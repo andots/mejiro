@@ -85,4 +85,13 @@ impl BookmarkArena {
         root_id.checked_append(node, &mut self.arena)?;
         Ok(())
     }
+
+    pub fn add_folder(&mut self, title: String) -> Result<(), CoreError> {
+        let folder = BookmarkData::new(title.as_str(), None, NodeType::Folder);
+        // TODO: for now, just add to root
+        let root_id = self.root_id()?;
+        let node = self.arena.new_node(folder);
+        root_id.checked_append(node, &mut self.arena)?;
+        Ok(())
+    }
 }
