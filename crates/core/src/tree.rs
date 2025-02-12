@@ -2,11 +2,7 @@ use std::{fs::File, io::BufReader, num::NonZeroUsize, path::Path};
 
 use indextree::{macros::tree, Arena, Node, NodeId};
 
-use crate::{
-    data::{BookmarkData, NodeType},
-    error::CoreError,
-    serialize::NestedNode,
-};
+use crate::{data::BookmarkData, error::CoreError, serialize::NestedNode};
 
 pub struct BookmarkArena {
     pub arena: Arena<BookmarkData>,
@@ -66,7 +62,7 @@ impl BookmarkArena {
     pub fn add_bookmark(&mut self, url: String, title: Option<String>) -> Result<(), CoreError> {
         // if title is None, use url as title
         let title = title.unwrap_or(url.clone());
-        let bookmark = BookmarkData::try_new(title.as_str(), Some(&url), NodeType::Bookmark)?;
+        let bookmark = BookmarkData::try_new_bookmark(&title, &url)?;
         // TODO: for now, just add to root
         let root_id = self.get_node_id_at(1).ok_or(CoreError::Other())?;
         let node = self.arena.new_node(bookmark);

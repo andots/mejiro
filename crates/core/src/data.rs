@@ -46,28 +46,12 @@ impl BookmarkData {
         Self::new(title, None, NodeType::Folder)
     }
 
-    pub fn try_new(title: &str, url: Option<&str>, node_type: NodeType) -> Result<Self, CoreError> {
-        if url.is_some() {
-            let parsed_url = Url::parse(url.unwrap())?;
-            if parsed_url.scheme() == "http" || parsed_url.scheme() == "https" {
-                Ok(Self {
-                    title: title.to_string(),
-                    url: Some(parsed_url.clone()),
-                    host: parsed_url.host_str().map(|s| s.to_string()),
-                    node_type,
-                    date_added: get_unix_timestamp(),
-                })
-            } else {
-                Err(CoreError::NotWebUrl(parsed_url.to_string()))
-            }
+    pub fn try_new_bookmark(title: &str, url: &str) -> Result<Self, CoreError> {
+        let parsed_url = Url::parse(url)?;
+        if parsed_url.scheme() == "http" || parsed_url.scheme() == "https" {
+            Ok(Self::new(title, Some(parsed_url), NodeType::Bookmark))
         } else {
-            Ok(Self {
-                title: title.to_string(),
-                url: None,
-                host: None,
-                node_type,
-                date_added: get_unix_timestamp(),
-            })
+            Err(CoreError::NotWebUrl(parsed_url.to_string()))
         }
     }
 }
@@ -86,27 +70,27 @@ mod tests {
     fn test_try_new() {
         let url = "https://abc.example.com";
         // normal case
-        let bookmark = BookmarkData::try_new("test", Some(url), NodeType::Bookmark).unwrap();
+        let bookmark = BookmarkData::try_new_bookmark("test", url).unwrap();
         assert_eq!(bookmark.url, Some(Url::parse(url).unwrap()));
 
         // folder case
-        let folder = BookmarkData::try_new("test", None, NodeType::Folder).unwrap();
+        let folder = BookmarkData::new_folder("test");
         assert_eq!(folder.url, None);
         assert_eq!(folder.node_type, NodeType::Folder);
 
-        // bookmark && folder case
-        let url = "https://abc.example.com";
-        let bookmark = BookmarkData::try_new("test", Some(url), NodeType::Folder).unwrap();
-        assert_eq!(bookmark.url, Some(Url::parse(url).unwrap()));
-
         // invalid url case
         let url = "ftp://abc.example.com";
-        let err = BookmarkData::try_new("test", Some(url), NodeType::Bookmark).unwrap_err();
+        let err = BookmarkData::try_new_bookmark("test", url).unwrap_err();
         assert_eq!(err.to_string(), "Not Web URL: ftp://abc.example.com/");
 
         // no scheme case
         let url = "abc.example.com";
-        let result = BookmarkData::try_new("test", Some(url), NodeType::Bookmark);
+        let result = BookmarkData::try_new_bookmark("test", url);
+        assert!(result.is_err());
+
+        // not url case
+        let url = "abc";
+        let result = BookmarkData::try_new_bookmark("test", url);
         assert!(result.is_err());
     }
 }
