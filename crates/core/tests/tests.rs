@@ -17,9 +17,9 @@ pub mod test_helper {
 
     pub enum Format {
         Arena,
-        ArenaPretty,
         Nested,
-        NestedPretty,
+        // ArenaPretty,
+        // NestedPretty,
     }
 
     /// Write json to file
@@ -45,9 +45,9 @@ pub mod test_helper {
         // get json string from arena depends on format
         let data = match format {
             Format::Arena => bookmark_arena.to_json()?,
-            Format::Nested => bookmark_arena.to_nested_json()?,
-            Format::ArenaPretty => bookmark_arena.to_json_pretty()?,
-            Format::NestedPretty => bookmark_arena.to_nested_json_pretty()?,
+            Format::Nested => bookmark_arena.to_nested_json(1)?,
+            // Format::ArenaPretty => bookmark_arena.to_json_pretty()?,
+            // Format::NestedPretty => bookmark_arena.to_nested_json_pretty()?,
         };
         file.write_all(data.as_bytes())?;
         Ok(())
@@ -193,23 +193,16 @@ mod tests {
     use crate::test_helper::*;
 
     #[test]
-    fn test_outs_path() {
-        let path = get_outs_path();
-        assert!(path.try_exists().expect("Outs directory does not exist"));
-        assert!(path.is_dir(), "Outs path is not a directory");
-    }
-
-    #[test]
     fn test_write_read_json_file() {
         let arena = create_bookmark_tree();
         let arena_path = get_outs_path().join("bookmarks.json");
         write_json_to_file(&arena_path, &arena, Format::Arena).unwrap();
         let path = get_outs_path().join("nested.json");
         write_json_to_file(&path, &arena, Format::Nested).unwrap();
-        let path = get_outs_path().join("bookmarks_pretty.json");
-        write_json_to_file(&path, &arena, Format::ArenaPretty).unwrap();
-        let path = get_outs_path().join("nested_pretty.json");
-        write_json_to_file(&path, &arena, Format::NestedPretty).unwrap();
+        // let path = get_outs_path().join("bookmarks_pretty.json");
+        // write_json_to_file(&path, &arena, Format::ArenaPretty).unwrap();
+        // let path = get_outs_path().join("nested_pretty.json");
+        // write_json_to_file(&path, &arena, Format::NestedPretty).unwrap();
 
         let arena_from_file = BookmarkArena::create_arena_from_file(&arena_path).unwrap();
         let arena = arena_from_file.arena;

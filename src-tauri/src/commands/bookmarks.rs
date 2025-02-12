@@ -12,7 +12,7 @@ pub async fn get_nested_json(
     let arena = state
         .lock()
         .map_err(|_| AppError::Other("can't get bookmarks".to_string()))?;
-    Ok(arena.to_nested_json()?)
+    Ok(arena.to_nested_json(1)?)
 }
 
 #[tauri::command]
@@ -30,7 +30,7 @@ pub async fn add_bookmark(
     app_handle.emit_to(
         EventTarget::webview(APP_WEBVIEW_LABEL),
         BookmarkEvent::UpdateTree.as_ref(),
-        arena.to_nested_json()?,
+        arena.to_nested_json(1)?,
     )?;
 
     Ok(())
