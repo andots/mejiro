@@ -2,6 +2,7 @@ export type Bookmark = {
   id: number;
   title: string;
   url: string | null;
+  host: string | null;
   node_type: string; // "Folder" | "Bookmark" | "Separator";
   date_added: number;
   children?: Bookmark[];
