@@ -19,6 +19,9 @@ pub enum CoreError {
     #[error("URL error: {0}")]
     InvalidUrl(#[from] url::ParseError),
 
+    #[error("Not Web URL: {0}")]
+    NotWebUrl(String),
+
     #[error("Something went wrong")]
     Other(),
 }
