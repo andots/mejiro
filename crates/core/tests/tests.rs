@@ -91,7 +91,7 @@ pub mod test_helper {
     pub fn create_bookmark_tree() -> Arena<BookmarkData> {
         let mut arena = Arena::new();
         let root_folder = BookmarkData {
-            title: "Bookmarks".to_string(),
+            title: "Root".to_string(),
             url: None,
             node_type: BookmarkNodeType::Folder,
             date_added: get_unix_timestamp(),

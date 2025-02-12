@@ -18,17 +18,15 @@ pub struct NestedNode<'a, T: Serialize> {
 }
 
 impl<'a, T: Serialize> NestedNode<'a, T> {
-    /// Attempt to create a new `BrowserNode` from an `Arena` and a `NodeId`.
+    /// Attempt to create a new `NestedNode` from an `Arena` and a `NodeId`.
     pub fn try_new(arena: &'a Arena<T>, node_id: NodeId) -> Result<Self, CoreError> {
         let node = arena.get(node_id);
         match node {
             None => Err(CoreError::NodeNotFound(node_id.into())),
-            Some(node) => Ok(NestedNode {
+            Some(n) => Ok(NestedNode {
                 id: node_id.into(),
-                data: node.get(),
-                children: node
-                    .first_child()
-                    .map(|first| SiblingNodes::new(first, arena)),
+                data: n.get(),
+                children: n.first_child().map(|first| SiblingNodes::new(first, arena)),
             }),
         }
     }
