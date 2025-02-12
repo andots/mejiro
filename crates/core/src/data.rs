@@ -6,6 +6,7 @@ use crate::{error::CoreError, utils::get_unix_timestamp};
 /// https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/bookmarks/BookmarkTreeNodeType
 #[derive(Debug, PartialEq, Eq, Clone, Serialize, Deserialize)]
 pub enum NodeType {
+    Root,
     Bookmark,
     Folder,
     Separator,
@@ -27,7 +28,7 @@ pub struct BookmarkData {
 }
 
 impl BookmarkData {
-    pub fn new(title: &str, url: Option<Url>, node_type: NodeType) -> Self {
+    fn new(title: &str, url: Option<Url>, node_type: NodeType) -> Self {
         Self {
             title: title.to_string(),
             url: url.clone(),
@@ -35,6 +36,14 @@ impl BookmarkData {
             node_type,
             date_added: get_unix_timestamp(),
         }
+    }
+
+    pub fn new_root() -> Self {
+        Self::new("Root", None, NodeType::Root)
+    }
+
+    pub fn new_folder(title: &str) -> Self {
+        Self::new(title, None, NodeType::Folder)
     }
 
     pub fn try_new(title: &str, url: Option<&str>, node_type: NodeType) -> Result<Self, CoreError> {

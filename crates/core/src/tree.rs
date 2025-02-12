@@ -15,8 +15,8 @@ pub struct BookmarkArena {
 impl Default for BookmarkArena {
     fn default() -> Self {
         let mut arena: Arena<BookmarkData> = Arena::new();
-        let root_data = BookmarkData::new("Root", None, NodeType::Folder);
-        tree!(&mut arena, root_data);
+        let root = BookmarkData::new_root();
+        tree!(&mut arena, root);
         Self { arena }
     }
 }
@@ -75,39 +75,47 @@ impl BookmarkArena {
     }
 }
 
-// fn get_root_node_id(&self) -> Result<NodeId, CoreError> {
-//     let index = NonZeroUsize::new(1).ok_or(CoreError::Other())?;
-//     self.arena
-//         .get_node_id_at(index)
-//         .ok_or(CoreError::NodeNotFound(index))
-// }
+#[cfg(test)]
+mod tests {
+    use std::{fs, io::Write, path::PathBuf, sync::OnceLock};
 
-// fn get_root_node(&self) -> Result<&Node<BookmarkData>, CoreError> {
-//     let root_id = self.get_root_node_id()?;
-//     let root = self
-//         .arena
-//         .get(root_id)
-//         .ok_or(CoreError::NodeNotFound(root_id.into()))?;
-//     Ok(root)
-// }
+    use super::*;
+    static OUTS_PATH: OnceLock<PathBuf> = OnceLock::new();
 
-// pub fn add_folder(&mut self, title: String) -> Result<(), CoreError> {
-//     let folder = BookmarkData::new(title.as_str(), None, NodeType::Folder);
-//     // TODO: for now, just add to root
-//     let root_id = self.get_root_node_id().ok_or(CoreError::Other())?;
-//     let node = self.arena.new_node(folder);
-//     root_id.checked_append(node, &mut self.arena)?;
-//     Ok(())
-// }
+    fn get_outs_path() -> &'static PathBuf {
+        OUTS_PATH.get_or_init(|| {
+            let manifest_dir = std::env::var("CARGO_MANIFEST_DIR")
+                .expect("CARGO_MANIFEST_DIR environment variable is not set");
+            let path = PathBuf::from(manifest_dir).join("outs");
+            if !path.exists() {
+                std::fs::create_dir_all(&path).expect("can't create outs directory");
+            }
+            path
+        })
+    }
 
-// To Arena to JSON (pretty)
-// pub fn to_json_pretty(&self) -> Result<String, CoreError> {
-//     Ok(serde_json::to_string_pretty(&self.arena)?)
-// }
+    fn create_realistic_arena() -> Arena<BookmarkData> {
+        let mut arena = Arena::new();
+        let root = BookmarkData::new_root();
+        let rust_folder = BookmarkData::new_folder("Rust");
+        let typescript_folder = BookmarkData::new_folder("TypeScript");
+        tree!(&mut arena,
+            root => {
+                rust_folder,
+                typescript_folder,
+            }
+        );
+        arena
+    }
 
-// Generate JSON for frontend (pretty)
-// pub fn to_nested_json_pretty(&self) -> Result<String, CoreError> {
-//     let root_id = self.get_root_node_id().ok_or(CoreError::Other())?;
-//     let value = NestedNode::try_new(&self.arena, root_id)?;
-//     Ok(serde_json::to_string_pretty(&value)?)
-// }
+    #[test]
+    fn test_create_realistic_arena() {
+        let path = get_outs_path().join("bookmarks.json");
+        let arena = create_realistic_arena();
+        let bookmark_arena = BookmarkArena::new(arena);
+        let mut file = fs::File::create(path).expect("can't create file");
+        let json = bookmark_arena.to_json().expect("can't convert to json");
+        file.write_all(json.as_bytes())
+            .expect("can't write to file");
+    }
+}
