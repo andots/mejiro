@@ -7,7 +7,6 @@ use crate::{
     data::{BookmarkData, BookmarkNodeType},
     error::CoreError,
     serialize::NestedNode,
-    utils::get_unix_timestamp,
 };
 
 pub struct BookmarkArena {
@@ -17,12 +16,7 @@ pub struct BookmarkArena {
 impl Default for BookmarkArena {
     fn default() -> Self {
         let mut arena: Arena<BookmarkData> = Arena::new();
-        let root = BookmarkData {
-            title: "Root".to_string(),
-            url: None,
-            node_type: BookmarkNodeType::Folder,
-            date_added: get_unix_timestamp(),
-        };
+        let root = BookmarkData::new("Root", None, BookmarkNodeType::Folder);
         tree!(&mut arena, root);
         Self { arena }
     }
@@ -81,13 +75,11 @@ impl BookmarkArena {
     }
 
     pub fn add_bookmark(&mut self, url: String, title: Option<String>) -> Result<(), CoreError> {
-        let url = Url::parse(&url)?;
-        let bookmark = BookmarkData {
-            url: Some(url.clone()),
-            title: title.unwrap_or(url.to_string()),
-            node_type: BookmarkNodeType::Bookmark,
-            date_added: get_unix_timestamp(),
-        };
+        // if title is None, use url as title
+        let title = title.unwrap_or(url.clone());
+        let parsed_url = Url::parse(&url)?;
+        let bookmark =
+            BookmarkData::new(title.as_str(), Some(parsed_url), BookmarkNodeType::Bookmark);
         // TODO: とりあえずrootに追加
         let root_id = self.root_id()?;
         let node = self.arena.new_node(bookmark);

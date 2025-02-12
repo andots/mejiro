@@ -7,7 +7,6 @@ pub mod test_helper {
         data::{BookmarkData, BookmarkNodeType},
         error::CoreError,
         tree::BookmarkArena,
-        utils::get_unix_timestamp,
     };
     use std::{
         fs::File,
@@ -68,11 +67,8 @@ pub mod test_helper {
     static ASSETS_PATH: OnceLock<PathBuf> = OnceLock::new();
     static OUTS_PATH: OnceLock<PathBuf> = OnceLock::new();
 
-    /// テストで使用するassetsディレクトリのパスを取得します。
-    /// 初回呼び出し時に初期化され、以降は同じパスを返します。
     pub fn get_assets_path() -> &'static PathBuf {
         ASSETS_PATH.get_or_init(|| {
-            // プロジェクトのルートディレクトリからの相対パスでassetsディレクトリを指定
             let manifest_dir = std::env::var("CARGO_MANIFEST_DIR")
                 .expect("CARGO_MANIFEST_DIR environment variable is not set");
             PathBuf::from(manifest_dir).join("tests").join("assets")
@@ -81,7 +77,6 @@ pub mod test_helper {
 
     pub fn get_outs_path() -> &'static PathBuf {
         OUTS_PATH.get_or_init(|| {
-            // プロジェクトのルートディレクトリからの相対パスでassetsディレクトリを指定
             let manifest_dir = std::env::var("CARGO_MANIFEST_DIR")
                 .expect("CARGO_MANIFEST_DIR environment variable is not set");
             PathBuf::from(manifest_dir).join("tests").join("outs")
@@ -90,115 +85,72 @@ pub mod test_helper {
 
     pub fn create_bookmark_tree() -> Arena<BookmarkData> {
         let mut arena = Arena::new();
-        let root_folder = BookmarkData {
-            title: "Root".to_string(),
-            url: None,
-            node_type: BookmarkNodeType::Folder,
-            date_added: get_unix_timestamp(),
-        };
-
-        let folder_search = BookmarkData {
-            title: "Search".to_string(),
-            url: None,
-            node_type: BookmarkNodeType::Folder,
-            date_added: get_unix_timestamp(),
-        };
-        let folder_dev = BookmarkData {
-            title: "Dev".to_string(),
-            url: None,
-            node_type: BookmarkNodeType::Folder,
-            date_added: get_unix_timestamp(),
-        };
-        let folder_doc = BookmarkData {
-            title: "Doc".to_string(),
-            url: None,
-            node_type: BookmarkNodeType::Folder,
-            date_added: get_unix_timestamp(),
-        };
-        let folder_fun = BookmarkData {
-            title: "Fun".to_string(),
-            url: None,
-            node_type: BookmarkNodeType::Folder,
-            date_added: get_unix_timestamp(),
-        };
-        let folder_video = BookmarkData {
-            title: "Video".to_string(),
-            url: None,
-            node_type: BookmarkNodeType::Folder,
-            date_added: get_unix_timestamp(),
-        };
-        let doc_rs = BookmarkData {
-            title: "doc.rs".to_string(),
-            url: Some(Url::parse("https://docs.rs/").unwrap()),
-            node_type: BookmarkNodeType::Bookmark,
-            date_added: get_unix_timestamp(),
-        };
-        let crate_io = BookmarkData {
-            title: "crates.io".to_string(),
-            url: Some(Url::parse("https://crates.io/").unwrap()),
-            node_type: BookmarkNodeType::Bookmark,
-            date_added: get_unix_timestamp(),
-        };
-        let librs = BookmarkData {
-            title: "lib.rs".to_string(),
-            url: Some(Url::parse("https://lib.rs/").unwrap()),
-            node_type: BookmarkNodeType::Bookmark,
-            date_added: get_unix_timestamp(),
-        };
-        let npm = BookmarkData {
-            title: "npm".to_string(),
-            url: Some(Url::parse("https://www.npmjs.com/").unwrap()),
-            node_type: BookmarkNodeType::Bookmark,
-            date_added: get_unix_timestamp(),
-        };
-        let github_search = BookmarkData {
-            title: "Github Search".to_string(),
-            url: Some(Url::parse("https://github.com/search").unwrap()),
-            node_type: BookmarkNodeType::Bookmark,
-            date_added: get_unix_timestamp(),
-        };
-        let google = BookmarkData {
-            title: "Google".to_string(),
-            url: Some(Url::parse("https://www.google.com/").unwrap()),
-            node_type: BookmarkNodeType::Bookmark,
-            date_added: get_unix_timestamp(),
-        };
-        let stackoverflow = BookmarkData {
-            title: "Stack Overflow".to_string(),
-            url: Some(Url::parse("https://stackoverflow.com/").unwrap()),
-            node_type: BookmarkNodeType::Bookmark,
-            date_added: get_unix_timestamp(),
-        };
-        let youtube = BookmarkData {
-            title: "YouTube".to_string(),
-            url: Some(Url::parse("https://www.youtube.com/").unwrap()),
-            node_type: BookmarkNodeType::Bookmark,
-            date_added: get_unix_timestamp(),
-        };
-        let reddit = BookmarkData {
-            title: "Reddit".to_string(),
-            url: Some(Url::parse("https://www.reddit.com/").unwrap()),
-            node_type: BookmarkNodeType::Bookmark,
-            date_added: get_unix_timestamp(),
-        };
-        let tailwindcss = BookmarkData {
-            title: "TailwindCSS".to_string(),
-            url: Some(Url::parse("https://tailwindcss.com/").unwrap()),
-            node_type: BookmarkNodeType::Bookmark,
-            date_added: get_unix_timestamp(),
-        };
-        let tauri_doc = BookmarkData {
-            title: "Tauri Doc".to_string(),
-            url: Some(Url::parse("https://docs.rs/tauri/latest/tauri/").unwrap()),
-            node_type: BookmarkNodeType::Bookmark,
-            date_added: get_unix_timestamp(),
-        };
-        let solidui_doc = BookmarkData {
-            title: "solid-ui".to_string(),
-            url: Some(Url::parse("https://www.solid-ui.com/docs/introduction").unwrap()),
-            node_type: BookmarkNodeType::Bookmark,
-            date_added: get_unix_timestamp(),
-        };
+        let root_folder = BookmarkData::new("Root", None, BookmarkNodeType::Folder);
+        let folder_search = BookmarkData::new("Search", None, BookmarkNodeType::Folder);
+        let folder_dev = BookmarkData::new("Dev", None, BookmarkNodeType::Folder);
+        let folder_doc = BookmarkData::new("Doc", None, BookmarkNodeType::Folder);
+        let folder_fun = BookmarkData::new("Fun", None, BookmarkNodeType::Folder);
+        let folder_video = BookmarkData::new("Video", None, BookmarkNodeType::Folder);
+        let doc_rs = BookmarkData::new(
+            "doc.rs",
+            Some(Url::parse("https://docs.rs/").unwrap()),
+            BookmarkNodeType::Bookmark,
+        );
+        let crate_io = BookmarkData::new(
+            "crates.io",
+            Some(Url::parse("https://crates.io/").unwrap()),
+            BookmarkNodeType::Bookmark,
+        );
+        let librs = BookmarkData::new(
+            "lib.rs",
+            Some(Url::parse("https://lib.rs/").unwrap()),
+            BookmarkNodeType::Bookmark,
+        );
+        let npm = BookmarkData::new(
+            "npm",
+            Some(Url::parse("https://www.npmjs.com/").unwrap()),
+            BookmarkNodeType::Bookmark,
+        );
+        let github_search = BookmarkData::new(
+            "Github Search",
+            Some(Url::parse("https://github.com/search").unwrap()),
+            BookmarkNodeType::Bookmark,
+        );
+        let google = BookmarkData::new(
+            "Google",
+            Some(Url::parse("https://www.google.com/").unwrap()),
+            BookmarkNodeType::Bookmark,
+        );
+        let stackoverflow = BookmarkData::new(
+            "Stack Overflow",
+            Some(Url::parse("https://stackoverflow.com/").unwrap()),
+            BookmarkNodeType::Bookmark,
+        );
+        let youtube = BookmarkData::new(
+            "YouTube",
+            Some(Url::parse("https://www.youtube.com/").unwrap()),
+            BookmarkNodeType::Bookmark,
+        );
+        let reddit = BookmarkData::new(
+            "Reddit",
+            Some(Url::parse("https://www.reddit.com/").unwrap()),
+            BookmarkNodeType::Bookmark,
+        );
+        let tailwindcss = BookmarkData::new(
+            "TailwindCSS",
+            Some(Url::parse("https://tailwindcss.com/").unwrap()),
+            BookmarkNodeType::Bookmark,
+        );
+        let tauri_doc = BookmarkData::new(
+            "Tauri Doc",
+            Some(Url::parse("https://docs.rs/tauri/latest/tauri/").unwrap()),
+            BookmarkNodeType::Bookmark,
+        );
+        let solidui_doc = BookmarkData::new(
+            "solid-ui",
+            Some(Url::parse("https://www.solid-ui.com/docs/introduction").unwrap()),
+            BookmarkNodeType::Bookmark,
+        );
         // create the tree
         tree!(
             &mut arena,
