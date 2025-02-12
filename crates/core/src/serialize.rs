@@ -10,7 +10,7 @@ use crate::error::CoreError;
 #[derive(Serialize)]
 pub struct NestedNode<'a, T: Serialize> {
     /// id of the node from NodeId.into()
-    id: usize,
+    index: usize,
     #[serde(flatten)]
     data: &'a T,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -24,7 +24,7 @@ impl<'a, T: Serialize> NestedNode<'a, T> {
         match node {
             None => Err(CoreError::NodeNotFound(node_id.into())),
             Some(n) => Ok(NestedNode {
-                id: node_id.into(),
+                index: node_id.into(),
                 data: n.get(),
                 children: n.first_child().map(|first| SiblingNodes::new(first, arena)),
             }),
