@@ -58,15 +58,9 @@ impl BookmarkArena {
 
     /// Generate JSON for frontend
     pub fn to_nested_json(&self, index: usize) -> Result<String, CoreError> {
-        let root_id = self.get_node_id_at(index).ok_or(CoreError::Other())?;
-        let value = NestedNode::try_new(&self.arena, root_id)?;
+        let node_id = self.get_node_id_at(index).ok_or(CoreError::Other())?;
+        let value = NestedNode::try_new(&self.arena, node_id)?;
         Ok(serde_json::to_string(&value)?)
-    }
-
-    /// Generate JSON for frontend with node_id
-    pub fn to_nested_json_with_node_id(&self, node_id: &NodeId) -> Result<String, CoreError> {
-        let value = NestedNode::try_new(&self.arena, *node_id)?;
-        Ok(serde_json::to_string_pretty(&value)?)
     }
 
     pub fn add_bookmark(&mut self, url: String, title: Option<String>) -> Result<(), CoreError> {
