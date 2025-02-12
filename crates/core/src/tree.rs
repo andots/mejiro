@@ -15,8 +15,8 @@ pub struct BookmarkArena {
 impl Default for BookmarkArena {
     fn default() -> Self {
         let mut arena: Arena<BookmarkData> = Arena::new();
-        let root = BookmarkData::new("Root", None, NodeType::Folder);
-        tree!(&mut arena, root);
+        let root_data = BookmarkData::new("Root", None, NodeType::Folder);
+        tree!(&mut arena, root_data);
         Self { arena }
     }
 }
@@ -36,7 +36,7 @@ impl BookmarkArena {
         Ok(Self::new(arena))
     }
 
-    fn root_id(&self) -> Result<NodeId, CoreError> {
+    fn root_node_id(&self) -> Result<NodeId, CoreError> {
         let index = NonZeroUsize::new(1).ok_or(CoreError::Other())?;
         self.arena
             .get_node_id_at(index)
@@ -55,19 +55,19 @@ impl BookmarkArena {
 
     /// Generate JSON for frontend
     pub fn to_nested_json(&self) -> Result<String, CoreError> {
-        let root_id = self.root_id()?;
+        let root_id = self.root_node_id()?;
         let value = NestedNode::try_new(&self.arena, root_id)?;
         Ok(serde_json::to_string(&value)?)
     }
 
     /// Generate JSON for frontend (pretty)
     pub fn to_nested_json_pretty(&self) -> Result<String, CoreError> {
-        let root_id = self.root_id()?;
+        let root_id = self.root_node_id()?;
         let value = NestedNode::try_new(&self.arena, root_id)?;
         Ok(serde_json::to_string_pretty(&value)?)
     }
 
-    /// Generate JSON the given node and its descendants
+    /// Generate JSON for frontend with node_id
     pub fn to_nested_json_with_node_id(&self, node_id: &NodeId) -> Result<String, CoreError> {
         let value = NestedNode::try_new(&self.arena, *node_id)?;
         Ok(serde_json::to_string_pretty(&value)?)
@@ -78,7 +78,7 @@ impl BookmarkArena {
         let title = title.unwrap_or(url.clone());
         let bookmark = BookmarkData::try_new(title.as_str(), Some(&url), NodeType::Bookmark)?;
         // TODO: for now, just add to root
-        let root_id = self.root_id()?;
+        let root_id = self.root_node_id()?;
         let node = self.arena.new_node(bookmark);
         root_id.checked_append(node, &mut self.arena)?;
         Ok(())
@@ -87,7 +87,7 @@ impl BookmarkArena {
     pub fn add_folder(&mut self, title: String) -> Result<(), CoreError> {
         let folder = BookmarkData::new(title.as_str(), None, NodeType::Folder);
         // TODO: for now, just add to root
-        let root_id = self.root_id()?;
+        let root_id = self.root_node_id()?;
         let node = self.arena.new_node(folder);
         root_id.checked_append(node, &mut self.arena)?;
         Ok(())

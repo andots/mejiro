@@ -59,3 +59,44 @@ impl<T: Serialize> Serialize for SiblingNodes<'_, T> {
         seq.end()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    use indextree::{macros::tree, Arena};
+
+    #[derive(Serialize)]
+    struct Data {
+        data_id: i32,
+        name: String,
+    }
+
+    impl Data {
+        fn new(id: i32, name: impl Into<String>) -> Self {
+            Self {
+                data_id: id,
+                name: name.into(),
+            }
+        }
+    }
+
+    #[test]
+    fn test_serialize() {
+        let mut arena = Arena::new();
+        let root = Data::new(1, "root");
+        let root_id = tree!(
+            &mut arena,
+            root => {
+                Data::new(2, "child1"),
+                Data::new(3, "child2") => {
+                    Data::new(4, "grandchild1"),
+                    Data::new(5, "grandchild2"),
+                },
+            }
+        );
+        let a = NestedNode::try_new(&arena, root_id).unwrap();
+        let json = serde_json::to_string_pretty(&a).unwrap();
+        println!("{}", json);
+    }
+}
