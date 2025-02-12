@@ -1,7 +1,6 @@
 use std::{fs::File, io::BufReader, num::NonZeroUsize, path::Path};
 
 use indextree::{macros::tree, Arena, NodeId};
-use url::Url;
 
 use crate::{
     data::{BookmarkData, NodeType},
@@ -77,9 +76,8 @@ impl BookmarkArena {
     pub fn add_bookmark(&mut self, url: String, title: Option<String>) -> Result<(), CoreError> {
         // if title is None, use url as title
         let title = title.unwrap_or(url.clone());
-        let parsed_url = Url::parse(&url)?;
-        let bookmark = BookmarkData::new(title.as_str(), Some(parsed_url), NodeType::Bookmark);
-        // TODO: とりあえずrootに追加
+        let bookmark = BookmarkData::try_new(title.as_str(), Some(&url), NodeType::Bookmark)?;
+        // TODO: for now, just add to root
         let root_id = self.root_id()?;
         let node = self.arena.new_node(bookmark);
         root_id.checked_append(node, &mut self.arena)?;

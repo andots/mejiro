@@ -39,17 +39,17 @@ impl BookmarkData {
 
     pub fn try_new(title: &str, url: Option<&str>, node_type: NodeType) -> Result<Self, CoreError> {
         if url.is_some() {
-            let url = Url::parse(url.unwrap())?;
-            if url.scheme() == "http" || url.scheme() == "https" {
+            let parsed_url = Url::parse(url.unwrap())?;
+            if parsed_url.scheme() == "http" || parsed_url.scheme() == "https" {
                 Ok(Self {
                     title: title.to_string(),
-                    url: Some(url.clone()),
-                    host: url.host_str().map(|s| s.to_string()),
+                    url: Some(parsed_url.clone()),
+                    host: parsed_url.host_str().map(|s| s.to_string()),
                     node_type,
                     date_added: get_unix_timestamp(),
                 })
             } else {
-                Err(CoreError::NotWebUrl(url.to_string()))
+                Err(CoreError::NotWebUrl(parsed_url.to_string()))
             }
         } else {
             Ok(Self {
