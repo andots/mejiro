@@ -4,7 +4,7 @@ pub mod test_helper {
 
     use indextree::{macros::tree, Arena};
     use mejiro_core::{
-        data::{BookmarkData, BookmarkNodeType},
+        data::{BookmarkData, NodeType},
         error::CoreError,
         tree::BookmarkArena,
     };
@@ -85,71 +85,71 @@ pub mod test_helper {
 
     pub fn create_bookmark_tree() -> Arena<BookmarkData> {
         let mut arena = Arena::new();
-        let root_folder = BookmarkData::new("Root", None, BookmarkNodeType::Folder);
-        let folder_search = BookmarkData::new("Search", None, BookmarkNodeType::Folder);
-        let folder_dev = BookmarkData::new("Dev", None, BookmarkNodeType::Folder);
-        let folder_doc = BookmarkData::new("Doc", None, BookmarkNodeType::Folder);
-        let folder_fun = BookmarkData::new("Fun", None, BookmarkNodeType::Folder);
-        let folder_video = BookmarkData::new("Video", None, BookmarkNodeType::Folder);
+        let root_folder = BookmarkData::new("Root", None, NodeType::Folder);
+        let folder_search = BookmarkData::new("Search", None, NodeType::Folder);
+        let folder_dev = BookmarkData::new("Dev", None, NodeType::Folder);
+        let folder_doc = BookmarkData::new("Doc", None, NodeType::Folder);
+        let folder_fun = BookmarkData::new("Fun", None, NodeType::Folder);
+        let folder_video = BookmarkData::new("Video", None, NodeType::Folder);
         let doc_rs = BookmarkData::new(
             "doc.rs",
             Some(Url::parse("https://docs.rs/").unwrap()),
-            BookmarkNodeType::Bookmark,
+            NodeType::Bookmark,
         );
         let crate_io = BookmarkData::new(
             "crates.io",
             Some(Url::parse("https://crates.io/").unwrap()),
-            BookmarkNodeType::Bookmark,
+            NodeType::Bookmark,
         );
         let librs = BookmarkData::new(
             "lib.rs",
             Some(Url::parse("https://lib.rs/").unwrap()),
-            BookmarkNodeType::Bookmark,
+            NodeType::Bookmark,
         );
         let npm = BookmarkData::new(
             "npm",
             Some(Url::parse("https://www.npmjs.com/").unwrap()),
-            BookmarkNodeType::Bookmark,
+            NodeType::Bookmark,
         );
         let github_search = BookmarkData::new(
             "Github Search",
             Some(Url::parse("https://github.com/search").unwrap()),
-            BookmarkNodeType::Bookmark,
+            NodeType::Bookmark,
         );
         let google = BookmarkData::new(
             "Google",
             Some(Url::parse("https://www.google.com/").unwrap()),
-            BookmarkNodeType::Bookmark,
+            NodeType::Bookmark,
         );
         let stackoverflow = BookmarkData::new(
             "Stack Overflow",
             Some(Url::parse("https://stackoverflow.com/").unwrap()),
-            BookmarkNodeType::Bookmark,
+            NodeType::Bookmark,
         );
         let youtube = BookmarkData::new(
             "YouTube",
             Some(Url::parse("https://www.youtube.com/").unwrap()),
-            BookmarkNodeType::Bookmark,
+            NodeType::Bookmark,
         );
         let reddit = BookmarkData::new(
             "Reddit",
             Some(Url::parse("https://www.reddit.com/").unwrap()),
-            BookmarkNodeType::Bookmark,
+            NodeType::Bookmark,
         );
         let tailwindcss = BookmarkData::new(
             "TailwindCSS",
             Some(Url::parse("https://tailwindcss.com/").unwrap()),
-            BookmarkNodeType::Bookmark,
+            NodeType::Bookmark,
         );
         let tauri_doc = BookmarkData::new(
             "Tauri Doc",
             Some(Url::parse("https://docs.rs/tauri/latest/tauri/").unwrap()),
-            BookmarkNodeType::Bookmark,
+            NodeType::Bookmark,
         );
         let solidui_doc = BookmarkData::new(
             "solid-ui",
             Some(Url::parse("https://www.solid-ui.com/docs/introduction").unwrap()),
-            BookmarkNodeType::Bookmark,
+            NodeType::Bookmark,
         );
         // create the tree
         tree!(

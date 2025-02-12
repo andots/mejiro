@@ -5,7 +5,7 @@ use crate::utils::get_unix_timestamp;
 
 /// https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/bookmarks/BookmarkTreeNodeType
 #[derive(Debug, PartialEq, Eq, Clone, Serialize, Deserialize)]
-pub enum BookmarkNodeType {
+pub enum NodeType {
     Bookmark,
     Folder,
     Separator,
@@ -21,13 +21,13 @@ pub struct BookmarkData {
     /// URL host name for convenience
     pub host: Option<String>,
     /// Node type (Bookmark, Folder, Separator)
-    pub node_type: BookmarkNodeType,
+    pub node_type: NodeType,
     /// Unix timestamp in milliseconds
     pub date_added: Option<u64>,
 }
 
 impl BookmarkData {
-    pub fn new(title: &str, url: Option<Url>, node_type: BookmarkNodeType) -> Self {
+    pub fn new(title: &str, url: Option<Url>, node_type: NodeType) -> Self {
         Self {
             title: title.to_string(),
             url: url.clone(),

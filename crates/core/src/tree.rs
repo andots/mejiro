@@ -4,7 +4,7 @@ use indextree::{macros::tree, Arena, NodeId};
 use url::Url;
 
 use crate::{
-    data::{BookmarkData, BookmarkNodeType},
+    data::{BookmarkData, NodeType},
     error::CoreError,
     serialize::NestedNode,
 };
@@ -16,7 +16,7 @@ pub struct BookmarkArena {
 impl Default for BookmarkArena {
     fn default() -> Self {
         let mut arena: Arena<BookmarkData> = Arena::new();
-        let root = BookmarkData::new("Root", None, BookmarkNodeType::Folder);
+        let root = BookmarkData::new("Root", None, NodeType::Folder);
         tree!(&mut arena, root);
         Self { arena }
     }
@@ -78,8 +78,7 @@ impl BookmarkArena {
         // if title is None, use url as title
         let title = title.unwrap_or(url.clone());
         let parsed_url = Url::parse(&url)?;
-        let bookmark =
-            BookmarkData::new(title.as_str(), Some(parsed_url), BookmarkNodeType::Bookmark);
+        let bookmark = BookmarkData::new(title.as_str(), Some(parsed_url), NodeType::Bookmark);
         // TODO: とりあえずrootに追加
         let root_id = self.root_id()?;
         let node = self.arena.new_node(bookmark);
