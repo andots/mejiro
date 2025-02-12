@@ -1,0 +1,32 @@
+{
+  "git": {
+    "commitMessage": "chore: release v${version}",
+    "tagName": "v${version}"
+  },
+  "plugins": {
+    "@j-ulrich/release-it-regex-bumper": {
+      "in": "package.json",
+      "out": {
+        "file": "Cargo.toml",
+        "search": "version = \"([0-9.]+)\"",
+        "replace": "version = \"{{version}}\""
+      }
+    },
+    "@release-it/conventional-changelog": {
+      "preset": {
+        "name": "angular"
+      },
+      "header": "# Changelog",
+      "infile": "CHANGELOG.md"
+    }
+  },
+  "npm": {
+    "publish": false
+  },
+  "hooks": {
+    "after:@j-ulrich/release-it-regex-bumper:bump": "cargo check"
+  },
+  "github": {
+    "release": false
+  }
+}

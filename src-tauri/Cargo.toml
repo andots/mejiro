@@ -1,0 +1,31 @@
+[package]
+name = "mejiro"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "app_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.0.5", features = [] }
+
+[dependencies]
+# tauri
+tauri = { version = "2.2.5", features = ["test", "unstable"] }
+tauri-plugin-log = "2.2.1"
+
+serde_json = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+log = { workspace = true }
+thiserror = { workspace = true }
+strum = { workspace = true, features = ["derive"] }
+anyhow = { workspace = true }
+
+# internal
+mejiro-core.workspace = true

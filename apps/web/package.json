@@ -1,0 +1,32 @@
+{
+  "name": "mejiro-web",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/solid-js": "^5.0.4",
+    "@astrojs/tailwind": "^5.1.5",
+    "@fontsource/inter": "^5.1.1",
+    "@repo/ui": "workspace:*",
+    "@solidjs/router": "^0.15.3",
+    "@tauri-apps/api": "^2.2.0",
+    "@tauri-apps/plugin-log": "^2.2.1",
+    "astro": "^5.1.10",
+    "clsx": "^2.1.1",
+    "solid-js": "^1.9.4",
+    "solid-zustand": "^1.8.1",
+    "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "@repo/tailwind-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "tailwindcss": "^3.4.17",
+    "tailwindcss-animate": "^1.0.7"
+  }
+}
