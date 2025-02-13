@@ -1,6 +1,7 @@
 use std::{fs::File, io::BufReader, num::NonZeroUsize, path::Path};
 
 use indextree::{macros::tree, Arena, Node, NodeId};
+use url::Url;
 
 use crate::{data::BookmarkData, error::CoreError, serialize::NestedNode};
 
@@ -59,14 +60,56 @@ impl BookmarkArena {
         Ok(serde_json::to_string(&value)?)
     }
 
+    pub fn to_nested_json_pretty(&self, index: usize) -> Result<String, CoreError> {
+        let node_id = self.get_node_id_at(index).ok_or(CoreError::Other())?;
+        let value = NestedNode::try_new(&self.arena, node_id)?;
+        Ok(serde_json::to_string_pretty(&value)?)
+    }
+
     pub fn add_bookmark(&mut self, url: String, title: Option<String>) -> Result<(), CoreError> {
         // if title is None, use url as title
         let title = title.unwrap_or(url.clone());
-        let bookmark = BookmarkData::try_new_bookmark(&title, &url)?;
-        // TODO: for now, just add to root
+        // 与えられたURLの一つ上の階層のURLを取得
+        let mut target_url = Url::parse(&url)?;
+        target_url
+            .path_segments_mut()
+            .map_err(|_| CoreError::CannotBeBase())?
+            .pop_if_empty()
+            .pop();
+
+        // まずはroot_idを取得
+        // TODO: ルートでなくて、フロントで見ている最上位のノードから探す
         let root_id = self.get_node_id_at(1).ok_or(CoreError::Other())?;
-        let node = self.arena.new_node(bookmark);
-        root_id.checked_append(node, &mut self.arena)?;
+        // ターゲットとなるノードをroot_idの子孫から探す
+        let target = root_id.descendants(&self.arena).find(|n| {
+            if let Some(node) = self.arena.get(*n) {
+                if let Some(node_url) = &node.get().url {
+                    let mut url = node_url.clone();
+                    match url.path_segments_mut() {
+                        Ok(mut u) => {
+                            u.pop_if_empty().pop();
+                        }
+                        Err(_) => return false,
+                    }
+                    if url.as_str() == target_url.as_str() {
+                        return true;
+                    }
+                }
+            }
+            false
+        });
+
+        let bookmark = BookmarkData::try_new_bookmark(&title, &url)?;
+        if let Some(target) = target {
+            // if found target, append new node to the target node
+            let new_node = self.arena.new_node(bookmark);
+            target.checked_append(new_node, &mut self.arena)?;
+        } else {
+            // if not found target, append new node to the root node
+            let new_node = self.arena.new_node(bookmark);
+            root_id.checked_append(new_node, &mut self.arena)?;
+        }
+
         Ok(())
     }
 }
@@ -138,6 +181,20 @@ mod tests {
         file.write_all(json.as_bytes())?;
 
         assert_eq!(arena.count(), 16);
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_add_bookmark() -> anyhow::Result<()> {
+        let arena = create_realistic_arena();
+        let mut bookmark_arena = BookmarkArena::new(arena.clone());
+
+        bookmark_arena.add_bookmark(
+            "https://docs.rs/tauri/latest/tauri/webview/struct.Color.html".to_string(),
+            Some("title".to_string()),
+        )?;
+        println!("{}", bookmark_arena.to_nested_json_pretty(3)?);
 
         Ok(())
     }

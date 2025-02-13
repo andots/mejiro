@@ -22,6 +22,9 @@ pub enum CoreError {
     #[error("Not Web URL: {0}")]
     NotWebUrl(String),
 
+    #[error("Cannot be a base")]
+    CannotBeBase(),
+
     #[error("Something went wrong")]
     Other(),
 }
