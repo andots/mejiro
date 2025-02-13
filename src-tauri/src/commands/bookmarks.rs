@@ -1,9 +1,11 @@
 use std::sync::Mutex;
 
 use mejiro_core::tree::BookmarkArena;
-use tauri::{Emitter, EventTarget};
 
-use crate::{constants::APP_WEBVIEW_LABEL, error::AppError, events::AppEvent};
+use crate::{
+    error::AppError,
+    events::{emit_to_app_webview, AppEvent},
+};
 
 #[tauri::command]
 pub async fn get_nested_json(
@@ -27,9 +29,9 @@ pub async fn add_bookmark(
         .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
     arena.add_bookmark(url, title)?;
 
-    app_handle.emit_to(
-        EventTarget::webview(APP_WEBVIEW_LABEL),
-        AppEvent::BookmarkUpdated.as_ref(),
+    emit_to_app_webview(
+        &app_handle,
+        AppEvent::BookmarkUpdated,
         arena.to_nested_json(1)?,
     )?;
 

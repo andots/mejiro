@@ -31,8 +31,8 @@ const AddressBar: Component<AddressBarProps> = (props) => {
 
   // TODO load favorites from data
   // お気に入りトグル
-  const toggleFavorite = async () => {
-    await invokeAddBookmark(url(), title());
+  const toggleFavorite = () => {
+    invokeAddBookmark(url(), title());
     setIsFavorited(!isFavorited());
   };
 
