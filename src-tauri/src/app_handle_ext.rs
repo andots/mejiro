@@ -100,7 +100,7 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
         let state = self.state::<Mutex<UserSettings>>();
         let value = state
             .lock()
-            .map_err(|_| AppError::Other("can't get settings".to_string()))?;
+            .map_err(|_| AppError::Mutex("can't get settings".to_string()))?;
         let settings = UserSettings {
             language: value.language.clone(),
             theme: value.theme.clone(),

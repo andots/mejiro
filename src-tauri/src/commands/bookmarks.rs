@@ -11,7 +11,7 @@ pub async fn get_nested_json(
 ) -> Result<String, AppError> {
     let arena = state
         .lock()
-        .map_err(|_| AppError::Other("can't get bookmarks".to_string()))?;
+        .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
     Ok(arena.to_nested_json(1)?)
 }
 
@@ -24,7 +24,7 @@ pub async fn add_bookmark(
 ) -> Result<(), AppError> {
     let mut arena = state
         .lock()
-        .map_err(|_| AppError::Other("can't get bookmarks".to_string()))?;
+        .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
     arena.add_bookmark(url, title)?;
 
     app_handle.emit_to(
