@@ -35,16 +35,17 @@ pub trait AppHandleExt {
 }
 
 impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
-    /// Get the app directory and create it if not exists.
-    /// Resolves to data_dir/${bundle_identifier}.
+    /// Get the app directory (DATA_DIR/${bundle_identifier}) and create it if not exists.
     /// This function will panic if it fails to get the app config dir.
-    /// - **Linux**: `$HOME/.config`
-    /// - **Windows**: `%APPDATA%`
-    /// - **Mac**: `$HOME/Library/Preferences`
+    /// |Platform | Value                                    | Example                                  |
+    /// | ------- | ---------------------------------------- | ---------------------------------------- |
+    /// | Linux   | `$XDG_DATA_HOME` or `$HOME`/.local/share | /home/alice/.local/share                 |
+    /// | macOS   | `$HOME`/Library/Application Support      | /Users/Alice/Library/Application Support |
+    /// | Windows | `{FOLDERID_RoamingAppData}`              | C:\Users\Alice\AppData\Roaming           |
     fn get_app_dir(&self) -> PathBuf {
         let path = self
             .path()
-            .app_config_dir()
+            .app_data_dir()
             .expect("failed to get app config dir");
         match path.try_exists() {
             Ok(exists) => {
