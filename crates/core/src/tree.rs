@@ -123,13 +123,22 @@ mod tests {
     }
 
     #[test]
-    fn test_create_realistic_arena() {
-        let path = get_outs_path().join("bookmarks.json");
+    fn test_create_realistic_arena() -> anyhow::Result<()> {
         let arena = create_realistic_arena();
-        let bookmark_arena = BookmarkArena::new(arena);
-        let mut file = fs::File::create(path).expect("can't create file");
-        let json = bookmark_arena.to_json().expect("can't convert to json");
-        file.write_all(json.as_bytes())
-            .expect("can't write to file");
+        let bookmark_arena = BookmarkArena::new(arena.clone());
+
+        let path = get_outs_path().join("bookmarks.json");
+        let mut file = fs::File::create(path)?;
+        let json = bookmark_arena.to_json()?;
+        file.write_all(json.as_bytes())?;
+
+        let path = get_outs_path().join("nested_bookmarks.json");
+        let mut file = fs::File::create(path)?;
+        let json = bookmark_arena.to_nested_json(1)?;
+        file.write_all(json.as_bytes())?;
+
+        assert_eq!(arena.count(), 16);
+
+        Ok(())
     }
 }
