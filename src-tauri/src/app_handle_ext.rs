@@ -84,13 +84,13 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
                 match serde_json::from_reader(reader) {
                     Ok(settings) => settings,
                     Err(e) => {
-                        log::error!("Failed to load user settings: {:?}", e);
+                        log::warn!("Load default settings: {:?}", e);
                         UserSettings::default()
                     }
                 }
             }
             Err(e) => {
-                log::error!("Failed to open user settings file: {:?}", e);
+                log::warn!("Load default settings: {:?}", e);
                 UserSettings::default()
             }
         }
@@ -123,13 +123,13 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
                 match serde_json::from_reader(reader) {
                     Ok(geometry) => geometry,
                     Err(e) => {
-                        log::error!("Failed to load window geometry: {:?}", e);
+                        log::warn!("Load default window geometry: {:?}", e);
                         WindowGeometry::default()
                     }
                 }
             }
             Err(e) => {
-                log::error!("Failed to open window geometry file: {:?}", e);
+                log::warn!("Load default window geometry: {:?}", e);
                 WindowGeometry::default()
             }
         }
@@ -161,7 +161,7 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
         match BookmarkArena::create_arena_from_file(path) {
             Ok(v) => v,
             Err(e) => {
-                log::error!("Failed to load bookmarks from file: {:?}", e);
+                log::warn!("Load default bookmarks: {:?}", e);
                 BookmarkArena::default()
             }
         }
