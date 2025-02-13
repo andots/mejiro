@@ -20,7 +20,7 @@ let unlistenPageLoaded: UnlistenFn | undefined;
 let unlistenUpdateTree: UnlistenFn | undefined;
 
 const initializeApp = async () => {
-  const syncBookmarks = useBookmarkState((state) => state.getBookmarksFromBackend);
+  const syncBookmarks = useBookmarkState((state) => state.syncBookmarks);
   syncBookmarks();
   const syncSettings = useSettingsState((state) => state.syncSettings);
   syncSettings();

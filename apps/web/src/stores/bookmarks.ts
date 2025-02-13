@@ -5,7 +5,7 @@ import type { Bookmark } from "../types";
 
 interface BookmarkState {
   bookmarks: Bookmark;
-  getBookmarksFromBackend: () => void;
+  syncBookmarks: () => void;
   updateTree: (data: string) => void;
 }
 
@@ -19,7 +19,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
     date_added: 0,
     children: [],
   },
-  getBookmarksFromBackend: async () => {
+  syncBookmarks: async () => {
     const data = await invokeGetBookmarks();
     const tree = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks: tree }));
