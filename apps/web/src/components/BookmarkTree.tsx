@@ -9,7 +9,7 @@ const BookmarkTree: Component = () => {
   const bookmarks = useBookmarkState((state) => state.bookmarks);
 
   return (
-    <div class="pl-1 py-1">
+    <div class="pl-1">
       <ul class="list-none">
         <BookmarkNode bookmark={bookmarks()} level={0} />
       </ul>
@@ -28,7 +28,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
   const [isOpen, setIsOpen] = createSignal(true);
   const hasChildren = () => props.bookmark.children?.length > 0;
 
-  const toggleFolder = (e: MouseEvent) => {
+  const toggle = (e: MouseEvent) => {
     if (hasChildren()) {
       e.preventDefault();
       setIsOpen(!isOpen());
@@ -44,9 +44,9 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
     <li>
       <div
         class={
-          "flex items-center text-left text-sm pb-2 hover:bg-sidebar-accent cursor-pointer transition-colors duration-150"
+          "flex items-center text-left text-sm py-1 hover:bg-sidebar-accent cursor-pointer transition-colors duration-150"
         }
-        onClick={toggleFolder}
+        onClick={toggle}
         onKeyDown={handleKeydown}
         style={{ "padding-left": `${props.level}px` }}
       >

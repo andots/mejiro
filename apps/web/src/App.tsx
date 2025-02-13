@@ -87,7 +87,7 @@ const App: Component = () => {
     <div class="w-full h-screen flex flex-col">
       <Header />
       <main class="flex-1 py-1 border border-border/40 bg-sidebar text-sidebar-foreground">
-        <div class="h-full">
+        <div class="h-full w-[200px]">
           <BookmarkTree />
           <div class="mt-8 ml-4">
             <Button onClick={() => toggleExternalWebview()}>Toggle</Button>
