@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use serde::Serialize;
 use strum::AsRefStr;
 use tauri::Emitter;
@@ -8,6 +6,7 @@ use crate::constants::APP_WEBVIEW_LABEL;
 
 #[derive(AsRefStr)]
 pub enum AppEvent {
+    #[allow(dead_code)]
     #[strum(serialize = "app://settings-updated")]
     SettingsUpdated,
     #[strum(serialize = "app://external-page-loaded")]
@@ -18,8 +17,8 @@ pub enum AppEvent {
     BookmarkUpdated,
 }
 
-pub fn emit_to_app<S>(
-    app_handle: tauri::AppHandle,
+pub fn emit_to_app_webview<S>(
+    app_handle: &tauri::AppHandle,
     event: AppEvent,
     payload: S,
 ) -> Result<(), tauri::Error>

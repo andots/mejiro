@@ -50,7 +50,7 @@ pub fn run() {
             commands::webviews::get_external_webview_url,
             commands::bookmarks::get_nested_json,
             commands::bookmarks::add_bookmark,
-            commands::emit_page_params,
+            commands::injects::emit_page_params,
             commands::settings::get_settings,
         ])
         .build(tauri::generate_context!())
