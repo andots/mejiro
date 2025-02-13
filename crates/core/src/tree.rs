@@ -70,12 +70,14 @@ impl BookmarkArena {
         // if title is None, use url as title
         let title = title.unwrap_or(url.clone());
         // 与えられたURLの一つ上の階層のURLを取得
-        let mut target_url = Url::parse(&url)?;
-        target_url
+        let parsed_url = Url::parse(&url)?;
+        let mut base_url = parsed_url.clone();
+        base_url
             .path_segments_mut()
             .map_err(|_| CoreError::CannotBeBase())?
             .pop_if_empty()
             .pop();
+        let base_url_str = base_url.as_str();
 
         // まずはroot_idを取得
         // TODO: ルートでなくて、フロントで見ている最上位のノードから探す
@@ -84,14 +86,7 @@ impl BookmarkArena {
         let target = root_id.descendants(&self.arena).find(|n| {
             if let Some(node) = self.arena.get(*n) {
                 if let Some(node_url) = &node.get().url {
-                    let mut url = node_url.clone();
-                    match url.path_segments_mut() {
-                        Ok(mut u) => {
-                            u.pop_if_empty().pop();
-                        }
-                        Err(_) => return false,
-                    }
-                    if url.as_str() == target_url.as_str() {
+                    if node_url.as_str().starts_with(base_url_str) {
                         return true;
                     }
                 }
@@ -187,15 +182,43 @@ mod tests {
 
     #[test]
     fn test_add_bookmark() -> anyhow::Result<()> {
-        let arena = create_realistic_arena();
-        let mut bookmark_arena = BookmarkArena::new(arena.clone());
+        let mut arena = Arena::new();
+        let root = BookmarkData::new_root();
+        tree!(&mut arena,
+            root => {
+                BookmarkData::try_new_bookmark("a", "https://docs.rs/abc").unwrap(),
+            }
+        );
+        let mut bookmark_arena = BookmarkArena::new(arena);
 
         bookmark_arena.add_bookmark(
-            "https://docs.rs/tauri/latest/tauri/webview/struct.Color.html".to_string(),
+            "https://docs.rs/abc/cdf".to_string(),
             Some("title".to_string()),
         )?;
-        println!("{}", bookmark_arena.to_nested_json_pretty(3)?);
+        bookmark_arena.add_bookmark(
+            "https://docs.rs/abc/cdf/efg".to_string(),
+            Some("title".to_string()),
+        )?;
+        bookmark_arena.add_bookmark(
+            "https://docs.rs/abc/cdf/aaaa".to_string(),
+            Some("title".to_string()),
+        )?;
+        bookmark_arena.add_bookmark("https://docs.rs/".to_string(), Some("title".to_string()))?;
 
+        println!("{}", bookmark_arena.to_nested_json_pretty(1)?);
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_url() -> anyhow::Result<()> {
+        let url = Url::parse("https://docs.rs/tauri/latest/tauri/webview/struct.Color.html")?;
+        let mut url = url;
+        url.path_segments_mut()
+            .map_err(|_| CoreError::CannotBeBase())?
+            .pop_if_empty()
+            .pop();
+        println!("{}", url.as_str());
         Ok(())
     }
 }
