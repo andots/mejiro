@@ -6,6 +6,7 @@ import {
   invokeSetExternalWebviewBounds,
 } from "../invokes";
 import { useSettingsState } from "../stores/settings";
+import { useUrlState } from "../stores/url";
 import AddressBar from "./AddressBar";
 import Favicon from "./Favicon";
 
@@ -47,12 +48,14 @@ const Header: Component = () => {
   };
 
   const settings = useSettingsState((state) => state.settings);
+  const navigateToUrl = useUrlState((state) => state.navigateToUrl);
 
   return (
     <header class="sticky top-0 z-50 w-full h-[40px] border-b border-sidebar-border bg-sidebar text-sidebar-foreground">
       <div class="flex justify-center items-center w-full h-full">
+        {/* menu button */}
         <Button
-          class="w-8 h-8 m-2 p-2 [&_svg]:size-6 [&_svg]:shrink-0"
+          class="w-9 h-9 m-2 p-2 [&_svg]:size-6 [&_svg]:shrink-0"
           variant="ghost"
           onClick={handleMenuClick}
         >
@@ -61,8 +64,15 @@ const Header: Component = () => {
             <path fill="currentColor" d="M3 18h18v-2H3zm0-5h18v-2H3zm0-7v2h18V6z" />
           </svg>
         </Button>
-        <div class="flex items-center space-x-2">
-          <For each={settings()?.pinned_urls}>{(url) => <Favicon url={url} />}</For>
+        {/* pinned url favicons */}
+        <div class="flex items-center">
+          <For each={settings()?.pinned_urls}>
+            {(url) => (
+              <Button variant="ghost" class="w-9 h-9 p-2" onClick={() => navigateToUrl(url)}>
+                <Favicon url={url} />
+              </Button>
+            )}
+          </For>
         </div>
         <AddressBar onRefresh={handleRefresh} onFavorite={handleFavorite} />
       </div>
