@@ -1,7 +1,5 @@
 use serde::{Deserialize, Serialize};
 
-use crate::constants::DEFAULT_START_PAGE_URL;
-
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UserSettings {
     #[serde(default = "default_language")]
@@ -18,6 +16,9 @@ pub struct UserSettings {
 
     #[serde(default = "default_start_page_url")]
     pub start_page_url: String,
+
+    #[serde(default = "default_pinned_urls")]
+    pub pinned_urls: Vec<String>,
 }
 
 fn default_language() -> String {
@@ -37,7 +38,16 @@ fn default_incognito() -> bool {
 }
 
 pub fn default_start_page_url() -> String {
-    DEFAULT_START_PAGE_URL.to_string()
+    "https://search.brave.com/".to_string()
+}
+
+fn default_pinned_urls() -> Vec<String> {
+    vec![
+        "https://search.brave.com/".to_string(),
+        "https://docs.rs".to_string(),
+        "https://crates.io".to_string(),
+        "https://github.com/search".to_string(),
+    ]
 }
 
 impl Default for UserSettings {
@@ -48,6 +58,7 @@ impl Default for UserSettings {
             gpu_acceleration_enabled: default_gpu_acceleration_enabled(),
             incognito: default_incognito(),
             start_page_url: default_start_page_url(),
+            pinned_urls: default_pinned_urls(),
         }
     }
 }
