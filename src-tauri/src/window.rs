@@ -73,38 +73,35 @@ pub fn create_window(app_handle: &tauri::AppHandle) -> tauri::Result<()> {
     let state = app_handle.state::<Mutex<UserSettings>>();
     let settings = state.lock().map_err(|_| anyhow!("can't get settings"))?;
 
-    let start_url = settings.start_page_url.clone();
-    let parsed_start_url = match Url::parse(&start_url) {
+    let url = match Url::parse(&settings.start_page_url) {
         Ok(url) => url,
         Err(_) => Url::parse(default_start_page_url().as_str()).unwrap(),
     };
 
     // external webview overlayed app_webview
     let handle = app_handle.clone();
-    let mut external_webview_builder = WebviewBuilder::<tauri::Wry>::new(
-        EXTERNAL_WEBVIEW_LABEL,
-        WebviewUrl::External(parsed_start_url),
-    )
-    .auto_resize()
-    .on_navigation(move |url| {
-        // log::debug!("{:?}: on_navigation", url.host());
-        let _ = handle.emit_to(
-            EventTarget::webview(APP_WEBVIEW_LABEL),
-            ExternalEvent::Navigation.as_ref(),
-            url.to_string(),
-        );
-        true
-    })
-    .on_page_load(move |webview, payload| match payload.event() {
-        PageLoadEvent::Started => {
-            // log::debug!("Page started loading: {:?}", payload.url().host());
-        }
-        PageLoadEvent::Finished => {
-            // log::debug!("{:?}: on_page_load", payload.url().host());
-            let _ = webview.eval(include_str!("../inject/eval.js"));
-        }
-    })
-    .initialization_script(include_str!("../inject/init.js"));
+    let mut external_webview_builder =
+        WebviewBuilder::<tauri::Wry>::new(EXTERNAL_WEBVIEW_LABEL, WebviewUrl::External(url))
+            .auto_resize()
+            .on_navigation(move |url| {
+                // log::debug!("{:?}: on_navigation", url.host());
+                let _ = handle.emit_to(
+                    EventTarget::webview(APP_WEBVIEW_LABEL),
+                    ExternalEvent::Navigation.as_ref(),
+                    url.to_string(),
+                );
+                true
+            })
+            .on_page_load(move |webview, payload| match payload.event() {
+                PageLoadEvent::Started => {
+                    // log::debug!("Page started loading: {:?}", payload.url().host());
+                }
+                PageLoadEvent::Finished => {
+                    // log::debug!("{:?}: on_page_load", payload.url().host());
+                    let _ = webview.eval(include_str!("../inject/eval.js"));
+                }
+            })
+            .initialization_script(include_str!("../inject/init.js"));
 
     // disable gpu acceleration on windows if user settings is set
     if cfg!(target_os = "windows") && !settings.gpu_acceleration_enabled {

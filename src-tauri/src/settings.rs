@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+use crate::constants::DEFAULT_START_PAGE_URL;
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UserSettings {
     #[serde(default = "default_language")]
@@ -34,7 +36,6 @@ fn default_incognito() -> bool {
     true
 }
 
-pub const DEFAULT_START_PAGE_URL: &str = "https://search.brave.com/";
 pub fn default_start_page_url() -> String {
     DEFAULT_START_PAGE_URL.to_string()
 }
