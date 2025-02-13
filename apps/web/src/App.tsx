@@ -5,9 +5,11 @@ import { Button } from "@repo/ui/button";
 import type { UnlistenFn } from "@tauri-apps/api/event";
 import { listen } from "@tauri-apps/api/event";
 
+import { debug } from "@tauri-apps/plugin-log";
 import BookmarkTree from "./components/BookmarkTree";
 import Header from "./components/Header";
-import { BookmarkEvent, ExternalEvent } from "./constants";
+import { AppEvent, BookmarkEvent, ExternalEvent } from "./constants";
+import { invokeGetSettings } from "./invokes";
 import { useBookmarkState } from "./stores/bookmarks";
 import { useThemeState } from "./stores/theme";
 import { useUrlState } from "./stores/url";
@@ -21,15 +23,22 @@ const App: Component = () => {
 
   const toggleExternalWebview = useWindowState((state) => state.toggleExternalWebview);
 
-  onMount(() => {
+  onMount(async () => {
     getBookmarksFromBackend();
+    const settings = await invokeGetSettings();
+    console.log(settings);
   });
 
+  let unlistenSettingsUpdated: UnlistenFn | undefined;
   let unlistenNavigation: UnlistenFn | undefined;
   let unlistenPageLoaded: UnlistenFn | undefined;
   let unlistenUpdateTree: UnlistenFn | undefined;
 
   onMount(async () => {
+    unlistenSettingsUpdated = await listen<string>(AppEvent.SettingsUpdated, (event) => {
+      console.log(event.payload);
+      debug(event.payload);
+    });
     unlistenNavigation = await listen<string>(ExternalEvent.Navigation, (event) => {
       const setUrl = useUrlState((state) => state.setUrl);
       setUrl(event.payload);
@@ -45,6 +54,9 @@ const App: Component = () => {
   });
 
   onCleanup(() => {
+    if (unlistenSettingsUpdated !== undefined) {
+      unlistenSettingsUpdated();
+    }
     if (unlistenNavigation !== undefined) {
       unlistenNavigation();
     }

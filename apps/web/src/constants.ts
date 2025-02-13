@@ -18,3 +18,10 @@ export const ExternalEvent = {
 export const BookmarkEvent = {
   UpdateTree: "bookmark://update-tree",
 } as const;
+
+export const AppEvent = {
+  SettingsUpdated: "app://settings-updated",
+  ExternalPageLoaded: "app://external-page-loaded",
+  ExternalNavigation: "app://external-navigation",
+  BookmarkUpdated: "app://bookmark-updated",
+};

@@ -1,8 +1,9 @@
 import { invoke } from "@tauri-apps/api/core";
 import type { PhysicalPosition, PhysicalSize } from "@tauri-apps/api/dpi";
-import type { Bounds, Rect } from "./types";
+import type { Bounds, Rect, UserSettings } from "./types";
 
 const TauriCommand = {
+  GetSettings: "get_settings",
   NavigateWebviewUrl: "navigate_webview_url",
   GetNestedJson: "get_nested_json",
   HideExternalWebview: "hide_external_webview",
@@ -15,6 +16,10 @@ const TauriCommand = {
   AddBookmark: "add_bookmark",
   GetExternalWebviewUrl: "get_external_webview_url",
 } as const;
+
+export const invokeGetSettings = async () => {
+  return await invoke<UserSettings>(TauriCommand.GetSettings, {});
+};
 
 export const invokeNavigateWebviewUrl = async (url: string) => {
   return await invoke(TauriCommand.NavigateWebviewUrl, { url });

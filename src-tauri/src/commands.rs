@@ -1,4 +1,5 @@
 pub mod bookmarks;
+pub mod settings;
 pub mod webviews;
 
 use tauri::{Emitter, EventTarget};
