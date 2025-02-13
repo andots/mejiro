@@ -3,9 +3,9 @@ export type Bookmark = {
   title: string;
   url: string | null;
   host: string | null;
-  node_type: string; // "Folder" | "Bookmark" | "Separator";
+  node_type: "Root" | "Folder" | "Bookmark" | "Separator";
   date_added: number;
-  children?: Bookmark[];
+  children: Bookmark[];
 };
 
 // Must sync with rust struct in src-tauri/settings.rs

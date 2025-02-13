@@ -10,14 +10,14 @@ const BookmarkTree: Component = () => {
   return (
     <div class="pl-1 py-1">
       <ul class="list-none">
-        <BookmarkNode bookmarks={bookmarks()} level={0} />
+        <BookmarkNode bookmark={bookmarks()} level={0} />
       </ul>
     </div>
   );
 };
 
 type BookmarkNodeProps = {
-  bookmarks: Bookmark | undefined;
+  bookmark: Bookmark;
   level: number;
 };
 
@@ -25,15 +25,15 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
   const navigateToUrl = useUrlState((state) => state.navigateToUrl);
 
   const [isOpen, setIsOpen] = createSignal(props.level < 2);
-  const hasChildren = () => !!props.bookmarks?.children?.length;
+  const hasChildren = () => props.bookmark.children?.length > 0;
 
   const toggleFolder = (e: MouseEvent) => {
     if (hasChildren()) {
       e.preventDefault();
       setIsOpen(!isOpen());
     }
-    if (!hasChildren() && props.bookmarks?.url) {
-      navigateToUrl(props.bookmarks.url);
+    if (props.bookmark.url) {
+      navigateToUrl(props.bookmark.url);
     }
   };
 
@@ -50,27 +50,24 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
         style={{ "padding-left": `${props.level}px` }}
       >
         <span class="w-5 h-5 flex items-center justify-center mr-1.5 text-gray-500">
-          {hasChildren() ? (
+          {props.bookmark.node_type === "Folder" || props.bookmark.node_type === "Root" ? (
             <FolderIcon isOpen={isOpen()} />
           ) : (
-            <Favicon host={props.bookmarks?.host} />
+            <Favicon host={props.bookmark.host} />
           )}
         </span>
-        {props.bookmarks?.url ? (
-          <span
-            onKeyDown={handleKeydown}
-            class="p-0.5 text-blue-500 overflow-hidden whitespace-nowrap text-ellipsis"
-          >
-            {props.bookmarks.title}
+        {props.bookmark.node_type === "Bookmark" ? (
+          <span class="p-0.5 text-blue-500 overflow-hidden whitespace-nowrap text-ellipsis">
+            {props.bookmark.title}
           </span>
         ) : (
-          <span class="text-gray-700 py-0.5">{props.bookmarks?.title}</span>
+          <span class="text-gray-700 py-0.5">{props.bookmark.title}</span>
         )}
       </div>
       <Show when={hasChildren() && isOpen()}>
         <ul class="pl-2">
-          <For each={props.bookmarks?.children}>
-            {(child) => <BookmarkNode bookmarks={child} level={props.level + 1} />}
+          <For each={props.bookmark.children}>
+            {(child) => <BookmarkNode bookmark={child} level={props.level + 1} />}
           </For>
         </ul>
       </Show>
