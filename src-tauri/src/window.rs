@@ -1,12 +1,9 @@
-use std::sync::Mutex;
-
-use anyhow::anyhow;
 use serde::{Deserialize, Serialize};
+use tauri::EventTarget;
 use tauri::{
     webview::PageLoadEvent, Emitter, LogicalPosition, LogicalSize, Url, WebviewBuilder, WebviewUrl,
     WindowBuilder,
 };
-use tauri::{EventTarget, Manager};
 
 use crate::app_handle_ext::AppHandleExt;
 use crate::constants::{
@@ -38,7 +35,7 @@ impl Default for WindowGeometry {
     }
 }
 
-pub fn create_window(app_handle: &tauri::AppHandle) -> tauri::Result<()> {
+pub fn create_window(app_handle: &tauri::AppHandle, settings: &UserSettings) -> tauri::Result<()> {
     // Create an initial webview window with the given options
     let title = format!(
         "{} - v{}",
@@ -67,11 +64,6 @@ pub fn create_window(app_handle: &tauri::AppHandle) -> tauri::Result<()> {
         WebviewUrl::App(APP_WEBVIEW_URL.into()),
     )
     .auto_resize();
-
-    // TODO: error handling correctly, if error occurs, force load default settings
-    // Load settings from state
-    let state = app_handle.state::<Mutex<UserSettings>>();
-    let settings = state.lock().map_err(|_| anyhow!("can't get settings"))?;
 
     let url = match Url::parse(&settings.start_page_url) {
         Ok(url) => url,

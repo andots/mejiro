@@ -32,9 +32,8 @@ pub fn run() {
             app.manage(Mutex::new(arena));
 
             let settings = app.handle().load_user_settings();
+            create_window(app.handle(), &settings)?;
             app.manage(Mutex::new(settings));
-
-            create_window(app.handle())?;
 
             Ok(())
         })
