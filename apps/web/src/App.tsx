@@ -19,7 +19,7 @@ let unlistenNavigation: UnlistenFn | undefined;
 let unlistenPageLoaded: UnlistenFn | undefined;
 let unlistenUpdateTree: UnlistenFn | undefined;
 
-const initApp = async () => {
+const initializeApp = async () => {
   const syncBookmarks = useBookmarkState((state) => state.getBookmarksFromBackend);
   syncBookmarks();
   const syncSettings = useSettingsState((state) => state.syncSettings);
@@ -43,28 +43,30 @@ const initApp = async () => {
   });
 };
 
-const App: Component = () => {
-  const bookmarks = useBookmarkState((state) => state.bookmarks);
+const removeEventListeners = () => {
+  if (unlistenSettingsUpdated !== undefined) {
+    unlistenSettingsUpdated();
+  }
+  if (unlistenNavigation !== undefined) {
+    unlistenNavigation();
+  }
+  if (unlistenPageLoaded !== undefined) {
+    unlistenPageLoaded();
+  }
+  if (unlistenUpdateTree !== undefined) {
+    unlistenUpdateTree();
+  }
+};
 
+const App: Component = () => {
   const toggleExternalWebview = useWindowState((state) => state.toggleExternalWebview);
 
   onMount(async () => {
-    await initApp();
+    await initializeApp();
   });
 
   onCleanup(() => {
-    if (unlistenSettingsUpdated !== undefined) {
-      unlistenSettingsUpdated();
-    }
-    if (unlistenNavigation !== undefined) {
-      unlistenNavigation();
-    }
-    if (unlistenPageLoaded !== undefined) {
-      unlistenPageLoaded();
-    }
-    if (unlistenUpdateTree !== undefined) {
-      unlistenUpdateTree();
-    }
+    removeEventListeners();
   });
 
   // createEffect(
@@ -84,10 +86,9 @@ const App: Component = () => {
   return (
     <div class="w-full h-screen flex flex-col">
       <Header />
-
       <main class="flex-1 py-1 border border-border/40 bg-sidebar text-sidebar-foreground">
         <div class="h-full">
-          <BookmarkTree bookmarks={bookmarks()} />
+          <BookmarkTree />
           <div class="mt-8 ml-4">
             <Button onClick={() => toggleExternalWebview()}>Toggle</Button>
           </div>

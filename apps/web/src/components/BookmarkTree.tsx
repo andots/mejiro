@@ -1,11 +1,81 @@
-import { For, Show, createSignal } from "solid-js";
+import { type Component, For, Show, createSignal } from "solid-js";
 
+import { useBookmarkState } from "../stores/bookmarks";
 import { useUrlState } from "../stores/url";
 import type { Bookmark } from "../types";
 
+const BookmarkTree: Component = () => {
+  const bookmarks = useBookmarkState((state) => state.bookmarks);
+
+  return (
+    <div class="pl-1 py-1">
+      <ul class="list-none">
+        <BookmarkNode bookmarks={bookmarks()} level={0} />
+      </ul>
+    </div>
+  );
+};
+
 type BookmarkNodeProps = {
-  bookmark: Bookmark | undefined;
+  bookmarks: Bookmark | undefined;
   level: number;
+};
+
+const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
+  const navigateToUrl = useUrlState((state) => state.navigateToUrl);
+
+  const [isOpen, setIsOpen] = createSignal(props.level < 2);
+  const hasChildren = () => !!props.bookmarks?.children?.length;
+
+  const toggleFolder = (e: MouseEvent) => {
+    if (hasChildren()) {
+      e.preventDefault();
+      setIsOpen(!isOpen());
+    }
+    if (!hasChildren() && props.bookmarks?.url) {
+      navigateToUrl(props.bookmarks.url);
+    }
+  };
+
+  const handleKeydown = (e: KeyboardEvent) => {};
+
+  return (
+    <li>
+      <div
+        class={
+          "flex items-center text-left text-sm pb-1 hover:bg-gray-100 cursor-pointer transition-colors duration-150"
+        }
+        onClick={toggleFolder}
+        onKeyDown={handleKeydown}
+        style={{ "padding-left": `${props.level}px` }}
+      >
+        <span class="w-5 h-5 flex items-center justify-center mr-1.5 text-gray-500">
+          {hasChildren() ? (
+            <FolderIcon isOpen={isOpen()} />
+          ) : (
+            <Favicon host={props.bookmarks?.host} />
+          )}
+        </span>
+        {props.bookmarks?.url ? (
+          <span
+            onKeyDown={handleKeydown}
+            class="p-0.5 text-blue-500 overflow-hidden whitespace-nowrap text-ellipsis"
+          >
+            {props.bookmarks.title}
+          </span>
+        ) : (
+          <span class="text-gray-700 py-0.5">{props.bookmarks?.title}</span>
+        )}
+      </div>
+      <Show when={hasChildren() && isOpen()}>
+        <ul class="pl-2">
+          <For each={props.bookmarks?.children}>
+            {(child) => <BookmarkNode bookmarks={child} level={props.level + 1} />}
+          </For>
+        </ul>
+      </Show>
+    </li>
+  );
 };
 
 const FolderIcon = (props: { isOpen: boolean }) => (
@@ -32,73 +102,6 @@ const Favicon = (props: { host: string | undefined | null }) => (
     />
   </div>
 );
-
-const BookmarkNode = (props: BookmarkNodeProps) => {
-  const navigateToUrl = useUrlState((state) => state.navigateToUrl);
-
-  const [isOpen, setIsOpen] = createSignal(props.level < 2);
-  const hasChildren = () => !!props.bookmark?.children?.length;
-
-  const toggleFolder = (e: MouseEvent) => {
-    if (hasChildren()) {
-      e.preventDefault();
-      setIsOpen(!isOpen());
-    }
-    if (!hasChildren() && props.bookmark?.url) {
-      navigateToUrl(props.bookmark.url);
-    }
-  };
-
-  const handleKeydown = (e: KeyboardEvent) => {};
-
-  return (
-    <li>
-      <div
-        class={
-          "flex items-center text-left text-sm pb-1 hover:bg-gray-100 cursor-pointer transition-colors duration-150"
-        }
-        onClick={toggleFolder}
-        onKeyDown={handleKeydown}
-        style={{ "padding-left": `${props.level}px` }}
-      >
-        <span class="w-5 h-5 flex items-center justify-center mr-1.5 text-gray-500">
-          {hasChildren() ? (
-            <FolderIcon isOpen={isOpen()} />
-          ) : (
-            <Favicon host={props.bookmark?.host} />
-          )}
-        </span>
-        {props.bookmark?.url ? (
-          <span
-            onKeyDown={handleKeydown}
-            class="p-0.5 text-blue-500 overflow-hidden whitespace-nowrap text-ellipsis"
-          >
-            {props.bookmark.title}
-          </span>
-        ) : (
-          <span class="text-gray-700 py-0.5">{props.bookmark?.title}</span>
-        )}
-      </div>
-      <Show when={hasChildren() && isOpen()}>
-        <ul class="pl-2">
-          <For each={props.bookmark?.children}>
-            {(child) => <BookmarkNode bookmark={child} level={props.level + 1} />}
-          </For>
-        </ul>
-      </Show>
-    </li>
-  );
-};
-
-const BookmarkTree = (props: { bookmarks: Bookmark | undefined }) => {
-  return (
-    <div class="pl-1 py-1">
-      <ul class="list-none">
-        <BookmarkNode bookmark={props.bookmarks} level={0} />
-      </ul>
-    </div>
-  );
-};
 
 export default BookmarkTree;
 
