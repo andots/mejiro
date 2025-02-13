@@ -9,48 +9,47 @@ import { debug } from "@tauri-apps/plugin-log";
 import BookmarkTree from "./components/BookmarkTree";
 import Header from "./components/Header";
 import { AppEvent } from "./constants";
-import { invokeGetSettings } from "./invokes";
 import { useBookmarkState } from "./stores/bookmarks";
-import { useThemeState } from "./stores/theme";
+import { useSettingsState } from "./stores/settings";
 import { useUrlState } from "./stores/url";
 import { useWindowState } from "./stores/window";
 
-const App: Component = () => {
-  const theme = useThemeState((state) => state.theme);
+let unlistenSettingsUpdated: UnlistenFn | undefined;
+let unlistenNavigation: UnlistenFn | undefined;
+let unlistenPageLoaded: UnlistenFn | undefined;
+let unlistenUpdateTree: UnlistenFn | undefined;
 
+const initApp = async () => {
+  const syncBookmarks = useBookmarkState((state) => state.getBookmarksFromBackend);
+  syncBookmarks();
+  const syncSettings = useSettingsState((state) => state.syncSettings);
+  syncSettings();
+
+  unlistenSettingsUpdated = await listen<string>(AppEvent.SettingsUpdated, (event) => {
+    console.log(event.payload);
+    debug(event.payload);
+  });
+  unlistenUpdateTree = await listen<string>(AppEvent.BookmarkUpdated, (event) => {
+    const updateTree = useBookmarkState((state) => state.updateTree);
+    updateTree(event.payload);
+  });
+  unlistenNavigation = await listen<string>(AppEvent.ExternalNavigation, (event) => {
+    const setUrl = useUrlState((state) => state.setUrl);
+    setUrl(event.payload);
+  });
+  unlistenPageLoaded = await listen<string>(AppEvent.ExternalPageLoaded, (event) => {
+    const setTitle = useUrlState((state) => state.setTitle);
+    setTitle(event.payload);
+  });
+};
+
+const App: Component = () => {
   const bookmarks = useBookmarkState((state) => state.bookmarks);
-  const getBookmarksFromBackend = useBookmarkState((state) => state.getBookmarksFromBackend);
 
   const toggleExternalWebview = useWindowState((state) => state.toggleExternalWebview);
 
   onMount(async () => {
-    getBookmarksFromBackend();
-    const settings = await invokeGetSettings();
-    console.log(settings);
-  });
-
-  let unlistenSettingsUpdated: UnlistenFn | undefined;
-  let unlistenNavigation: UnlistenFn | undefined;
-  let unlistenPageLoaded: UnlistenFn | undefined;
-  let unlistenUpdateTree: UnlistenFn | undefined;
-
-  onMount(async () => {
-    unlistenSettingsUpdated = await listen<string>(AppEvent.SettingsUpdated, (event) => {
-      console.log(event.payload);
-      debug(event.payload);
-    });
-    unlistenUpdateTree = await listen<string>(AppEvent.BookmarkUpdated, (event) => {
-      const updateTree = useBookmarkState((state) => state.updateTree);
-      updateTree(event.payload);
-    });
-    unlistenNavigation = await listen<string>(AppEvent.ExternalNavigation, (event) => {
-      const setUrl = useUrlState((state) => state.setUrl);
-      setUrl(event.payload);
-    });
-    unlistenPageLoaded = await listen<string>(AppEvent.ExternalPageLoaded, (event) => {
-      const setTitle = useUrlState((state) => state.setTitle);
-      setTitle(event.payload);
-    });
+    await initApp();
   });
 
   onCleanup(() => {
@@ -68,19 +67,19 @@ const App: Component = () => {
     }
   });
 
-  createEffect(
-    on(theme, (t) => {
-      const root = document.documentElement;
-      if (
-        t === "dark" ||
-        (t === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)
-      ) {
-        root.classList.add("dark");
-      } else {
-        root.classList.remove("dark");
-      }
-    }),
-  );
+  // createEffect(
+  //   on(theme, (t) => {
+  //     const root = document.documentElement;
+  //     if (
+  //       t === "dark" ||
+  //       (t === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)
+  //     ) {
+  //       root.classList.add("dark");
+  //     } else {
+  //       root.classList.remove("dark");
+  //     }
+  //   }),
+  // );
 
   return (
     <div class="w-full h-screen flex flex-col">

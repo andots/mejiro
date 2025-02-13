@@ -1,11 +1,13 @@
 import { Button } from "@repo/ui/button";
-import type { Component } from "solid-js";
+import { type Component, For, Show } from "solid-js";
 import {
   invokeGetAppWebviewBounds,
   invokeGetExternalWebviewBounds,
   invokeSetExternalWebviewBounds,
 } from "../invokes";
+import { useSettingsState } from "../stores/settings";
 import AddressBar from "./AddressBar";
+import Favicon from "./Favicon";
 
 const Header: Component = () => {
   const handleRefresh = () => {
@@ -44,6 +46,8 @@ const Header: Component = () => {
     }
   };
 
+  const settings = useSettingsState((state) => state.settings);
+
   return (
     <header class="sticky top-0 z-50 w-full h-[40px] border-b border-sidebar-border bg-sidebar text-sidebar-foreground">
       <div class="flex justify-center items-center w-full h-full">
@@ -57,6 +61,9 @@ const Header: Component = () => {
             <path fill="currentColor" d="M3 18h18v-2H3zm0-5h18v-2H3zm0-7v2h18V6z" />
           </svg>
         </Button>
+        <div class="flex items-center space-x-2">
+          <For each={settings()?.pinned_urls}>{(url) => <Favicon url={url} />}</For>
+        </div>
         <AddressBar onRefresh={handleRefresh} onFavorite={handleFavorite} />
       </div>
     </header>
