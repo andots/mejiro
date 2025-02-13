@@ -13,7 +13,7 @@ use crate::constants::{
     APP_WEBVIEW_LABEL, APP_WEBVIEW_URL, EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL,
 };
 use crate::events::ExternalEvent;
-use crate::settings::{UserSettings, DEFAULT_SEARCH_ENGINE_URL};
+use crate::settings::{default_start_page_url, UserSettings};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct WindowGeometry {
@@ -73,13 +73,10 @@ pub fn create_window(app_handle: &tauri::AppHandle) -> tauri::Result<()> {
     let state = app_handle.state::<Mutex<UserSettings>>();
     let settings = state.lock().map_err(|_| anyhow!("can't get settings"))?;
 
-    let start_url = settings
-        .start_page_url
-        .clone()
-        .unwrap_or(DEFAULT_SEARCH_ENGINE_URL.to_string());
+    let start_url = settings.start_page_url.clone();
     let parsed_start_url = match Url::parse(&start_url) {
         Ok(url) => url,
-        Err(_) => Url::parse(DEFAULT_SEARCH_ENGINE_URL).unwrap(),
+        Err(_) => Url::parse(default_start_page_url().as_str()).unwrap(),
     };
 
     // external webview overlayed app_webview
@@ -110,7 +107,7 @@ pub fn create_window(app_handle: &tauri::AppHandle) -> tauri::Result<()> {
     .initialization_script(include_str!("../inject/init.js"));
 
     // disable gpu acceleration on windows if user settings is set
-    if cfg!(target_os = "windows") && !settings.gpu_acceleration_enabled.unwrap_or(false) {
+    if cfg!(target_os = "windows") && !settings.gpu_acceleration_enabled {
         app_webview_builder = app_webview_builder.additional_browser_args(
             "--disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection --disable-gpu",
         );
@@ -120,7 +117,7 @@ pub fn create_window(app_handle: &tauri::AppHandle) -> tauri::Result<()> {
     }
 
     // incognito mode: default is true
-    let incognito = settings.incognito.unwrap_or(true);
+    let incognito = settings.incognito;
     app_webview_builder = app_webview_builder.incognito(incognito);
     external_webview_builder = external_webview_builder.incognito(incognito);
 
