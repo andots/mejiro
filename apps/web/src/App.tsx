@@ -8,7 +8,7 @@ import { listen } from "@tauri-apps/api/event";
 import { debug } from "@tauri-apps/plugin-log";
 import BookmarkTree from "./components/BookmarkTree";
 import Header from "./components/Header";
-import { AppEvent, BookmarkEvent, ExternalEvent } from "./constants";
+import { AppEvent } from "./constants";
 import { invokeGetSettings } from "./invokes";
 import { useBookmarkState } from "./stores/bookmarks";
 import { useThemeState } from "./stores/theme";
@@ -39,17 +39,17 @@ const App: Component = () => {
       console.log(event.payload);
       debug(event.payload);
     });
-    unlistenNavigation = await listen<string>(ExternalEvent.Navigation, (event) => {
+    unlistenUpdateTree = await listen<string>(AppEvent.BookmarkUpdated, (event) => {
+      const updateTree = useBookmarkState((state) => state.updateTree);
+      updateTree(event.payload);
+    });
+    unlistenNavigation = await listen<string>(AppEvent.ExternalNavigation, (event) => {
       const setUrl = useUrlState((state) => state.setUrl);
       setUrl(event.payload);
     });
-    unlistenPageLoaded = await listen<string>(ExternalEvent.PageLoaded, (event) => {
+    unlistenPageLoaded = await listen<string>(AppEvent.ExternalPageLoaded, (event) => {
       const setTitle = useUrlState((state) => state.setTitle);
       setTitle(event.payload);
-    });
-    unlistenUpdateTree = await listen<string>(BookmarkEvent.UpdateTree, (event) => {
-      const updateTree = useBookmarkState((state) => state.updateTree);
-      updateTree(event.payload);
     });
   });
 

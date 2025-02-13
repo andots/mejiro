@@ -4,7 +4,7 @@ pub mod webviews;
 
 use tauri::{Emitter, EventTarget};
 
-use crate::{constants::APP_WEBVIEW_LABEL, events::ExternalEvent};
+use crate::{constants::APP_WEBVIEW_LABEL, events::AppEvent};
 
 // https://v2.tauri.app/develop/calling-rust/
 
@@ -16,12 +16,12 @@ pub fn emit_page_params(app_handle: tauri::AppHandle, title: String, url: String
     // log::debug!("Title from IPC: {}", title);
     let _ = app_handle.emit_to(
         EventTarget::webview(APP_WEBVIEW_LABEL),
-        ExternalEvent::Navigation.as_ref(),
+        AppEvent::ExternalNavigation.as_ref(),
         url,
     );
     let _ = app_handle.emit_to(
         EventTarget::webview(APP_WEBVIEW_LABEL),
-        ExternalEvent::PageLoaded.as_ref(),
+        AppEvent::ExternalPageLoaded.as_ref(),
         title,
     );
 }

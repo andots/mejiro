@@ -9,16 +9,6 @@ export const ROUTES = {
   HOME: "/",
 } as const;
 
-// from rust event
-export const ExternalEvent = {
-  PageLoaded: "external://page-loaded",
-  Navigation: "external://navigation",
-} as const;
-
-export const BookmarkEvent = {
-  UpdateTree: "bookmark://update-tree",
-} as const;
-
 export const AppEvent = {
   SettingsUpdated: "app://settings-updated",
   ExternalPageLoaded: "app://external-page-loaded",

@@ -12,7 +12,7 @@ use crate::app_handle_ext::AppHandleExt;
 use crate::constants::{
     APP_WEBVIEW_LABEL, APP_WEBVIEW_URL, EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL,
 };
-use crate::events::ExternalEvent;
+use crate::events::AppEvent;
 use crate::settings::{default_start_page_url, UserSettings};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -87,7 +87,7 @@ pub fn create_window(app_handle: &tauri::AppHandle) -> tauri::Result<()> {
                 // log::debug!("{:?}: on_navigation", url.host());
                 let _ = handle.emit_to(
                     EventTarget::webview(APP_WEBVIEW_LABEL),
-                    ExternalEvent::Navigation.as_ref(),
+                    AppEvent::ExternalNavigation.as_ref(),
                     url.to_string(),
                 );
                 true

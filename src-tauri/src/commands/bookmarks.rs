@@ -3,7 +3,7 @@ use std::sync::Mutex;
 use mejiro_core::tree::BookmarkArena;
 use tauri::{Emitter, EventTarget};
 
-use crate::{constants::APP_WEBVIEW_LABEL, error::AppError, events::BookmarkEvent};
+use crate::{constants::APP_WEBVIEW_LABEL, error::AppError, events::AppEvent};
 
 #[tauri::command]
 pub async fn get_nested_json(
@@ -29,7 +29,7 @@ pub async fn add_bookmark(
 
     app_handle.emit_to(
         EventTarget::webview(APP_WEBVIEW_LABEL),
-        BookmarkEvent::UpdateTree.as_ref(),
+        AppEvent::BookmarkUpdated.as_ref(),
         arena.to_nested_json(1)?,
     )?;
 
