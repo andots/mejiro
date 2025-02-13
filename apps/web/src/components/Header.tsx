@@ -69,7 +69,7 @@ const Header: Component = () => {
           <For each={settings()?.pinned_urls}>
             {(url) => (
               <Button variant="ghost" class="w-9 h-9 p-2" onClick={() => navigateToUrl(url)}>
-                <Favicon url={url} />
+                <Favicon url={url} width="20" height="20" />
               </Button>
             )}
           </For>

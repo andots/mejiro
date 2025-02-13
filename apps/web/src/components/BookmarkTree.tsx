@@ -3,6 +3,7 @@ import { type Component, For, Show, createSignal } from "solid-js";
 import { useBookmarkState } from "../stores/bookmarks";
 import { useUrlState } from "../stores/url";
 import type { Bookmark } from "../types";
+import Favicon from "./Favicon";
 
 const BookmarkTree: Component = () => {
   const bookmarks = useBookmarkState((state) => state.bookmarks);
@@ -53,7 +54,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
           {props.bookmark.node_type === "Folder" || props.bookmark.node_type === "Root" ? (
             <FolderIcon isOpen={isOpen()} />
           ) : (
-            <Favicon host={props.bookmark.host} />
+            <Favicon url={`https://${props.bookmark.host}`} width="17" height="17" />
           )}
         </span>
         {props.bookmark.node_type === "Bookmark" ? (
@@ -84,20 +85,6 @@ const FolderIcon = (props: { isOpen: boolean }) => (
       <path d="M.5 3A1.5 1.5 0 0 0-1 4.5v7A1.5 1.5 0 0 0 .5 13h13a1.5 1.5 0 0 0 1.5-1.5v-7A1.5 1.5 0 0 0 13.5 3h-13z" />
     )}
   </svg>
-);
-
-const GSTATIC_URL =
-  "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL";
-
-const Favicon = (props: { host: string | undefined | null }) => (
-  <div class="w-6 h-6 flex items-center justify-center">
-    <img
-      width="20"
-      height="20"
-      src={`${GSTATIC_URL}&size=32&url=https://${props.host}`}
-      alt="favicon"
-    />
-  </div>
 );
 
 export default BookmarkTree;
