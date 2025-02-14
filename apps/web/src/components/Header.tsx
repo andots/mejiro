@@ -1,5 +1,5 @@
 import { Button } from "@repo/ui/button";
-import { type Component, For, Show } from "solid-js";
+import { type Component, For } from "solid-js";
 import {
   invokeGetAppWebviewBounds,
   invokeGetExternalWebviewBounds,
@@ -11,16 +11,6 @@ import AddressBar from "./AddressBar";
 import Favicon from "./Favicon";
 
 const Header: Component = () => {
-  const handleRefresh = () => {
-    // console.log("Refreshing page...");
-    // ここに更新ロジックを実装
-  };
-
-  const handleFavorite = () => {
-    // console.log("Toggling favorite...");
-    // ここにお気に入り処理を実装
-  };
-
   const handleMenuClick = async () => {
     const appBounds = await invokeGetAppWebviewBounds();
     const externalBounds = await invokeGetExternalWebviewBounds();
@@ -74,7 +64,7 @@ const Header: Component = () => {
             )}
           </For>
         </div>
-        <AddressBar onRefresh={handleRefresh} onFavorite={handleFavorite} />
+        <AddressBar />
       </div>
     </header>
   );

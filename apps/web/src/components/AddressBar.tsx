@@ -3,12 +3,7 @@ import { createEffect, createSignal, on } from "solid-js";
 import { invokeAddBookmark } from "../invokes";
 import { useUrlState } from "../stores/url";
 
-interface AddressBarProps {
-  onRefresh?: () => void;
-  onFavorite?: () => void;
-}
-
-const AddressBar: Component<AddressBarProps> = (props) => {
+const AddressBar: Component = () => {
   const url = useUrlState((state) => state.url);
   const title = useUrlState((state) => state.title);
   const navigateToUrl = useUrlState((state) => state.navigateToUrl);
@@ -34,6 +29,10 @@ const AddressBar: Component<AddressBarProps> = (props) => {
   const toggleFavorite = () => {
     invokeAddBookmark(url(), title());
     setIsFavorited(!isFavorited());
+  };
+
+  const refresh = () => {
+    //
   };
 
   return (
@@ -92,7 +91,7 @@ const AddressBar: Component<AddressBarProps> = (props) => {
         <div class="flex items-center space-x-2 ml-2">
           {/* Refresh Button */}
           <button
-            onClick={() => props.onRefresh?.()}
+            onClick={() => refresh()}
             class="p-1.5 hover:bg-gray-200 rounded-full transition-colors"
             title="Refresh page"
             type="button"
