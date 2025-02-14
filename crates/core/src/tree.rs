@@ -23,7 +23,7 @@ impl BookmarkArena {
         Self { arena }
     }
 
-    pub fn create_arena_from_file<P>(path: P) -> Result<Self, CoreError>
+    pub fn load_from_file<P>(path: P) -> Result<Self, CoreError>
     where
         P: AsRef<Path>,
     {

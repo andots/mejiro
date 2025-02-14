@@ -169,7 +169,7 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
 
     fn load_bookmark_arena(&self) -> BookmarkArena {
         let path = self.get_bookmarks_file_path();
-        match BookmarkArena::create_arena_from_file(path) {
+        match BookmarkArena::load_from_file(path) {
             Ok(v) => v,
             Err(e) => {
                 log::warn!("Load default bookmarks: {:?}", e);
