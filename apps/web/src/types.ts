@@ -8,6 +8,14 @@ export type Bookmark = {
   children: Bookmark[];
 };
 
+export type BookmarkData = {
+  title: string;
+  url: string | null;
+  host: string | null;
+  node_type: "Root" | "Folder" | "Bookmark" | "Separator";
+  date_added: number | null;
+};
+
 // Must sync with rust struct in src-tauri/settings.rs
 export type UserSettings = {
   language: string;

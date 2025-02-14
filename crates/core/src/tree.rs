@@ -67,12 +67,12 @@ impl BookmarkArena {
         self.get_node_id_at(1).ok_or(CoreError::NodeNotFound(1))
     }
 
-    pub fn get_root_children(&self) -> Result<Vec<&BookmarkData>, CoreError> {
+    pub fn get_root_children(&self) -> Result<Vec<BookmarkData>, CoreError> {
         let root_id = self.get_root_node_id()?;
         let root_children = root_id
             .children(&self.arena)
             .filter_map(|id| self.arena.get(id))
-            .map(|n| n.get())
+            .map(|n| n.get().clone())
             .collect::<Vec<_>>();
         Ok(root_children)
     }
@@ -291,6 +291,7 @@ mod tests {
         assert_eq!(n_3.title, "n_3");
         let n_4 = root_children.last().unwrap();
         assert_eq!(n_4.title, "n_4");
+        println!("{}", serde_json::to_string_pretty(&root_children)?);
         Ok(())
     }
 

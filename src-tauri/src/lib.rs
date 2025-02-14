@@ -47,6 +47,7 @@ pub fn run() {
             commands::webviews::set_external_webview_bounds,
             commands::webviews::get_external_webview_url,
             commands::bookmarks::get_nested_json,
+            commands::bookmarks::get_root_children,
             commands::bookmarks::add_bookmark,
             commands::bookmarks::remove_bookmark,
             commands::injects::emit_page_params,

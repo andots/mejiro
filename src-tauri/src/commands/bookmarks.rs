@@ -1,6 +1,6 @@
 use std::sync::Mutex;
 
-use mejiro_core::tree::BookmarkArena;
+use mejiro_core::{data::BookmarkData, tree::BookmarkArena};
 
 use crate::{
     error::AppError,
@@ -15,6 +15,17 @@ pub async fn get_nested_json(
         .lock()
         .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
     Ok(arena.to_nested_json(1)?)
+}
+
+#[tauri::command]
+pub fn get_root_children(
+    state: tauri::State<'_, Mutex<BookmarkArena>>,
+) -> Result<Vec<BookmarkData>, AppError> {
+    let arena = state
+        .lock()
+        .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
+    let children = arena.get_root_children()?;
+    Ok(children)
 }
 
 #[tauri::command]
