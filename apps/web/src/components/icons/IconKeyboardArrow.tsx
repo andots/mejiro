@@ -1,5 +1,11 @@
+import type { Component } from "solid-js";
+
+type Props = {
+  isOpen: boolean;
+};
+
 // https://icon-sets.iconify.design/ic/page-2.html?icon-filter=arrow&prefixes=Baseline
-const IconKeyboardArrow = (props: { isOpen: boolean }) => (
+const IconKeyboardArrow: Component<Props> = (props) => (
   <svg
     width="20"
     height="20"

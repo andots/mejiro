@@ -1,5 +1,11 @@
+import type { Component } from "solid-js";
+
+type Props = {
+  isOpen: boolean;
+};
+
 // https://icon-sets.iconify.design/ic/page-2.html?icon-filter=folder
-const IconFolder = (props: { isOpen: boolean }) => (
+const IconFolder: Component<Props> = (props) => (
   <svg
     width="20"
     height="20"
