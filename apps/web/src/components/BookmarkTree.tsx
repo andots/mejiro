@@ -4,8 +4,12 @@ import { useBookmarkState } from "../stores/bookmarks";
 import { useUrlState } from "../stores/url";
 import type { Bookmark } from "../types";
 import Favicon from "./icons/Favicon";
-import IconFolder from "./icons/IconFolder";
-import IconKeyboardArrow from "./icons/IconKeyboardArrow";
+import {
+  IcBaselineKeyboardArrowDown,
+  IcBaselineKeyboardArrowRight,
+  IcOutlineFolder,
+  IcOutlineFolderOpen,
+} from "./icons/Icons";
 
 const BookmarkTree: Component = () => {
   const bookmarks = useBookmarkState((state) => state.bookmarks);
@@ -59,13 +63,24 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
               when={props.bookmark.node_type === "Folder" || props.bookmark.node_type === "Root"}
             >
               <span class="flex w-[40px]">
-                <IconKeyboardArrow isOpen={isOpen()} />
-                <IconFolder isOpen={isOpen()} />
+                <Show when={isOpen()}>
+                  <IcBaselineKeyboardArrowDown width={20} height={20} />
+                  <IcOutlineFolderOpen width={20} height={20} />
+                </Show>
+                <Show when={!isOpen()}>
+                  <IcBaselineKeyboardArrowRight width={20} height={20} />
+                  <IcOutlineFolder width={20} height={20} />
+                </Show>
               </span>
             </Match>
             <Match when={props.bookmark.node_type === "Bookmark" && hasChildren()}>
               <span class="flex w-[40px]">
-                <IconKeyboardArrow isOpen={isOpen()} />
+                <Show when={isOpen()}>
+                  <IcBaselineKeyboardArrowDown width={20} height={20} />
+                </Show>
+                <Show when={!isOpen()}>
+                  <IcBaselineKeyboardArrowRight width={20} height={20} />
+                </Show>
                 <Favicon url={`https://${props.bookmark.host}`} width="18" height="18" />
               </span>
             </Match>
