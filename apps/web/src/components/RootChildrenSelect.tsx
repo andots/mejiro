@@ -1,4 +1,4 @@
-import { type Component, createSignal, onMount } from "solid-js";
+import { type Component, Show, createSignal, onMount } from "solid-js";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/ui/select";
 import { invokeGetRootChildrenFolder } from "../invokes";
@@ -18,23 +18,30 @@ const RootChildrenSelect: Component = () => {
     }
   });
 
+  const handleOnChange = (value: FolderData | null) => {
+    setValue(value);
+    // TODO: reload bookmarks tree based on selected folder
+  };
+
   return (
-    <div class="flex-col">
-      <Select
-        options={options()}
-        optionValue="index"
-        optionTextValue="title"
-        value={value()}
-        onChange={setValue}
-        itemComponent={(props) => (
-          <SelectItem item={props.item}>{props.item.rawValue.title}</SelectItem>
-        )}
-      >
-        <SelectTrigger aria-label="child" class="w-[180px]">
-          <SelectValue<FolderData>>{(state) => state.selectedOption().title}</SelectValue>
-        </SelectTrigger>
-        <SelectContent />
-      </Select>
+    <div class="flex-col h-[40px]">
+      <Show when={options().length > 0}>
+        <Select
+          options={options()}
+          optionValue="index"
+          optionTextValue="title"
+          value={value()}
+          onChange={(val) => handleOnChange(val)}
+          itemComponent={(props) => (
+            <SelectItem item={props.item}>{props.item.rawValue.title}</SelectItem>
+          )}
+        >
+          <SelectTrigger aria-label="child" class="w-[180px]">
+            <SelectValue<FolderData>>{(state) => state.selectedOption().title}</SelectValue>
+          </SelectTrigger>
+          <SelectContent />
+        </Select>
+      </Show>
     </div>
   );
 };
