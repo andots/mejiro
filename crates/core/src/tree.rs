@@ -62,6 +62,20 @@ impl BookmarkArena {
             None => None,
         }
     }
+
+    fn get_root_node_id(&self) -> Result<NodeId, CoreError> {
+        self.get_node_id_at(1).ok_or(CoreError::NodeNotFound(1))
+    }
+
+    pub fn get_root_children(&self) -> Result<Vec<&BookmarkData>, CoreError> {
+        let root_id = self.get_root_node_id()?;
+        let root_children = root_id
+            .children(&self.arena)
+            .filter_map(|id| self.arena.get(id))
+            .map(|n| n.get())
+            .collect::<Vec<_>>();
+        Ok(root_children)
+    }
 }
 
 /// Converting to JSON
@@ -196,6 +210,27 @@ mod tests {
         arena
     }
 
+    fn create_bookmark_arena() -> BookmarkArena {
+        let mut arena = Arena::new();
+        let root = BookmarkData::new_root();
+        let n_2 = BookmarkData::try_new_bookmark("n_2", "https://docs.rs/abc").unwrap();
+        let n_3 = BookmarkData::try_new_bookmark("n_3", "https://docs.rs/abc").unwrap();
+        let n_4 = BookmarkData::try_new_bookmark("n_4", "https://docs.rs/abc").unwrap();
+        let n_5 = BookmarkData::try_new_bookmark("n_5", "https://docs.rs/abc").unwrap();
+        let n_6 = BookmarkData::try_new_bookmark("n_6", "https://docs.rs/abc").unwrap();
+        tree!(&mut arena,
+            root => {
+                n_2,
+                n_3,
+                n_4 => {
+                    n_5,
+                    n_6,
+                }
+            }
+        );
+        BookmarkArena::new(arena)
+    }
+
     #[test]
     fn test_create_realistic_arena() -> anyhow::Result<()> {
         let arena = create_realistic_arena();
@@ -218,24 +253,8 @@ mod tests {
 
     #[test]
     fn test_remove_subtree() -> anyhow::Result<()> {
-        let mut arena = Arena::new();
-        let root = BookmarkData::new_root();
-        let n_2 = BookmarkData::try_new_bookmark("n_2", "https://docs.rs/abc").unwrap();
-        let n_3 = BookmarkData::try_new_bookmark("n_3", "https://docs.rs/abc").unwrap();
-        let n_4 = BookmarkData::try_new_bookmark("n_4", "https://docs.rs/abc").unwrap();
-        let n_5 = BookmarkData::try_new_bookmark("n_5", "https://docs.rs/abc").unwrap();
-        let n_6 = BookmarkData::try_new_bookmark("n_6", "https://docs.rs/abc").unwrap();
-        tree!(&mut arena,
-            root => {
-                n_2,
-                n_3,
-                n_4 => {
-                    n_5,
-                    n_6,
-                }
-            }
-        );
-        let mut bookmark_arena = BookmarkArena::new(arena);
+        // let arena = create_test_tree();
+        let mut bookmark_arena = create_bookmark_arena();
 
         // remove wrong index must be error
         assert!(bookmark_arena.remove_subtree(100).is_err());
@@ -258,6 +277,20 @@ mod tests {
 
         println!("{}", bookmark_arena.to_nested_json_pretty(1)?);
 
+        Ok(())
+    }
+
+    #[test]
+    fn test_get_root_children() -> anyhow::Result<()> {
+        let bookmark_arena = create_bookmark_arena();
+        let root_children = bookmark_arena.get_root_children()?;
+        assert_eq!(root_children.len(), 3);
+        let n_2 = root_children.first().unwrap();
+        assert_eq!(n_2.title, "n_2");
+        let n_3 = root_children.get(1).unwrap();
+        assert_eq!(n_3.title, "n_3");
+        let n_4 = root_children.last().unwrap();
+        assert_eq!(n_4.title, "n_4");
         Ok(())
     }
 
