@@ -71,6 +71,9 @@ impl BookmarkArena {
     }
 
     pub fn remove_subtree(&mut self, index: usize) -> Result<(), CoreError> {
+        if index == 1 {
+            return Err(CoreError::CannotRemoveRoot());
+        }
         let node_id = self
             .get_node_id_at(index)
             .ok_or(CoreError::NodeNotFound(index))?;
@@ -216,6 +219,9 @@ mod tests {
         // remove wrong index must be error
         assert!(bookmark_arena.remove_subtree(100).is_err());
         assert_eq!(bookmark_arena.arena.count(), 6);
+
+        // try to remove root node must be error
+        assert!(bookmark_arena.remove_subtree(1).is_err());
 
         // remove n_2
         bookmark_arena.remove_subtree(2)?;

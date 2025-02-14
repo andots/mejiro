@@ -27,4 +27,7 @@ pub enum CoreError {
 
     #[error("Cannot be a base")]
     CannotBeBase(),
+
+    #[error("Cannnot remove root node")]
+    CannotRemoveRoot(),
 }
