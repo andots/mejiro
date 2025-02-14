@@ -1,17 +1,17 @@
 import { type Component, createSignal, onMount } from "solid-js";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/ui/select";
-import { invokeGetRootChildren } from "../invokes";
-import type { BookmarkData } from "../types";
+import { invokeGetRootChildrenFolder } from "../invokes";
+import type { FolderData } from "../types";
 
 // https://kobalte.dev/docs/core/components/select/
 
 const RootChildrenSelect: Component = () => {
-  const [options, setOptions] = createSignal<BookmarkData[]>([]);
-  const [value, setValue] = createSignal<BookmarkData | null>(null);
+  const [options, setOptions] = createSignal<FolderData[]>([]);
+  const [value, setValue] = createSignal<FolderData | null>(null);
 
   onMount(async () => {
-    const data = await invokeGetRootChildren();
+    const data = await invokeGetRootChildrenFolder();
     setOptions(data);
     if (data.length > 0) {
       setValue(data[0]);
@@ -19,10 +19,10 @@ const RootChildrenSelect: Component = () => {
   });
 
   return (
-    <div class="flex-col mb-2">
+    <div class="flex-col">
       <Select
         options={options()}
-        optionValue="title"
+        optionValue="index"
         optionTextValue="title"
         value={value()}
         onChange={setValue}
@@ -31,7 +31,7 @@ const RootChildrenSelect: Component = () => {
         )}
       >
         <SelectTrigger aria-label="child" class="w-[180px]">
-          <SelectValue<BookmarkData>>{(state) => state.selectedOption().title}</SelectValue>
+          <SelectValue<FolderData>>{(state) => state.selectedOption().title}</SelectValue>
         </SelectTrigger>
         <SelectContent />
       </Select>

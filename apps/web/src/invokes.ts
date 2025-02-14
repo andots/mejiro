@@ -1,12 +1,12 @@
 import { invoke } from "@tauri-apps/api/core";
 import type { PhysicalPosition, PhysicalSize } from "@tauri-apps/api/dpi";
-import type { BookmarkData, Bounds, Rect, UserSettings } from "./types";
+import type { Bounds, FolderData, Rect, UserSettings } from "./types";
 
 const AppCommands = {
   GetSettings: "get_settings",
   NavigateWebviewUrl: "navigate_webview_url",
   GetNestedJson: "get_nested_json",
-  GetRootChildren: "get_root_children",
+  GetRootChildrenFolder: "get_root_children_folder",
   HideExternalWebview: "hide_external_webview",
   ShowExternalWebview: "show_external_webview",
   GetExternalWebviewSize: "get_external_webview_size",
@@ -31,8 +31,8 @@ export const invokeGetBookmarks = async () => {
   return await invoke<string>(AppCommands.GetNestedJson, {});
 };
 
-export const invokeGetRootChildren = async () => {
-  return await invoke<BookmarkData[]>(AppCommands.GetRootChildren, {});
+export const invokeGetRootChildrenFolder = async () => {
+  return await invoke<FolderData[]>(AppCommands.GetRootChildrenFolder, {});
 };
 
 export const invokeHideExternalWebview = async () => {

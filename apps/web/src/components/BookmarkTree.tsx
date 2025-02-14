@@ -17,7 +17,9 @@ const BookmarkTree: Component = () => {
 
   return (
     <div class="pl-1">
-      <RootChildrenSelect />
+      <div class="mb-2">
+        <RootChildrenSelect />
+      </div>
       <ul class="list-none">
         <BookmarkNode bookmark={bookmarks()} level={0} />
       </ul>
