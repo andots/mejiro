@@ -55,15 +55,27 @@ impl BookmarkArena {
 
     /// Generate JSON for frontend
     pub fn to_nested_json(&self, index: usize) -> Result<String, CoreError> {
-        let node_id = self.get_node_id_at(index).ok_or(CoreError::Other())?;
+        let node_id = self
+            .get_node_id_at(index)
+            .ok_or(CoreError::NodeNotFound(index))?;
         let value = NestedNode::try_new(&self.arena, node_id)?;
         Ok(serde_json::to_string(&value)?)
     }
 
     pub fn to_nested_json_pretty(&self, index: usize) -> Result<String, CoreError> {
-        let node_id = self.get_node_id_at(index).ok_or(CoreError::Other())?;
+        let node_id = self
+            .get_node_id_at(index)
+            .ok_or(CoreError::NodeNotFound(index))?;
         let value = NestedNode::try_new(&self.arena, node_id)?;
         Ok(serde_json::to_string_pretty(&value)?)
+    }
+
+    pub fn remove_subtree(&mut self, index: usize) -> Result<(), CoreError> {
+        let node_id = self
+            .get_node_id_at(index)
+            .ok_or(CoreError::NodeNotFound(index))?;
+        node_id.remove_subtree(&mut self.arena);
+        Ok(())
     }
 
     pub fn add_bookmark(&mut self, url: String, title: Option<String>) -> Result<(), CoreError> {
@@ -81,7 +93,7 @@ impl BookmarkArena {
 
         // まずはroot_idを取得
         // TODO: ルートでなくて、フロントで見ている最上位のノードから探す
-        let root_id = self.get_node_id_at(1).ok_or(CoreError::Other())?;
+        let root_id = self.get_node_id_at(1).ok_or(CoreError::NodeNotFound(1))?;
         // ターゲットとなるノードをroot_idの子孫から探す
         let target = root_id.descendants(&self.arena).find(|n| {
             if let Some(node) = self.arena.get(*n) {
@@ -176,6 +188,48 @@ mod tests {
         file.write_all(json.as_bytes())?;
 
         assert_eq!(arena.count(), 16);
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_remove_subtree() -> anyhow::Result<()> {
+        let mut arena = Arena::new();
+        let root = BookmarkData::new_root();
+        let n_2 = BookmarkData::try_new_bookmark("n_2", "https://docs.rs/abc").unwrap();
+        let n_3 = BookmarkData::try_new_bookmark("n_3", "https://docs.rs/abc").unwrap();
+        let n_4 = BookmarkData::try_new_bookmark("n_4", "https://docs.rs/abc").unwrap();
+        let n_5 = BookmarkData::try_new_bookmark("n_5", "https://docs.rs/abc").unwrap();
+        let n_6 = BookmarkData::try_new_bookmark("n_6", "https://docs.rs/abc").unwrap();
+        tree!(&mut arena,
+            root => {
+                n_2,
+                n_3,
+                n_4 => {
+                    n_5,
+                    n_6,
+                }
+            }
+        );
+        let mut bookmark_arena = BookmarkArena::new(arena);
+
+        // remove wrong index must be error
+        assert!(bookmark_arena.remove_subtree(100).is_err());
+        assert_eq!(bookmark_arena.arena.count(), 6);
+
+        // remove n_2
+        bookmark_arena.remove_subtree(2)?;
+        let me = bookmark_arena.get_node_id_at(2);
+        assert!(me.is_none());
+
+        // remove n_4
+        bookmark_arena.remove_subtree(3)?;
+        bookmark_arena.remove_subtree(4)?;
+
+        // internal arena count must be still 6
+        assert_eq!(bookmark_arena.arena.count(), 6);
+
+        println!("{}", bookmark_arena.to_nested_json_pretty(1)?);
 
         Ok(())
     }

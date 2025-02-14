@@ -10,24 +10,21 @@ pub enum CoreError {
     #[error("JSON error: {0}")]
     Json(#[from] serde_json::Error),
 
-    #[error("Node not found: {0}")]
-    NestedNode(NonZero<usize>),
-
-    #[error("Node not found: {0}")]
-    NodeNotFound(usize),
-
     #[error("Node error: {0}")]
     NodeError(#[from] indextree::NodeError),
 
     #[error("URL error: {0}")]
     InvalidUrl(#[from] url::ParseError),
 
+    #[error("Node not found: {0}")]
+    NestedNode(NonZero<usize>),
+
+    #[error("Node not found: {0}")]
+    NodeNotFound(usize),
+
     #[error("Not Web URL: {0}")]
     NotWebUrl(String),
 
     #[error("Cannot be a base")]
     CannotBeBase(),
-
-    #[error("Something went wrong")]
-    Other(),
 }
