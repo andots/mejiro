@@ -1,11 +1,14 @@
 import { type Component, For, Match, Show, Switch, createSignal } from "solid-js";
 
+import { Button } from "@repo/ui/button";
 import { useBookmarkState } from "../stores/bookmarks";
 import type { Bookmark } from "../types";
 import Favicon from "./icons/Favicon";
 import {
+  IcBaselineEdit,
   IcBaselineKeyboardArrowDown,
   IcBaselineKeyboardArrowRight,
+  IcOutlineDeleteOutline,
   IcOutlineFolder,
   IcOutlineFolderOpen,
 } from "./icons/Icons";
@@ -40,11 +43,19 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
 
   const handleKeydown = (e: KeyboardEvent) => {};
 
+  const handleEdit = (index: number) => {
+    console.log("Edit", index);
+  };
+
+  const handleRemove = (index: number) => {
+    console.log("Remove", index);
+  };
+
   return (
     <li>
       <div
         class={
-          "flex items-center text-left text-sm py-1 hover:bg-sidebar-accent cursor-pointer transition-colors duration-150"
+          "flex items-center text-left text-sm py-1 hover:bg-sidebar-accent transition-colors duration-150"
         }
         onClick={toggle}
         onKeyDown={handleKeydown}
@@ -85,14 +96,31 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
             </Match>
           </Switch>
         </span>
+
         {/* Title */}
-        <span class="w-full overflow-hidden whitespace-nowrap text-ellipsis">
-          {props.bookmark.node_type === "Bookmark" ? (
-            <span class="text-blue-500">{props.bookmark.title}</span>
-          ) : (
-            <span class="text-sidebar-foreground">{props.bookmark.title}</span>
-          )}
+        <span class="text-sidebar-foreground overflow-hidden whitespace-nowrap text-ellipsis">
+          {props.bookmark.title}
         </span>
+
+        {/* Edit button */}
+        <Button
+          class="w-8 h-8 ml-3"
+          variant="outline"
+          size="icon"
+          onClick={() => handleEdit(props.bookmark.index)}
+        >
+          <IcBaselineEdit />
+        </Button>
+
+        {/* Remove button */}
+        <Button
+          class="w-8 h-8 ml-3"
+          variant="outline"
+          size="icon"
+          onClick={() => handleRemove(props.bookmark.index)}
+        >
+          <IcOutlineDeleteOutline />
+        </Button>
       </div>
       <Show when={hasChildren() && isOpen()}>
         <ul class="ml-2">

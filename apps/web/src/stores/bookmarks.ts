@@ -11,10 +11,10 @@ interface BookmarkState {
 
 export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
   bookmarks: {
+    index: 0,
     title: "Root",
     url: null,
     host: null,
-    id: 0,
     node_type: "Root",
     date_added: 0,
     children: [],

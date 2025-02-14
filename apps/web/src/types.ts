@@ -1,5 +1,5 @@
 export type Bookmark = {
-  id: number;
+  index: number;
   title: string;
   url: string | null;
   host: string | null;
