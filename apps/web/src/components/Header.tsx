@@ -8,7 +8,7 @@ import {
 import { useSettingsState } from "../stores/settings";
 import { useUrlState } from "../stores/url";
 import AddressBar from "./AddressBar";
-import Favicon from "./Favicon";
+import Favicon from "./icons/Favicon";
 
 const Header: Component = () => {
   const handleMenuClick = async () => {

@@ -3,7 +3,9 @@ import { type Component, For, Match, Show, Switch, createSignal } from "solid-js
 import { useBookmarkState } from "../stores/bookmarks";
 import { useUrlState } from "../stores/url";
 import type { Bookmark } from "../types";
-import Favicon from "./Favicon";
+import Favicon from "./icons/Favicon";
+import IconFolder from "./icons/IconFolder";
+import IconKeyboardArrow from "./icons/IconKeyboardArrow";
 
 const BookmarkTree: Component = () => {
   const bookmarks = useBookmarkState((state) => state.bookmarks);
@@ -57,13 +59,13 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
               when={props.bookmark.node_type === "Folder" || props.bookmark.node_type === "Root"}
             >
               <span class="flex w-[40px]">
-                <Arrow isOpen={isOpen()} />
-                <Folder isOpen={isOpen()} />
+                <IconKeyboardArrow isOpen={isOpen()} />
+                <IconFolder isOpen={isOpen()} />
               </span>
             </Match>
             <Match when={props.bookmark.node_type === "Bookmark" && hasChildren()}>
               <span class="flex w-[40px]">
-                <Arrow isOpen={isOpen()} />
+                <IconKeyboardArrow isOpen={isOpen()} />
                 <Favicon url={`https://${props.bookmark.host}`} width="18" height="18" />
               </span>
             </Match>
@@ -93,49 +95,5 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
     </li>
   );
 };
-
-// https://icon-sets.iconify.design/ic/page-2.html?icon-filter=folder
-const Folder = (props: { isOpen: boolean }) => (
-  <svg
-    width="20"
-    height="20"
-    class="w-[20px]"
-    fill="currentColor"
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-  >
-    <title>ic:folder</title>
-    {props.isOpen ? (
-      <path
-        fill="currentColor"
-        d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2m0 12H4V8h16z"
-      />
-    ) : (
-      <path
-        fill="currentColor"
-        d="m9.17 6l2 2H20v10H4V6zM10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8z"
-      />
-    )}
-  </svg>
-);
-
-// https://icon-sets.iconify.design/ic/page-2.html?icon-filter=arrow&prefixes=Baseline
-const Arrow = (props: { isOpen: boolean }) => (
-  <svg
-    width="20"
-    height="20"
-    class="w-[20px]"
-    xmlns="http://www.w3.org/2000/svg"
-    fill="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <title>ic:baseline-keyboard-arrow-right</title>
-    {props.isOpen ? (
-      <path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6l-6-6z" />
-    ) : (
-      <path fill="currentColor" d="M8.59 16.59L13.17 12L8.59 7.41L10 6l6 6l-6 6z" />
-    )}
-  </svg>
-);
 
 export default BookmarkTree;
