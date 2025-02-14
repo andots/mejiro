@@ -11,7 +11,10 @@ pub enum CoreError {
     Json(#[from] serde_json::Error),
 
     #[error("Node not found: {0}")]
-    NodeNotFound(NonZero<usize>),
+    NestedNode(NonZero<usize>),
+
+    #[error("Node not found: {0}")]
+    NodeNotFound(usize),
 
     #[error("Node error: {0}")]
     NodeError(#[from] indextree::NodeError),

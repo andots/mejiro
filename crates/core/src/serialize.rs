@@ -22,7 +22,7 @@ impl<'a, T: Serialize> NestedNode<'a, T> {
     pub fn try_new(arena: &'a Arena<T>, node_id: NodeId) -> Result<Self, CoreError> {
         let node = arena.get(node_id);
         match node {
-            None => Err(CoreError::NodeNotFound(node_id.into())),
+            None => Err(CoreError::NestedNode(node_id.into())),
             Some(n) => Ok(NestedNode {
                 index: node_id.into(),
                 data: n.get(),
