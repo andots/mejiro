@@ -7,7 +7,7 @@ import { listen } from "@tauri-apps/api/event";
 
 import { debug } from "@tauri-apps/plugin-log";
 import BookmarkTree from "./components/BookmarkTree";
-import Header from "./components/Header";
+import ToolBar from "./components/ToolBar";
 import { AppEvent } from "./constants";
 import { useBookmarkState } from "./stores/bookmarks";
 import { useSettingsState } from "./stores/settings";
@@ -85,7 +85,7 @@ const App: Component = () => {
 
   return (
     <div class="w-full h-screen flex flex-col">
-      <Header />
+      <ToolBar />
       <main class="flex-1 py-1 border border-border/40 bg-sidebar text-sidebar-foreground">
         <div class="h-full w-[200px]">
           <BookmarkTree />

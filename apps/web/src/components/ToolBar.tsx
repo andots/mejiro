@@ -11,7 +11,7 @@ import AddressBar from "./AddressBar";
 import Favicon from "./icons/Favicon";
 import { IcBaselineEditNote, IcBaselineMenuOpen, IcOutlineSettings } from "./icons/Icons";
 
-const Header: Component = () => {
+const ToolBar: Component = () => {
   const settings = useSettingsState((state) => state.settings);
   const navigateToUrl = useUrlState((state) => state.navigateToUrl);
 
@@ -42,7 +42,7 @@ const Header: Component = () => {
   };
 
   return (
-    <header class="sticky top-0 z-50 w-full h-[40px] border-b border-sidebar-border bg-sidebar text-sidebar-foreground">
+    <div class="sticky top-0 z-50 w-full h-[40px] border-b border-sidebar-border bg-sidebar text-sidebar-foreground">
       <div class="flex justify-center items-center w-full h-full px-1">
         {/* menu button */}
         <Button
@@ -82,8 +82,8 @@ const Header: Component = () => {
           <IcOutlineSettings />
         </Button>
       </div>
-    </header>
+    </div>
   );
 };
 
-export default Header;
+export default ToolBar;
