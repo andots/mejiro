@@ -9,8 +9,12 @@ import { useSettingsState } from "../stores/settings";
 import { useUrlState } from "../stores/url";
 import AddressBar from "./AddressBar";
 import Favicon from "./icons/Favicon";
+import { IcBaselineEditNote, IcBaselineMenuOpen, IcOutlineSettings } from "./icons/Icons";
 
 const Header: Component = () => {
+  const settings = useSettingsState((state) => state.settings);
+  const navigateToUrl = useUrlState((state) => state.navigateToUrl);
+
   const handleMenuClick = async () => {
     const appBounds = await invokeGetAppWebviewBounds();
     const externalBounds = await invokeGetExternalWebviewBounds();
@@ -37,23 +41,19 @@ const Header: Component = () => {
     }
   };
 
-  const settings = useSettingsState((state) => state.settings);
-  const navigateToUrl = useUrlState((state) => state.navigateToUrl);
-
   return (
     <header class="sticky top-0 z-50 w-full h-[40px] border-b border-sidebar-border bg-sidebar text-sidebar-foreground">
-      <div class="flex justify-center items-center w-full h-full">
+      <div class="flex justify-center items-center w-full h-full px-1">
         {/* menu button */}
         <Button
-          class="w-9 h-9 m-2 p-2 [&_svg]:size-6 [&_svg]:shrink-0"
+          class="w-9 h-9 m-0 mr-3 p-2 [&_svg]:size-6 [&_svg]:shrink-0"
           variant="ghost"
+          size="icon"
           onClick={handleMenuClick}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24">
-            <title>menu</title>
-            <path fill="currentColor" d="M3 18h18v-2H3zm0-5h18v-2H3zm0-7v2h18V6z" />
-          </svg>
+          <IcBaselineMenuOpen />
         </Button>
+
         {/* pinned url favicons */}
         <div class="flex items-center">
           <For each={settings()?.pinned_urls}>
@@ -64,7 +64,23 @@ const Header: Component = () => {
             )}
           </For>
         </div>
+        {/* address bar */}
         <AddressBar />
+
+        {/* edit button */}
+        <Button class="w-9 h-9 m-0 p-2 [&_svg]:size-6 [&_svg]:shrink-0" variant="ghost" size="icon">
+          <IcBaselineEditNote />
+        </Button>
+
+        {/* settings button */}
+        <Button
+          class="w-9 h-9 m-0 p-2 [&_svg]:size-5 [&_svg]:shrink-0"
+          variant="ghost"
+          size="icon"
+          onClick={handleMenuClick}
+        >
+          <IcOutlineSettings />
+        </Button>
       </div>
     </header>
   );

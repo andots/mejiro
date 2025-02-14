@@ -47,7 +47,7 @@ const AddressBar: Component = () => {
   };
 
   return (
-    <div class="max-w-4xl mx-auto h-full flex items-center justify-center">
+    <div class="flex items-center justify-center max-w-4xl mx-auto h-full">
       <div
         class={`flex items-center w-[570px] h-[30px] px-4 bg-gray-100 border ${isValidUrl() ? "border-gray-300" : "border-red-300"} rounded-lg hover:bg-gray-50`}
       >
