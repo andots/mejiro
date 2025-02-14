@@ -41,12 +41,20 @@ fn get_external_webview(app_handle: tauri::AppHandle) -> Result<tauri::Webview, 
         .ok_or(AppError::WebviewNotFound)
 }
 
+/// Navigate the external webview to the given URL
+#[tauri::command]
+pub fn navigate_webview_url(app_handle: tauri::AppHandle, url: String) -> Result<(), AppError> {
+    let parsed_url = Url::parse(&url).map_err(tauri::Error::InvalidUrl)?;
+    let mut webview = get_external_webview(app_handle)?;
+    webview.navigate(parsed_url)?;
+    Ok(())
+}
+
 /// Get the size and position of the app webview
 #[tauri::command]
 pub fn get_app_webview_bounds(app_handle: tauri::AppHandle) -> Result<Rect, AppError> {
     let webview = get_app_webview(app_handle)?;
     let bounds = webview.bounds()?;
-    log::debug!("{:?}", bounds);
     Ok(bounds)
 }
 
@@ -55,7 +63,6 @@ pub fn get_app_webview_bounds(app_handle: tauri::AppHandle) -> Result<Rect, AppE
 pub fn get_external_webview_bounds(app_handle: tauri::AppHandle) -> Result<Rect, AppError> {
     let webview = get_external_webview(app_handle)?;
     let bounds = webview.bounds()?;
-    log::debug!("{:?}", bounds);
     Ok(bounds)
 }
 
@@ -85,7 +92,6 @@ pub fn get_external_webview_size(
 ) -> Result<PhysicalSize<u32>, AppError> {
     let webview = get_external_webview(app_handle)?;
     let size = webview.size()?;
-    log::debug!("size: {:?}", size);
     Ok(size)
 }
 
@@ -96,17 +102,7 @@ pub fn get_external_webview_position(
 ) -> Result<PhysicalPosition<i32>, AppError> {
     let webview = get_external_webview(app_handle)?;
     let pos = webview.position()?;
-    log::debug!("pos: {:?}", pos);
     Ok(pos)
-}
-
-/// Navigate the external webview to the given URL
-#[tauri::command]
-pub fn navigate_webview_url(app_handle: tauri::AppHandle, url: String) -> Result<(), AppError> {
-    let parsed_url = Url::parse(&url).map_err(tauri::Error::InvalidUrl)?;
-    let mut webview = get_external_webview(app_handle)?;
-    webview.navigate(parsed_url)?;
-    Ok(())
 }
 
 /// Hide the external webview
