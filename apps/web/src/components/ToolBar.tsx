@@ -12,6 +12,7 @@ const ToolBar: Component = () => {
   const settings = useSettingsState((state) => state.settings);
   const navigateToUrl = useUrlState((state) => state.navigateToUrl);
   const toggleSidebar = useWindowState((state) => state.toggleSidebar);
+  const toggleExternalWebview = useWindowState((state) => state.toggleExternalWebview);
 
   return (
     <div class="sticky top-0 z-50 w-full h-[40px] border-b border-sidebar-border bg-sidebar text-sidebar-foreground">
@@ -41,7 +42,12 @@ const ToolBar: Component = () => {
         <AddressBar />
 
         {/* edit button */}
-        <Button class="w-9 h-9 m-0 p-2 [&_svg]:size-6 [&_svg]:shrink-0" variant="ghost" size="icon">
+        <Button
+          class="w-9 h-9 m-0 p-2 [&_svg]:size-6 [&_svg]:shrink-0"
+          variant="ghost"
+          size="icon"
+          onClick={toggleExternalWebview}
+        >
           <IcBaselineEditNote />
         </Button>
 

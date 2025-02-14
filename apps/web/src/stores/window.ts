@@ -10,7 +10,6 @@ import {
 
 interface WindowState {
   isExternalWebviewVisible: boolean;
-  setExternalWebviewVisible: (visible: boolean) => void;
   hideExternalWebview: () => void;
   showExternalWebview: () => void;
   toggleExternalWebview: () => void;
@@ -19,9 +18,6 @@ interface WindowState {
 
 export const useWindowState = createWithSignal<WindowState>((set) => ({
   isExternalWebviewVisible: true,
-
-  setExternalWebviewVisible: (visible: boolean) =>
-    set(() => ({ isExternalWebviewVisible: visible })),
 
   hideExternalWebview: async () => {
     set(() => ({ isExternalWebviewVisible: false }));
@@ -35,11 +31,11 @@ export const useWindowState = createWithSignal<WindowState>((set) => ({
 
   toggleExternalWebview: async () => {
     const visible = useWindowState((state) => state.isExternalWebviewVisible);
-    const showExternalWebview = useWindowState((state) => state.showExternalWebview);
-    const hideExternalWebview = useWindowState((state) => state.hideExternalWebview);
     if (visible()) {
+      const hideExternalWebview = useWindowState((state) => state.hideExternalWebview);
       hideExternalWebview();
     } else {
+      const showExternalWebview = useWindowState((state) => state.showExternalWebview);
       showExternalWebview();
     }
   },
