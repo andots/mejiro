@@ -11,14 +11,12 @@ type Props = {
 
 const Favicon: Component<Props> = (props) => {
   return (
-    <div class="flex items-center justify-center">
-      <img
-        width={props.width}
-        height={props.height}
-        src={`${GSTATIC_URL}&size=32&url=${props.url}`}
-        alt="favicon"
-      />
-    </div>
+    <img
+      width={props.width}
+      height={props.height}
+      src={`${GSTATIC_URL}&size=32&url=${props.url}`}
+      alt="favicon"
+    />
   );
 };
 

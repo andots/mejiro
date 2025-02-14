@@ -56,30 +56,35 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
             <Match
               when={props.bookmark.node_type === "Folder" || props.bookmark.node_type === "Root"}
             >
-              <Arrow isOpen={isOpen()} />
-              <Folder isOpen={isOpen()} />
+              <span class="flex w-[40px]">
+                <Arrow isOpen={isOpen()} />
+                <Folder isOpen={isOpen()} />
+              </span>
             </Match>
             <Match when={props.bookmark.node_type === "Bookmark" && hasChildren()}>
-              <Arrow isOpen={isOpen()} />
-              <Favicon url={`https://${props.bookmark.host}`} width="17" height="17" />
+              <span class="flex w-[40px]">
+                <Arrow isOpen={isOpen()} />
+                <Favicon url={`https://${props.bookmark.host}`} width="18" height="18" />
+              </span>
             </Match>
             <Match when={props.bookmark.node_type === "Bookmark" && !hasChildren()}>
-              <span class="pl-3 pr-1">-</span>
+              <span class="flex w-[24px] ml-[20px]">
+                <Favicon url={`https://${props.bookmark.host}`} width="18" height="18" />
+              </span>
             </Match>
           </Switch>
         </span>
-        {props.bookmark.node_type === "Bookmark" ? (
-          <span class="text-blue-500 overflow-hidden whitespace-nowrap text-ellipsis">
-            {props.bookmark.title}
-          </span>
-        ) : (
-          <span class="text-sidebar-foreground overflow-hidden whitespace-nowrap text-ellipsis">
-            {props.bookmark.title}
-          </span>
-        )}
+        {/* Title */}
+        <span class="w-full overflow-hidden whitespace-nowrap text-ellipsis">
+          {props.bookmark.node_type === "Bookmark" ? (
+            <span class="text-blue-500">{props.bookmark.title}</span>
+          ) : (
+            <span class="text-sidebar-foreground">{props.bookmark.title}</span>
+          )}
+        </span>
       </div>
       <Show when={hasChildren() && isOpen()}>
-        <ul class="pl-2">
+        <ul class="ml-2">
           <For each={props.bookmark.children}>
             {(child) => <BookmarkNode bookmark={child} level={props.level + 1} />}
           </For>
@@ -91,8 +96,15 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
 
 // https://icon-sets.iconify.design/ic/page-2.html?icon-filter=folder
 const Folder = (props: { isOpen: boolean }) => (
-  <svg class="w-4 h-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-    <title>folder</title>
+  <svg
+    width="20"
+    height="20"
+    class="w-[20px]"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+  >
+    <title>ic:folder</title>
     {props.isOpen ? (
       <path
         fill="currentColor"
@@ -109,7 +121,14 @@ const Folder = (props: { isOpen: boolean }) => (
 
 // https://icon-sets.iconify.design/ic/page-2.html?icon-filter=arrow&prefixes=Baseline
 const Arrow = (props: { isOpen: boolean }) => (
-  <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+  <svg
+    width="20"
+    height="20"
+    class="w-[20px]"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+  >
     <title>ic:baseline-keyboard-arrow-right</title>
     {props.isOpen ? (
       <path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6l-6-6z" />
