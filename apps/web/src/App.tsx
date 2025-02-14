@@ -1,7 +1,6 @@
 import type { Component } from "solid-js";
 import { createEffect, on, onCleanup, onMount } from "solid-js";
 
-import { Button } from "@repo/ui/button";
 import type { UnlistenFn } from "@tauri-apps/api/event";
 import { listen } from "@tauri-apps/api/event";
 
@@ -12,7 +11,6 @@ import { AppEvent } from "./constants";
 import { useBookmarkState } from "./stores/bookmarks";
 import { useSettingsState } from "./stores/settings";
 import { useUrlState } from "./stores/url";
-import { useWindowState } from "./stores/window";
 
 let unlistenSettingsUpdated: UnlistenFn | undefined;
 let unlistenNavigation: UnlistenFn | undefined;
@@ -59,8 +57,6 @@ const removeEventListeners = () => {
 };
 
 const App: Component = () => {
-  const toggleExternalWebview = useWindowState((state) => state.toggleExternalWebview);
-
   onMount(async () => {
     await initializeApp();
   });
@@ -89,9 +85,6 @@ const App: Component = () => {
       <main class="flex-1 py-1 border border-border/40 bg-sidebar text-sidebar-foreground">
         <div class="h-full w-[200px]">
           <BookmarkTree />
-          <div class="mt-8 ml-4">
-            <Button onClick={() => toggleExternalWebview()}>Toggle</Button>
-          </div>
         </div>
       </main>
     </div>

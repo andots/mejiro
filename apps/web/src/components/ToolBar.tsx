@@ -1,12 +1,9 @@
 import { Button } from "@repo/ui/button";
 import { type Component, For } from "solid-js";
-import {
-  invokeGetAppWebviewBounds,
-  invokeGetExternalWebviewBounds,
-  invokeSetExternalWebviewBounds,
-} from "../invokes";
+
 import { useSettingsState } from "../stores/settings";
 import { useUrlState } from "../stores/url";
+import { useWindowState } from "../stores/window";
 import AddressBar from "./AddressBar";
 import Favicon from "./icons/Favicon";
 import { IcBaselineEditNote, IcBaselineMenuOpen, IcOutlineSettings } from "./icons/Icons";
@@ -14,32 +11,7 @@ import { IcBaselineEditNote, IcBaselineMenuOpen, IcOutlineSettings } from "./ico
 const ToolBar: Component = () => {
   const settings = useSettingsState((state) => state.settings);
   const navigateToUrl = useUrlState((state) => state.navigateToUrl);
-
-  const handleMenuClick = async () => {
-    const appBounds = await invokeGetAppWebviewBounds();
-    const externalBounds = await invokeGetExternalWebviewBounds();
-    // TODO: must be user defined state
-    const headerHeight = 40;
-    const sidebarWidth = 200;
-    if (externalBounds.position.Physical.x === 0) {
-      // 全画面状態なので、サイドバー分の幅を引く
-      await invokeSetExternalWebviewBounds({
-        size: {
-          width: appBounds.size.Physical.width - sidebarWidth,
-          height: appBounds.size.Physical.height - headerHeight,
-        },
-        position: { x: sidebarWidth, y: headerHeight },
-      });
-    } else {
-      await invokeSetExternalWebviewBounds({
-        size: {
-          width: appBounds.size.Physical.width,
-          height: appBounds.size.Physical.height - headerHeight,
-        },
-        position: { x: 0, y: headerHeight },
-      });
-    }
-  };
+  const toggleSidebar = useWindowState((state) => state.toggleSidebar);
 
   return (
     <div class="sticky top-0 z-50 w-full h-[40px] border-b border-sidebar-border bg-sidebar text-sidebar-foreground">
@@ -49,7 +21,7 @@ const ToolBar: Component = () => {
           class="w-9 h-9 m-0 mr-3 p-2 [&_svg]:size-6 [&_svg]:shrink-0"
           variant="ghost"
           size="icon"
-          onClick={handleMenuClick}
+          onClick={toggleSidebar}
         >
           <IcBaselineMenuOpen />
         </Button>
@@ -73,12 +45,7 @@ const ToolBar: Component = () => {
         </Button>
 
         {/* settings button */}
-        <Button
-          class="w-9 h-9 m-0 p-2 [&_svg]:size-5 [&_svg]:shrink-0"
-          variant="ghost"
-          size="icon"
-          onClick={handleMenuClick}
-        >
+        <Button class="w-9 h-9 m-0 p-2 [&_svg]:size-5 [&_svg]:shrink-0" variant="ghost" size="icon">
           <IcOutlineSettings />
         </Button>
       </div>
