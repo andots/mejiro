@@ -22,7 +22,10 @@ impl BookmarkArena {
     pub fn new(arena: Arena<BookmarkData>) -> Self {
         Self { arena }
     }
+}
 
+/// File I/O
+impl BookmarkArena {
     pub fn load_from_file<P>(path: P) -> Result<Self, CoreError>
     where
         P: AsRef<Path>,
@@ -41,7 +44,10 @@ impl BookmarkArena {
         serde_json::to_writer(file, &self.arena)?;
         Ok(())
     }
+}
 
+/// Wrapper for indextree::Arena
+impl BookmarkArena {
     fn get_node_id_at(&self, index: usize) -> Option<NodeId> {
         match NonZeroUsize::new(index) {
             Some(index) => self.arena.get_node_id_at(index),
@@ -56,7 +62,10 @@ impl BookmarkArena {
             None => None,
         }
     }
+}
 
+/// Converting to JSON
+impl BookmarkArena {
     /// Arena to JSON to save file
     pub fn to_json(&self) -> Result<String, CoreError> {
         Ok(serde_json::to_string(&self.arena)?)
@@ -78,7 +87,10 @@ impl BookmarkArena {
         let value = NestedNode::try_new(&self.arena, node_id)?;
         Ok(serde_json::to_string_pretty(&value)?)
     }
+}
 
+/// Tree manupulation
+impl BookmarkArena {
     pub fn remove_subtree(&mut self, index: usize) -> Result<(), CoreError> {
         if index == 1 {
             return Err(CoreError::CannotRemoveRoot());
