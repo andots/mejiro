@@ -103,25 +103,27 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
           {props.bookmark.title}
         </span>
 
-        {/* Edit button */}
-        <Button
-          class="w-8 h-8 ml-3"
-          variant="outline"
-          size="icon"
-          onClick={() => handleEdit(props.bookmark.index)}
-        >
-          <IcBaselineEdit />
-        </Button>
+        <Show when={props.bookmark.node_type !== "Root"}>
+          {/* Edit button */}
+          <Button
+            class="w-8 h-8 ml-3"
+            variant="outline"
+            size="icon"
+            onClick={() => handleEdit(props.bookmark.index)}
+          >
+            <IcBaselineEdit />
+          </Button>
 
-        {/* Remove button */}
-        <Button
-          class="w-8 h-8 ml-3"
-          variant="outline"
-          size="icon"
-          onClick={() => handleRemove(props.bookmark.index)}
-        >
-          <IcOutlineDeleteOutline />
-        </Button>
+          {/* Remove button */}
+          <Button
+            class="w-8 h-8 ml-3"
+            variant="outline"
+            size="icon"
+            onClick={() => handleRemove(props.bookmark.index)}
+          >
+            <IcOutlineDeleteOutline />
+          </Button>
+        </Show>
       </div>
       <Show when={hasChildren() && isOpen()}>
         <ul class="ml-2">
