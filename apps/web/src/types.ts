@@ -8,6 +8,7 @@ export type Bookmark = {
   children: Bookmark[];
 };
 
+//! Must sync with core/src/data.rs
 export type BookmarkData = {
   title: string;
   url: string | null;
@@ -16,7 +17,13 @@ export type BookmarkData = {
   date_added: number | null;
 };
 
-// Must sync with rust struct in src-tauri/settings.rs
+//! Must sync with core/src/data.rs
+export type FolderData = {
+  index: number;
+  title: string;
+};
+
+//! Must sync with rust struct in src-tauri/settings.rs
 export type UserSettings = {
   language: string;
   theme: string;

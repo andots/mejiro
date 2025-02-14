@@ -3,7 +3,11 @@ use std::{fs::File, io::BufReader, num::NonZeroUsize, path::Path};
 use indextree::{macros::tree, Arena, Node, NodeId};
 use url::Url;
 
-use crate::{data::BookmarkData, error::CoreError, serialize::NestedNode};
+use crate::{
+    data::{BookmarkData, FolderData},
+    error::CoreError,
+    serialize::NestedNode,
+};
 
 pub struct BookmarkArena {
     pub arena: Arena<BookmarkData>,
@@ -85,6 +89,21 @@ impl BookmarkArena {
             .map(|n| n.get().clone())
             .collect::<Vec<_>>();
         Ok(root_children)
+    }
+
+    pub fn get_root_children_folder(&self) -> Result<Vec<FolderData>, CoreError> {
+        let root_id = self.get_root_node_id()?;
+        let mut vec: Vec<FolderData> = Vec::new();
+        for node_id in root_id.children(&self.arena) {
+            if let Some(node) = self.arena.get(node_id) {
+                let data = node.get();
+                vec.push(FolderData {
+                    index: node_id.into(),
+                    title: data.title.clone(),
+                });
+            }
+        }
+        Ok(vec)
     }
 }
 

@@ -27,6 +27,12 @@ pub struct BookmarkData {
     pub date_added: Option<u64>,
 }
 
+#[derive(Debug, Serialize)]
+pub struct FolderData {
+    pub index: usize,
+    pub title: String,
+}
+
 impl BookmarkData {
     fn new(title: &str, url: Option<Url>, node_type: NodeType) -> Self {
         Self {
