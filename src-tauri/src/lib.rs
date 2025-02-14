@@ -12,7 +12,6 @@ mod constants;
 mod error;
 mod events;
 mod settings;
-mod utils;
 mod window;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]

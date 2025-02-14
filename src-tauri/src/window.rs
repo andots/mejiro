@@ -89,11 +89,7 @@ pub fn create_window(app_handle: &tauri::AppHandle, settings: &UserSettings) -> 
     external_webview_builder = external_webview_builder.incognito(incognito);
 
     // Create main window and add webviews, load geometry from file
-    let title = format!(
-        "{} - v{}",
-        app_handle.package_info().name,
-        app_handle.package_info().version
-    );
+    let title = app_handle.get_defautl_title();
     let geometry = app_handle.load_window_geometry();
     let width = geometry.width;
     let height = geometry.height;

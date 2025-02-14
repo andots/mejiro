@@ -21,6 +21,7 @@ pub enum FileName {
 }
 
 pub trait AppHandleExt {
+    fn get_defautl_title(&self) -> String;
     fn get_app_dir(&self) -> PathBuf;
     fn get_file_path_from_app_dir(&self, file_name: FileName) -> PathBuf;
     fn get_bookmarks_file_path(&self) -> PathBuf;
@@ -35,6 +36,15 @@ pub trait AppHandleExt {
 }
 
 impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
+    /// Get the default title of the app. The title is in the format of "name - version".
+    fn get_defautl_title(&self) -> String {
+        format!(
+            "{} - v{}",
+            self.package_info().name,
+            self.package_info().version
+        )
+    }
+
     /// Get the app directory (DATA_DIR/${bundle_identifier}) and create it if not exists.
     /// This function will panic if it fails to get the app config dir.
     /// |Platform | Value                                    | Example                                  |
