@@ -60,16 +60,14 @@ pub fn run() {
         tauri::RunEvent::Exit => {
             // save settings before exit
             let _ = app_handle.save_user_settings();
+            let _ = app_handle.save_bookmark_arena();
             app_handle.exit(0);
         }
         tauri::RunEvent::WindowEvent { label, event, .. } => {
             if label == MAINWINDOW_LABEL {
                 match event {
                     tauri::WindowEvent::CloseRequested { .. } => {
-                        // TODO: logging error when failed to save
                         let _ = app_handle.save_window_geometry();
-                        let _ = app_handle.save_bookmark_arena();
-                        let _ = app_handle.save_user_settings();
                     }
                     tauri::WindowEvent::Resized(_physical_size) => {}
                     tauri::WindowEvent::Moved(_physical_position) => {}

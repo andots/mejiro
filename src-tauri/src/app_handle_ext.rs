@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use std::{fs, io::Write, path::PathBuf, sync::Mutex};
+use std::{fs, path::PathBuf, sync::Mutex};
 
 use mejiro_core::tree::BookmarkArena;
 use strum::AsRefStr;
@@ -180,14 +180,12 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
 
     fn save_bookmark_arena(&self) -> Result<(), AppError> {
         let path = self.get_bookmarks_file_path();
-        let mut file = fs::File::create(path)?;
-
         let state = self.state::<Mutex<BookmarkArena>>();
         let arena = state
             .lock()
             .map_err(|_| AppError::Mutex("can't lock bookmarks".to_string()))?;
-        let json = arena.to_json()?;
-        file.write_all(json.as_bytes())?;
+
+        arena.save_to_file(path)?;
 
         Ok(())
     }

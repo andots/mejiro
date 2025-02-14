@@ -33,6 +33,15 @@ impl BookmarkArena {
         Ok(Self::new(arena))
     }
 
+    pub fn save_to_file<P>(&self, path: P) -> Result<(), CoreError>
+    where
+        P: AsRef<Path>,
+    {
+        let file = File::create(path)?;
+        serde_json::to_writer(file, &self.arena)?;
+        Ok(())
+    }
+
     fn get_node_id_at(&self, index: usize) -> Option<NodeId> {
         match NonZeroUsize::new(index) {
             Some(index) => self.arena.get_node_id_at(index),
@@ -48,12 +57,12 @@ impl BookmarkArena {
         }
     }
 
-    /// To Arena to JSON
+    /// Arena to JSON to save file
     pub fn to_json(&self) -> Result<String, CoreError> {
         Ok(serde_json::to_string(&self.arena)?)
     }
 
-    /// Generate JSON for frontend
+    /// Generate nested JSON for frontend
     pub fn to_nested_json(&self, index: usize) -> Result<String, CoreError> {
         let node_id = self
             .get_node_id_at(index)
