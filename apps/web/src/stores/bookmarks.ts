@@ -6,7 +6,7 @@ import type { Bookmark } from "../types";
 interface BookmarkState {
   bookmarks: Bookmark;
   syncBookmarks: () => void;
-  updateTree: (data: string) => void;
+  updateBookmarks: (data: string) => void;
 }
 
 export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
@@ -24,7 +24,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
     const tree = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks: tree }));
   },
-  updateTree: async (data) => {
+  updateBookmarks: async (data) => {
     const tree = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks: tree }));
   },

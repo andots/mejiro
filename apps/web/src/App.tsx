@@ -15,32 +15,42 @@ import { useUrlState } from "./stores/url";
 let unlistenSettingsUpdated: UnlistenFn | undefined;
 let unlistenNavigation: UnlistenFn | undefined;
 let unlistenPageLoaded: UnlistenFn | undefined;
-let unlistenUpdateTree: UnlistenFn | undefined;
+let unlistenBookmarkUpdated: UnlistenFn | undefined;
 
 const initializeApp = async () => {
+  // notify frontend is ready and get bookmarks managed by rust
   const syncBookmarks = useBookmarkState((state) => state.syncBookmarks);
   syncBookmarks();
+
+  // notify frontend is ready and get settings managed by rust
   const syncSettings = useSettingsState((state) => state.syncSettings);
   syncSettings();
 
+  // listen for settings updates on rust side
   unlistenSettingsUpdated = await listen<string>(AppEvent.SettingsUpdated, (event) => {
-    console.log(event.payload);
     debug(event.payload);
   });
-  unlistenUpdateTree = await listen<string>(AppEvent.BookmarkUpdated, (event) => {
-    const updateTree = useBookmarkState((state) => state.updateTree);
-    updateTree(event.payload);
+
+  // listen for bookmark updates on rust side
+  unlistenBookmarkUpdated = await listen<string>(AppEvent.BookmarkUpdated, (event) => {
+    const updateBookmarks = useBookmarkState((state) => state.updateBookmarks);
+    updateBookmarks(event.payload);
   });
+
+  // listen for external navigation events on rust side
   unlistenNavigation = await listen<string>(AppEvent.ExternalNavigation, (event) => {
     const setUrl = useUrlState((state) => state.setUrl);
     setUrl(event.payload);
   });
+
+  // listen for external page loaded events on rust side
   unlistenPageLoaded = await listen<string>(AppEvent.ExternalPageLoaded, (event) => {
     const setTitle = useUrlState((state) => state.setTitle);
     setTitle(event.payload);
   });
 };
 
+// Remove all event listeners
 const removeEventListeners = () => {
   if (unlistenSettingsUpdated !== undefined) {
     unlistenSettingsUpdated();
@@ -51,8 +61,8 @@ const removeEventListeners = () => {
   if (unlistenPageLoaded !== undefined) {
     unlistenPageLoaded();
   }
-  if (unlistenUpdateTree !== undefined) {
-    unlistenUpdateTree();
+  if (unlistenBookmarkUpdated !== undefined) {
+    unlistenBookmarkUpdated();
   }
 };
 
@@ -64,20 +74,6 @@ const App: Component = () => {
   onCleanup(() => {
     removeEventListeners();
   });
-
-  // createEffect(
-  //   on(theme, (t) => {
-  //     const root = document.documentElement;
-  //     if (
-  //       t === "dark" ||
-  //       (t === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)
-  //     ) {
-  //       root.classList.add("dark");
-  //     } else {
-  //       root.classList.remove("dark");
-  //     }
-  //   }),
-  // );
 
   return (
     <div class="w-full h-screen flex flex-col">
@@ -92,3 +88,17 @@ const App: Component = () => {
 };
 
 export default App;
+
+// createEffect(
+//   on(theme, (t) => {
+//     const root = document.documentElement;
+//     if (
+//       t === "dark" ||
+//       (t === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)
+//     ) {
+//       root.classList.add("dark");
+//     } else {
+//       root.classList.remove("dark");
+//     }
+//   }),
+// );

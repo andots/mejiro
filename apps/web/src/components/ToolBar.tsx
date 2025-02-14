@@ -36,6 +36,7 @@ const ToolBar: Component = () => {
             )}
           </For>
         </div>
+
         {/* address bar */}
         <AddressBar />
 
