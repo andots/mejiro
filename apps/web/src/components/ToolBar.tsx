@@ -15,7 +15,7 @@ const ToolBar: Component = () => {
 
   return (
     <div class="sticky top-0 z-50 w-full h-[40px] border-b border-sidebar-border bg-sidebar text-sidebar-foreground">
-      <div class="flex justify-center items-center w-full h-full px-1">
+      <div class="flex justify-center items-center w-full h-full px-2">
         {/* menu button */}
         <Button
           class="w-9 h-9 m-0 mr-3 p-2 [&_svg]:size-6 [&_svg]:shrink-0"
@@ -31,7 +31,7 @@ const ToolBar: Component = () => {
           <For each={settings()?.pinned_urls}>
             {(url) => (
               <Button variant="ghost" class="w-9 h-9 p-2" onClick={() => navigateToUrl(url)}>
-                <Favicon url={url} width="20" height="20" />
+                <Favicon url={url} width="18" height="18" />
               </Button>
             )}
           </For>
