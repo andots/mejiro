@@ -13,7 +13,17 @@ impl Default for BookmarkArena {
     fn default() -> Self {
         let mut arena: Arena<BookmarkData> = Arena::new();
         let root = BookmarkData::new_root();
-        tree!(&mut arena, root);
+        let group1 = BookmarkData::new_folder("Group 1");
+        let group2 = BookmarkData::new_folder("Group 2");
+        let group3 = BookmarkData::new_folder("Group 3");
+        tree!(
+            &mut arena,
+            root => {
+                group1,
+                group2,
+                group3,
+            }
+        );
         Self { arena }
     }
 }
