@@ -9,7 +9,6 @@ import BookmarkTree from "./components/BookmarkTree";
 import BookmarkTreeEditable from "./components/BookmarkTreeEditable";
 import ToolBar from "./components/ToolBar";
 import { AppEvent } from "./constants";
-import { invokeGetRootChildren } from "./invokes";
 import { useBookmarkState } from "./stores/bookmarks";
 import { useSettingsState } from "./stores/settings";
 import { useUrlState } from "./stores/url";
@@ -74,8 +73,6 @@ const App: Component = () => {
 
   onMount(async () => {
     await initializeApp();
-    const data = await invokeGetRootChildren();
-    console.log(data);
   });
 
   onCleanup(() => {

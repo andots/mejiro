@@ -3,6 +3,7 @@ import { type Component, For, Match, Show, Switch, createSignal } from "solid-js
 import { useBookmarkState } from "../stores/bookmarks";
 import { useUrlState } from "../stores/url";
 import type { Bookmark } from "../types";
+import RootChildrenSelect from "./RootChildrenSelect";
 import Favicon from "./icons/Favicon";
 import {
   IcBaselineKeyboardArrowDown,
@@ -16,6 +17,7 @@ const BookmarkTree: Component = () => {
 
   return (
     <div class="pl-1">
+      <RootChildrenSelect />
       <ul class="list-none">
         <BookmarkNode bookmark={bookmarks()} level={0} />
       </ul>

@@ -5,6 +5,8 @@
   "files": ["dist"],
   "exports": {
     "./button": "./src/button.tsx",
+    "./combobox": "./src/combobox.tsx",
+    "./select": "./src/select.tsx",
     "./separator": "./src/separator.tsx",
     "./sheet": "./src/sheet.tsx",
     "./skeleton": "./src/skeleton.tsx",

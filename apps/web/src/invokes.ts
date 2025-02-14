@@ -32,7 +32,7 @@ export const invokeGetBookmarks = async () => {
 };
 
 export const invokeGetRootChildren = async () => {
-  return await invoke<BookmarkData>(AppCommands.GetRootChildren, {});
+  return await invoke<BookmarkData[]>(AppCommands.GetRootChildren, {});
 };
 
 export const invokeHideExternalWebview = async () => {
