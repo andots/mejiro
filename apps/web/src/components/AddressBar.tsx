@@ -14,6 +14,9 @@ const AddressBar: Component = () => {
 
   createEffect(
     on(url, (u) => {
+      if (u === "") {
+        return;
+      }
       setIsHttps(u.toLowerCase().startsWith("https://"));
       try {
         const v = new URL(u);

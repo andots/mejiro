@@ -10,9 +10,8 @@ interface UrlState {
 }
 
 export const useUrlState = createWithSignal<UrlState>((set) => ({
-  // TODO: Replace this with the user defined default URL
-  url: "https://docs.rs/",
-  title: "Docs.rs",
+  url: "",
+  title: "",
   setUrl: (url) => set(() => ({ url })),
   setTitle: (title) => set(() => ({ title })),
   navigateToUrl: (url) => {
