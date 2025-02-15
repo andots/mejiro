@@ -2,7 +2,7 @@
 
 use std::{fs, path::PathBuf, sync::Mutex};
 
-use mejiro_core::tree::BookmarkArena;
+use mejiro_core::bookmarks::BookmarkArena;
 use strum::AsRefStr;
 use tauri::{Manager, Runtime};
 

@@ -1,6 +1,6 @@
 use std::sync::Mutex;
 
-use mejiro_core::{data::FolderData, tree::BookmarkArena};
+use mejiro_core::{bookmarks::BookmarkArena, data::FolderData};
 
 use crate::error::AppError;
 
