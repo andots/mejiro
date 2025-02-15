@@ -62,7 +62,7 @@ impl BookmarkArena {
 
 /// Wrapper for indextree::Arena
 impl BookmarkArena {
-    fn get_node_id_at(&self, index: usize) -> Option<NodeId> {
+    fn find_node_id_by_index(&self, index: usize) -> Option<NodeId> {
         match NonZeroUsize::new(index) {
             Some(index) => self.arena.get_node_id_at(index),
             None => None,
@@ -70,15 +70,16 @@ impl BookmarkArena {
     }
 
     #[allow(dead_code)]
-    fn get_node_at(&self, index: usize) -> Option<&Node<BookmarkData>> {
-        match self.get_node_id_at(index) {
+    fn find_node_by_index(&self, index: usize) -> Option<&Node<BookmarkData>> {
+        match self.find_node_id_by_index(index) {
             Some(node_id) => self.arena.get(node_id),
             None => None,
         }
     }
 
     fn get_root_node_id(&self) -> Result<NodeId, CoreError> {
-        self.get_node_id_at(1).ok_or(CoreError::NodeNotFound(1))
+        self.find_node_id_by_index(1)
+            .ok_or(CoreError::NodeNotFound(1))
     }
 
     pub fn get_root_children(&self) -> Result<Vec<BookmarkData>, CoreError> {
@@ -117,7 +118,7 @@ impl BookmarkArena {
     /// Generate nested JSON for frontend
     pub fn to_nested_json(&self, index: usize) -> Result<String, CoreError> {
         let node_id = self
-            .get_node_id_at(index)
+            .find_node_id_by_index(index)
             .ok_or(CoreError::NodeNotFound(index))?;
         let value = NestedNode::try_new(&self.arena, node_id)?;
         Ok(serde_json::to_string(&value)?)
@@ -125,7 +126,7 @@ impl BookmarkArena {
 
     pub fn to_nested_json_pretty(&self, index: usize) -> Result<String, CoreError> {
         let node_id = self
-            .get_node_id_at(index)
+            .find_node_id_by_index(index)
             .ok_or(CoreError::NodeNotFound(index))?;
         let value = NestedNode::try_new(&self.arena, node_id)?;
         Ok(serde_json::to_string_pretty(&value)?)
@@ -139,7 +140,7 @@ impl BookmarkArena {
             return Err(CoreError::CannotRemoveRoot());
         }
         let node_id = self
-            .get_node_id_at(index)
+            .find_node_id_by_index(index)
             .ok_or(CoreError::NodeNotFound(index))?;
         node_id.remove_subtree(&mut self.arena);
         Ok(())
@@ -164,7 +165,7 @@ impl BookmarkArena {
         let base_url_str = base_url.as_str();
 
         let start_node_id = self
-            .get_node_id_at(starting_index)
+            .find_node_id_by_index(starting_index)
             .ok_or(CoreError::NodeNotFound(1))?;
         let target = start_node_id.descendants(&self.arena).find(|node_id| {
             if let Some(node) = self.arena.get(*node_id) {
@@ -298,7 +299,7 @@ mod tests {
 
         // remove n_2
         bookmark_arena.remove_subtree(2)?;
-        let me = bookmark_arena.get_node_id_at(2);
+        let me = bookmark_arena.find_node_id_by_index(2);
         assert!(me.is_none());
 
         // remove n_4
