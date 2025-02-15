@@ -4,6 +4,7 @@ import { type Component, For, Show, createSignal } from "solid-js";
 import {
   IcBaselineEditNote,
   IcOutlineSettings,
+  OcticonPencil24,
   OcticonSidebarCollapse24,
   OcticonSidebarExpand24,
 } from "@repo/ui/icons";
@@ -44,7 +45,7 @@ const ToolBar: Component = () => {
         size="icon"
         onClick={toggleExternalWebview}
       >
-        <IcBaselineEditNote />
+        <OcticonPencil24 />
       </Button>
 
       {/* pinned url favicons */}
