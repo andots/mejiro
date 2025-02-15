@@ -4,7 +4,7 @@ use indextree::{macros::tree, Arena, Node, NodeId};
 use url::Url;
 
 use crate::{
-    data::{BookmarkData, FolderData},
+    data::{BookmarkData, FolderData, NodeType},
     error::CoreError,
     serialize::NestedNode,
 };
@@ -102,10 +102,13 @@ impl BookmarkArena {
         for node_id in root_id.children(&self.arena) {
             if let Some(node) = self.find_node_by_node_id(node_id) {
                 let data = node.get();
-                vec.push(FolderData {
-                    index: node_id.into(),
-                    title: data.title.clone(),
-                });
+                // only push if the node is folder
+                if data.node_type == NodeType::Folder {
+                    vec.push(FolderData {
+                        index: node_id.into(),
+                        title: data.title.clone(),
+                    });
+                }
             }
         }
         Ok(vec)
