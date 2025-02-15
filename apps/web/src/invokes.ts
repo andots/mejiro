@@ -10,8 +10,8 @@ export const Invoke = {
   GetRootChildrenFolder: async () => {
     return invoke<FolderData[]>("get_root_children_folder", {});
   },
-  AddBookmark: async (url: string, title: string | null | undefined) => {
-    return invoke("add_bookmark", { url, title });
+  AddBookmark: async (url: string, title: string | null | undefined, startingIndex: number) => {
+    return invoke<string>("add_bookmark", { url, title, startingIndex });
   },
   RemoveBookmark: async (index: number) => {
     return invoke("remove_bookmark", { index });

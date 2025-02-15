@@ -8,13 +8,14 @@ import {
   OcticonStar24,
   OcticonStarFill24,
 } from "@repo/ui/icons";
-import { Invoke } from "../invokes";
+import { useBookmarkState } from "../stores/bookmarks";
 import { useUrlState } from "../stores/url";
 
 const AddressBar: Component = () => {
   const url = useUrlState((state) => state.url);
   const title = useUrlState((state) => state.title);
   const navigateToUrl = useUrlState((state) => state.navigateToUrl);
+  const addBookmark = useBookmarkState((state) => state.addBookmark);
   const [isHttps, setIsHttps] = createSignal<boolean>(true);
   const [isValidUrl, setIsValidUrl] = createSignal<boolean>(false);
 
@@ -36,10 +37,9 @@ const AddressBar: Component = () => {
     }),
   );
 
-  // TODO load favorites from data
-  // お気に入りトグル
+  // TODO load favorites from state
   const toggleFavorite = () => {
-    Invoke.AddBookmark(url(), title());
+    addBookmark(url(), title());
     setIsFavorited(!isFavorited());
   };
 

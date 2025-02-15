@@ -34,23 +34,17 @@ pub fn get_root_children_folder(
 
 #[tauri::command]
 pub async fn add_bookmark(
-    app_handle: tauri::AppHandle,
     state: tauri::State<'_, Mutex<BookmarkArena>>,
     url: String,
     title: Option<String>,
-) -> Result<(), AppError> {
+    starting_index: usize,
+) -> Result<String, AppError> {
     let mut arena = state
         .lock()
         .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
-    arena.add_bookmark(url, title)?;
+    arena.add_bookmark(url, title, starting_index)?;
 
-    emit_to_app_webview(
-        &app_handle,
-        AppEvent::BookmarkUpdated,
-        arena.to_nested_json(1)?,
-    )?;
-
-    Ok(())
+    Ok(arena.to_nested_json(starting_index)?)
 }
 
 #[tauri::command]

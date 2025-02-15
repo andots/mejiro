@@ -6,13 +6,14 @@ import type { Bookmark } from "../types";
 interface BookmarkState {
   bookmarks: Bookmark;
   getBookmarks: (index: number) => void;
+  addBookmark: (url: string, title: string) => void;
   updateBookmarks: (data: string) => void;
 }
 
 export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
   bookmarks: {
     index: 0,
-    title: "Root",
+    title: "All Bookmarks",
     url: null,
     host: null,
     node_type: "Root",
@@ -26,6 +27,14 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
       const tree = JSON.parse(data) as Bookmark;
       set(() => ({ bookmarks: tree }));
     }
+  },
+  addBookmark: async (url, title) => {
+    // get current top of bookmark index that shown in the UI as a starting point
+    const current = useBookmarkState((state) => state.bookmarks);
+    const startingIndex = current().index;
+    const data = await Invoke.AddBookmark(url, title, startingIndex);
+    const tree = JSON.parse(data) as Bookmark;
+    set(() => ({ bookmarks: tree }));
   },
   updateBookmarks: async (data) => {
     const tree = JSON.parse(data) as Bookmark;

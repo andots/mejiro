@@ -145,7 +145,12 @@ impl BookmarkArena {
         Ok(())
     }
 
-    pub fn add_bookmark(&mut self, url: String, title: Option<String>) -> Result<(), CoreError> {
+    pub fn add_bookmark(
+        &mut self,
+        url: String,
+        title: Option<String>,
+        starting_index: usize,
+    ) -> Result<(), CoreError> {
         // if title is None, use url as title
         let title = title.unwrap_or(url.clone());
         // 与えられたURLの一つ上の階層のURLを取得
@@ -158,12 +163,11 @@ impl BookmarkArena {
             .pop();
         let base_url_str = base_url.as_str();
 
-        // まずはroot_idを取得
-        // TODO: ルートでなくて、フロントで見ている最上位のノードから探す
-        let root_id = self.get_node_id_at(1).ok_or(CoreError::NodeNotFound(1))?;
-        // ターゲットとなるノードをroot_idの子孫から探す
-        let target = root_id.descendants(&self.arena).find(|n| {
-            if let Some(node) = self.arena.get(*n) {
+        let start_node_id = self
+            .get_node_id_at(starting_index)
+            .ok_or(CoreError::NodeNotFound(1))?;
+        let target = start_node_id.descendants(&self.arena).find(|node_id| {
+            if let Some(node) = self.arena.get(*node_id) {
                 if let Some(node_url) = &node.get().url {
                     if node_url.as_str().starts_with(base_url_str) {
                         return true;
@@ -179,9 +183,9 @@ impl BookmarkArena {
             let new_node = self.arena.new_node(bookmark);
             target.checked_append(new_node, &mut self.arena)?;
         } else {
-            // if not found target, append new node to the root node
+            // if not found target, append new node to the starting node
             let new_node = self.arena.new_node(bookmark);
-            root_id.checked_append(new_node, &mut self.arena)?;
+            start_node_id.checked_append(new_node, &mut self.arena)?;
         }
 
         Ok(())
@@ -338,16 +342,23 @@ mod tests {
         bookmark_arena.add_bookmark(
             "https://docs.rs/abc/cdf".to_string(),
             Some("title".to_string()),
+            1,
         )?;
         bookmark_arena.add_bookmark(
             "https://docs.rs/abc/cdf/efg".to_string(),
             Some("title".to_string()),
+            1,
         )?;
         bookmark_arena.add_bookmark(
             "https://docs.rs/abc/cdf/aaaa".to_string(),
             Some("title".to_string()),
+            1,
         )?;
-        bookmark_arena.add_bookmark("https://docs.rs/".to_string(), Some("title".to_string()))?;
+        bookmark_arena.add_bookmark(
+            "https://docs.rs/".to_string(),
+            Some("title".to_string()),
+            1,
+        )?;
 
         println!("{}", bookmark_arena.to_nested_json_pretty(1)?);
 
