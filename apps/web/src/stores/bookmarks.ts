@@ -7,6 +7,7 @@ interface BookmarkState {
   bookmarks: Bookmark;
   getBookmarks: (index: number) => void;
   addBookmark: (url: string, title: string) => void;
+  removeBookmark: (index: number) => void;
   updateBookmarks: (data: string) => void;
 }
 
@@ -33,6 +34,14 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
     const current = useBookmarkState((state) => state.bookmarks);
     const startingIndex = current().index;
     const data = await Invoke.AddBookmark(url, title, startingIndex);
+    const tree = JSON.parse(data) as Bookmark;
+    set(() => ({ bookmarks: tree }));
+  },
+  removeBookmark: async (index) => {
+    // get current top of bookmark index that shown in the UI as a starting point
+    const current = useBookmarkState((state) => state.bookmarks);
+    const startingIndex = current().index;
+    const data = await Invoke.RemoveBookmark(index, startingIndex);
     const tree = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks: tree }));
   },

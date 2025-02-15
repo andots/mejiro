@@ -11,10 +11,12 @@ export const Invoke = {
     return invoke<FolderData[]>("get_root_children_folder", {});
   },
   AddBookmark: async (url: string, title: string | null | undefined, startingIndex: number) => {
+    // returned json string is a nested tree of bookmarks
     return invoke<string>("add_bookmark", { url, title, startingIndex });
   },
-  RemoveBookmark: async (index: number) => {
-    return invoke("remove_bookmark", { index });
+  RemoveBookmark: async (index: number, startingIndex: number) => {
+    // returned json string is a nested tree of bookmarks
+    return invoke<string>("remove_bookmark", { index, startingIndex });
   },
 
   // External Webview commands

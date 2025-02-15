@@ -9,7 +9,6 @@ import {
   IcOutlineFolder,
   IcOutlineFolderOpen,
 } from "@repo/ui/icons";
-import { Invoke } from "../invokes";
 import { useBookmarkState } from "../stores/bookmarks";
 import type { Bookmark } from "../types";
 import Favicon from "./icons/Favicon";
@@ -49,7 +48,8 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
   };
 
   const handleRemove = (index: number) => {
-    Invoke.RemoveBookmark(index);
+    const removeBookmark = useBookmarkState((state) => state.removeBookmark);
+    removeBookmark(index);
   };
 
   return (
