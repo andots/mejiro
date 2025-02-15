@@ -7,20 +7,23 @@ import type { FolderData } from "../types";
 // https://kobalte.dev/docs/core/components/select/
 
 const RootChildrenSelect: Component = () => {
-  const [options, setOptions] = createSignal<FolderData[]>([]);
-  const [value, setValue] = createSignal<FolderData | null>(null);
+  const [options, setOptions] = createSignal<FolderData[]>([{ index: 1, title: "All Bookmarks" }]);
+  const [value, setValue] = createSignal<FolderData | null>({ index: 1, title: "All Bookmarks" });
 
   onMount(async () => {
     const data = await invokeGetRootChildrenFolder();
-    setOptions(data);
-    if (data.length > 0) {
-      setValue(data[0]);
+    setOptions([...options(), ...data]);
+    if (options().length > 0) {
+      setValue(options()[0]);
     }
   });
 
   const handleOnChange = (value: FolderData | null) => {
-    setValue(value);
     // TODO: reload bookmarks tree based on selected folder
+    if (value !== null) {
+      console.log(value);
+      setValue(value);
+    }
   };
 
   return (
@@ -36,7 +39,7 @@ const RootChildrenSelect: Component = () => {
             <SelectItem item={props.item}>{props.item.rawValue.title}</SelectItem>
           )}
         >
-          <SelectTrigger aria-label="child" class="w-[180px]">
+          <SelectTrigger aria-label="child" class="w-[185px]">
             <SelectValue<FolderData>>{(state) => state.selectedOption().title}</SelectValue>
           </SelectTrigger>
           <SelectContent />
