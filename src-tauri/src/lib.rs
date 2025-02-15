@@ -27,7 +27,7 @@ pub fn run() {
                 )?;
             }
 
-            let bookmarks = app.handle().load_bookmark_arena();
+            let bookmarks = app.handle().load_bookmarks();
             app.manage(Mutex::new(bookmarks));
 
             let settings = app.handle().load_user_settings();
@@ -61,7 +61,7 @@ pub fn run() {
         tauri::RunEvent::Exit => {
             // save settings before exit
             let _ = app_handle.save_user_settings();
-            let _ = app_handle.save_bookmark_arena();
+            let _ = app_handle.save_bookmarks();
             app_handle.exit(0);
         }
         tauri::RunEvent::WindowEvent { label, event, .. } => {

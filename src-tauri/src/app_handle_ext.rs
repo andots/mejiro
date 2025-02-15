@@ -31,8 +31,8 @@ pub trait AppHandleExt {
     fn save_user_settings(&self) -> Result<(), AppError>;
     fn load_window_geometry(&self) -> WindowGeometry;
     fn save_window_geometry(&self) -> Result<(), AppError>;
-    fn load_bookmark_arena(&self) -> Bookmarks;
-    fn save_bookmark_arena(&self) -> Result<(), AppError>;
+    fn load_bookmarks(&self) -> Bookmarks;
+    fn save_bookmarks(&self) -> Result<(), AppError>;
 }
 
 impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
@@ -167,7 +167,7 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
         Ok(())
     }
 
-    fn load_bookmark_arena(&self) -> Bookmarks {
+    fn load_bookmarks(&self) -> Bookmarks {
         let path = self.get_bookmarks_file_path();
         match Bookmarks::load_from_file(path) {
             Ok(v) => v,
@@ -178,7 +178,7 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
         }
     }
 
-    fn save_bookmark_arena(&self) -> Result<(), AppError> {
+    fn save_bookmarks(&self) -> Result<(), AppError> {
         let path = self.get_bookmarks_file_path();
         let state = self.state::<Mutex<Bookmarks>>();
         let bookmarks = state
