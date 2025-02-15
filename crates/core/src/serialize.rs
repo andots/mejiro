@@ -20,15 +20,16 @@ pub struct NestedNode<'a, T: Serialize> {
 impl<'a, T: Serialize> NestedNode<'a, T> {
     /// Attempt to create a new `NestedNode` from an `Arena` and a `NodeId`.
     pub fn try_new(arena: &'a Arena<T>, node_id: NodeId) -> Result<Self, CoreError> {
-        let node = arena.get(node_id);
-        match node {
-            None => Err(CoreError::NestedNode(node_id.into())),
-            Some(n) => Ok(NestedNode {
-                index: node_id.into(),
-                data: n.get(),
-                children: n.first_child().map(|first| SiblingNodes::new(first, arena)),
-            }),
-        }
+        let node = arena
+            .get(node_id)
+            .ok_or(CoreError::NestedNode(node_id.into()))?;
+        Ok(NestedNode {
+            index: node_id.into(),
+            data: node.get(),
+            children: node
+                .first_child()
+                .map(|first| SiblingNodes::new(first, arena)),
+        })
     }
 }
 
