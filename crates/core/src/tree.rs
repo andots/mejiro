@@ -80,7 +80,10 @@ impl BookmarkArena {
     fn find_node_by_node_id(&self, node_id: NodeId) -> Option<&Node<BookmarkData>> {
         self.arena.get(node_id)
     }
+}
 
+/// Root node stuff
+impl BookmarkArena {
     fn get_root_node_id(&self) -> Result<NodeId, CoreError> {
         self.find_node_id_by_index(1)
             .ok_or(CoreError::NodeNotFound(1))
