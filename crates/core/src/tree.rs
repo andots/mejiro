@@ -77,6 +77,10 @@ impl BookmarkArena {
         }
     }
 
+    fn find_node_by_node_id(&self, node_id: NodeId) -> Option<&Node<BookmarkData>> {
+        self.arena.get(node_id)
+    }
+
     fn get_root_node_id(&self) -> Result<NodeId, CoreError> {
         self.find_node_id_by_index(1)
             .ok_or(CoreError::NodeNotFound(1))
@@ -86,7 +90,7 @@ impl BookmarkArena {
         let root_id = self.get_root_node_id()?;
         let root_children = root_id
             .children(&self.arena)
-            .filter_map(|id| self.arena.get(id))
+            .filter_map(|node_id| self.find_node_by_node_id(node_id))
             .map(|n| n.get().clone())
             .collect::<Vec<_>>();
         Ok(root_children)
@@ -96,7 +100,7 @@ impl BookmarkArena {
         let root_id = self.get_root_node_id()?;
         let mut vec: Vec<FolderData> = Vec::new();
         for node_id in root_id.children(&self.arena) {
-            if let Some(node) = self.arena.get(node_id) {
+            if let Some(node) = self.find_node_by_node_id(node_id) {
                 let data = node.get();
                 vec.push(FolderData {
                     index: node_id.into(),
@@ -168,7 +172,7 @@ impl BookmarkArena {
             .find_node_id_by_index(starting_index)
             .ok_or(CoreError::NodeNotFound(1))?;
         let target = start_node_id.descendants(&self.arena).find(|node_id| {
-            if let Some(node) = self.arena.get(*node_id) {
+            if let Some(node) = self.find_node_by_node_id(*node_id) {
                 if let Some(node_url) = &node.get().url {
                     if node_url.as_str().starts_with(base_url_str) {
                         return true;
