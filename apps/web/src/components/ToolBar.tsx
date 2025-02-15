@@ -1,12 +1,12 @@
 import { Button } from "@repo/ui/button";
 import { type Component, For } from "solid-js";
 
+import { IcBaselineEditNote, IcBaselineMenuOpen, IcOutlineSettings } from "@repo/ui/icons";
 import { useSettingsState } from "../stores/settings";
 import { useUrlState } from "../stores/url";
 import { useWindowState } from "../stores/window";
 import AddressBar from "./AddressBar";
 import Favicon from "./icons/Favicon";
-import { IcBaselineEditNote, IcBaselineMenuOpen, IcOutlineSettings } from "./icons/Icons";
 
 const ToolBar: Component = () => {
   const settings = useSettingsState((state) => state.settings);

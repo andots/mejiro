@@ -1,15 +1,15 @@
 import { type Component, For, Match, Show, Switch, createSignal } from "solid-js";
 
-import { useBookmarkState } from "../stores/bookmarks";
-import { useUrlState } from "../stores/url";
-import type { Bookmark } from "../types";
-import Favicon from "./icons/Favicon";
 import {
   IcBaselineKeyboardArrowDown,
   IcBaselineKeyboardArrowRight,
   IcOutlineFolder,
   IcOutlineFolderOpen,
-} from "./icons/Icons";
+} from "@repo/ui/icons";
+import { useBookmarkState } from "../stores/bookmarks";
+import { useUrlState } from "../stores/url";
+import type { Bookmark } from "../types";
+import Favicon from "./icons/Favicon";
 
 const BookmarkTree: Component = () => {
   const bookmarks = useBookmarkState((state) => state.bookmarks);

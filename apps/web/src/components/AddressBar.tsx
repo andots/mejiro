@@ -1,14 +1,15 @@
 import type { Component } from "solid-js";
 import { Show, createEffect, createSignal, on } from "solid-js";
-import { Invoke } from "../invokes";
-import { useUrlState } from "../stores/url";
+
 import {
   IcBaselineRefresh,
   IcBaselineStar,
   IcBaselineStarBorder,
   IcOutlineLock,
   IcOutlineLockOpen,
-} from "./icons/Icons";
+} from "@repo/ui/icons";
+import { Invoke } from "../invokes";
+import { useUrlState } from "../stores/url";
 
 const AddressBar: Component = () => {
   const url = useUrlState((state) => state.url);

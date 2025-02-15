@@ -1,10 +1,6 @@
 import { type Component, For, Match, Show, Switch, createSignal } from "solid-js";
 
 import { Button } from "@repo/ui/button";
-import { Invoke } from "../invokes";
-import { useBookmarkState } from "../stores/bookmarks";
-import type { Bookmark } from "../types";
-import Favicon from "./icons/Favicon";
 import {
   IcBaselineEdit,
   IcBaselineKeyboardArrowDown,
@@ -12,7 +8,11 @@ import {
   IcOutlineDeleteOutline,
   IcOutlineFolder,
   IcOutlineFolderOpen,
-} from "./icons/Icons";
+} from "@repo/ui/icons";
+import { Invoke } from "../invokes";
+import { useBookmarkState } from "../stores/bookmarks";
+import type { Bookmark } from "../types";
+import Favicon from "./icons/Favicon";
 
 const BookmarkTreeEditable: Component = () => {
   const bookmarks = useBookmarkState((state) => state.bookmarks);
