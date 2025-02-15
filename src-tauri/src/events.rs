@@ -13,10 +13,6 @@ pub enum AppEvent {
     ExternalPageLoaded,
     #[strum(serialize = "app://external-navigation")]
     ExternalNavigation,
-
-    #[allow(dead_code)]
-    #[strum(serialize = "app://bookmark-updated")]
-    BookmarkUpdated,
 }
 
 pub fn emit_to_app_webview<S>(

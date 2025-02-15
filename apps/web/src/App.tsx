@@ -16,7 +16,6 @@ import { useUrlState } from "./stores/url";
 import { useWindowState } from "./stores/window";
 
 let unlistenSettingsUpdated: UnlistenFn | undefined;
-let unlistenBookmarkUpdated: UnlistenFn | undefined;
 let unlistenNavigation: UnlistenFn | undefined;
 let unlistenPageLoaded: UnlistenFn | undefined;
 
@@ -28,12 +27,6 @@ const initializeApp = async () => {
   // listen for settings updates on rust side
   unlistenSettingsUpdated = await listen<string>(AppEvent.SettingsUpdated, (event) => {
     debug(event.payload);
-  });
-
-  // listen for bookmark updates on rust side
-  unlistenBookmarkUpdated = await listen<string>(AppEvent.BookmarkUpdated, (event) => {
-    const updateBookmarks = useBookmarkState((state) => state.updateBookmarks);
-    updateBookmarks(event.payload);
   });
 
   // listen for external navigation events on rust side
@@ -59,9 +52,6 @@ const removeEventListeners = () => {
   }
   if (unlistenPageLoaded !== undefined) {
     unlistenPageLoaded();
-  }
-  if (unlistenBookmarkUpdated !== undefined) {
-    unlistenBookmarkUpdated();
   }
 };
 

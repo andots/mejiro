@@ -8,12 +8,11 @@ interface BookmarkState {
   getBookmarks: (index: number) => void;
   addBookmark: (url: string, title: string) => void;
   removeBookmark: (index: number) => void;
-  updateBookmarks: (data: string) => void;
 }
 
 export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
   bookmarks: {
-    index: 0,
+    index: 1,
     title: "All Bookmarks",
     url: null,
     host: null,
@@ -42,10 +41,6 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
     const current = useBookmarkState((state) => state.bookmarks);
     const startingIndex = current().index;
     const data = await Invoke.RemoveBookmark(index, startingIndex);
-    const tree = JSON.parse(data) as Bookmark;
-    set(() => ({ bookmarks: tree }));
-  },
-  updateBookmarks: async (data) => {
     const tree = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks: tree }));
   },
