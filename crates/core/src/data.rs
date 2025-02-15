@@ -45,7 +45,7 @@ impl BookmarkData {
     }
 
     pub fn new_root() -> Self {
-        Self::new("Root", None, NodeType::Root)
+        Self::new("All Bookmarks", None, NodeType::Root)
     }
 
     pub fn new_folder(title: &str) -> Self {
