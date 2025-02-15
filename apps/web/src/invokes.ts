@@ -4,8 +4,8 @@ import type { Bounds, FolderData, Rect, UserSettings } from "./types";
 
 export const Invoke = {
   // Bookmarks commands
-  GetNestedJson: async () => {
-    return invoke<string>("get_nested_json", {});
+  GetNestedJson: async (index: number) => {
+    return invoke<string>("get_nested_json", { index });
   },
   GetRootChildrenFolder: async () => {
     return invoke<FolderData[]>("get_root_children_folder", {});

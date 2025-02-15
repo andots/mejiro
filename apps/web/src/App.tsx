@@ -16,15 +16,11 @@ import { useUrlState } from "./stores/url";
 import { useWindowState } from "./stores/window";
 
 let unlistenSettingsUpdated: UnlistenFn | undefined;
+let unlistenBookmarkUpdated: UnlistenFn | undefined;
 let unlistenNavigation: UnlistenFn | undefined;
 let unlistenPageLoaded: UnlistenFn | undefined;
-let unlistenBookmarkUpdated: UnlistenFn | undefined;
 
 const initializeApp = async () => {
-  // notify frontend is ready and get bookmarks managed by rust
-  const syncBookmarks = useBookmarkState((state) => state.syncBookmarks);
-  syncBookmarks();
-
   // notify frontend is ready and get settings managed by rust
   const syncSettings = useSettingsState((state) => state.syncSettings);
   syncSettings();

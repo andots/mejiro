@@ -2,6 +2,7 @@ import { type Component, Show, createSignal, onMount } from "solid-js";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/ui/select";
 import { Invoke } from "../invokes";
+import { useBookmarkState } from "../stores/bookmarks";
 import type { FolderData } from "../types";
 
 // https://kobalte.dev/docs/core/components/select/
@@ -9,6 +10,7 @@ import type { FolderData } from "../types";
 const RootChildrenSelect: Component = () => {
   const [options, setOptions] = createSignal<FolderData[]>([{ index: 1, title: "All Bookmarks" }]);
   const [value, setValue] = createSignal<FolderData | null>({ index: 1, title: "All Bookmarks" });
+  const getBookmarks = useBookmarkState((state) => state.getBookmarks);
 
   onMount(async () => {
     const data = await Invoke.GetRootChildrenFolder();
@@ -19,10 +21,9 @@ const RootChildrenSelect: Component = () => {
   });
 
   const handleOnChange = (value: FolderData | null) => {
-    // TODO: reload bookmarks tree based on selected folder
-    if (value !== null) {
-      console.log(value);
+    if (value !== null && value.index > 0) {
       setValue(value);
+      getBookmarks(value.index);
     }
   };
 

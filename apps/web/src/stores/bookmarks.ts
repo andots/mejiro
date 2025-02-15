@@ -5,7 +5,7 @@ import type { Bookmark } from "../types";
 
 interface BookmarkState {
   bookmarks: Bookmark;
-  syncBookmarks: () => void;
+  getBookmarks: (index: number) => void;
   updateBookmarks: (data: string) => void;
 }
 
@@ -19,10 +19,13 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
     date_added: 0,
     children: [],
   },
-  syncBookmarks: async () => {
-    const data = await Invoke.GetNestedJson();
-    const tree = JSON.parse(data) as Bookmark;
-    set(() => ({ bookmarks: tree }));
+  getBookmarks: async (index) => {
+    // can't accept index 0 because indextree starts from 1
+    if (index >= 1) {
+      const data = await Invoke.GetNestedJson(index);
+      const tree = JSON.parse(data) as Bookmark;
+      set(() => ({ bookmarks: tree }));
+    }
   },
   updateBookmarks: async (data) => {
     const tree = JSON.parse(data) as Bookmark;

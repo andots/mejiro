@@ -10,11 +10,15 @@ use crate::{
 #[tauri::command]
 pub async fn get_nested_json(
     state: tauri::State<'_, Mutex<BookmarkArena>>,
+    index: usize,
 ) -> Result<String, AppError> {
+    if index == 0 {
+        return Err(AppError::Other("index should not be 0".to_string()));
+    }
     let arena = state
         .lock()
         .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
-    Ok(arena.to_nested_json(1)?)
+    Ok(arena.to_nested_json(index)?)
 }
 
 #[tauri::command]
