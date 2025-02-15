@@ -1,9 +1,8 @@
 import { Button } from "@repo/ui/button";
-import { type Component, For, Show, createSignal } from "solid-js";
+import { type Component, For, Show } from "solid-js";
 
 import {
-  IcBaselineEditNote,
-  IcOutlineSettings,
+  OcticonGear24,
   OcticonPencil24,
   OcticonSidebarCollapse24,
   OcticonSidebarExpand24,
@@ -64,7 +63,7 @@ const ToolBar: Component = () => {
 
       {/* settings button */}
       <Button class="w-9 h-9 m-0 p-2 [&_svg]:size-5 [&_svg]:shrink-0" variant="ghost" size="icon">
-        <IcOutlineSettings />
+        <OcticonGear24 />
       </Button>
     </div>
   );

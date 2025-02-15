@@ -3,10 +3,10 @@ import { Show, createEffect, createSignal, on } from "solid-js";
 
 import {
   IcBaselineRefresh,
-  IcBaselineStar,
-  IcBaselineStarBorder,
   IcOutlineLock,
   IcOutlineLockOpen,
+  OcticonStar24,
+  OcticonStarFill24,
 } from "@repo/ui/icons";
 import { Invoke } from "../invokes";
 import { useUrlState } from "../stores/url";
@@ -74,7 +74,7 @@ const AddressBar: Component = () => {
           {/* Refresh Button */}
           <button
             onClick={() => refresh()}
-            class="p-1.5 hover:bg-gray-200 rounded-full transition-colors"
+            class="p-1 hover:bg-gray-200 rounded-full transition-colors"
             title="Refresh page"
             type="button"
           >
@@ -83,20 +83,36 @@ const AddressBar: Component = () => {
 
           {/* Favorite Button */}
           <button
-            onClick={toggleFavorite}
-            class="p-1.5 hover:bg-gray-200 rounded-full transition-colors"
-            title="Add to favorites"
             type="button"
+            onClick={toggleFavorite}
+            class="p-1 hover:bg-gray-200 rounded-full transition-colors"
           >
             <Show when={isFavorited()}>
-              <IcBaselineStar class="text-yellow-500 fill-current" />
+              <OcticonStarFill24 class="text-yellow-500 fill-current" />
             </Show>
             <Show when={!isFavorited()}>
-              <IcBaselineStarBorder />
+              <OcticonStar24 />
             </Show>
           </button>
         </div>
       </div>
+
+      {/* Star Button */}
+      {/* <div class="ml-2">
+        <Button
+          onClick={toggleFavorite}
+          class="w-9 h-9 m-0 p-2 [&_svg]:size-5 [&_svg]:shrink-0"
+          variant="ghost"
+          size="icon"
+        >
+          <Show when={isFavorited()}>
+            <OcticonStarFill24 class="text-yellow-500 fill-current" />
+          </Show>
+          <Show when={!isFavorited()}>
+            <OcticonStar24 />
+          </Show>
+        </Button>
+      </div> */}
     </div>
   );
 };
