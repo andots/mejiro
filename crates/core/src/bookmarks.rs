@@ -9,11 +9,11 @@ use crate::{
     serialize::NestedNode,
 };
 
-pub struct BookmarkArena {
+pub struct Bookmarks {
     pub arena: Arena<BookmarkData>,
 }
 
-impl Default for BookmarkArena {
+impl Default for Bookmarks {
     fn default() -> Self {
         let mut arena: Arena<BookmarkData> = Arena::new();
         let root = BookmarkData::new_root();
@@ -32,14 +32,14 @@ impl Default for BookmarkArena {
     }
 }
 
-impl BookmarkArena {
+impl Bookmarks {
     pub fn new(arena: Arena<BookmarkData>) -> Self {
         Self { arena }
     }
 }
 
 /// File I/O
-impl BookmarkArena {
+impl Bookmarks {
     pub fn load_from_file<P>(path: P) -> Result<Self, CoreError>
     where
         P: AsRef<Path>,
@@ -61,7 +61,7 @@ impl BookmarkArena {
 }
 
 /// Wrapper for indextree::Arena
-impl BookmarkArena {
+impl Bookmarks {
     fn find_node_id_by_index(&self, index: usize) -> Option<NodeId> {
         match NonZeroUsize::new(index) {
             Some(index) => self.arena.get_node_id_at(index),
@@ -83,7 +83,7 @@ impl BookmarkArena {
 }
 
 /// Root node stuff
-impl BookmarkArena {
+impl Bookmarks {
     fn get_root_node_id(&self) -> Result<NodeId, CoreError> {
         self.find_node_id_by_index(1)
             .ok_or(CoreError::NodeNotFound(1))
@@ -119,7 +119,7 @@ impl BookmarkArena {
 }
 
 /// Converting to JSON
-impl BookmarkArena {
+impl Bookmarks {
     /// Arena to JSON to save file
     pub fn to_json(&self) -> Result<String, CoreError> {
         Ok(serde_json::to_string(&self.arena)?)
@@ -144,7 +144,7 @@ impl BookmarkArena {
 }
 
 /// Tree manupulation
-impl BookmarkArena {
+impl Bookmarks {
     pub fn remove_subtree(&mut self, index: usize) -> Result<(), CoreError> {
         if index == 1 {
             return Err(CoreError::CannotRemoveRoot());
@@ -254,7 +254,7 @@ mod tests {
         arena
     }
 
-    fn create_bookmark_arena() -> BookmarkArena {
+    fn create_test_bookmarks() -> Bookmarks {
         let mut arena = Arena::new();
         let root = BookmarkData::new_root();
         let n_2 = BookmarkData::try_new_bookmark("n_2", "https://docs.rs/abc").unwrap();
@@ -272,22 +272,22 @@ mod tests {
                 }
             }
         );
-        BookmarkArena::new(arena)
+        Bookmarks::new(arena)
     }
 
     #[test]
     fn test_create_realistic_arena() -> anyhow::Result<()> {
         let arena = create_realistic_arena();
-        let bookmark_arena = BookmarkArena::new(arena.clone());
+        let bookmarks = Bookmarks::new(arena.clone());
 
         let path = get_outs_path().join("bookmarks.json");
         let mut file = fs::File::create(path)?;
-        let json = bookmark_arena.to_json()?;
+        let json = bookmarks.to_json()?;
         file.write_all(json.as_bytes())?;
 
         let path = get_outs_path().join("nested_bookmarks.json");
         let mut file = fs::File::create(path)?;
-        let json = bookmark_arena.to_nested_json(1)?;
+        let json = bookmarks.to_nested_json(1)?;
         file.write_all(json.as_bytes())?;
 
         assert_eq!(arena.count(), 16);
@@ -298,36 +298,36 @@ mod tests {
     #[test]
     fn test_remove_subtree() -> anyhow::Result<()> {
         // let arena = create_test_tree();
-        let mut bookmark_arena = create_bookmark_arena();
+        let mut bookmarks = create_test_bookmarks();
 
         // remove wrong index must be error
-        assert!(bookmark_arena.remove_subtree(100).is_err());
-        assert_eq!(bookmark_arena.arena.count(), 6);
+        assert!(bookmarks.remove_subtree(100).is_err());
+        assert_eq!(bookmarks.arena.count(), 6);
 
         // try to remove root node must be error
-        assert!(bookmark_arena.remove_subtree(1).is_err());
+        assert!(bookmarks.remove_subtree(1).is_err());
 
         // remove n_2
-        bookmark_arena.remove_subtree(2)?;
-        let me = bookmark_arena.find_node_id_by_index(2);
+        bookmarks.remove_subtree(2)?;
+        let me = bookmarks.find_node_id_by_index(2);
         assert!(me.is_none());
 
         // remove n_4
-        bookmark_arena.remove_subtree(3)?;
-        bookmark_arena.remove_subtree(4)?;
+        bookmarks.remove_subtree(3)?;
+        bookmarks.remove_subtree(4)?;
 
         // internal arena count must be still 6
-        assert_eq!(bookmark_arena.arena.count(), 6);
+        assert_eq!(bookmarks.arena.count(), 6);
 
-        println!("{}", bookmark_arena.to_nested_json_pretty(1)?);
+        println!("{}", bookmarks.to_nested_json_pretty(1)?);
 
         Ok(())
     }
 
     #[test]
     fn test_get_root_children() -> anyhow::Result<()> {
-        let bookmark_arena = create_bookmark_arena();
-        let root_children = bookmark_arena.get_root_children()?;
+        let bookmarks = create_test_bookmarks();
+        let root_children = bookmarks.get_root_children()?;
         assert_eq!(root_children.len(), 3);
         let n_2 = root_children.first().unwrap();
         assert_eq!(n_2.title, "n_2");
@@ -348,30 +348,26 @@ mod tests {
                 BookmarkData::try_new_bookmark("a", "https://docs.rs/abc").unwrap(),
             }
         );
-        let mut bookmark_arena = BookmarkArena::new(arena);
+        let mut bookmarks = Bookmarks::new(arena);
 
-        bookmark_arena.add_bookmark(
+        bookmarks.add_bookmark(
             "https://docs.rs/abc/cdf".to_string(),
             Some("title".to_string()),
             1,
         )?;
-        bookmark_arena.add_bookmark(
+        bookmarks.add_bookmark(
             "https://docs.rs/abc/cdf/efg".to_string(),
             Some("title".to_string()),
             1,
         )?;
-        bookmark_arena.add_bookmark(
+        bookmarks.add_bookmark(
             "https://docs.rs/abc/cdf/aaaa".to_string(),
             Some("title".to_string()),
             1,
         )?;
-        bookmark_arena.add_bookmark(
-            "https://docs.rs/".to_string(),
-            Some("title".to_string()),
-            1,
-        )?;
+        bookmarks.add_bookmark("https://docs.rs/".to_string(), Some("title".to_string()), 1)?;
 
-        println!("{}", bookmark_arena.to_nested_json_pretty(1)?);
+        println!("{}", bookmarks.to_nested_json_pretty(1)?);
 
         Ok(())
     }

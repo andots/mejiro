@@ -2,7 +2,7 @@
 
 use std::{fs, path::PathBuf, sync::Mutex};
 
-use mejiro_core::bookmarks::BookmarkArena;
+use mejiro_core::bookmarks::Bookmarks;
 use strum::AsRefStr;
 use tauri::{Manager, Runtime};
 
@@ -31,7 +31,7 @@ pub trait AppHandleExt {
     fn save_user_settings(&self) -> Result<(), AppError>;
     fn load_window_geometry(&self) -> WindowGeometry;
     fn save_window_geometry(&self) -> Result<(), AppError>;
-    fn load_bookmark_arena(&self) -> BookmarkArena;
+    fn load_bookmark_arena(&self) -> Bookmarks;
     fn save_bookmark_arena(&self) -> Result<(), AppError>;
 }
 
@@ -167,25 +167,25 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
         Ok(())
     }
 
-    fn load_bookmark_arena(&self) -> BookmarkArena {
+    fn load_bookmark_arena(&self) -> Bookmarks {
         let path = self.get_bookmarks_file_path();
-        match BookmarkArena::load_from_file(path) {
+        match Bookmarks::load_from_file(path) {
             Ok(v) => v,
             Err(e) => {
                 log::warn!("Load default bookmarks: {:?}", e);
-                BookmarkArena::default()
+                Bookmarks::default()
             }
         }
     }
 
     fn save_bookmark_arena(&self) -> Result<(), AppError> {
         let path = self.get_bookmarks_file_path();
-        let state = self.state::<Mutex<BookmarkArena>>();
-        let arena = state
+        let state = self.state::<Mutex<Bookmarks>>();
+        let bookmarks = state
             .lock()
             .map_err(|_| AppError::Mutex("can't lock bookmarks".to_string()))?;
 
-        arena.save_to_file(path)?;
+        bookmarks.save_to_file(path)?;
 
         Ok(())
     }

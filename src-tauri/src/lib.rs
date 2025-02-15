@@ -27,8 +27,8 @@ pub fn run() {
                 )?;
             }
 
-            let arena = app.handle().load_bookmark_arena();
-            app.manage(Mutex::new(arena));
+            let bookmarks = app.handle().load_bookmark_arena();
+            app.manage(Mutex::new(bookmarks));
 
             let settings = app.handle().load_user_settings();
             create_window(app.handle(), &settings)?;
