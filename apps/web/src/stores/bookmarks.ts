@@ -1,6 +1,6 @@
 import { createWithSignal } from "solid-zustand";
 
-import { invokeGetBookmarks } from "../invokes";
+import { Invoke } from "../invokes";
 import type { Bookmark } from "../types";
 
 interface BookmarkState {
@@ -20,7 +20,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
     children: [],
   },
   syncBookmarks: async () => {
-    const data = await invokeGetBookmarks();
+    const data = await Invoke.GetNestedJson();
     const tree = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks: tree }));
   },

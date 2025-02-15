@@ -1,6 +1,6 @@
 import type { Component } from "solid-js";
 import { Show, createEffect, createSignal, on } from "solid-js";
-import { invokeAddBookmark } from "../invokes";
+import { Invoke } from "../invokes";
 import { useUrlState } from "../stores/url";
 import {
   IcBaselineRefresh,
@@ -38,7 +38,7 @@ const AddressBar: Component = () => {
   // TODO load favorites from data
   // お気に入りトグル
   const toggleFavorite = () => {
-    invokeAddBookmark(url(), title());
+    Invoke.AddBookmark(url(), title());
     setIsFavorited(!isFavorited());
   };
 

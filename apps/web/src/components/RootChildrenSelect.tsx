@@ -1,7 +1,7 @@
 import { type Component, Show, createSignal, onMount } from "solid-js";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/ui/select";
-import { invokeGetRootChildrenFolder } from "../invokes";
+import { Invoke } from "../invokes";
 import type { FolderData } from "../types";
 
 // https://kobalte.dev/docs/core/components/select/
@@ -11,7 +11,7 @@ const RootChildrenSelect: Component = () => {
   const [value, setValue] = createSignal<FolderData | null>({ index: 1, title: "All Bookmarks" });
 
   onMount(async () => {
-    const data = await invokeGetRootChildrenFolder();
+    const data = await Invoke.GetRootChildrenFolder();
     setOptions([...options(), ...data]);
     if (options().length > 0) {
       setValue(options()[0]);

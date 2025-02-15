@@ -1,5 +1,5 @@
 import { createWithSignal } from "solid-zustand";
-import { invokeNavigateWebviewUrl } from "../invokes";
+import { Invoke } from "../invokes";
 
 interface UrlState {
   url: string;
@@ -15,6 +15,6 @@ export const useUrlState = createWithSignal<UrlState>((set) => ({
   setUrl: (url) => set(() => ({ url })),
   setTitle: (title) => set(() => ({ title })),
   navigateToUrl: (url) => {
-    invokeNavigateWebviewUrl(url);
+    Invoke.NavigateWebviewUrl(url);
   },
 }));

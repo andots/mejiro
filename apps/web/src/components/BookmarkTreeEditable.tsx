@@ -1,7 +1,7 @@
 import { type Component, For, Match, Show, Switch, createSignal } from "solid-js";
 
 import { Button } from "@repo/ui/button";
-import { invokeRemoveBookmark } from "../invokes";
+import { Invoke } from "../invokes";
 import { useBookmarkState } from "../stores/bookmarks";
 import type { Bookmark } from "../types";
 import Favicon from "./icons/Favicon";
@@ -49,7 +49,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
   };
 
   const handleRemove = (index: number) => {
-    invokeRemoveBookmark(index);
+    Invoke.RemoveBookmark(index);
   };
 
   return (
