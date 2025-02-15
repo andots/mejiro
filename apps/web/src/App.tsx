@@ -84,20 +84,21 @@ const App: Component = () => {
   });
 
   return (
-    <div class="w-full h-screen flex flex-col">
-      <ToolBar />
-
-      <main class="flex-col py-1 border border-border/40 bg-sidebar text-sidebar-foreground">
-        <div>
+    <div class="w-full flex flex-col">
+      <div class="sticky top-0 z-50 w-full h-[40px] border-b border-sidebar-border bg-sidebar text-sidebar-foreground">
+        <ToolBar />
+      </div>
+      <main class="flex-col h-[calc(100vh_-_40px)] py-2 px-1 border border-border/40 bg-sidebar text-sidebar-foreground">
+        <div class="mb-2">
           <RootChildrenSelect />
         </div>
         <Show when={isExternalWebviewVisible()}>
-          <div class="h-full w-[200px]">
+          <div class="w-[200px]">
             <BookmarkTree />
           </div>
         </Show>
         <Show when={!isExternalWebviewVisible()}>
-          <div class="h-full">
+          <div class="">
             <BookmarkTreeEditable />
           </div>
         </Show>

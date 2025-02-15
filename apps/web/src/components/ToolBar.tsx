@@ -15,47 +15,45 @@ const ToolBar: Component = () => {
   const toggleExternalWebview = useWindowState((state) => state.toggleExternalWebview);
 
   return (
-    <div class="sticky top-0 z-50 w-full h-[40px] border-b border-sidebar-border bg-sidebar text-sidebar-foreground">
-      <div class="flex justify-center items-center w-full h-full px-2">
-        {/* menu button */}
-        <Button
-          class="w-9 h-9 m-0 mr-3 p-2 [&_svg]:size-6 [&_svg]:shrink-0"
-          variant="ghost"
-          size="icon"
-          onClick={toggleSidebar}
-        >
-          <IcBaselineMenuOpen />
-        </Button>
+    <div class="flex justify-center items-center w-full h-full px-2">
+      {/* menu button */}
+      <Button
+        class="w-9 h-9 m-0 mr-3 p-2 [&_svg]:size-6 [&_svg]:shrink-0"
+        variant="ghost"
+        size="icon"
+        onClick={toggleSidebar}
+      >
+        <IcBaselineMenuOpen />
+      </Button>
 
-        {/* pinned url favicons */}
-        <div class="flex items-center">
-          <For each={settings()?.pinned_urls}>
-            {(url) => (
-              <Button variant="ghost" class="w-9 h-9 p-2" onClick={() => navigateToUrl(url)}>
-                <Favicon url={url} width="18" height="18" />
-              </Button>
-            )}
-          </For>
-        </div>
-
-        {/* address bar */}
-        <AddressBar />
-
-        {/* edit button */}
-        <Button
-          class="w-9 h-9 m-0 p-2 [&_svg]:size-6 [&_svg]:shrink-0"
-          variant="ghost"
-          size="icon"
-          onClick={toggleExternalWebview}
-        >
-          <IcBaselineEditNote />
-        </Button>
-
-        {/* settings button */}
-        <Button class="w-9 h-9 m-0 p-2 [&_svg]:size-5 [&_svg]:shrink-0" variant="ghost" size="icon">
-          <IcOutlineSettings />
-        </Button>
+      {/* pinned url favicons */}
+      <div class="flex items-center">
+        <For each={settings()?.pinned_urls}>
+          {(url) => (
+            <Button variant="ghost" class="w-9 h-9 p-2" onClick={() => navigateToUrl(url)}>
+              <Favicon url={url} width="18" height="18" />
+            </Button>
+          )}
+        </For>
       </div>
+
+      {/* address bar */}
+      <AddressBar />
+
+      {/* edit button */}
+      <Button
+        class="w-9 h-9 m-0 p-2 [&_svg]:size-6 [&_svg]:shrink-0"
+        variant="ghost"
+        size="icon"
+        onClick={toggleExternalWebview}
+      >
+        <IcBaselineEditNote />
+      </Button>
+
+      {/* settings button */}
+      <Button class="w-9 h-9 m-0 p-2 [&_svg]:size-5 [&_svg]:shrink-0" variant="ghost" size="icon">
+        <IcOutlineSettings />
+      </Button>
     </div>
   );
 };
