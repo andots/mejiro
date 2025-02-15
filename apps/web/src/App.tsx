@@ -4,13 +4,11 @@ import { Show, createEffect, on, onCleanup, onMount } from "solid-js";
 import type { UnlistenFn } from "@tauri-apps/api/event";
 import { listen } from "@tauri-apps/api/event";
 
-import { Button } from "@repo/ui/button";
 import { debug } from "@tauri-apps/plugin-log";
 import BookmarkTree from "./components/BookmarkTree";
 import BookmarkTreeEditable from "./components/BookmarkTreeEditable";
 import RootChildrenSelect from "./components/RootChildrenSelect";
 import ToolBar from "./components/ToolBar";
-import { IcBaselineEditNote } from "./components/icons/Icons";
 import { AppEvent } from "./constants";
 import { useBookmarkState } from "./stores/bookmarks";
 import { useSettingsState } from "./stores/settings";
@@ -73,7 +71,6 @@ const removeEventListeners = () => {
 
 const App: Component = () => {
   const isExternalWebviewVisible = useWindowState((state) => state.isExternalWebviewVisible);
-  const toggleExternalWebview = useWindowState((state) => state.toggleExternalWebview);
 
   onMount(async () => {
     await initializeApp();
@@ -102,18 +99,6 @@ const App: Component = () => {
             <BookmarkTreeEditable />
           </div>
         </Show>
-
-        {/* edit button */}
-        <div>
-          <Button
-            class="[&_svg]:size-8 [&_svg]:shrink-0"
-            variant="ghost"
-            size="icon"
-            onClick={toggleExternalWebview}
-          >
-            <IcBaselineEditNote />
-          </Button>
-        </div>
       </main>
     </div>
   );

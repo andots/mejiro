@@ -18,7 +18,7 @@ const ToolBar: Component = () => {
     <div class="flex justify-center items-center w-full h-full px-2">
       {/* menu button */}
       <Button
-        class="w-9 h-9 m-0 mr-3 p-2 [&_svg]:size-6 [&_svg]:shrink-0"
+        class="w-9 h-9 m-0 p-2 [&_svg]:size-6 [&_svg]:shrink-0"
         variant="ghost"
         size="icon"
         onClick={toggleSidebar}
@@ -26,8 +26,18 @@ const ToolBar: Component = () => {
         <IcBaselineMenuOpen />
       </Button>
 
+      {/* edit button */}
+      <Button
+        class="w-9 h-9 m-0 p-2 [&_svg]:size-6 [&_svg]:shrink-0"
+        variant="ghost"
+        size="icon"
+        onClick={toggleExternalWebview}
+      >
+        <IcBaselineEditNote />
+      </Button>
+
       {/* pinned url favicons */}
-      <div class="flex items-center">
+      <div class="flex items-center ml-2">
         <For each={settings()?.pinned_urls}>
           {(url) => (
             <Button variant="ghost" class="w-9 h-9 p-2" onClick={() => navigateToUrl(url)}>
@@ -39,16 +49,6 @@ const ToolBar: Component = () => {
 
       {/* address bar */}
       <AddressBar />
-
-      {/* edit button */}
-      <Button
-        class="w-9 h-9 m-0 p-2 [&_svg]:size-6 [&_svg]:shrink-0"
-        variant="ghost"
-        size="icon"
-        onClick={toggleExternalWebview}
-      >
-        <IcBaselineEditNote />
-      </Button>
 
       {/* settings button */}
       <Button class="w-9 h-9 m-0 p-2 [&_svg]:size-5 [&_svg]:shrink-0" variant="ghost" size="icon">
