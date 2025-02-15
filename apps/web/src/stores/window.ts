@@ -3,6 +3,7 @@ import { createWithSignal } from "solid-zustand";
 import { Invoke } from "../invokes";
 
 interface WindowState {
+  sidebarVisible: boolean;
   isExternalWebviewVisible: boolean;
   hideExternalWebview: () => void;
   showExternalWebview: () => void;
@@ -11,6 +12,7 @@ interface WindowState {
 }
 
 export const useWindowState = createWithSignal<WindowState>((set) => ({
+  sidebarVisible: true,
   isExternalWebviewVisible: true,
 
   hideExternalWebview: async () => {
@@ -41,7 +43,7 @@ export const useWindowState = createWithSignal<WindowState>((set) => ({
     const headerHeight = 40;
     const sidebarWidth = 200;
     if (externalBounds.position.Physical.x === 0) {
-      // 全画面状態なので、サイドバー分の幅を引く
+      // External is full on window, so we need to move it to the right
       await Invoke.SetExternalWebviewBounds({
         size: {
           width: appBounds.size.Physical.width - sidebarWidth,
@@ -49,7 +51,9 @@ export const useWindowState = createWithSignal<WindowState>((set) => ({
         },
         position: { x: sidebarWidth, y: headerHeight },
       });
+      set(() => ({ sidebarVisible: true }));
     } else {
+      // External is already moved to the right, so we need to move it back to the left
       await Invoke.SetExternalWebviewBounds({
         size: {
           width: appBounds.size.Physical.width,
@@ -57,6 +61,7 @@ export const useWindowState = createWithSignal<WindowState>((set) => ({
         },
         position: { x: 0, y: headerHeight },
       });
+      set(() => ({ sidebarVisible: false }));
     }
   },
 }));

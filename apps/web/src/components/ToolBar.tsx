@@ -1,7 +1,12 @@
 import { Button } from "@repo/ui/button";
-import { type Component, For } from "solid-js";
+import { type Component, For, Show, createSignal } from "solid-js";
 
-import { IcBaselineEditNote, IcBaselineMenuOpen, IcOutlineSettings } from "@repo/ui/icons";
+import {
+  IcBaselineEditNote,
+  IcOutlineSettings,
+  OcticonSidebarCollapse24,
+  OcticonSidebarExpand24,
+} from "@repo/ui/icons";
 import { useSettingsState } from "../stores/settings";
 import { useUrlState } from "../stores/url";
 import { useWindowState } from "../stores/window";
@@ -11,6 +16,7 @@ import Favicon from "./icons/Favicon";
 const ToolBar: Component = () => {
   const settings = useSettingsState((state) => state.settings);
   const navigateToUrl = useUrlState((state) => state.navigateToUrl);
+  const sidebarVisible = useWindowState((state) => state.sidebarVisible);
   const toggleSidebar = useWindowState((state) => state.toggleSidebar);
   const toggleExternalWebview = useWindowState((state) => state.toggleExternalWebview);
 
@@ -23,7 +29,12 @@ const ToolBar: Component = () => {
         size="icon"
         onClick={toggleSidebar}
       >
-        <IcBaselineMenuOpen />
+        <Show when={sidebarVisible()}>
+          <OcticonSidebarExpand24 />
+        </Show>
+        <Show when={!sidebarVisible()}>
+          <OcticonSidebarCollapse24 />
+        </Show>
       </Button>
 
       {/* edit button */}
