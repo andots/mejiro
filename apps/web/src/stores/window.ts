@@ -6,7 +6,7 @@ type ExternalState = "full" | "hidden" | "right";
 
 interface WindowState {
   externalState: ExternalState;
-  changeExternalState: (flag: ExternalState) => void;
+  changeExternalState: (flag: ExternalState) => Promise<void>;
 }
 
 export const useWindowState = createWithSignal<WindowState>((set, get) => ({
