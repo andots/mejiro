@@ -33,6 +33,15 @@ pub struct FolderData {
     pub title: String,
 }
 
+impl FolderData {
+    pub fn new(index: usize, title: impl Into<String>) -> Self {
+        Self {
+            index,
+            title: title.into(),
+        }
+    }
+}
+
 impl BookmarkData {
     fn new(title: &str, url: Option<Url>, node_type: NodeType) -> Self {
         Self {

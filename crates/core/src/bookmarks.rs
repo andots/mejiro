@@ -103,19 +103,13 @@ impl Bookmarks {
         let root_id = self.get_root_node_id()?;
         let mut vec: Vec<FolderData> = Vec::new();
         // push root folder at first
-        vec.push(FolderData {
-            index: root_id.into(),
-            title: "All Bookmarks".to_string(),
-        });
+        vec.push(FolderData::new(root_id.into(), "All Bookmarks"));
         for node_id in root_id.children(&self.arena) {
             if let Some(node) = self.find_node_by_node_id(node_id) {
                 let data = node.get();
                 // only push if the node is folder
                 if data.node_type == NodeType::Folder {
-                    vec.push(FolderData {
-                        index: node_id.into(),
-                        title: data.title.clone(),
-                    });
+                    vec.push(FolderData::new(node_id.into(), data.title.clone()));
                 }
             }
         }
@@ -227,7 +221,7 @@ mod tests {
         })
     }
 
-    fn create_realistic_arena() -> Arena<BookmarkData> {
+    fn create_realistic_bookmarks() -> Bookmarks {
         let mut arena = Arena::new();
         let root = BookmarkData::new_root();
         let rust_folder = BookmarkData::new_folder("Rust");
@@ -256,7 +250,7 @@ mod tests {
                 },
             }
         );
-        arena
+        Bookmarks::new(arena)
     }
 
     fn create_test_bookmarks() -> Bookmarks {
@@ -282,8 +276,7 @@ mod tests {
 
     #[test]
     fn test_create_realistic_arena() -> anyhow::Result<()> {
-        let arena = create_realistic_arena();
-        let bookmarks = Bookmarks::new(arena.clone());
+        let bookmarks = create_realistic_bookmarks();
 
         let path = get_outs_path().join("bookmarks.json");
         let mut file = fs::File::create(path)?;
@@ -295,7 +288,7 @@ mod tests {
         let json = bookmarks.to_nested_json(1)?;
         file.write_all(json.as_bytes())?;
 
-        assert_eq!(arena.count(), 16);
+        assert_eq!(bookmarks.arena.count(), 16);
 
         Ok(())
     }
@@ -341,6 +334,20 @@ mod tests {
         let n_4 = root_children.last().unwrap();
         assert_eq!(n_4.title, "n_4");
         println!("{}", serde_json::to_string_pretty(&root_children)?);
+        Ok(())
+    }
+
+    #[test]
+    fn test_get_root_and_children_folder() -> anyhow::Result<()> {
+        let bookmarks = create_realistic_bookmarks();
+        let folders = bookmarks.get_root_and_children_folders()?;
+        assert_eq!(folders.len(), 3);
+        let root = folders.first().unwrap();
+        assert_eq!(root.title, "All Bookmarks");
+        let rust = folders.get(1).unwrap();
+        assert_eq!(rust.title, "Rust");
+        let frontend = folders.last().unwrap();
+        assert_eq!(frontend.title, "Frontend");
         Ok(())
     }
 
