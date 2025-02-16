@@ -103,7 +103,12 @@ impl Bookmarks {
         let root_id = self.get_root_node_id()?;
         let mut vec: Vec<FolderData> = Vec::new();
         // push root folder at first
-        vec.push(FolderData::new(root_id.into(), "All Bookmarks"));
+        let root = self
+            .find_node_by_node_id(root_id)
+            .ok_or(CoreError::NodeNotFound(1))?;
+        let root_data = root.get();
+        vec.push(FolderData::new(root_id.into(), root_data.title.clone()));
+
         for node_id in root_id.children(&self.arena) {
             if let Some(node) = self.find_node_by_node_id(node_id) {
                 let data = node.get();
@@ -406,7 +411,8 @@ mod tests {
         assert_eq!(node.get().title, "new root name");
         let node = bookmarks.find_node_by_index(2).unwrap();
         assert_eq!(node.get().title, "new title");
-        println!("{}", bookmarks.to_nested_json_pretty(1)?);
+        // println!("{}", bookmarks.to_nested_json_pretty(1)?);
+        // println!("{:?}", bookmarks.get_root_and_children_folders()?);
         Ok(())
     }
 
