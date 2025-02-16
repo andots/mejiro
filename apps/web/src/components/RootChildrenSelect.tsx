@@ -9,17 +9,11 @@ import type { FolderData } from "../types";
 const RootChildrenSelect: Component = () => {
   const folders = useBookmarkState((state) => state.folders);
   const [value, setValue] = createSignal<FolderData>({ index: 1, title: "All Bookmarks" });
-  const { getFolders, getBookmarks } = useBookmarkState.getState();
-
-  onMount(() => {
-    getFolders();
-    getBookmarks(1);
-  });
 
   const handleOnChange = (value: FolderData | null) => {
     if (value !== null && value.index >= 1) {
       setValue(value);
-      getBookmarks(value.index);
+      useBookmarkState.getState().getBookmarks(value.index);
     }
   };
 

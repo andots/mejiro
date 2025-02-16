@@ -20,9 +20,10 @@ let unlistenNavigation: UnlistenFn | undefined;
 let unlistenPageLoaded: UnlistenFn | undefined;
 
 const initializeApp = async () => {
-  // notify frontend is ready and get settings managed by rust
-  const syncSettings = useSettingsState((state) => state.syncSettings);
-  syncSettings();
+  // frontend is ready, so get datas managed by rust
+  useBookmarkState.getState().getFolders();
+  useBookmarkState.getState().getBookmarks(1);
+  useSettingsState.getState().syncSettings();
 
   // listen for settings updates on rust side
   unlistenSettingsUpdated = await listen<string>(AppEvent.SettingsUpdated, (event) => {
