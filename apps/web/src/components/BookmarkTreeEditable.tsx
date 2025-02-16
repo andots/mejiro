@@ -164,11 +164,12 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
               <span>Add Bookmark</span>
             </ContextMenuItem>
 
-            <ContextMenuSeparator />
-
-            <ContextMenuItem>
-              <span class="text-destructive">Delete</span>
-            </ContextMenuItem>
+            <Show when={props.bookmark.node_type !== "Root"}>
+              <ContextMenuSeparator />
+              <ContextMenuItem>
+                <span class="text-destructive">Delete</span>
+              </ContextMenuItem>
+            </Show>
           </ContextMenuContent>
         </ContextMenuPortal>
       </ContextMenu>
