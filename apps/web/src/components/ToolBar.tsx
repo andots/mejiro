@@ -25,16 +25,16 @@ const ToolBar: Component = () => {
       changeExternalState("full");
     } else if (externalState() === "full") {
       changeExternalState("right");
-    } else if (externalState() === "hide") {
+    } else if (externalState() === "hidden") {
       changeExternalState("right");
     }
   };
 
   const handleEditButton = () => {
-    if (externalState() === "hide") {
+    if (externalState() === "hidden") {
       changeExternalState("right");
     } else {
-      changeExternalState("hide");
+      changeExternalState("hidden");
     }
   };
 
@@ -50,7 +50,7 @@ const ToolBar: Component = () => {
         <Show when={externalState() === "right"}>
           <OcticonSidebarCollapse24 />
         </Show>
-        <Show when={externalState() === "hide"}>
+        <Show when={externalState() === "hidden"}>
           {/* <OcticonSidebar24 /> */}
           <OcticonSidebarCollapse24 />
         </Show>

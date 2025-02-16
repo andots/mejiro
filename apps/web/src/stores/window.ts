@@ -2,7 +2,7 @@ import { createWithSignal } from "solid-zustand";
 
 import { Invoke } from "../invokes";
 
-type ExternalState = "full" | "hide" | "right";
+type ExternalState = "full" | "hidden" | "right";
 
 interface WindowState {
   externalState: ExternalState;
@@ -25,14 +25,14 @@ export const useWindowState = createWithSignal<WindowState>((set, get) => ({
         position: { x: sidebarWidth, y: headerHeight },
       });
       // Show the external webview if it is hidden
-      if (get().externalState === "hide") {
+      if (get().externalState === "hidden") {
         await Invoke.ShowExternalWebview();
       }
       set(() => ({ externalState: "right" }));
-    } else if (flag === "hide") {
+    } else if (flag === "hidden") {
       // Hide the external webview
       await Invoke.HideExternalWebview();
-      set(() => ({ externalState: "hide" }));
+      set(() => ({ externalState: "hidden" }));
     } else if (flag === "full") {
       // Set the bounds of the external webview to the full size of the app
       await Invoke.SetExternalWebviewBounds({
@@ -43,7 +43,7 @@ export const useWindowState = createWithSignal<WindowState>((set, get) => ({
         position: { x: 0, y: headerHeight },
       });
       // Show the external webview if it is hidden
-      if (get().externalState === "hide") {
+      if (get().externalState === "hidden") {
         await Invoke.ShowExternalWebview();
       }
       set(() => ({ externalState: "full" }));
