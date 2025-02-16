@@ -22,11 +22,18 @@ const BookmarkEditDialog: Component = () => {
   createEffect(on(selected, () => setTitle(selected().title)));
 
   const handleSave = () => {
-    if (selected().index !== -1 && selected().title !== "") {
+    // update the title only if it's not empty and the index is not 0
+    if (selected().index > 0 && title() !== "") {
       const updateBookmarkTitle = useBookmarkState((state) => state.updateBookmarkTitle);
       updateBookmarkTitle(selected().index, title());
     }
     setOpen(false);
+  };
+
+  const handleKeydown = (e: KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleSave();
+    }
   };
 
   const handleCancel = () => {
@@ -45,7 +52,8 @@ const BookmarkEditDialog: Component = () => {
             <TextFieldLabel class="text-right">Title</TextFieldLabel>
             <TextFieldInput
               value={title()}
-              onChange={(e) => setTitle(e.target.value)}
+              onInput={(e) => setTitle(e.currentTarget.value)}
+              onKeyDown={(e) => handleKeydown(e)}
               class="col-span-3"
               type="text"
             />
