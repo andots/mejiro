@@ -68,14 +68,14 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
   return (
     <div>
       <ContextMenu>
-        <ContextMenuTrigger class="">
+        <ContextMenuTrigger>
           <div
             class={
               "flex items-center text-left text-sm py-1 hover:bg-sidebar-accent transition-colors duration-150"
             }
             onClick={toggle}
             onKeyDown={handleKeydown}
-            style={{ "padding-left": `${props.level}px` }}
+            style={{ "padding-left": `${props.level * 4}px` }}
           >
             {/* Folder icon or Favicon */}
             <span class="flex items-center justify-center mr-1">
@@ -148,11 +148,9 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
       </ContextMenu>
 
       <Show when={hasChildren() && isOpen()}>
-        <div class="ml-2">
-          <For each={props.bookmark.children}>
-            {(child) => <BookmarkNode bookmark={child} level={props.level + 1} />}
-          </For>
-        </div>
+        <For each={props.bookmark.children}>
+          {(child) => <BookmarkNode bookmark={child} level={props.level + 1} />}
+        </For>
       </Show>
     </div>
   );
