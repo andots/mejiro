@@ -1,11 +1,8 @@
 import { type Component, For, Match, Show, Switch, createSignal } from "solid-js";
 
-import { Button } from "@repo/ui/button";
 import {
-  IcBaselineEdit,
   IcBaselineKeyboardArrowDown,
   IcBaselineKeyboardArrowRight,
-  IcOutlineDeleteOutline,
   IcOutlineFolder,
   IcOutlineFolderOpen,
 } from "@repo/ui/icons";
@@ -124,28 +121,6 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
             <span class="text-sidebar-foreground overflow-hidden whitespace-nowrap text-ellipsis">
               {props.bookmark.title}
             </span>
-
-            <Show when={props.bookmark.node_type !== "Root"}>
-              {/* Edit button */}
-              <Button
-                class="w-8 h-8 ml-3"
-                variant="outline"
-                size="icon"
-                onClick={() => handleEdit(props.bookmark.index)}
-              >
-                <IcBaselineEdit />
-              </Button>
-
-              {/* Remove button */}
-              <Button
-                class="w-8 h-8 ml-3"
-                variant="outline"
-                size="icon"
-                onClick={() => handleRemove(props.bookmark.index)}
-              >
-                <IcOutlineDeleteOutline />
-              </Button>
-            </Show>
           </div>
         </ContextMenuTrigger>
 
@@ -166,7 +141,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
 
             <Show when={props.bookmark.node_type !== "Root"}>
               <ContextMenuSeparator />
-              <ContextMenuItem>
+              <ContextMenuItem onClick={() => handleRemove(props.bookmark.index)}>
                 <span class="text-destructive">Delete</span>
               </ContextMenuItem>
             </Show>
