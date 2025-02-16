@@ -71,3 +71,18 @@ pub fn update_bookmark_title(
 
     Ok(bookmarks.to_nested_json(starting_index)?)
 }
+
+#[tauri::command]
+pub fn add_folder(
+    state: tauri::State<'_, Mutex<Bookmarks>>,
+    parent_index: usize,
+    title: String,
+    starting_index: usize,
+) -> Result<String, AppError> {
+    let mut bookmarks = state
+        .lock()
+        .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
+    bookmarks.add_folder(parent_index, &title)?;
+
+    Ok(bookmarks.to_nested_json(starting_index)?)
+}

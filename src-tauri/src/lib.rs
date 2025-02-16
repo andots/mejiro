@@ -51,6 +51,7 @@ pub fn run() {
             commands::bookmarks::add_bookmark,
             commands::bookmarks::remove_bookmark,
             commands::bookmarks::update_bookmark_title,
+            commands::bookmarks::add_folder,
             commands::injects::emit_page_params,
             commands::settings::get_settings,
         ])

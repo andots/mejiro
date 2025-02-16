@@ -173,6 +173,16 @@ impl Bookmarks {
         Ok(())
     }
 
+    pub fn add_folder(&mut self, parent_index: usize, title: &str) -> Result<(), CoreError> {
+        let parent_node_id = self
+            .find_node_id_by_index(parent_index)
+            .ok_or(CoreError::NodeNotFound(parent_index))?;
+        let new_folder = BookmarkData::new_folder(title);
+        let new_node = self.arena.new_node(new_folder);
+        parent_node_id.checked_append(new_node, &mut self.arena)?;
+        Ok(())
+    }
+
     pub fn add_bookmark(
         &mut self,
         url: String,
@@ -413,6 +423,32 @@ mod tests {
         assert_eq!(node.get().title, "new title");
         // println!("{}", bookmarks.to_nested_json_pretty(1)?);
         // println!("{:?}", bookmarks.get_root_and_children_folders()?);
+        Ok(())
+    }
+
+    #[test]
+    fn test_add_folder() -> anyhow::Result<()> {
+        let mut bookmarks = create_test_bookmarks();
+        // add folder to root
+        bookmarks.add_folder(1, "new folder 1")?;
+        let root_id = bookmarks.find_node_id_by_index(1).unwrap();
+        assert_eq!(root_id.children(&bookmarks.arena).count(), 4);
+        // add folder to n_2
+        let n_2_id = bookmarks.find_node_id_by_index(2).unwrap();
+        assert_eq!(n_2_id.children(&bookmarks.arena).count(), 0);
+        bookmarks.add_folder(2, "new folder 2")?;
+        assert_eq!(n_2_id.children(&bookmarks.arena).count(), 1);
+        // add folder to n_6
+        let n_6_id = bookmarks.find_node_id_by_index(6).unwrap();
+        assert_eq!(n_6_id.children(&bookmarks.arena).count(), 0);
+        bookmarks.add_folder(6, "new folder 3")?;
+        assert_eq!(n_6_id.children(&bookmarks.arena).count(), 1);
+
+        // add folder to non-exist node must be error
+        assert!(bookmarks.add_folder(100, "new folder 4").is_err());
+
+        // println!("{}", bookmarks.to_nested_json_pretty(1)?);
+        // println!("{:?}", root_id.debug_pretty_print(&bookmarks.arena));
         Ok(())
     }
 
