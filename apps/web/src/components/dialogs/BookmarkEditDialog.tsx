@@ -11,21 +11,21 @@ import {
 } from "@repo/ui/dialog";
 import { TextField, TextFieldInput, TextFieldLabel } from "@repo/ui/text-field";
 import { useBookmarkState } from "../../stores/bookmarks";
-import { useDialogState } from "../../stores/dialogs";
+import { useEditDialog } from "../../stores/dialogs";
 
 const BookmarkEditDialog: Component = () => {
-  const open = useDialogState((state) => state.bookmarkEditOpen);
-  const setOpen = useDialogState((state) => state.setBookmarkEditOpen);
-  const selected = useDialogState((state) => state.selectedBookmark);
-  const [title, setTitle] = createSignal(selected().title);
+  const open = useEditDialog((state) => state.open);
+  const setOpen = useEditDialog((state) => state.setOpen);
+  const target = useEditDialog((state) => state.target);
+  const [title, setTitle] = createSignal(target().title);
 
-  createEffect(on(selected, () => setTitle(selected().title)));
+  createEffect(on(target, () => setTitle(target().title)));
 
   const handleSave = () => {
     // update the title only if it's not empty and the index is not 0
-    if (selected().index > 0 && title() !== "") {
+    if (target().index > 0 && title() !== "") {
       const updateBookmarkTitle = useBookmarkState((state) => state.updateBookmarkTitle);
-      updateBookmarkTitle(selected().index, title());
+      updateBookmarkTitle(target().index, title());
     }
     setOpen(false);
   };
@@ -44,7 +44,7 @@ const BookmarkEditDialog: Component = () => {
     <Dialog open={open()} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Bookmark</DialogTitle>
+          <DialogTitle>Edit Title</DialogTitle>
         </DialogHeader>
         <DialogDescription>Edit the title of the bookmark</DialogDescription>
         <div class="grid gap-4 py-4">

@@ -1,24 +1,24 @@
 import { createWithSignal } from "solid-zustand";
 
-type SelectedBookmark = {
+// Bookmark edit dialog
+type Target = {
   index: number;
   title: string;
 };
 
-type DialogState = {
+type EditDialogState = {
   // Bookmark edit dialog
-  bookmarkEditOpen: boolean;
-  selectedBookmark: SelectedBookmark;
-  setBookmarkEditOpen: (open: boolean) => void;
-  setSelectedBookmark: (bookmark: SelectedBookmark) => void;
+  open: boolean;
+  target: Target;
+  setOpen: (open: boolean) => void;
+  setTarget: (target: Target) => void;
 };
 
-export const useDialogState = createWithSignal<DialogState>((set) => ({
-  // Bookmark edit dialog
-  bookmarkEditOpen: false,
-  selectedBookmark: { index: -1, title: "" },
-  setBookmarkEditOpen: (open) => set({ bookmarkEditOpen: open }),
-  setSelectedBookmark: (bookmark) => set({ selectedBookmark: bookmark }),
+export const useEditDialog = createWithSignal<EditDialogState>((set) => ({
+  open: false,
+  target: { index: -1, title: "" },
+  setOpen: (open) => set({ open: open }),
+  setTarget: (target) => set({ target }),
 }));
 
 // Add folder dialog
@@ -29,7 +29,7 @@ type AddFolderDialogState = {
   setParentIndex: (parentIndex: number) => void;
 };
 
-export const useAddFolderDialogState = createWithSignal<AddFolderDialogState>((set) => ({
+export const useAddFolderDialog = createWithSignal<AddFolderDialogState>((set) => ({
   open: false,
   parentIndex: -1,
   setOpen: (open) => set({ open }),

@@ -11,12 +11,12 @@ import {
 } from "@repo/ui/dialog";
 import { TextField, TextFieldInput, TextFieldLabel } from "@repo/ui/text-field";
 import { useBookmarkState } from "../../stores/bookmarks";
-import { useAddFolderDialogState } from "../../stores/dialogs";
+import { useAddFolderDialog } from "../../stores/dialogs";
 
 const AddFolderDialog: Component = () => {
-  const open = useAddFolderDialogState((state) => state.open);
-  const setOpen = useAddFolderDialogState((state) => state.setOpen);
-  const parentIndex = useAddFolderDialogState((state) => state.parentIndex);
+  const open = useAddFolderDialog((state) => state.open);
+  const setOpen = useAddFolderDialog((state) => state.setOpen);
+  const parentIndex = useAddFolderDialog((state) => state.parentIndex);
   const addFolder = useBookmarkState((state) => state.addFolder);
 
   const [title, setTitle] = createSignal("");
@@ -47,7 +47,7 @@ const AddFolderDialog: Component = () => {
         <DialogHeader>
           <DialogTitle>Add Folder</DialogTitle>
         </DialogHeader>
-        <DialogDescription>Enter title for the new folder</DialogDescription>
+        <DialogDescription>Enter the title for new folder</DialogDescription>
         <div class="grid gap-4 py-4">
           <TextField class="grid grid-cols-4 items-center gap-4">
             <TextFieldLabel class="text-right">Title</TextFieldLabel>
