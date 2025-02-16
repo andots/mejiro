@@ -121,8 +121,6 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
             </span>
 
             {/* Title */}
-            {/* <BookmarkContextMenu bookmark={props.bookmark} /> */}
-
             <span class="text-sidebar-foreground overflow-hidden whitespace-nowrap text-ellipsis">
               {props.bookmark.title}
             </span>
@@ -150,6 +148,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
             </Show>
           </div>
         </ContextMenuTrigger>
+
         <ContextMenuPortal>
           <ContextMenuContent class="w-48">
             <ContextMenuItem>
