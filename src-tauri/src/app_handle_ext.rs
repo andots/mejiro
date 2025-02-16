@@ -10,14 +10,18 @@ use crate::{
     constants::MAINWINDOW_LABEL, error::AppError, settings::UserSettings, window::WindowGeometry,
 };
 
+/// Data file names.
+/// The file names are defined as an enum to prevent typos and to provide a list of all data files.
+/// Bookmarks and window geometry data are stored in JSON format.
+/// But the file names are stored in a hidden format to avoid users from accidentally deleting or modifying the data files.
 #[derive(AsRefStr)]
 pub enum FileName {
-    #[strum(serialize = "bookmarks.json")]
+    #[strum(serialize = ".bookmarks")]
     Bookmarks,
+    #[strum(serialize = ".window_geometry")]
+    WindowGeometry,
     #[strum(serialize = "settings.json")]
     Settings,
-    #[strum(serialize = "window_geometry.json")]
-    WindowGeometry,
 }
 
 pub trait AppHandleExt {
