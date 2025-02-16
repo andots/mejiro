@@ -102,6 +102,11 @@ impl Bookmarks {
     pub fn get_root_children_folder(&self) -> Result<Vec<FolderData>, CoreError> {
         let root_id = self.get_root_node_id()?;
         let mut vec: Vec<FolderData> = Vec::new();
+        // push root folder at first
+        vec.push(FolderData {
+            index: root_id.into(),
+            title: "All Bookmarks".to_string(),
+        });
         for node_id in root_id.children(&self.arena) {
             if let Some(node) = self.find_node_by_node_id(node_id) {
                 let data = node.get();

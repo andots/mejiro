@@ -1,27 +1,28 @@
 import { type Component, Show, createSignal, onMount } from "solid-js";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/ui/select";
-import { Invoke } from "../invokes";
 import { useBookmarkState } from "../stores/bookmarks";
 import type { FolderData } from "../types";
 
 // https://kobalte.dev/docs/core/components/select/
 
 const RootChildrenSelect: Component = () => {
-  const [options, setOptions] = createSignal<FolderData[]>([{ index: 1, title: "All Bookmarks" }]);
-  const [value, setValue] = createSignal<FolderData | null>({ index: 1, title: "All Bookmarks" });
-  const getBookmarks = useBookmarkState((state) => state.getBookmarks);
+  const folders = useBookmarkState((state) => state.folders);
+  const [value, setValue] = createSignal<FolderData | null>();
 
-  onMount(async () => {
-    const data = await Invoke.GetRootChildrenFolder();
-    setOptions([...options(), ...data]);
-    if (options().length > 0) {
-      setValue(options()[0]);
-    }
+  const getBookmarks = useBookmarkState((state) => state.getBookmarks);
+  const getFolders = useBookmarkState((state) => state.getFolders);
+
+  onMount(() => {
+    getFolders();
   });
 
   const handleOnChange = (value: FolderData | null) => {
-    if (value !== null && value.index > 0) {
+    // value is null when the select is first rendered
+    if (value === null) {
+      setValue(folders()[0]);
+      getBookmarks(folders()[0].index);
+    } else {
       setValue(value);
       getBookmarks(value.index);
     }
@@ -29,9 +30,9 @@ const RootChildrenSelect: Component = () => {
 
   return (
     <div class="flex-col h-[40px]">
-      <Show when={options().length > 0}>
+      <Show when={folders().length > 0}>
         <Select
-          options={options()}
+          options={folders()}
           optionValue="index"
           optionTextValue="title"
           value={value()}

@@ -25,8 +25,7 @@ pub fn get_root_children_folder(
     let bookmarks = state
         .lock()
         .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
-    let children = bookmarks.get_root_children_folder()?;
-    Ok(children)
+    Ok(bookmarks.get_root_children_folder()?)
 }
 
 #[tauri::command]
