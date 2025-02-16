@@ -11,18 +11,19 @@ import {
 } from "@repo/ui/dialog";
 import { TextField, TextFieldInput, TextFieldLabel } from "@repo/ui/text-field";
 import { useBookmarkState } from "../../stores/bookmarks";
-import { useDialogState } from "../../stores/dialog";
+import { useAddFolderDialogState } from "../../stores/dialog";
 
 const AddFolderDialog: Component = () => {
-  const open = useDialogState((state) => state.addFolderOpen);
-  const setOpen = useDialogState((state) => state.setAddFolderOpen);
-  const parentIndex = useDialogState((state) => state.parentIndex);
+  const open = useAddFolderDialogState((state) => state.open);
+  const setOpen = useAddFolderDialogState((state) => state.setOpen);
+  const parentIndex = useAddFolderDialogState((state) => state.parentIndex);
+  const addFolder = useBookmarkState((state) => state.addFolder);
+
   const [title, setTitle] = createSignal("");
 
   const handleSave = () => {
     // update the title only if it's not empty and the index is not 0
     if (parentIndex() > 0 && title() !== "") {
-      const addFolder = useBookmarkState((state) => state.addFolder);
       addFolder(parentIndex(), title());
     }
     setOpen(false);

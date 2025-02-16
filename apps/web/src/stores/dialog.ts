@@ -5,19 +5,13 @@ type SelectedBookmark = {
   title: string;
 };
 
-interface DialogState {
+type DialogState = {
   // Bookmark edit dialog
   bookmarkEditOpen: boolean;
   selectedBookmark: SelectedBookmark;
   setBookmarkEditOpen: (open: boolean) => void;
   setSelectedBookmark: (bookmark: SelectedBookmark) => void;
-
-  // Add folder dialog
-  addFolderOpen: boolean;
-  parentIndex: number;
-  setAddFolderOpen: (open: boolean) => void;
-  setParentIndex: (index: number) => void;
-}
+};
 
 export const useDialogState = createWithSignal<DialogState>((set) => ({
   // Bookmark edit dialog
@@ -25,10 +19,19 @@ export const useDialogState = createWithSignal<DialogState>((set) => ({
   selectedBookmark: { index: -1, title: "" },
   setBookmarkEditOpen: (open) => set({ bookmarkEditOpen: open }),
   setSelectedBookmark: (bookmark) => set({ selectedBookmark: bookmark }),
+}));
 
-  // Add folder dialog
-  addFolderOpen: false,
+// Add folder dialog
+type AddFolderDialogState = {
+  open: boolean;
+  parentIndex: number;
+  setOpen: (open: boolean) => void;
+  setParentIndex: (parentIndex: number) => void;
+};
+
+export const useAddFolderDialogState = createWithSignal<AddFolderDialogState>((set) => ({
+  open: false,
   parentIndex: -1,
-  setAddFolderOpen: (open) => set({ addFolderOpen: open }),
-  setParentIndex: (index) => set({ parentIndex: index }),
+  setOpen: (open) => set({ open }),
+  setParentIndex: (parentIndex) => set({ parentIndex }),
 }));

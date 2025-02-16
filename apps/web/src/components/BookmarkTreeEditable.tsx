@@ -28,7 +28,7 @@ import {
   ContextMenuTrigger,
 } from "@repo/ui/context-menu";
 
-import { useDialogState } from "../stores/dialog";
+import { useAddFolderDialogState, useDialogState } from "../stores/dialog";
 import { useUrlState } from "../stores/url";
 import { useWindowState } from "../stores/window";
 
@@ -65,8 +65,8 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
   const handleAddBookmark = (index: number) => {};
 
   const handleAddFolder = (index: number) => {
-    useDialogState.getState().setParentIndex(index);
-    useDialogState.getState().setAddFolderOpen(true);
+    useAddFolderDialogState.getState().setParentIndex(index);
+    useAddFolderDialogState.getState().setOpen(true);
   };
 
   const handleEdit = (index: number) => {
