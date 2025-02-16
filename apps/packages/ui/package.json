@@ -6,6 +6,8 @@
   "exports": {
     "./button": "./src/button.tsx",
     "./combobox": "./src/combobox.tsx",
+    "./context-menu": "./src/context-menu.tsx",
+    "./dialog": "./src/dialog.tsx",
     "./icons": "./src/icons.tsx",
     "./select": "./src/select.tsx",
     "./separator": "./src/separator.tsx",
