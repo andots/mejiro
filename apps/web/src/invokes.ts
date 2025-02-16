@@ -18,6 +18,10 @@ export const Invoke = {
     // returned json string is a nested tree of bookmarks
     return invoke<string>("remove_bookmark", { index, startingIndex });
   },
+  UpdateBookmarkTitle: async (index: number, title: string, startingIndex: number) => {
+    // returned json string is a nested tree of bookmarks
+    return invoke<string>("update_bookmark_title", { index, title, startingIndex });
+  },
 
   // External Webview commands
   NavigateWebviewUrl: async (url: string) => {

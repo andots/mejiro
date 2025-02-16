@@ -27,13 +27,21 @@ import {
   ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from "@repo/ui/context-menu";
+
+import { useDialogState } from "../stores/dialog";
 import { useUrlState } from "../stores/url";
 import { useWindowState } from "../stores/window";
+import BookmarkEditDialog from "./dialogs/BookmarkEditDialog";
 
 const BookmarkTreeEditable: Component = () => {
   const bookmarks = useBookmarkState((state) => state.bookmarks);
 
-  return <BookmarkNode bookmark={bookmarks()} level={0} />;
+  return (
+    <>
+      <BookmarkEditDialog />
+      <BookmarkNode bookmark={bookmarks()} level={0} />
+    </>
+  );
 };
 
 type BookmarkNodeProps = {
@@ -43,6 +51,7 @@ type BookmarkNodeProps = {
 
 const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
   const [isOpen, setIsOpen] = createSignal(true);
+
   const hasChildren = () => props.bookmark.children?.length > 0;
   const isExternalWebviewVisible = useWindowState((state) => state.isExternalWebviewVisible);
   const navigateToUrl = useUrlState((state) => state.navigateToUrl);
@@ -66,7 +75,8 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
   const handleAddBookmark = (index: number) => {};
 
   const handleEdit = (index: number) => {
-    console.log("Edit", index);
+    // open edit dialog
+    useDialogState.getState().setBookmarkEditOpen(true);
   };
 
   const handleRemove = (index: number) => {
