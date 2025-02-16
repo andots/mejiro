@@ -99,7 +99,7 @@ impl Bookmarks {
         Ok(root_children)
     }
 
-    pub fn get_root_children_folder(&self) -> Result<Vec<FolderData>, CoreError> {
+    pub fn get_root_and_children_folders(&self) -> Result<Vec<FolderData>, CoreError> {
         let root_id = self.get_root_node_id()?;
         let mut vec: Vec<FolderData> = Vec::new();
         // push root folder at first

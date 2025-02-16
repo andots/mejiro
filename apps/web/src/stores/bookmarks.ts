@@ -24,7 +24,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
     children: [],
   },
   getFolders: async () => {
-    const folders = await Invoke.GetRootChildrenFolder();
+    const folders = await Invoke.GetRootAndChildrenFolders();
     set(() => ({ folders }));
   },
   getBookmarks: async (index) => {

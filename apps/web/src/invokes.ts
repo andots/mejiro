@@ -7,8 +7,8 @@ export const Invoke = {
   GetNestedJson: async (index: number) => {
     return invoke<string>("get_nested_json", { index });
   },
-  GetRootChildrenFolder: async () => {
-    return invoke<FolderData[]>("get_root_children_folder", {});
+  GetRootAndChildrenFolders: async () => {
+    return invoke<FolderData[]>("get_root_and_children_folders", {});
   },
   AddBookmark: async (url: string, title: string | null | undefined, startingIndex: number) => {
     // returned json string is a nested tree of bookmarks

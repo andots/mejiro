@@ -19,13 +19,13 @@ pub async fn get_nested_json(
 }
 
 #[tauri::command]
-pub fn get_root_children_folder(
+pub fn get_root_and_children_folders(
     state: tauri::State<'_, Mutex<Bookmarks>>,
 ) -> Result<Vec<FolderData>, AppError> {
     let bookmarks = state
         .lock()
         .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
-    Ok(bookmarks.get_root_children_folder()?)
+    Ok(bookmarks.get_root_and_children_folders()?)
 }
 
 #[tauri::command]
