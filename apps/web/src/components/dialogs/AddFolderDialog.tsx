@@ -11,7 +11,7 @@ import {
 } from "@repo/ui/dialog";
 import { TextField, TextFieldInput, TextFieldLabel } from "@repo/ui/text-field";
 import { useBookmarkState } from "../../stores/bookmarks";
-import { useAddFolderDialogState } from "../../stores/dialog";
+import { useAddFolderDialogState } from "../../stores/dialogs";
 
 const AddFolderDialog: Component = () => {
   const open = useAddFolderDialogState((state) => state.open);

@@ -11,7 +11,7 @@ import {
 } from "@repo/ui/dialog";
 import { TextField, TextFieldInput, TextFieldLabel } from "@repo/ui/text-field";
 import { useBookmarkState } from "../../stores/bookmarks";
-import { useDialogState } from "../../stores/dialog";
+import { useDialogState } from "../../stores/dialogs";
 
 const BookmarkEditDialog: Component = () => {
   const open = useDialogState((state) => state.bookmarkEditOpen);

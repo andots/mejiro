@@ -28,7 +28,7 @@ import {
   ContextMenuTrigger,
 } from "@repo/ui/context-menu";
 
-import { useAddFolderDialogState, useDialogState } from "../stores/dialog";
+import { useAddFolderDialogState, useDialogState } from "../stores/dialogs";
 import { useUrlState } from "../stores/url";
 import { useWindowState } from "../stores/window";
 
