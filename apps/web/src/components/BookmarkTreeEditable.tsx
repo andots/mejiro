@@ -33,9 +33,7 @@ const BookmarkTreeEditable: Component = () => {
 
   return (
     <div class="pl-1">
-      <ul class="list-none">
-        <BookmarkNode bookmark={bookmarks()} level={0} />
-      </ul>
+      <BookmarkNode bookmark={bookmarks()} level={0} />
     </div>
   );
 };
@@ -68,7 +66,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
   };
 
   return (
-    <li>
+    <div>
       <ContextMenu>
         <ContextMenuTrigger class="">
           <div
@@ -150,13 +148,13 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
       </ContextMenu>
 
       <Show when={hasChildren() && isOpen()}>
-        <ul class="ml-2">
+        <div class="ml-2">
           <For each={props.bookmark.children}>
             {(child) => <BookmarkNode bookmark={child} level={props.level + 1} />}
           </For>
-        </ul>
+        </div>
       </Show>
-    </li>
+    </div>
   );
 };
 

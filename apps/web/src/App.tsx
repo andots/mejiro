@@ -60,7 +60,7 @@ const App: Component = () => {
   onMount(async () => {
     await initializeApp();
     // disable right click context menu
-    document.oncontextmenu = () => false;
+    document.oncontextmenu = () => true;
   });
 
   onCleanup(() => {
