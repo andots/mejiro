@@ -32,14 +32,12 @@ const initializeApp = async () => {
 
   // listen for external navigation events on rust side
   unlistenNavigation = await listen<string>(AppEvent.ExternalNavigation, (event) => {
-    const setUrl = useUrlState((state) => state.setUrl);
-    setUrl(event.payload);
+    useUrlState.getState().setUrl(event.payload);
   });
 
   // listen for external page loaded events on rust side
   unlistenPageLoaded = await listen<string>(AppEvent.ExternalPageLoaded, (event) => {
-    const setTitle = useUrlState((state) => state.setTitle);
-    setTitle(event.payload);
+    useUrlState.getState().setTitle(event.payload);
   });
 };
 
