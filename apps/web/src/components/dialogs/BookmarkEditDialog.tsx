@@ -1,4 +1,4 @@
-import type { Component } from "solid-js";
+import { type Component, createEffect, createSignal, on } from "solid-js";
 
 import { Button } from "@repo/ui/button";
 import {
@@ -10,14 +10,23 @@ import {
   DialogTitle,
 } from "@repo/ui/dialog";
 import { TextField, TextFieldInput, TextFieldLabel } from "@repo/ui/text-field";
+import { useBookmarkState } from "../../stores/bookmarks";
 import { useDialogState } from "../../stores/dialog";
 
-const BookmarkEditDialog: Component = (props) => {
+const BookmarkEditDialog: Component = () => {
   const open = useDialogState((state) => state.bookmarkEditOpen);
   const setOpen = useDialogState((state) => state.setBookmarkEditOpen);
+  const selected = useDialogState((state) => state.selectedBookmark);
+  const [title, setTitle] = createSignal(selected().title);
+
+  createEffect(on(selected, () => setTitle(selected().title)));
 
   const handleSave = () => {
-    //
+    if (selected().index !== -1 && selected().title !== "") {
+      const updateBookmarkTitle = useBookmarkState((state) => state.updateBookmarkTitle);
+      updateBookmarkTitle(selected().index, title());
+    }
+    setOpen(false);
   };
 
   const handleCancel = () => {
@@ -34,7 +43,12 @@ const BookmarkEditDialog: Component = (props) => {
         <div class="grid gap-4 py-4">
           <TextField class="grid grid-cols-4 items-center gap-4">
             <TextFieldLabel class="text-right">Title</TextFieldLabel>
-            <TextFieldInput value="" class="col-span-3" type="text" />
+            <TextFieldInput
+              value={title()}
+              onChange={(e) => setTitle(e.target.value)}
+              class="col-span-3"
+              type="text"
+            />
           </TextField>
         </div>
         <DialogFooter>

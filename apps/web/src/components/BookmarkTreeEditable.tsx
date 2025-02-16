@@ -75,7 +75,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
   const handleAddBookmark = (index: number) => {};
 
   const handleEdit = (index: number) => {
-    // open edit dialog
+    useDialogState.getState().setSelectedBookmark({ index, title: props.bookmark.title });
     useDialogState.getState().setBookmarkEditOpen(true);
   };
 

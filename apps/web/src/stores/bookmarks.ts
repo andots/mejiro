@@ -10,6 +10,7 @@ type BookmarkState = {
   getBookmarks: (index: number) => void;
   addBookmark: (url: string, title: string) => void;
   removeBookmark: (index: number) => void;
+  updateBookmarkTitle: (index: number, title: string) => void;
 };
 
 export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
@@ -50,6 +51,15 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
     const data = await Invoke.RemoveBookmark(index, startingIndex);
     const tree = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks: tree }));
+    // update the folders list
+    useBookmarkState.getState().getFolders();
+  },
+  updateBookmarkTitle: async (index, title) => {
+    // get current top of bookmark index that shown in the UI as a starting point
+    const startingIndex = getCurrentStatingIndex();
+    const data = await Invoke.UpdateBookmarkTitle(index, title, startingIndex);
+    const bookmarks = JSON.parse(data) as Bookmark;
+    set(() => ({ bookmarks }));
     // update the folders list
     useBookmarkState.getState().getFolders();
   },
