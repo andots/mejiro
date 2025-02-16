@@ -4,6 +4,14 @@
 
 /* @import "@fontsource/inter/latin-400.css"; */
 
+/*
+  TODO find a way to remove focus outline for context menu
+  Remove undesired focus black outline for context menu, but this is not recommended for accessibility.
+*/
+*:focus {
+    outline: none;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
