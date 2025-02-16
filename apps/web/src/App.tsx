@@ -5,7 +5,6 @@ import type { UnlistenFn } from "@tauri-apps/api/event";
 import { listen } from "@tauri-apps/api/event";
 
 import { debug } from "@tauri-apps/plugin-log";
-import BookmarkTree from "./components/BookmarkTree";
 import BookmarkTreeEditable from "./components/BookmarkTreeEditable";
 import RootChildrenSelect from "./components/RootChildrenSelect";
 import ToolBar from "./components/ToolBar";
@@ -13,7 +12,6 @@ import { AppEvent } from "./constants";
 import { useBookmarkState } from "./stores/bookmarks";
 import { useSettingsState } from "./stores/settings";
 import { useUrlState } from "./stores/url";
-import { useWindowState } from "./stores/window";
 
 let unlistenSettingsUpdated: UnlistenFn | undefined;
 let unlistenNavigation: UnlistenFn | undefined;
@@ -55,8 +53,6 @@ const removeEventListeners = () => {
 };
 
 const App: Component = () => {
-  const isExternalWebviewVisible = useWindowState((state) => state.isExternalWebviewVisible);
-
   onMount(async () => {
     await initializeApp();
     // disable right click context menu
@@ -76,16 +72,7 @@ const App: Component = () => {
         <div class="mb-2">
           <RootChildrenSelect />
         </div>
-        <Show when={isExternalWebviewVisible()}>
-          <div class="w-[200px]">
-            <BookmarkTree />
-          </div>
-        </Show>
-        <Show when={!isExternalWebviewVisible()}>
-          <div class="">
-            <BookmarkTreeEditable />
-          </div>
-        </Show>
+        <BookmarkTreeEditable />
       </main>
     </div>
   );

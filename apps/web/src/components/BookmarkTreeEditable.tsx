@@ -27,15 +27,13 @@ import {
   ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from "@repo/ui/context-menu";
+import { useUrlState } from "../stores/url";
+import { useWindowState } from "../stores/window";
 
 const BookmarkTreeEditable: Component = () => {
   const bookmarks = useBookmarkState((state) => state.bookmarks);
 
-  return (
-    <div class="pl-1">
-      <BookmarkNode bookmark={bookmarks()} level={0} />
-    </div>
-  );
+  return <BookmarkNode bookmark={bookmarks()} level={0} />;
 };
 
 type BookmarkNodeProps = {
@@ -46,15 +44,26 @@ type BookmarkNodeProps = {
 const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
   const [isOpen, setIsOpen] = createSignal(true);
   const hasChildren = () => props.bookmark.children?.length > 0;
+  const isExternalWebviewVisible = useWindowState((state) => state.isExternalWebviewVisible);
+  const navigateToUrl = useUrlState((state) => state.navigateToUrl);
 
   const toggle = (e: MouseEvent) => {
     if (hasChildren()) {
       e.preventDefault();
       setIsOpen(!isOpen());
     }
+    if (props.bookmark.url && isExternalWebviewVisible()) {
+      navigateToUrl(props.bookmark.url);
+    }
   };
 
   const handleKeydown = (e: KeyboardEvent) => {};
+
+  const handleAddFolder = (index: number) => {
+    //
+  };
+
+  const handleAddBookmark = (index: number) => {};
 
   const handleEdit = (index: number) => {
     console.log("Edit", index);
@@ -75,7 +84,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
             }
             onClick={toggle}
             onKeyDown={handleKeydown}
-            style={{ "padding-left": `${props.level * 4}px` }}
+            style={{ "padding-left": `${props.level * 6}px` }}
           >
             {/* Folder icon or Favicon */}
             <span class="flex items-center justify-center mr-1">
@@ -108,7 +117,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
                   </span>
                 </Match>
                 <Match when={props.bookmark.node_type === "Bookmark" && !hasChildren()}>
-                  <span class="flex w-[24px] ml-[20px]">
+                  <span class="flex w-[24px] ml-[24px]">
                     <Favicon url={`https://${props.bookmark.host}`} width="18" height="18" />
                   </span>
                 </Match>
@@ -124,16 +133,16 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
 
         <ContextMenuPortal>
           <ContextMenuContent class="w-48">
-            <ContextMenuItem>
+            <ContextMenuItem onClick={() => handleEdit(props.bookmark.index)}>
               <span>Edit</span>
             </ContextMenuItem>
 
             <ContextMenuSeparator />
 
-            <ContextMenuItem>
+            <ContextMenuItem onClick={() => handleAddFolder(props.bookmark.index)}>
               <span>Add Folder</span>
             </ContextMenuItem>
-            <ContextMenuItem>
+            <ContextMenuItem onClick={() => handleAddBookmark(props.bookmark.index)}>
               <span>Add Bookmark</span>
             </ContextMenuItem>
 
