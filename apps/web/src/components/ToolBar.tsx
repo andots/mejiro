@@ -38,6 +38,13 @@ const ToolBar: Component = () => {
     }
   };
 
+  const handlePinnedUrl = (url: string) => {
+    navigateToUrl(url);
+    if (externalState() === "hidden") {
+      changeExternalState("right");
+    }
+  };
+
   return (
     <div class="flex justify-center items-center w-full h-full px-2">
       {/* menu button */}
@@ -72,7 +79,7 @@ const ToolBar: Component = () => {
       <div class="flex items-center ml-2">
         <For each={settings()?.pinned_urls}>
           {(url) => (
-            <Button variant="ghost" class="w-9 h-9 p-2" onClick={() => navigateToUrl(url)}>
+            <Button variant="ghost" class="w-9 h-9 p-2" onClick={() => handlePinnedUrl(url)}>
               <Favicon url={url} width="18" height="18" />
             </Button>
           )}
