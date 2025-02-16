@@ -20,7 +20,7 @@ let unlistenNavigation: UnlistenFn | undefined;
 let unlistenPageLoaded: UnlistenFn | undefined;
 
 const initializeApp = async () => {
-  // frontend is ready, so get datas managed by rust
+  // get data from rust side for zustand stores
   useBookmarkState.getState().getFolders();
   useBookmarkState.getState().getBookmarks(1);
   useSettingsState.getState().syncSettings();

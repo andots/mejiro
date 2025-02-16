@@ -37,8 +37,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
   },
   addBookmark: async (url, title) => {
     // get current top of bookmark index that shown in the UI as a starting point
-    const current = useBookmarkState((state) => state.bookmarks);
-    const startingIndex = current().index;
+    const startingIndex = getCurrentStatingIndex();
     const data = await Invoke.AddBookmark(url, title, startingIndex);
     const tree = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks: tree }));
@@ -47,8 +46,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
   },
   removeBookmark: async (index) => {
     // get current top of bookmark index that shown in the UI as a starting point
-    const current = useBookmarkState((state) => state.bookmarks);
-    const startingIndex = current().index;
+    const startingIndex = getCurrentStatingIndex();
     const data = await Invoke.RemoveBookmark(index, startingIndex);
     const tree = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks: tree }));
@@ -56,3 +54,8 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
     useBookmarkState.getState().getFolders();
   },
 }));
+
+const getCurrentStatingIndex = () => {
+  const bookmarks = useBookmarkState((state) => state.bookmarks);
+  return bookmarks().index;
+};
