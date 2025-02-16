@@ -31,17 +31,11 @@ import {
 import { useDialogState } from "../stores/dialog";
 import { useUrlState } from "../stores/url";
 import { useWindowState } from "../stores/window";
-import BookmarkEditDialog from "./dialogs/BookmarkEditDialog";
 
 const BookmarkTreeEditable: Component = () => {
   const bookmarks = useBookmarkState((state) => state.bookmarks);
 
-  return (
-    <>
-      <BookmarkEditDialog />
-      <BookmarkNode bookmark={bookmarks()} level={0} />
-    </>
-  );
+  return <BookmarkNode bookmark={bookmarks()} level={0} />;
 };
 
 type BookmarkNodeProps = {
@@ -68,11 +62,12 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
 
   const handleKeydown = (e: KeyboardEvent) => {};
 
-  const handleAddFolder = (index: number) => {
-    //
-  };
-
   const handleAddBookmark = (index: number) => {};
+
+  const handleAddFolder = (index: number) => {
+    useDialogState.getState().setSelectedFolder(index);
+    useDialogState.getState().setAddFolderOpen(true);
+  };
 
   const handleEdit = (index: number) => {
     useDialogState.getState().setSelectedBookmark({ index, title: props.bookmark.title });
@@ -152,6 +147,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
             <ContextMenuItem onClick={() => handleAddFolder(props.bookmark.index)}>
               <span>Add Folder</span>
             </ContextMenuItem>
+
             <ContextMenuItem onClick={() => handleAddBookmark(props.bookmark.index)}>
               <span>Add Bookmark</span>
             </ContextMenuItem>

@@ -8,6 +8,8 @@ import { debug } from "@tauri-apps/plugin-log";
 import BookmarkTreeEditable from "./components/BookmarkTreeEditable";
 import RootChildrenSelect from "./components/RootChildrenSelect";
 import ToolBar from "./components/ToolBar";
+import AddFolderDialog from "./components/dialogs/AddFolderDialog";
+import BookmarkEditDialog from "./components/dialogs/BookmarkEditDialog";
 import { AppEvent } from "./constants";
 import { useBookmarkState } from "./stores/bookmarks";
 import { useSettingsState } from "./stores/settings";
@@ -74,6 +76,8 @@ const App: Component = () => {
         </div>
         <BookmarkTreeEditable />
       </main>
+      <BookmarkEditDialog />
+      <AddFolderDialog />
     </div>
   );
 };

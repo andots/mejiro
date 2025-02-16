@@ -6,11 +6,12 @@ import type { Bookmark, FolderData } from "../types";
 type BookmarkState = {
   folders: FolderData[];
   bookmarks: Bookmark;
-  getFolders: () => void;
-  getBookmarks: (index: number) => void;
-  addBookmark: (url: string, title: string) => void;
-  removeBookmark: (index: number) => void;
-  updateBookmarkTitle: (index: number, title: string) => void;
+  getFolders: () => Promise<void>;
+  getBookmarks: (index: number) => Promise<void>;
+  addBookmark: (url: string, title: string) => Promise<void>;
+  removeBookmark: (index: number) => Promise<void>;
+  updateBookmarkTitle: (index: number, title: string) => Promise<void>;
+  addFolder: (parentIndex: number, title: string) => Promise<void>;
 };
 
 export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
@@ -60,6 +61,15 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
     const data = await Invoke.UpdateBookmarkTitle(index, title, startingIndex);
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
+    // update the folders list
+    useBookmarkState.getState().getFolders();
+  },
+  addFolder: async (parentIndex, title) => {
+    // get current top of bookmark index that shown in the UI as a starting point
+    const startingIndex = getCurrentStatingIndex();
+    const data = await Invoke.AddFolder(parentIndex, title, startingIndex);
+    const tree = JSON.parse(data) as Bookmark;
+    set(() => ({ bookmarks: tree }));
     // update the folders list
     useBookmarkState.getState().getFolders();
   },
