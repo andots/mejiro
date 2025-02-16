@@ -138,19 +138,19 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
 
         <ContextMenuPortal>
           <ContextMenuContent class="w-48">
-            <ContextMenuItem onClick={() => handleEdit(props.bookmark.index)}>
-              <span>Edit</span>
-            </ContextMenuItem>
-
-            <ContextMenuSeparator />
-
             <ContextMenuItem onClick={() => handleAddFolder(props.bookmark.index)}>
               <span>Add Folder</span>
             </ContextMenuItem>
 
-            <ContextMenuItem onClick={() => handleAddBookmark(props.bookmark.index)}>
-              <span>Add Bookmark</span>
+            {/* <ContextMenuSeparator /> */}
+
+            <ContextMenuItem onClick={() => handleEdit(props.bookmark.index)}>
+              <span>Edit</span>
             </ContextMenuItem>
+
+            {/* <ContextMenuItem onClick={() => handleAddBookmark(props.bookmark.index)}>
+              <span>Add Bookmark</span>
+            </ContextMenuItem> */}
 
             <Show when={props.bookmark.node_type !== "Root"}>
               <ContextMenuSeparator />
