@@ -56,3 +56,18 @@ pub fn remove_bookmark(
 
     Ok(bookmarks.to_nested_json(starting_index)?)
 }
+
+#[tauri::command]
+pub fn update_bookmark_title(
+    state: tauri::State<'_, Mutex<Bookmarks>>,
+    index: usize,
+    title: String,
+    starting_index: usize,
+) -> Result<String, AppError> {
+    let mut bookmarks = state
+        .lock()
+        .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
+    bookmarks.update_title(index, title)?;
+
+    Ok(bookmarks.to_nested_json(starting_index)?)
+}

@@ -50,6 +50,7 @@ pub fn run() {
             commands::bookmarks::get_root_and_children_folders,
             commands::bookmarks::add_bookmark,
             commands::bookmarks::remove_bookmark,
+            commands::bookmarks::update_bookmark_title,
             commands::injects::emit_page_params,
             commands::settings::get_settings,
         ])

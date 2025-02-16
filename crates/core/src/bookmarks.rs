@@ -144,6 +144,19 @@ impl Bookmarks {
 
 /// Tree manupulation
 impl Bookmarks {
+    pub fn update_title(&mut self, index: usize, title: String) -> Result<(), CoreError> {
+        let node_id = self
+            .find_node_id_by_index(index)
+            .ok_or(CoreError::NodeNotFound(index))?;
+        let node = self
+            .arena
+            .get_mut(node_id)
+            .ok_or(CoreError::NodeNotFound(index))?;
+        let data = node.get_mut();
+        data.title = title;
+        Ok(())
+    }
+
     pub fn remove_subtree(&mut self, index: usize) -> Result<(), CoreError> {
         if index == 1 {
             return Err(CoreError::CannotRemoveRoot());
@@ -381,6 +394,19 @@ mod tests {
 
         println!("{}", bookmarks.to_nested_json_pretty(1)?);
 
+        Ok(())
+    }
+
+    #[test]
+    fn test_update_title() -> anyhow::Result<()> {
+        let mut bookmarks = create_test_bookmarks();
+        bookmarks.update_title(1, "new root name".to_string())?;
+        bookmarks.update_title(2, "new title".to_string())?;
+        let node = bookmarks.find_node_by_index(1).unwrap();
+        assert_eq!(node.get().title, "new root name");
+        let node = bookmarks.find_node_by_index(2).unwrap();
+        assert_eq!(node.get().title, "new title");
+        println!("{}", bookmarks.to_nested_json_pretty(1)?);
         Ok(())
     }
 
