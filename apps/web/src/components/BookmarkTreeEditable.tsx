@@ -53,7 +53,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
   const [isOpen, setIsOpen] = createSignal(true);
 
   const hasChildren = () => props.bookmark.children?.length > 0;
-  const isExternalWebviewVisible = useWindowState((state) => state.isExternalWebviewVisible);
+  const externalState = useWindowState((state) => state.externalState);
   const navigateToUrl = useUrlState((state) => state.navigateToUrl);
 
   const toggle = (e: MouseEvent) => {
@@ -61,7 +61,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
       e.preventDefault();
       setIsOpen(!isOpen());
     }
-    if (props.bookmark.url && isExternalWebviewVisible()) {
+    if (props.bookmark.url && externalState() === "right") {
       navigateToUrl(props.bookmark.url);
     }
   };

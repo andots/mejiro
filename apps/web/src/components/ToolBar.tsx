@@ -16,9 +16,27 @@ import Favicon from "./icons/Favicon";
 const ToolBar: Component = () => {
   const settings = useSettingsState((state) => state.settings);
   const navigateToUrl = useUrlState((state) => state.navigateToUrl);
-  const sidebarVisible = useWindowState((state) => state.sidebarVisible);
-  const toggleSidebar = useWindowState((state) => state.toggleSidebar);
-  const toggleExternalWebview = useWindowState((state) => state.toggleExternalWebview);
+
+  const externalState = useWindowState((state) => state.externalState);
+  const changeExternalState = useWindowState((state) => state.changeExternalState);
+
+  const handleSidebar = () => {
+    if (externalState() === "right") {
+      changeExternalState("full");
+    } else if (externalState() === "full") {
+      changeExternalState("right");
+    } else if (externalState() === "hide") {
+      changeExternalState("right");
+    }
+  };
+
+  const handleEditButton = () => {
+    if (externalState() === "hide") {
+      changeExternalState("right");
+    } else {
+      changeExternalState("hide");
+    }
+  };
 
   return (
     <div class="flex justify-center items-center w-full h-full px-2">
@@ -27,22 +45,25 @@ const ToolBar: Component = () => {
         class="w-9 h-9 m-0 p-2 [&_svg]:size-6 [&_svg]:shrink-0"
         variant="ghost"
         size="icon"
-        onClick={toggleSidebar}
+        onClick={handleSidebar}
       >
-        <Show when={sidebarVisible()}>
-          <OcticonSidebarExpand24 />
-        </Show>
-        <Show when={!sidebarVisible()}>
+        <Show when={externalState() === "right"}>
           <OcticonSidebarCollapse24 />
+        </Show>
+        <Show when={externalState() === "hide"}>
+          {/* <OcticonSidebar24 /> */}
+          <OcticonSidebarCollapse24 />
+        </Show>
+        <Show when={externalState() === "full"}>
+          <OcticonSidebarExpand24 />
         </Show>
       </Button>
 
-      {/* edit button */}
       <Button
         class="w-9 h-9 m-0 p-2 [&_svg]:size-6 [&_svg]:shrink-0"
         variant="ghost"
         size="icon"
-        onClick={toggleExternalWebview}
+        onClick={handleEditButton}
       >
         <OcticonPencil24 />
       </Button>
