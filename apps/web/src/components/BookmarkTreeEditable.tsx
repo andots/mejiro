@@ -65,7 +65,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
   const handleAddBookmark = (index: number) => {};
 
   const handleAddFolder = (index: number) => {
-    useDialogState.getState().setSelectedFolder(index);
+    useDialogState.getState().setParentIndex(index);
     useDialogState.getState().setAddFolderOpen(true);
   };
 

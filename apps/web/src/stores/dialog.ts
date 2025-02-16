@@ -14,9 +14,9 @@ interface DialogState {
 
   // Add folder dialog
   addFolderOpen: boolean;
-  selectedFolder: SelectedBookmark;
+  parentIndex: number;
   setAddFolderOpen: (open: boolean) => void;
-  setSelectedFolder: (index: number) => void;
+  setParentIndex: (index: number) => void;
 }
 
 export const useDialogState = createWithSignal<DialogState>((set) => ({
@@ -28,7 +28,7 @@ export const useDialogState = createWithSignal<DialogState>((set) => ({
 
   // Add folder dialog
   addFolderOpen: false,
-  selectedFolder: { index: -1, title: "" },
+  parentIndex: -1,
   setAddFolderOpen: (open) => set({ addFolderOpen: open }),
-  setSelectedFolder: (index) => set({ selectedFolder: { index, title: "" } }),
+  setParentIndex: (index) => set({ parentIndex: index }),
 }));

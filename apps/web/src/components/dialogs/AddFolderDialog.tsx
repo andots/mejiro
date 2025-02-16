@@ -16,14 +16,14 @@ import { useDialogState } from "../../stores/dialog";
 const AddFolderDialog: Component = () => {
   const open = useDialogState((state) => state.addFolderOpen);
   const setOpen = useDialogState((state) => state.setAddFolderOpen);
-  const selected = useDialogState((state) => state.selectedFolder);
+  const parentIndex = useDialogState((state) => state.parentIndex);
   const [title, setTitle] = createSignal("");
 
   const handleSave = () => {
     // update the title only if it's not empty and the index is not 0
-    if (selected().index > 0 && title() !== "") {
+    if (parentIndex() > 0 && title() !== "") {
       const addFolder = useBookmarkState((state) => state.addFolder);
-      addFolder(selected().index, title());
+      addFolder(parentIndex(), title());
     }
     setOpen(false);
     setTitle("");
