@@ -85,6 +85,10 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
     }
   };
 
+  const handlePinToToolbar = (url: string | null) => {
+    //
+  };
+
   return (
     <div>
       <ContextMenu onOpenChange={(isOpen) => handleContextMenu(isOpen)}>
@@ -148,15 +152,21 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
               <span>Add Folder</span>
             </ContextMenuItem>
 
-            {/* <ContextMenuSeparator /> */}
+            <ContextMenuItem onClick={() => handleAddBookmark(props.bookmark.index)} disabled>
+              <span>Add Bookmark (WIP)</span>
+            </ContextMenuItem>
+
+            <ContextMenuSeparator />
 
             <ContextMenuItem onClick={() => handleEdit(props.bookmark.index)}>
               <span>Edit</span>
             </ContextMenuItem>
 
-            {/* <ContextMenuItem onClick={() => handleAddBookmark(props.bookmark.index)}>
-              <span>Add Bookmark</span>
-            </ContextMenuItem> */}
+            <Show when={props.bookmark.node_type === "Bookmark"}>
+              <ContextMenuItem onClick={() => handlePinToToolbar(props.bookmark.url)} disabled>
+                <span>Pin to Toolbar (WIP)</span>
+              </ContextMenuItem>
+            </Show>
 
             <Show when={props.bookmark.node_type !== "Root"}>
               <ContextMenuSeparator />
