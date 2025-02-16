@@ -79,9 +79,15 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
     removeBookmark(index);
   };
 
+  const handleContextMenu = (isOpen: boolean) => {
+    if (externalState() === "right" && isOpen) {
+      useWindowState.getState().changeExternalState("hidden");
+    }
+  };
+
   return (
     <div>
-      <ContextMenu>
+      <ContextMenu onOpenChange={(isOpen) => handleContextMenu(isOpen)}>
         <ContextMenuTrigger>
           <div
             class={
