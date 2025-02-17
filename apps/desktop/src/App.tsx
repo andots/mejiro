@@ -1,12 +1,11 @@
 import type { Component } from "solid-js";
-import { Show, createEffect, on, onCleanup, onMount } from "solid-js";
+import { Show, createEffect, lazy, on, onCleanup, onMount } from "solid-js";
 
 import type { UnlistenFn } from "@tauri-apps/api/event";
 import { listen } from "@tauri-apps/api/event";
 
 import { debug } from "@tauri-apps/plugin-log";
-import BookmarkTreeEditable from "./components/BookmarkTreeEditable";
-import RootChildrenSelect from "./components/RootChildrenSelect";
+
 import ToolBar from "./components/ToolBar";
 import AddFolderDialog from "./components/dialogs/AddFolderDialog";
 import BookmarkEditDialog from "./components/dialogs/BookmarkEditDialog";
@@ -14,6 +13,7 @@ import { AppEvent } from "./constants";
 import { useBookmarkState } from "./stores/bookmarks";
 import { useSettingsState } from "./stores/settings";
 import { useUrlState } from "./stores/url";
+import { usePageState } from "./stores/pages";
 
 let unlistenSettingsUpdated: UnlistenFn | undefined;
 let unlistenNavigation: UnlistenFn | undefined;
@@ -54,7 +54,12 @@ const removeEventListeners = () => {
   }
 };
 
+const BookmarksPage = lazy(() => import("./components/BookmarksPage"));
+const SettingsPage = lazy(() => import("./components/SettingsPage"));
+
 const App: Component = () => {
+  const page = usePageState((state) => state.page);
+
   onMount(async () => {
     await initializeApp();
     // disable right click context menu
@@ -71,10 +76,12 @@ const App: Component = () => {
         <ToolBar />
       </div>
       <main class="flex-col h-[calc(100vh_-_40px)] py-2 px-1 border border-border/40 bg-sidebar text-sidebar-foreground">
-        <div class="mb-2">
-          <RootChildrenSelect />
-        </div>
-        <BookmarkTreeEditable />
+        <Show when={page() === "home"}>
+          <BookmarksPage />
+        </Show>
+        <Show when={page() === "settings"}>
+          <SettingsPage />
+        </Show>
       </main>
       <BookmarkEditDialog />
       <AddFolderDialog />

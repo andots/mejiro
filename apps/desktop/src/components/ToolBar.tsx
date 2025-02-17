@@ -12,6 +12,7 @@ import { useUrlState } from "../stores/url";
 import { useWindowState } from "../stores/window";
 import AddressBar from "./AddressBar";
 import Favicon from "./icons/Favicon";
+import { usePageState } from "../stores/pages";
 
 const ToolBar: Component = () => {
   const settings = useSettingsState((state) => state.settings);
@@ -42,6 +43,15 @@ const ToolBar: Component = () => {
     navigateToUrl(url);
     if (externalState() === "hidden") {
       changeExternalState("right");
+    }
+  };
+
+  const handleSettings = () => {
+    const page = usePageState((state) => state.page);
+    if (page() === "settings") {
+      usePageState.getState().setPage("home");
+    } else {
+      usePageState.getState().setPage("settings");
     }
   };
 
@@ -90,7 +100,12 @@ const ToolBar: Component = () => {
       <AddressBar />
 
       {/* settings button */}
-      <Button class="w-9 h-9 m-0 p-2 [&_svg]:size-5 [&_svg]:shrink-0" variant="ghost" size="icon">
+      <Button
+        class="w-9 h-9 m-0 p-2 [&_svg]:size-5 [&_svg]:shrink-0"
+        variant="ghost"
+        size="icon"
+        onClick={() => handleSettings()}
+      >
         <OcticonGear24 />
       </Button>
     </div>

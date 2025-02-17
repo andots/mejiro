@@ -5,6 +5,7 @@
   "files": ["dist"],
   "exports": {
     "./button": "./src/button.tsx",
+    "./card": "./src/card.tsx",
     "./combobox": "./src/combobox.tsx",
     "./context-menu": "./src/context-menu.tsx",
     "./dialog": "./src/dialog.tsx",
