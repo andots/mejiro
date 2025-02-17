@@ -23,7 +23,7 @@ export type FolderData = {
   title: string;
 };
 
-//! Must sync with rust struct in src-tauri/settings.rs
+//! Must sync with rust struct in app/settings.rs
 export type UserSettings = {
   language: string;
   theme: string;
