@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.2](https://github.com/andots/mejiro/compare/v0.7.1...v0.7.2) (2025-02-17)
+
+
+### Bug Fixes
+
+* update release workflow to use signing keys for Tauri artifacts ([3fc6da1](https://github.com/andots/mejiro/commit/3fc6da1dcdf113318f04386ce364877515e31b2c))
+
 ## [0.7.1](https://github.com/andots/mejiro/compare/v0.7.0...v0.7.1) (2025-02-17)
 
 
