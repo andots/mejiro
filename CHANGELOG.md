@@ -1,5 +1,18 @@
 # Changelog
 
+# [0.8.0](https://github.com/andots/mejiro/compare/v0.7.2...v0.8.0) (2025-02-17)
+
+
+### Bug Fixes
+
+* update ToolBar component to manage page state transitions ([b5fec6c](https://github.com/andots/mejiro/commit/b5fec6c08cecc857b94081bf35c1967edee38ed7))
+
+
+### Features
+
+* implement updateSettings functionality in SettingsPage and backend ([ba7ccf0](https://github.com/andots/mejiro/commit/ba7ccf0acf963b4aac5405997b20fb86cbf7f560))
+* sync SettingsPage with state management and default settings ([240a343](https://github.com/andots/mejiro/commit/240a3436cec4b210dcf09f94a231e10140bed758))
+
 ## [0.7.2](https://github.com/andots/mejiro/compare/v0.7.1...v0.7.2) (2025-02-17)
 
 
