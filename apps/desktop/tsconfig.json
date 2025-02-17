@@ -6,6 +6,6 @@
     }
     // "types": ["unplugin-icons/types/solid"]
   },
-  "include": [".astro/types.d.ts", "**/*", "src/components/BookmarkTree.tsx"],
+  "include": [".astro/types.d.ts", "**/*"],
   "exclude": ["dist"]
 }
