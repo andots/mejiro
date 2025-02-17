@@ -5,7 +5,7 @@ import { useUrlState } from "./url";
 
 interface UserSettingsState {
   settings: UserSettings;
-  syncSettings: () => void;
+  getSettings: () => void;
   updateSettings: (settings: UserSettings) => Promise<void>;
 }
 
@@ -24,7 +24,7 @@ export const useSettingsState = createWithSignal<UserSettingsState>((set) => ({
       "https://github.com/search",
     ],
   },
-  syncSettings: async () => {
+  getSettings: async () => {
     const settings = await Invoke.GetSettings();
     const setUrl = useUrlState((state) => state.setUrl);
     setUrl(settings.start_page_url);

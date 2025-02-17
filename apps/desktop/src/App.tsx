@@ -23,7 +23,7 @@ const initializeApp = async () => {
   // get data from rust side for zustand stores
   useBookmarkState.getState().getFolders();
   useBookmarkState.getState().getBookmarks(1);
-  useSettingsState.getState().syncSettings();
+  useSettingsState.getState().getSettings();
 
   // listen for settings updates on rust side
   unlistenSettingsUpdated = await listen<string>(AppEvent.SettingsUpdated, (event) => {
