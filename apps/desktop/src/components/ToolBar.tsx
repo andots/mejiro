@@ -21,7 +21,11 @@ const ToolBar: Component = () => {
   const externalState = useWindowState((state) => state.externalState);
   const changeExternalState = useWindowState((state) => state.changeExternalState);
 
+  const page = usePageState((state) => state.page);
+  const setPage = usePageState((state) => state.setPage);
+
   const handleSidebar = () => {
+    setPage("home");
     if (externalState() === "right") {
       changeExternalState("full");
     } else if (externalState() === "full") {
@@ -32,6 +36,7 @@ const ToolBar: Component = () => {
   };
 
   const handleEditButton = () => {
+    setPage("home");
     if (externalState() === "hidden") {
       changeExternalState("right");
     } else {
@@ -40,6 +45,7 @@ const ToolBar: Component = () => {
   };
 
   const handlePinnedUrl = (url: string) => {
+    setPage("home");
     navigateToUrl(url);
     if (externalState() === "hidden") {
       changeExternalState("right");
@@ -47,11 +53,12 @@ const ToolBar: Component = () => {
   };
 
   const handleSettings = () => {
-    const page = usePageState((state) => state.page);
     if (page() === "settings") {
-      usePageState.getState().setPage("home");
+      changeExternalState("right");
+      setPage("home");
     } else {
-      usePageState.getState().setPage("settings");
+      changeExternalState("hidden");
+      setPage("settings");
     }
   };
 
