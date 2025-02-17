@@ -1,5 +1,12 @@
 # Changelog
 
+# [0.7.0](https://github.com/andots/mejiro/compare/v0.6.0...v0.7.0) (2025-02-17)
+
+
+### Features
+
+* implement updater functionality with dialog prompts for version updates ([7564ba8](https://github.com/andots/mejiro/commit/7564ba8105ecab8718bf545c1f506be672a7ab5a))
+
 # 0.6.0 (2025-02-17)
 
 
