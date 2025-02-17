@@ -57,6 +57,9 @@ export const Invoke = {
   GetSettings: async () => {
     return invoke<UserSettings>("get_settings", {});
   },
+  UpdateSettings: async (settings: UserSettings) => {
+    return invoke<UserSettings>("update_settings", { settings });
+  },
 
   // App Webview commands
   GetAppWebviewBounds: async () => {

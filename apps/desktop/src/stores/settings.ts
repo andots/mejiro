@@ -6,6 +6,7 @@ import { useUrlState } from "./url";
 interface UserSettingsState {
   settings: UserSettings;
   syncSettings: () => void;
+  updateSettings: (settings: UserSettings) => Promise<void>;
 }
 
 export const useSettingsState = createWithSignal<UserSettingsState>((set) => ({
@@ -25,9 +26,12 @@ export const useSettingsState = createWithSignal<UserSettingsState>((set) => ({
   },
   syncSettings: async () => {
     const settings = await Invoke.GetSettings();
-    console.log(settings);
     const setUrl = useUrlState((state) => state.setUrl);
     setUrl(settings.start_page_url);
     set({ settings });
+  },
+  updateSettings: async (settings) => {
+    const data = await Invoke.UpdateSettings(settings);
+    set({ settings: data });
   },
 }));

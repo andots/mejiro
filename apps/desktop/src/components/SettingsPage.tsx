@@ -10,23 +10,27 @@ import { useSettingsState } from "../stores/settings";
 
 const SettingsPage: Component = () => {
   const settings = useSettingsState((state) => state.settings);
+  const updateSettings = useSettingsState((state) => state.updateSettings);
 
-  // const [language, setLanguage] = createSignal(settings().language);
-  // const [theme, setTheme] = createSignal(settings().theme);
   const [gpuAcceleration, setGpuAcceleration] = createSignal(settings().gpu_acceleration_enabled);
   const [incognito, setIncognito] = createSignal(settings().incognito);
   const [startPageUrl, setStartPageUrl] = createSignal(settings().start_page_url);
+  // const [language, setLanguage] = createSignal(settings().language);
+  // const [theme, setTheme] = createSignal(settings().theme);
 
   const handleGpuAccelerationChange = (value: boolean) => {
     setGpuAcceleration(value);
+    updateSettings({ ...settings(), gpu_acceleration_enabled: value });
   };
 
   const handleIncognitoChange = (value: boolean) => {
     setIncognito(value);
+    updateSettings({ ...settings(), incognito: value });
   };
 
   const handleStartPageUrlUpdate = () => {
-    console.log(startPageUrl());
+    // TODO: validate url
+    updateSettings({ ...settings(), start_page_url: startPageUrl() });
   };
 
   // const handleLanguageChange = () => {};

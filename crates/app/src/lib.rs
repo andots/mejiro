@@ -76,6 +76,7 @@ pub fn run() {
             commands::bookmarks::add_folder,
             commands::injects::emit_page_params,
             commands::settings::get_settings,
+            commands::settings::update_settings,
         ])
         .build(tauri::generate_context!())
         .expect("error while running tauri application");
