@@ -8,7 +8,7 @@ members = [
 ]
 
 [workspace.package]
-version = "0.1.0"
+version = "0.5.0"
 authors = ["andots"]
 edition = "2021"
 rust-version = "1.84.0"
@@ -16,14 +16,13 @@ rust-version = "1.84.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [workspace.dependencies]
-serde_json = "1.0.138"
-serde = "1.0.217"
-log = "0.4.25"
-thiserror = "2.0.11"
-# Enum to string
-strum = "0.27.0"
-reqwest = "0.12.12"
 anyhow = "1.0.95"
+log = "0.4.25"
+reqwest = "0.12.12"
+serde = "1.0.217"
+serde_json = "1.0.138"
+strum = "0.27.0"
+thiserror = "2.0.11"
 url = "2.5.4"
 
 # internal
