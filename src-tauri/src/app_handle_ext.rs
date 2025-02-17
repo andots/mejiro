@@ -10,10 +10,22 @@ use crate::{
     constants::MAINWINDOW_LABEL, error::AppError, settings::UserSettings, window::WindowGeometry,
 };
 
-/// Data file names.
-/// The file names are defined as an enum to prevent typos and to provide a list of all data files.
-/// Bookmarks and window geometry data are stored in JSON format.
-/// But the file names are stored in a hidden format to avoid users from accidentally deleting or modifying the data files.
+/// The file names are defined as an enum to prevent typos and to provide a centralized list of all data files.
+/// Bookmarks and window geometry data are stored in JSON format, but with a dot prefix and no extension name
+/// to prevent accidental deletion or modification by users.
+/// Different file names are used for debug and release builds to separate development and production data.
+#[cfg(debug_assertions)]
+#[derive(AsRefStr)]
+pub enum FileName {
+    #[strum(serialize = ".dev-bookmarks")]
+    Bookmarks,
+    #[strum(serialize = ".dev-window_geometry")]
+    WindowGeometry,
+    #[strum(serialize = "dev-settings.json")]
+    Settings,
+}
+
+#[cfg(not(debug_assertions))]
 #[derive(AsRefStr)]
 pub enum FileName {
     #[strum(serialize = ".bookmarks")]
