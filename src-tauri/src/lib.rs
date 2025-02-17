@@ -1,9 +1,10 @@
 use std::sync::Mutex;
 
+use tauri::Manager;
+use tauri_plugin_updater::UpdaterExt;
+
 use app_handle_ext::AppHandleExt;
 use constants::MAINWINDOW_LABEL;
-
-use tauri::Manager;
 use window::create_window;
 
 mod app_handle_ext;
@@ -12,6 +13,7 @@ mod constants;
 mod error;
 mod events;
 mod settings;
+mod updater;
 mod window;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -26,6 +28,26 @@ pub fn run() {
                         .build(),
                 )?;
             }
+
+            #[cfg(desktop)]
+            {
+                // setup tauri plugin updater
+                app.handle()
+                    .plugin(tauri_plugin_updater::Builder::new().build())?;
+                // setup tauri plugin dialog
+                app.handle().plugin(tauri_plugin_dialog::init())?;
+
+                // setup updater
+                let updater = app.updater_builder().build().unwrap();
+
+                // check for updates
+                let app_handle = app.handle().clone();
+                tauri::async_runtime::spawn_blocking(|| {
+                    tauri::async_runtime::block_on(async {
+                        updater::check_and_install_updates(app_handle, updater).await;
+                    })
+                });
+            };
 
             let bookmarks = app.handle().load_bookmarks();
             app.manage(Mutex::new(bookmarks));
