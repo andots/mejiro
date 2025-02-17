@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.1](https://github.com/andots/mejiro/compare/v0.7.0...v0.7.1) (2025-02-17)
+
+
+### Bug Fixes
+
+* enable creation of updater artifacts in tauri configuration ([539841e](https://github.com/andots/mejiro/commit/539841e8e16de14e89ce4ca28fc9e2697d740bf5))
+
 # [0.7.0](https://github.com/andots/mejiro/compare/v0.6.0...v0.7.0) (2025-02-17)
 
 
