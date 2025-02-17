@@ -41,7 +41,8 @@ pub fn create_window(app_handle: &tauri::AppHandle, settings: &UserSettings) -> 
         APP_WEBVIEW_LABEL,
         WebviewUrl::App(APP_WEBVIEW_URL.into()),
     )
-    .auto_resize();
+    .auto_resize()
+    .data_directory(app_handle.get_app_dir());
 
     // External webview
     let url = match Url::parse(&settings.start_page_url) {
@@ -53,6 +54,7 @@ pub fn create_window(app_handle: &tauri::AppHandle, settings: &UserSettings) -> 
     let mut external_webview_builder =
         WebviewBuilder::<tauri::Wry>::new(EXTERNAL_WEBVIEW_LABEL, WebviewUrl::External(url))
             .auto_resize()
+            .data_directory(app_handle.get_app_dir())
             .on_navigation(move |url| {
                 // log::debug!("{:?}: on_navigation", url.host());
                 let _ = handle.emit_to(
