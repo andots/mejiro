@@ -1,9 +1,9 @@
 {
-  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "$schema": "../../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "mejiro",
   "identifier": "mejiro",
   "build": {
-    "frontendDist": "../target-frontend/web",
+    "frontendDist": "../../target-frontend/web",
     "devUrl": "http://localhost:1420",
     "beforeDevCommand": "pnpm run turbo dev",
     "beforeBuildCommand": "pnpm run turbo build"

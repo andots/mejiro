@@ -23,8 +23,8 @@ export default defineConfig({
     port: 1420,
     strictPort: true,
     watch: {
-      // 3. tell vite to ignore watching `src-tauri`
-      ignored: ["**/src-tauri/**"],
+      // 3. tell vite to ignore watching `crates`
+      ignored: ["**/crates/**"],
     },
   },
 });
