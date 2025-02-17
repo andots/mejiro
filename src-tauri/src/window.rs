@@ -35,90 +35,112 @@ impl Default for WindowGeometry {
     }
 }
 
+/// Create the main window with the app and external webviews.
+/// The app webview is the main webview that loads the app.
+/// The external webview is a webview that loads external URLs and placed on the right side of the app webview (overlayed).
 pub fn create_window(app_handle: &tauri::AppHandle, settings: &UserSettings) -> tauri::Result<()> {
-    // App webview
-    let mut app_webview_builder = WebviewBuilder::<tauri::Wry>::new(
-        APP_WEBVIEW_LABEL,
-        WebviewUrl::App(APP_WEBVIEW_URL.into()),
-    )
-    .auto_resize()
-    .data_directory(app_handle.get_app_dir());
+    let geometry = app_handle.load_window_geometry();
+    let window = create_main_window(app_handle, &geometry)?;
 
-    // External webview
-    let url = match Url::parse(&settings.start_page_url) {
-        Ok(url) => url,
-        Err(_) => Url::parse(default_start_page_url().as_str()).unwrap(),
-    };
+    let app_webview = create_app_webview(app_handle, settings)?;
+    let external_webview = create_external_webview(app_handle, settings)?;
 
-    let handle = app_handle.clone();
-    let mut external_webview_builder =
-        WebviewBuilder::<tauri::Wry>::new(EXTERNAL_WEBVIEW_LABEL, WebviewUrl::External(url))
+    add_webviews_to_window(&window, app_webview, external_webview, &geometry)?;
+
+    Ok(())
+}
+
+fn create_main_window(
+    app_handle: &tauri::AppHandle,
+    geometry: &WindowGeometry,
+) -> tauri::Result<tauri::Window> {
+    WindowBuilder::new(app_handle, MAINWINDOW_LABEL)
+        .resizable(true)
+        .fullscreen(false)
+        .title(app_handle.get_defautl_title())
+        .position(geometry.x, geometry.y)
+        .inner_size(geometry.width, geometry.height)
+        .build()
+}
+
+fn create_app_webview(
+    app_handle: &tauri::AppHandle,
+    settings: &UserSettings,
+) -> tauri::Result<WebviewBuilder<tauri::Wry>> {
+    let mut builder =
+        WebviewBuilder::new(APP_WEBVIEW_LABEL, WebviewUrl::App(APP_WEBVIEW_URL.into()))
             .auto_resize()
             .data_directory(app_handle.get_app_dir())
-            .on_navigation(move |url| {
-                // log::debug!("{:?}: on_navigation", url.host());
-                let _ = handle.emit_to(
-                    EventTarget::webview(APP_WEBVIEW_LABEL),
-                    AppEvent::ExternalNavigation.as_ref(),
-                    url.to_string(),
-                );
-                true
-            })
-            .on_page_load(move |webview, payload| match payload.event() {
-                PageLoadEvent::Started => {
-                    // log::debug!("Page started loading: {:?}", payload.url().host());
-                }
-                PageLoadEvent::Finished => {
-                    // log::debug!("{:?}: on_page_load", payload.url().host());
-                    let _ = webview.eval(include_str!("../inject/eval.js"));
-                }
-            })
-            .initialization_script(include_str!("../inject/init.js"));
+            .incognito(settings.incognito);
 
-    // disable gpu acceleration on windows if user settings is set
-    if cfg!(target_os = "windows") && !settings.gpu_acceleration_enabled {
-        app_webview_builder = app_webview_builder.additional_browser_args(
-            "--disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection --disable-gpu",
-        );
-        external_webview_builder = external_webview_builder.additional_browser_args(
+    #[cfg(target_os = "windows")]
+    if !settings.gpu_acceleration_enabled {
+        builder = builder.additional_browser_args(
             "--disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection --disable-gpu",
         );
     }
 
-    // incognito mode: default is true
-    let incognito = settings.incognito;
-    app_webview_builder = app_webview_builder.incognito(incognito);
-    external_webview_builder = external_webview_builder.incognito(incognito);
+    Ok(builder)
+}
 
-    // Create main window and add webviews, load geometry from file
-    let title = app_handle.get_defautl_title();
-    let geometry = app_handle.load_window_geometry();
-    let width = geometry.width;
-    let height = geometry.height;
-    let x = geometry.x;
-    let y = geometry.y;
-    let sidebar_width = geometry.sidebar_width;
-    let header_height = geometry.header_height;
+fn create_external_webview(
+    app_handle: &tauri::AppHandle,
+    settings: &UserSettings,
+) -> tauri::Result<WebviewBuilder<tauri::Wry>> {
+    let url = Url::parse(&settings.start_page_url)
+        .unwrap_or_else(|_| Url::parse(default_start_page_url().as_str()).unwrap());
 
-    let window = WindowBuilder::new(app_handle, MAINWINDOW_LABEL)
-        .resizable(true)
-        .fullscreen(false)
-        .title(title)
-        .position(x, y)
-        .inner_size(width, height)
-        .build()?;
+    let handle = app_handle.clone();
+    let mut builder = WebviewBuilder::new(EXTERNAL_WEBVIEW_LABEL, WebviewUrl::External(url))
+        .auto_resize()
+        .data_directory(app_handle.get_app_dir())
+        .on_navigation(move |url| {
+            handle
+                .emit_to(
+                    EventTarget::webview(APP_WEBVIEW_LABEL),
+                    AppEvent::ExternalNavigation.as_ref(),
+                    url.to_string(),
+                )
+                .ok();
+            true
+        })
+        .on_page_load(|webview, payload| {
+            if let PageLoadEvent::Finished = payload.event() {
+                webview.eval(include_str!("../inject/eval.js")).ok();
+            }
+        })
+        .initialization_script(include_str!("../inject/init.js"))
+        .incognito(settings.incognito);
 
-    let _app_webview = window.add_child(
-        app_webview_builder,
+    #[cfg(target_os = "windows")]
+    if !settings.gpu_acceleration_enabled {
+        builder = builder.additional_browser_args(
+            "--disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection --disable-gpu",
+        );
+    }
+
+    Ok(builder)
+}
+
+fn add_webviews_to_window(
+    window: &tauri::Window,
+    app_webview: WebviewBuilder<tauri::Wry>,
+    external_webview: WebviewBuilder<tauri::Wry>,
+    geometry: &WindowGeometry,
+) -> tauri::Result<()> {
+    window.add_child(
+        app_webview,
         LogicalPosition::new(0., 0.),
-        LogicalSize::new(width, height),
+        LogicalSize::new(geometry.width, geometry.height),
     )?;
 
-    // External webview is overlaid on top of the app webview
-    let _external_webview = window.add_child(
-        external_webview_builder,
-        LogicalPosition::new(sidebar_width, header_height),
-        LogicalSize::new(width - sidebar_width, height - header_height),
+    window.add_child(
+        external_webview,
+        LogicalPosition::new(geometry.sidebar_width, geometry.header_height),
+        LogicalSize::new(
+            geometry.width - geometry.sidebar_width,
+            geometry.height - geometry.header_height,
+        ),
     )?;
 
     Ok(())
