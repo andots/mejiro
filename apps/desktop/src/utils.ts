@@ -1,3 +1,7 @@
+import type { ClassValue } from "clsx";
+import { clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
 export const validateUrl = (url: string): boolean => {
   try {
     const u = new URL(url);
@@ -10,3 +14,7 @@ export const validateUrl = (url: string): boolean => {
     return false;
   }
 };
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
