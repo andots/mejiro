@@ -32,6 +32,32 @@ import { useAddFolderDialog, useDeleteConfirmDialog, useEditDialog } from "../st
 import { useUrlState } from "../stores/url";
 import { useWindowState } from "../stores/window";
 
+const NavigationArrow = (props: { isOpen: boolean }) => {
+  return (
+    <Switch>
+      <Match when={props.isOpen}>
+        <IcBaselineKeyboardArrowDown width={20} height={20} />
+      </Match>
+      <Match when={!props.isOpen}>
+        <IcBaselineKeyboardArrowRight width={20} height={20} />
+      </Match>
+    </Switch>
+  );
+};
+
+const FolderIcon = (props: { isOpen: boolean }) => {
+  return (
+    <Switch>
+      <Match when={props.isOpen}>
+        <IcOutlineFolderOpen width={20} height={20} />
+      </Match>
+      <Match when={!props.isOpen}>
+        <IcOutlineFolder width={20} height={20} />
+      </Match>
+    </Switch>
+  );
+};
+
 const BookmarkTreeEditable: Component = () => {
   const bookmarks = useBookmarkState((state) => state.bookmarks);
 
@@ -64,6 +90,13 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
         useWindowState.getState().changeExternalState("right");
         navigateToUrl(props.bookmark.url);
       }
+    }
+  };
+
+  const toggleFolder = (e: MouseEvent) => {
+    if (hasChildren()) {
+      e.preventDefault();
+      setIsOpen(!isOpen());
     }
   };
 
@@ -104,52 +137,43 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
             class={
               "flex items-center text-left text-sm py-1 hover:bg-sidebar-accent transition-colors duration-150"
             }
-            onClick={toggle}
-            onKeyDown={handleKeydown}
             style={{ "padding-left": `${props.level * 6}px` }}
           >
-            {/* Folder icon or Favicon */}
-            <span class="flex items-center justify-center mr-1">
-              <Switch>
-                <Match
-                  when={
-                    props.bookmark.node_type === "Folder" || props.bookmark.node_type === "Root"
-                  }
-                >
-                  <span class="flex w-[40px]">
-                    <Show when={isOpen()}>
-                      <IcBaselineKeyboardArrowDown width={20} height={20} />
-                      <IcOutlineFolderOpen width={20} height={20} />
-                    </Show>
-                    <Show when={!isOpen()}>
-                      <IcBaselineKeyboardArrowRight width={20} height={20} />
-                      <IcOutlineFolder width={20} height={20} />
-                    </Show>
-                  </span>
-                </Match>
-                <Match when={props.bookmark.node_type === "Bookmark" && hasChildren()}>
-                  <span class="flex w-[40px]">
-                    <Show when={isOpen()}>
-                      <IcBaselineKeyboardArrowDown width={20} height={20} />
-                    </Show>
-                    <Show when={!isOpen()}>
-                      <IcBaselineKeyboardArrowRight width={20} height={20} />
-                    </Show>
-                    <Favicon url={`https://${props.bookmark.host}`} width="18" height="18" />
-                  </span>
-                </Match>
-                <Match when={props.bookmark.node_type === "Bookmark" && !hasChildren()}>
-                  <span class="flex w-[24px] ml-[24px]">
-                    <Favicon url={`https://${props.bookmark.host}`} width="18" height="18" />
-                  </span>
-                </Match>
-              </Switch>
-            </span>
+            <div class="flex items-center justify-center">
+              <div class="w-[20px]" onClick={toggleFolder} onKeyDown={handleKeydown}>
+                <Show when={hasChildren()}>
+                  <div class="rounded hover:bg-stone-300 cursor-pointer">
+                    <NavigationArrow isOpen={isOpen()} />
+                  </div>
+                </Show>
+              </div>
+            </div>
 
-            {/* Title */}
-            <span class="text-sidebar-foreground overflow-hidden whitespace-nowrap text-ellipsis">
-              {props.bookmark.title}
-            </span>
+            <div
+              class="flex items-center w-full cursor-pointer"
+              onClick={toggle}
+              onKeyDown={handleKeydown}
+            >
+              <div class="w-[20px] mr-1">
+                <Switch>
+                  <Match
+                    when={
+                      props.bookmark.node_type === "Folder" || props.bookmark.node_type === "Root"
+                    }
+                  >
+                    <FolderIcon isOpen={isOpen()} />
+                  </Match>
+                  <Match when={props.bookmark.node_type === "Bookmark"}>
+                    <Favicon url={`https://${props.bookmark.host}`} width="18" height="18" />
+                  </Match>
+                </Switch>
+              </div>
+
+              {/* Title */}
+              <div class="text-sidebar-foreground overflow-hidden whitespace-nowrap text-ellipsis">
+                {props.bookmark.title}
+              </div>
+            </div>
           </div>
         </ContextMenuTrigger>
 
@@ -195,3 +219,100 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
 };
 
 export default BookmarkTreeEditable;
+
+// return (
+//   <div>
+//     <ContextMenu onOpenChange={(isOpen) => handleContextMenu(isOpen)}>
+//       <ContextMenuTrigger>
+//         <div
+//           class={
+//             "flex items-center text-left text-sm py-1 hover:bg-sidebar-accent transition-colors duration-150"
+//           }
+//           onClick={toggle}
+//           onKeyDown={handleKeydown}
+//           style={{ "padding-left": `${props.level * 6}px` }}
+//         >
+//           {/* Folder icon or Favicon */}
+//           <span class="flex items-center justify-center mr-1">
+//             <Switch>
+//               <Match
+//                 when={
+//                   props.bookmark.node_type === "Folder" || props.bookmark.node_type === "Root"
+//                 }
+//               >
+//                 <span class="flex w-[40px]">
+//                   <Show when={isOpen()}>
+//                     <IcBaselineKeyboardArrowDown width={20} height={20} />
+//                     <IcOutlineFolderOpen width={20} height={20} />
+//                   </Show>
+//                   <Show when={!isOpen()}>
+//                     <IcBaselineKeyboardArrowRight width={20} height={20} />
+//                     <IcOutlineFolder width={20} height={20} />
+//                   </Show>
+//                 </span>
+//               </Match>
+//               <Match when={props.bookmark.node_type === "Bookmark" && hasChildren()}>
+//                 <span class="flex w-[40px]">
+//                   <Show when={isOpen()}>
+//                     <IcBaselineKeyboardArrowDown width={20} height={20} />
+//                   </Show>
+//                   <Show when={!isOpen()}>
+//                     <IcBaselineKeyboardArrowRight width={20} height={20} />
+//                   </Show>
+//                   <Favicon url={`https://${props.bookmark.host}`} width="18" height="18" />
+//                 </span>
+//               </Match>
+//               <Match when={props.bookmark.node_type === "Bookmark" && !hasChildren()}>
+//                 <span class="flex w-[24px] ml-[24px]">
+//                   <Favicon url={`https://${props.bookmark.host}`} width="18" height="18" />
+//                 </span>
+//               </Match>
+//             </Switch>
+//           </span>
+
+//           {/* Title */}
+//           <span class="text-sidebar-foreground overflow-hidden whitespace-nowrap text-ellipsis">
+//             {props.bookmark.title}
+//           </span>
+//         </div>
+//       </ContextMenuTrigger>
+
+//       <ContextMenuPortal>
+//         <ContextMenuContent class="w-48">
+//           <ContextMenuItem onClick={() => handleAddFolder(props.bookmark.index)}>
+//             <span>Add Folder</span>
+//           </ContextMenuItem>
+
+//           <ContextMenuItem onClick={() => handleAddBookmark(props.bookmark.index)} disabled>
+//             <span>Add Bookmark (WIP)</span>
+//           </ContextMenuItem>
+
+//           <ContextMenuSeparator />
+
+//           <ContextMenuItem onClick={() => handleEdit(props.bookmark.index)}>
+//             <span>Edit</span>
+//           </ContextMenuItem>
+
+//           <Show when={props.bookmark.node_type === "Bookmark"}>
+//             <ContextMenuItem onClick={() => handlePinToToolbar(props.bookmark.url)} disabled>
+//               <span>Pin to Toolbar (WIP)</span>
+//             </ContextMenuItem>
+//           </Show>
+
+//           <Show when={props.bookmark.node_type !== "Root"}>
+//             <ContextMenuSeparator />
+//             <ContextMenuItem onClick={() => handleRemove(props.bookmark.index)}>
+//               <span class="text-destructive">Delete</span>
+//             </ContextMenuItem>
+//           </Show>
+//         </ContextMenuContent>
+//       </ContextMenuPortal>
+//     </ContextMenu>
+
+//     <Show when={hasChildren() && isOpen()}>
+//       <For each={props.bookmark.children}>
+//         {(child) => <BookmarkNode bookmark={child} level={props.level + 1} />}
+//       </For>
+//     </Show>
+//   </div>
+// );
