@@ -142,7 +142,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
             class={
               "flex items-center text-left text-sm py-1 hover:bg-sidebar-accent transition-colors duration-150"
             }
-            style={{ "padding-left": `${props.level * 6}px` }}
+            style={{ "padding-left": `${props.level * 8}px` }}
           >
             <div class="flex items-center justify-center">
               <div class="w-[20px]" onClick={toggleFolder} onKeyDown={handleKeydown}>
@@ -159,7 +159,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
               onClick={handleNodeClick}
               onKeyDown={handleKeydown}
             >
-              <div class="mr-1">
+              <div class="mr-0.5">
                 <Switch>
                   <Match when={isFolder()}>
                     <div class="w-[20px]">
