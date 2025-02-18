@@ -9,10 +9,16 @@ pub enum AppEvent {
     #[allow(dead_code)]
     #[strum(serialize = "app://settings-updated")]
     SettingsUpdated,
+
+    #[allow(dead_code)]
     #[strum(serialize = "app://external-page-loaded")]
     ExternalPageLoaded,
+
     #[strum(serialize = "app://external-navigation")]
     ExternalNavigation,
+
+    #[strum(serialize = "app://external-title-changed")]
+    ExternalTitleChanged,
 }
 
 pub fn emit_to_app_webview<S>(

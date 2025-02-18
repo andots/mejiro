@@ -17,7 +17,7 @@ import { usePageState } from "./stores/pages";
 
 let unlistenSettingsUpdated: UnlistenFn | undefined;
 let unlistenNavigation: UnlistenFn | undefined;
-let unlistenPageLoaded: UnlistenFn | undefined;
+let unlistenTitleChanged: UnlistenFn | undefined;
 
 const initializeApp = async () => {
   // get data from rust side for zustand stores
@@ -36,7 +36,7 @@ const initializeApp = async () => {
   });
 
   // listen for external page loaded events on rust side
-  unlistenPageLoaded = await listen<string>(AppEvent.ExternalPageLoaded, (event) => {
+  unlistenTitleChanged = await listen<string>(AppEvent.ExternalTitleChanged, (event) => {
     useUrlState.getState().setTitle(event.payload);
   });
 };
@@ -49,8 +49,8 @@ const removeEventListeners = () => {
   if (unlistenNavigation !== undefined) {
     unlistenNavigation();
   }
-  if (unlistenPageLoaded !== undefined) {
-    unlistenPageLoaded();
+  if (unlistenTitleChanged !== undefined) {
+    unlistenTitleChanged();
   }
 };
 

@@ -95,6 +95,7 @@ fn create_external_webview(
         .auto_resize()
         .data_directory(app_handle.get_app_dir())
         .on_navigation(move |url| {
+            // This happens when the first navigation only, SPA navigations can't be captured by this
             handle
                 .emit_to(
                     EventTarget::webview(APP_WEBVIEW_LABEL),
@@ -104,12 +105,13 @@ fn create_external_webview(
                 .ok();
             true
         })
-        .on_page_load(|webview, payload| {
+        .on_page_load(|_webview, payload| {
             if let PageLoadEvent::Finished = payload.event() {
-                webview.eval(include_str!("../inject/eval.js")).ok();
+                // This happens when the page is loaded
+                // webview.eval(include_str!("../js/eval.js")).ok();
             }
         })
-        .initialization_script(include_str!("../inject/init.js"))
+        .initialization_script(include_str!("../js/external.js"))
         .incognito(settings.incognito);
 
     #[cfg(target_os = "windows")]

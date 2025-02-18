@@ -74,9 +74,10 @@ pub fn run() {
             commands::bookmarks::remove_bookmark,
             commands::bookmarks::update_bookmark_title,
             commands::bookmarks::add_folder,
-            commands::injects::emit_page_params,
             commands::settings::get_settings,
             commands::settings::update_settings,
+            commands::external::send_page_title,
+            commands::external::send_page_url,
         ])
         .build(tauri::generate_context!())
         .expect("error while running tauri application");

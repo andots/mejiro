@@ -1,4 +1,4 @@
 pub mod bookmarks;
-pub mod injects;
+pub mod external;
 pub mod settings;
 pub mod webviews;
