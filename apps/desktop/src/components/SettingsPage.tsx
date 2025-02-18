@@ -18,7 +18,7 @@ const SettingsPage: Component = () => {
   const [incognito, setIncognito] = createSignal(settings().incognito);
   const [startPageUrl, setStartPageUrl] = createSignal(settings().start_page_url);
   const [pinnedUrls, setPinnedUrls] = createSignal(settings().pinned_urls);
-  const [openNewUrlBox, setOpenNewUrlBox] = createSignal(false);
+  const [newPinnedUrl, setNewPinnedUrl] = createSignal("");
 
   const handleGpuAccelerationChange = (value: boolean) => {
     setGpuAcceleration(value);
@@ -38,7 +38,13 @@ const SettingsPage: Component = () => {
   const handleDeletePinnedUrl = (url: string) => {
     const urls = pinnedUrls().filter((u) => u !== url);
     setPinnedUrls(urls);
-    // updateSettings({ ...settings(), pinned_urls: urls });
+    updateSettings({ ...settings(), pinned_urls: pinnedUrls() });
+  };
+
+  const handleAddNewPinnedUrl = () => {
+    setPinnedUrls([...pinnedUrls(), newPinnedUrl()]);
+    updateSettings({ ...settings(), pinned_urls: pinnedUrls() });
+    setNewPinnedUrl("");
   };
 
   // const handleLanguageChange = () => {};
@@ -116,7 +122,15 @@ const SettingsPage: Component = () => {
                 <For each={pinnedUrls()}>
                   {(url) => (
                     <div class="flex flex-row justify-between items-center">
-                      <div class="w-10/12 text-base truncate">{url}</div>
+                      <TextField class="w-10/12">
+                        <TextFieldInput
+                          type="url"
+                          id="new-url"
+                          value={url}
+                          disabled
+                          class="disabled:cursor-default"
+                        />
+                      </TextField>
                       <Button
                         variant="destructive"
                         class="w-20"
@@ -135,10 +149,13 @@ const SettingsPage: Component = () => {
                     type="url"
                     id="new-url"
                     placeholder="Enter url..."
-                    // onChange={(e) => setStartPageUrl(e.currentTarget.value)}
+                    value={newPinnedUrl()}
+                    onInput={(e) => setNewPinnedUrl(e.currentTarget.value)}
                   />
                 </TextField>
-                <Button class="w-20">Add</Button>
+                <Button class="w-20" onClick={handleAddNewPinnedUrl}>
+                  Add
+                </Button>
               </div>
             </CardContent>
           </Card>
