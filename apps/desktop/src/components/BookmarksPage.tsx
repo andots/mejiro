@@ -1,8 +1,8 @@
 import type { Component } from "solid-js";
 
-import RootChildrenSelect from "./RootChildrenSelect";
+import RootChildrenSelect from "./controls/RootChildrenSelect";
 
-import BookmarkTreeEditable from "./BookmarkTreeEditable";
+import BookmarkTree from "./controls/BookmarkTree";
 import { useWindowState } from "../stores/window";
 import { cn } from "../utils";
 
@@ -10,12 +10,13 @@ const BookmarksPage: Component = () => {
   const externalState = useWindowState((state) => state.externalState);
 
   return (
-    <div class={cn(externalState() === "right" ? "w-[200px]" : "w-full")}>
+    // TODO: determine sidebar width based on externalState
+    <div class={cn(externalState() === "right" ? "w-full" : "w-full")}>
       <div class="mb-2">
         <RootChildrenSelect />
       </div>
       <div>
-        <BookmarkTreeEditable />
+        <BookmarkTree />
       </div>
     </div>
   );

@@ -7,12 +7,12 @@ import {
   OcticonSidebarCollapse24,
   OcticonSidebarExpand24,
 } from "@repo/ui/icons";
-import { useSettingsState } from "../stores/settings";
-import { useUrlState } from "../stores/url";
-import { useWindowState } from "../stores/window";
+import { useSettingsState } from "../../stores/settings";
+import { useUrlState } from "../../stores/url";
+import { useWindowState } from "../../stores/window";
 import AddressBar from "./AddressBar";
-import Favicon from "./icons/Favicon";
-import { usePageState } from "../stores/pages";
+import Favicon from "../icons/Favicon";
+import { usePageState } from "../../stores/pages";
 
 const ToolBar: Component = () => {
   const settings = useSettingsState((state) => state.settings);

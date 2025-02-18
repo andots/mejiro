@@ -6,7 +6,7 @@ import { listen } from "@tauri-apps/api/event";
 
 import { debug } from "@tauri-apps/plugin-log";
 
-import ToolBar from "./components/ToolBar";
+import ToolBar from "./components/controls/ToolBar";
 import AddFolderDialog from "./components/dialogs/AddFolderDialog";
 import BookmarkEditDialog from "./components/dialogs/BookmarkEditDialog";
 import { AppEvent } from "./constants";

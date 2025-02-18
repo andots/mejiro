@@ -6,9 +6,9 @@ import {
   IcOutlineFolder,
   IcOutlineFolderOpen,
 } from "@repo/ui/icons";
-import { useBookmarkState } from "../stores/bookmarks";
-import type { Bookmark } from "../types";
-import Favicon from "./icons/Favicon";
+import { useBookmarkState } from "../../stores/bookmarks";
+import type { Bookmark } from "../../types";
+import Favicon from "../icons/Favicon";
 
 import {
   ContextMenu,
@@ -28,9 +28,9 @@ import {
   ContextMenuTrigger,
 } from "@repo/ui/context-menu";
 
-import { useAddFolderDialog, useDeleteConfirmDialog, useEditDialog } from "../stores/dialogs";
-import { useUrlState } from "../stores/url";
-import { useWindowState } from "../stores/window";
+import { useAddFolderDialog, useDeleteConfirmDialog, useEditDialog } from "../../stores/dialogs";
+import { useUrlState } from "../../stores/url";
+import { useWindowState } from "../../stores/window";
 
 const NavigationArrow = (props: { isOpen: boolean }) => {
   return (
@@ -58,7 +58,7 @@ const FolderIcon = (props: { isOpen: boolean }) => {
   );
 };
 
-const BookmarkTreeEditable: Component = () => {
+const BookmarkTree: Component = () => {
   const bookmarks = useBookmarkState((state) => state.bookmarks);
 
   return <BookmarkNode bookmark={bookmarks()} level={0} />;
@@ -223,7 +223,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
   );
 };
 
-export default BookmarkTreeEditable;
+export default BookmarkTree;
 
 // return (
 //   <div>

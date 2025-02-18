@@ -1,8 +1,8 @@
 import { type Component, Show, createSignal, onMount } from "solid-js";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/ui/select";
-import { useBookmarkState } from "../stores/bookmarks";
-import type { FolderData } from "../types";
+import { useBookmarkState } from "../../stores/bookmarks";
+import type { FolderData } from "../../types";
 
 // https://kobalte.dev/docs/core/components/select/
 

@@ -8,8 +8,8 @@ import {
   OcticonStar24,
   OcticonStarFill24,
 } from "@repo/ui/icons";
-import { useBookmarkState } from "../stores/bookmarks";
-import { useUrlState } from "../stores/url";
+import { useBookmarkState } from "../../stores/bookmarks";
+import { useUrlState } from "../../stores/url";
 
 const AddressBar: Component = () => {
   const url = useUrlState((state) => state.url);
