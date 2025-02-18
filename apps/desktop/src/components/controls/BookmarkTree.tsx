@@ -1,14 +1,6 @@
 import { type Component, For, Match, Show, Switch, createSignal } from "solid-js";
 
-import {
-  IcBaselineKeyboardArrowDown,
-  IcBaselineKeyboardArrowRight,
-  IcOutlineFolder,
-  IcOutlineFolderOpen,
-} from "@repo/ui/icons";
-import { useBookmarkState } from "../../stores/bookmarks";
 import type { Bookmark } from "../../types";
-import Favicon from "../icons/Favicon";
 
 import {
   ContextMenu,
@@ -30,33 +22,12 @@ import {
 
 import { useAddFolderDialog, useDeleteConfirmDialog, useEditDialog } from "../../stores/dialogs";
 import { useUrlState } from "../../stores/url";
+import { useBookmarkState } from "../../stores/bookmarks";
 import { useWindowState } from "../../stores/window";
 
-const NavigationArrow = (props: { isOpen: boolean }) => {
-  return (
-    <Switch>
-      <Match when={props.isOpen}>
-        <IcBaselineKeyboardArrowDown width={20} height={20} />
-      </Match>
-      <Match when={!props.isOpen}>
-        <IcBaselineKeyboardArrowRight width={20} height={20} />
-      </Match>
-    </Switch>
-  );
-};
-
-const FolderIcon = (props: { isOpen: boolean }) => {
-  return (
-    <Switch>
-      <Match when={props.isOpen}>
-        <IcOutlineFolderOpen width={20} height={20} />
-      </Match>
-      <Match when={!props.isOpen}>
-        <IcOutlineFolder width={20} height={20} />
-      </Match>
-    </Switch>
-  );
-};
+import NavigationArrowIcon from "../icons/NavigationArrowIcon";
+import FolderIcon from "../icons/FolderIcon";
+import Favicon from "../icons/Favicon";
 
 const BookmarkTree: Component = () => {
   const bookmarks = useBookmarkState((state) => state.bookmarks);
@@ -148,7 +119,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
               <div class="w-[20px]" onClick={toggleFolder} onKeyDown={handleKeydown}>
                 <Show when={hasChildren()}>
                   <div class="rounded hover:bg-stone-300 cursor-pointer">
-                    <NavigationArrow isOpen={isOpen()} />
+                    <NavigationArrowIcon isOpen={isOpen()} />
                   </div>
                 </Show>
               </div>
