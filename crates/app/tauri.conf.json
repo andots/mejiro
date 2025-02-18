@@ -1,7 +1,7 @@
 {
   "$schema": "../../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "mejiro",
-  "identifier": "mejiro",
+  "productName": "Mejiro",
+  "identifier": "com.andots.mejiro",
   "build": {
     "frontendDist": "../../target-frontend/web",
     "devUrl": "http://localhost:1420",
