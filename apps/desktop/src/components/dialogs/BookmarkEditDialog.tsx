@@ -17,13 +17,11 @@ const BookmarkEditDialog: Component = () => {
   const open = useEditDialog((state) => state.open);
   const setOpen = useEditDialog((state) => state.setOpen);
   const target = useEditDialog((state) => state.target);
-  const setTarget = useEditDialog((state) => state.setTarget);
   const [title, setTitle] = createSignal(target().title);
 
   createEffect(on(target, () => setTitle(target().title)));
 
   const closeDialog = () => {
-    setTarget({ index: -1, title: "" });
     setOpen(false);
   };
 

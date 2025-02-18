@@ -16,27 +16,14 @@ const DeleteConfirmDialog: Component = () => {
   const open = useDeleteConfirmDialog((state) => state.open);
   const setOpen = useDeleteConfirmDialog((state) => state.setOpen);
   const target = useDeleteConfirmDialog((state) => state.target);
-  const setTarget = useDeleteConfirmDialog((state) => state.setTarget);
   const removeBookmark = useBookmarkState((state) => state.removeBookmark);
 
   const handleDelete = () => {
     if (target().index >= 1) {
       removeBookmark(target().index);
     }
-    setTarget({ index: -1, title: "" });
     setOpen(false);
   };
-
-  const handleCancel = () => {
-    setTarget({ index: -1, title: "" });
-    setOpen(false);
-  };
-
-  // const handleKeydown = (e: KeyboardEvent) => {
-  //   if (e.key === "Enter") {
-  //     handleDelete();
-  //   }
-  // };
 
   return (
     <Dialog open={open()} onOpenChange={setOpen}>
@@ -51,7 +38,7 @@ const DeleteConfirmDialog: Component = () => {
           <p>This action cannot be undone.</p>
         </DialogDescription>
         <DialogFooter>
-          <Button type="button" variant="outline" onClick={handleCancel}>
+          <Button variant="outline" onClick={() => setOpen(false)}>
             Cancel
           </Button>
           <Button variant="destructive" onClick={handleDelete}>
