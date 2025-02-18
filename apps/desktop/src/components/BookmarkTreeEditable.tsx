@@ -76,12 +76,14 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
   const [isOpen, setIsOpen] = createSignal(true);
   const hasChildren = () => props.bookmark.children?.length > 0;
 
-  const toggle = (e: MouseEvent) => {
-    if (hasChildren()) {
+  const handleNodeClick = (e: MouseEvent) => {
+    // If the node has children and is not a bookmark, toggle the folder
+    if (hasChildren() && props.bookmark.node_type !== "Bookmark") {
       e.preventDefault();
       setIsOpen(!isOpen());
     }
-    if (props.bookmark.url) {
+    // If the node is a bookmark, navigate to the URL
+    if (props.bookmark.url && props.bookmark.node_type === "Bookmark") {
       if (externalState() === "right") {
         // Navigate to the URL
         navigateToUrl(props.bookmark.url);
@@ -151,7 +153,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
 
             <div
               class="flex items-center w-full cursor-pointer"
-              onClick={toggle}
+              onClick={handleNodeClick}
               onKeyDown={handleKeydown}
             >
               <div class="w-[20px] mr-1">
