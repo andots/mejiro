@@ -1,5 +1,17 @@
 # Changelog
 
+# [0.10.0](https://github.com/andots/mejiro/compare/v0.9.0...v0.10.0) (2025-02-18)
+
+
+### Bug Fixes
+
+* new pinned URLs in SettingsPage ([4e3641f](https://github.com/andots/mejiro/commit/4e3641fafc619cab848838acad712c58bdbfc0ec))
+
+
+### Features
+
+* add URL validation for pinned URLs and start page URL in SettingsPage ([5d65409](https://github.com/andots/mejiro/commit/5d654098d37ae7eae63ede9bb4db9587453b620f))
+
 # [0.9.0](https://github.com/andots/mejiro/compare/v0.8.0...v0.9.0) (2025-02-18)
 
 
