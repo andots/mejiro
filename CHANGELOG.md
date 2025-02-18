@@ -1,5 +1,22 @@
 # Changelog
 
+# [0.11.0](https://github.com/andots/mejiro/compare/v0.10.0...v0.11.0) (2025-02-18)
+
+
+### Bug Fixes
+
+* closing function BookmarkEditDialog and DeleteConfirmDialog ([3db7885](https://github.com/andots/mejiro/commit/3db78858d4c0cc0745f4a2bae60609ba612f3df5))
+* dialog closure and target reset in BookmarkEditDialog ([428645b](https://github.com/andots/mejiro/commit/428645b94a7e275d51b447ebc96f76baf06e1b61))
+* enhance bookmark navigation by handling hidden external state ([6dd31ae](https://github.com/andots/mejiro/commit/6dd31ae8b24d7dbc82f953cf36f5634a7d453382))
+* improve folder toggle functionality and navigation in BookmarkTreeEditable ([68a4cf3](https://github.com/andots/mejiro/commit/68a4cf347b53283c6cf65b50f7f9e26db60e7f07))
+* remove focus-visible:ring-ring from Button ([5bc8f6c](https://github.com/andots/mejiro/commit/5bc8f6c042cb0bd9323e81bc292f6de2e6e87c0a))
+* reset target state in delete confirmation dialog ([f6521e5](https://github.com/andots/mejiro/commit/f6521e550033d701ae829e2088d84df9a0cd1034))
+
+
+### Features
+
+* add delete confirmation dialog for bookmarks ([e24dd3c](https://github.com/andots/mejiro/commit/e24dd3cc55e8380ad37c9dc90f688dd84cd6877c))
+
 # [0.10.0](https://github.com/andots/mejiro/compare/v0.9.0...v0.10.0) (2025-02-18)
 
 

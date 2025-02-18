@@ -1052,7 +1052,7 @@ checksum = "37909eebbb50d72f9059c3b6d82c0463f2ff062c9e95845c43a6c9c0355411be"
 
 [[package]]
 name = "favicon-fetcher"
-version = "0.10.0"
+version = "0.11.0"
 dependencies = [
  "base64 0.22.1",
  "reqwest",
@@ -2254,7 +2254,7 @@ checksum = "2532096657941c2fea9c289d370a250971c689d4f143798ff67113ec042024a5"
 
 [[package]]
 name = "mejiro"
-version = "0.10.0"
+version = "0.11.0"
 dependencies = [
  "anyhow",
  "log",
@@ -2272,7 +2272,7 @@ dependencies = [
 
 [[package]]
 name = "mejiro-core"
-version = "0.10.0"
+version = "0.11.0"
 dependencies = [
  "anyhow",
  "indextree",
@@ -2301,7 +2301,7 @@ dependencies = [
 
 [[package]]
 name = "meta-parser"
-version = "0.10.0"
+version = "0.11.0"
 dependencies = [
  "reqwest",
  "tl",
