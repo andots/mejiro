@@ -17,9 +17,15 @@ const BookmarkEditDialog: Component = () => {
   const open = useEditDialog((state) => state.open);
   const setOpen = useEditDialog((state) => state.setOpen);
   const target = useEditDialog((state) => state.target);
+  const setTarget = useEditDialog((state) => state.setTarget);
   const [title, setTitle] = createSignal(target().title);
 
   createEffect(on(target, () => setTitle(target().title)));
+
+  const closeDialog = () => {
+    setTarget({ index: -1, title: "" });
+    setOpen(false);
+  };
 
   const handleSave = () => {
     // update the title only if it's not empty and the index is not 0
@@ -27,7 +33,7 @@ const BookmarkEditDialog: Component = () => {
       const updateBookmarkTitle = useBookmarkState((state) => state.updateBookmarkTitle);
       updateBookmarkTitle(target().index, title());
     }
-    setOpen(false);
+    closeDialog();
   };
 
   const handleKeydown = (e: KeyboardEvent) => {
@@ -36,12 +42,8 @@ const BookmarkEditDialog: Component = () => {
     }
   };
 
-  const handleCancel = () => {
-    setOpen(false);
-  };
-
   return (
-    <Dialog open={open()} onOpenChange={setOpen}>
+    <Dialog open={open()} onOpenChange={closeDialog}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Edit Title</DialogTitle>
@@ -60,7 +62,7 @@ const BookmarkEditDialog: Component = () => {
           </TextField>
         </div>
         <DialogFooter>
-          <Button type="button" variant={"outline"} onClick={handleCancel}>
+          <Button type="button" variant={"outline"} onClick={closeDialog}>
             Cancel
           </Button>
           <Button type="button" onClick={handleSave}>
