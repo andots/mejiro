@@ -28,7 +28,7 @@ import {
   ContextMenuTrigger,
 } from "@repo/ui/context-menu";
 
-import { useAddFolderDialog, useEditDialog } from "../stores/dialogs";
+import { useAddFolderDialog, useDeleteConfirmDialog, useEditDialog } from "../stores/dialogs";
 import { useUrlState } from "../stores/url";
 import { useWindowState } from "../stores/window";
 
@@ -82,8 +82,8 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
   };
 
   const handleRemove = (index: number) => {
-    const removeBookmark = useBookmarkState((state) => state.removeBookmark);
-    removeBookmark(index);
+    useDeleteConfirmDialog.getState().setTarget({ index, title: props.bookmark.title });
+    useDeleteConfirmDialog.getState().setOpen(true);
   };
 
   const handleContextMenu = (isOpen: boolean) => {

@@ -35,3 +35,17 @@ export const useAddFolderDialog = createWithSignal<AddFolderDialogState>((set) =
   setOpen: (open) => set({ open }),
   setParentIndex: (parentIndex) => set({ parentIndex }),
 }));
+
+type DeleteConfirmDialogState = {
+  open: boolean;
+  target: Target;
+  setOpen: (open: boolean) => void;
+  setTarget: (target: Target) => void;
+};
+
+export const useDeleteConfirmDialog = createWithSignal<DeleteConfirmDialogState>((set) => ({
+  open: false,
+  setOpen: (open) => set({ open }),
+  target: { index: -1, title: "" },
+  setTarget: (target) => set({ target }),
+}));

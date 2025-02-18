@@ -14,6 +14,7 @@ import { useBookmarkState } from "./stores/bookmarks";
 import { useSettingsState } from "./stores/settings";
 import { useUrlState } from "./stores/url";
 import { usePageState } from "./stores/pages";
+import DeleteConfirmDialog from "./components/dialogs/DeleteConfirmDialog";
 
 let unlistenSettingsUpdated: UnlistenFn | undefined;
 let unlistenNavigation: UnlistenFn | undefined;
@@ -85,6 +86,7 @@ const App: Component = () => {
       </main>
       <BookmarkEditDialog />
       <AddFolderDialog />
+      <DeleteConfirmDialog />
     </div>
   );
 };
