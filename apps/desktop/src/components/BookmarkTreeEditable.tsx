@@ -75,15 +75,18 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
 
   const [isOpen, setIsOpen] = createSignal(true);
   const hasChildren = () => props.bookmark.children?.length > 0;
+  const isFolder = () =>
+    props.bookmark.node_type === "Folder" || props.bookmark.node_type === "Root";
+  const isBookmark = () => props.bookmark.node_type === "Bookmark";
 
   const handleNodeClick = (e: MouseEvent) => {
     // If the node has children and is not a bookmark, toggle the folder
-    if (hasChildren() && props.bookmark.node_type !== "Bookmark") {
+    if (hasChildren() && !isBookmark()) {
       e.preventDefault();
       setIsOpen(!isOpen());
     }
     // If the node is a bookmark, navigate to the URL
-    if (props.bookmark.url && props.bookmark.node_type === "Bookmark") {
+    if (props.bookmark.url && isBookmark()) {
       if (externalState() === "right") {
         // Navigate to the URL
         navigateToUrl(props.bookmark.url);
@@ -156,17 +159,17 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
               onClick={handleNodeClick}
               onKeyDown={handleKeydown}
             >
-              <div class="w-[20px] mr-1">
+              <div class="mr-1">
                 <Switch>
-                  <Match
-                    when={
-                      props.bookmark.node_type === "Folder" || props.bookmark.node_type === "Root"
-                    }
-                  >
-                    <FolderIcon isOpen={isOpen()} />
+                  <Match when={isFolder()}>
+                    <div class="w-[20px]">
+                      <FolderIcon isOpen={isOpen()} />
+                    </div>
                   </Match>
-                  <Match when={props.bookmark.node_type === "Bookmark"}>
-                    <Favicon url={`https://${props.bookmark.host}`} width="18" height="18" />
+                  <Match when={isBookmark()}>
+                    <div class="w-[20px]">
+                      <Favicon url={`https://${props.bookmark.host}`} width="18" height="18" />
+                    </div>
                   </Match>
                 </Switch>
               </div>
