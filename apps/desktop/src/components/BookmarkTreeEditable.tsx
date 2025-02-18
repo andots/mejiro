@@ -44,19 +44,26 @@ type BookmarkNodeProps = {
 };
 
 const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
-  const [isOpen, setIsOpen] = createSignal(true);
-
-  const hasChildren = () => props.bookmark.children?.length > 0;
   const externalState = useWindowState((state) => state.externalState);
   const navigateToUrl = useUrlState((state) => state.navigateToUrl);
+
+  const [isOpen, setIsOpen] = createSignal(true);
+  const hasChildren = () => props.bookmark.children?.length > 0;
 
   const toggle = (e: MouseEvent) => {
     if (hasChildren()) {
       e.preventDefault();
       setIsOpen(!isOpen());
     }
-    if (props.bookmark.url && externalState() === "right") {
-      navigateToUrl(props.bookmark.url);
+    if (props.bookmark.url) {
+      if (externalState() === "right") {
+        // Navigate to the URL
+        navigateToUrl(props.bookmark.url);
+      } else if (externalState() === "hidden") {
+        // Open the right panel and navigate to the URL
+        useWindowState.getState().changeExternalState("right");
+        navigateToUrl(props.bookmark.url);
+      }
     }
   };
 
