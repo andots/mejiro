@@ -16,16 +16,19 @@ const DeleteConfirmDialog: Component = () => {
   const open = useDeleteConfirmDialog((state) => state.open);
   const setOpen = useDeleteConfirmDialog((state) => state.setOpen);
   const target = useDeleteConfirmDialog((state) => state.target);
+  const setTarget = useDeleteConfirmDialog((state) => state.setTarget);
   const removeBookmark = useBookmarkState((state) => state.removeBookmark);
 
   const handleDelete = () => {
     if (target().index >= 1) {
       removeBookmark(target().index);
     }
+    setTarget({ index: -1, title: "" });
     setOpen(false);
   };
 
   const handleCancel = () => {
+    setTarget({ index: -1, title: "" });
     setOpen(false);
   };
 
