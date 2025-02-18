@@ -5,6 +5,7 @@ import { Switch, SwitchControl, SwitchThumb } from "@repo/ui/switch";
 import { TextField, TextFieldInput } from "@repo/ui/text-field";
 import { Button } from "@repo/ui/button";
 import { useSettingsState } from "../stores/settings";
+import { validateUrl } from "../utils";
 
 // import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/ui/select";
 
@@ -31,8 +32,9 @@ const SettingsPage: Component = () => {
   };
 
   const handleStartPageUrlUpdate = () => {
-    // TODO: validate url
-    updateSettings({ ...settings(), start_page_url: startPageUrl() });
+    if (validateUrl(startPageUrl())) {
+      updateSettings({ ...settings(), start_page_url: startPageUrl() });
+    }
   };
 
   const handleDeletePinnedUrl = (url: string) => {
@@ -42,9 +44,11 @@ const SettingsPage: Component = () => {
   };
 
   const handleAddNewPinnedUrl = () => {
-    setPinnedUrls([...pinnedUrls(), newPinnedUrl()]);
-    updateSettings({ ...settings(), pinned_urls: pinnedUrls() });
-    setNewPinnedUrl("");
+    if (validateUrl(newPinnedUrl())) {
+      setPinnedUrls([...pinnedUrls(), newPinnedUrl()]);
+      updateSettings({ ...settings(), pinned_urls: pinnedUrls() });
+      setNewPinnedUrl("");
+    }
   };
 
   // const handleLanguageChange = () => {};
