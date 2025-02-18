@@ -1,5 +1,19 @@
 # Changelog
 
+# [0.9.0](https://github.com/andots/mejiro/compare/v0.8.0...v0.9.0) (2025-02-18)
+
+
+### Bug Fixes
+
+* correct spelling of get_default_app_title in AppHandleExt trait ([ce4287f](https://github.com/andots/mejiro/commit/ce4287f5607d32f497defe757cad857251147e23))
+* update product name and identifier in tauri.conf.json to avoid name collision ([515656a](https://github.com/andots/mejiro/commit/515656ac05625ce754d774e924414dc58a15e4a5))
+
+
+### Features
+
+* implement external title change and navigation handling ([b90730b](https://github.com/andots/mejiro/commit/b90730b2b4d79db8ce5a82044c96e9f494c08c25))
+* update window title with external page title ([3c9d03e](https://github.com/andots/mejiro/commit/3c9d03ec9933940d268f948751829a395421d1c5))
+
 # [0.8.0](https://github.com/andots/mejiro/compare/v0.7.2...v0.8.0) (2025-02-17)
 
 
