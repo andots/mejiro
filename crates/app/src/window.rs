@@ -57,7 +57,7 @@ fn create_main_window(
     WindowBuilder::new(app_handle, MAINWINDOW_LABEL)
         .resizable(true)
         .fullscreen(false)
-        .title(app_handle.get_defautl_title())
+        .title(app_handle.get_default_app_title())
         .position(geometry.x, geometry.y)
         .inner_size(geometry.width, geometry.height)
         .build()
