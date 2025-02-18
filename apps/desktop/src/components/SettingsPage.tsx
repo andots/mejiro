@@ -1,4 +1,4 @@
-import { createSignal, For, type Component } from "solid-js";
+import { createSignal, For, Show, type Component } from "solid-js";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo/ui/card";
 import { Switch, SwitchControl, SwitchThumb } from "@repo/ui/switch";
@@ -12,11 +12,13 @@ const SettingsPage: Component = () => {
   const settings = useSettingsState((state) => state.settings);
   const updateSettings = useSettingsState((state) => state.updateSettings);
 
+  // const [language, setLanguage] = createSignal(settings().language);
+  // const [theme, setTheme] = createSignal(settings().theme);
   const [gpuAcceleration, setGpuAcceleration] = createSignal(settings().gpu_acceleration_enabled);
   const [incognito, setIncognito] = createSignal(settings().incognito);
   const [startPageUrl, setStartPageUrl] = createSignal(settings().start_page_url);
-  // const [language, setLanguage] = createSignal(settings().language);
-  // const [theme, setTheme] = createSignal(settings().theme);
+  const [pinnedUrls, setPinnedUrls] = createSignal(settings().pinned_urls);
+  const [openNewUrlBox, setOpenNewUrlBox] = createSignal(false);
 
   const handleGpuAccelerationChange = (value: boolean) => {
     setGpuAcceleration(value);
@@ -31,6 +33,12 @@ const SettingsPage: Component = () => {
   const handleStartPageUrlUpdate = () => {
     // TODO: validate url
     updateSettings({ ...settings(), start_page_url: startPageUrl() });
+  };
+
+  const handleDeletePinnedUrl = (url: string) => {
+    const urls = pinnedUrls().filter((u) => u !== url);
+    setPinnedUrls(urls);
+    // updateSettings({ ...settings(), pinned_urls: urls });
   };
 
   // const handleLanguageChange = () => {};
@@ -81,7 +89,7 @@ const SettingsPage: Component = () => {
             <CardTitle class="pb-2 text-base">Start Page</CardTitle>
             <CardDescription class="mb-2">Open page when starting app.</CardDescription>
             <CardContent class="flex flex-row justify-between items-center p-2 space-x-3">
-              <TextField class="w-full">
+              <TextField class="w-10/12">
                 <TextFieldInput
                   type="url"
                   id="start-page-url"
@@ -91,7 +99,7 @@ const SettingsPage: Component = () => {
                   onInput={(e) => setStartPageUrl(e.currentTarget.value)}
                 />
               </TextField>
-              <Button variant={"default"} size="sm" onClick={handleStartPageUrlUpdate}>
+              <Button class="w-20" onClick={handleStartPageUrlUpdate}>
                 Update
               </Button>
             </CardContent>
@@ -103,17 +111,35 @@ const SettingsPage: Component = () => {
             <CardDescription class="mb-2">
               These pages will be shown on the top toolbar.
             </CardDescription>
-            <CardContent class="p-2 space-y-2">
-              <For each={settings().pinned_urls}>
-                {(url) => (
-                  <div class="flex items-center justify-between py-2">
-                    <span class="text-base truncate">{url}</span>
-                    <Button variant="destructive" size="sm">
-                      Remove
-                    </Button>
-                  </div>
-                )}
-              </For>
+            <CardContent class="p-2 space-y-6">
+              <div class="flex-col space-y-4">
+                <For each={pinnedUrls()}>
+                  {(url) => (
+                    <div class="flex flex-row justify-between items-center">
+                      <div class="w-10/12 text-base truncate">{url}</div>
+                      <Button
+                        variant="destructive"
+                        class="w-20"
+                        onClick={() => handleDeletePinnedUrl(url)}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  )}
+                </For>
+              </div>
+
+              <div class="flex flex-row justify-between items-center">
+                <TextField class="w-10/12">
+                  <TextFieldInput
+                    type="url"
+                    id="new-url"
+                    placeholder="Enter url..."
+                    // onChange={(e) => setStartPageUrl(e.currentTarget.value)}
+                  />
+                </TextField>
+                <Button class="w-20">Add</Button>
+              </div>
             </CardContent>
           </Card>
         </CardContent>
