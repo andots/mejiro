@@ -30,4 +30,7 @@ pub enum CoreError {
 
     #[error("Cannnot remove root node")]
     CannotRemoveRoot(),
+
+    #[error("Cannot move root")]
+    CannotMoveRoot(),
 }

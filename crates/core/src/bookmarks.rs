@@ -228,6 +228,30 @@ impl Bookmarks {
 
         Ok(())
     }
+
+    pub fn move_subtree_after(
+        &mut self,
+        source_index: usize,
+        destination_index: usize,
+    ) -> Result<(), CoreError> {
+        // if origin node is root, return error
+        if source_index == 1 {
+            return Err(CoreError::CannotMoveRoot());
+        }
+
+        let origin_node_id = self
+            .find_node_id_by_index(source_index)
+            .ok_or(CoreError::NodeNotFound(source_index))?;
+        let target_node_id = self
+            .find_node_id_by_index(destination_index)
+            .ok_or(CoreError::NodeNotFound(destination_index))?;
+
+        // detach origin node and insert after target node
+        origin_node_id.detach(&mut self.arena);
+        target_node_id.checked_insert_after(origin_node_id, &mut self.arena)?;
+
+        Ok(())
+    }
 }
 
 #[cfg(test)]
@@ -300,6 +324,55 @@ mod tests {
             }
         );
         Bookmarks::new(arena)
+    }
+
+    #[test]
+    fn test_move_subtree() -> anyhow::Result<()> {
+        let mut bookmarks = create_test_bookmarks();
+        bookmarks.move_subtree_after(4, 2)?;
+        let root = bookmarks.get_root_node_id()?;
+        let vec: Vec<usize> = vec![1, 2, 4, 5, 6, 3];
+        // tree is like
+        // root
+        //  |- n_2
+        //  |- n_4
+        //  |   |- n_5
+        //  |   |- n_6
+        //  |- n_3
+        for (i, node_id) in root.descendants(&bookmarks.arena).enumerate() {
+            let id: usize = node_id.into();
+            assert_eq!(id, vec[i]);
+        }
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_arena() {
+        let mut arena = Arena::new();
+        tree!(&mut arena,
+            "1" => {
+                "2",
+                "3",
+                "4" => {
+                    "5",
+                    "6",
+                }
+            }
+        );
+        assert_eq!(arena.count(), 6);
+        let n_1 = arena.get_node_id_at(NonZeroUsize::new(1).unwrap()).unwrap();
+        let n_2 = arena.get_node_id_at(NonZeroUsize::new(2).unwrap()).unwrap();
+        println!("{:?}", n_1.debug_pretty_print(&arena));
+        let n_4 = arena.get_node_id_at(NonZeroUsize::new(4).unwrap()).unwrap();
+        n_4.detach(&mut arena);
+        println!("after detach n_1");
+        println!("{:?}", n_1.debug_pretty_print(&arena));
+        println!("after detach n_4");
+        println!("{:?}", n_4.debug_pretty_print(&arena));
+        println!("after insert n_4 after n_2");
+        n_2.checked_insert_after(n_4, &mut arena).unwrap();
+        println!("{:?}", n_1.debug_pretty_print(&arena));
     }
 
     #[test]
