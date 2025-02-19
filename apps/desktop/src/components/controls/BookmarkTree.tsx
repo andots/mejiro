@@ -1,4 +1,13 @@
-import { type Component, For, Match, Show, Switch, createSignal } from "solid-js";
+import {
+  type Component,
+  For,
+  Match,
+  Show,
+  Switch,
+  createEffect,
+  createSignal,
+  onMount,
+} from "solid-js";
 
 import type { Bookmark } from "../../types";
 
@@ -29,21 +38,65 @@ import NavigationArrowIcon from "../icons/NavigationArrowIcon";
 import FolderIcon from "../icons/FolderIcon";
 import Favicon from "../icons/Favicon";
 
+import { makeEventListener } from "@solid-primitives/event-listener";
+
 const BookmarkTree: Component = () => {
   const bookmarks = useBookmarkState((state) => state.bookmarks);
+  let ref!: HTMLDivElement;
 
-  const handleDrop = (e: DragEvent) => {
-    e.preventDefault();
-    console.log("drop");
-  };
-
-  const handleDragOver = (e: DragEvent) => {
-    e.preventDefault();
-    // console.log("drag over");
-  };
+  onMount(() => {
+    if (ref) {
+      for (const child of ref.children) {
+        makeEventListener(child as HTMLElement, "dragstart", (e) => {
+          console.log("drag start");
+          const target = e.target as HTMLElement;
+          e.dataTransfer?.setData("text/plain", target.id);
+          setTimeout(() => target.classList.add("dragging"), 0);
+        });
+        makeEventListener(child as HTMLElement, "dragend", (e) => {
+          console.log("drag end");
+          const target = e.target as HTMLElement;
+          target.classList.remove("dragging");
+        });
+      }
+      // dragOver
+      makeEventListener(ref, "dragover", (e) => {
+        e.preventDefault();
+        if (ref && e.dataTransfer) {
+          e.dataTransfer.dropEffect = "move";
+          const draggingItem = ref.querySelector(".dragging");
+          if (draggingItem) {
+            const sibilings = Array.from(ref.children);
+            const target = sibilings.find((sibiling) => {
+              const targetRect = sibiling.getBoundingClientRect();
+              // return e.clientY <= targetRect.top + targetRect.height / 2;
+              return e.clientY <= targetRect.bottom;
+            });
+            if (target) {
+              target.classList.add("border-b", "border-sidebar-accent");
+            } else {
+              // nextSibiling.classList.remove("border-b-2", "border-sidebar-accent");
+            }
+          }
+        }
+      });
+      // dragEnter
+      makeEventListener(ref, "dragenter", (e) => {
+        e.preventDefault();
+      });
+      // dragDrop
+      makeEventListener(ref, "drop", (e) => {
+        e.preventDefault();
+        if (e.dataTransfer) {
+          const data = e.dataTransfer.getData("text/plain");
+          console.log(`dropped: ${data}`);
+        }
+      });
+    }
+  });
 
   return (
-    <div id="bookmark-tree" onDrop={handleDrop} onDragOver={handleDragOver}>
+    <div id="bookmark-tree" ref={ref}>
       <BookmarkNode bookmark={bookmarks()} level={0} />
     </div>
   );
@@ -119,25 +172,11 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
     //
   };
 
-  const handleDragStart = (e: DragEvent) => {
-    console.log("drag start");
-    e.dataTransfer?.setData("text/plain", `${props.bookmark.index}`);
-  };
-
-  const handleDrangEnd = (e: DragEvent) => {
-    console.log("drag end");
-  };
-
   return (
     <>
       <ContextMenu onOpenChange={(isOpen) => handleContextMenu(isOpen)}>
-        <ContextMenuTrigger
-          draggable={true}
-          onDragStart={handleDragStart}
-          onDragEnd={handleDrangEnd}
-        >
+        <ContextMenuTrigger draggable={true} id={`bookmark-${props.bookmark.index}`}>
           <div
-            id={`bookmark-${props.bookmark.index}`}
             class={
               "flex items-center text-left hover:bg-sidebar-accent transition-colors duration-150"
             }

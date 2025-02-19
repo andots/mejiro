@@ -56,6 +56,9 @@ importers:
       '@repo/ui':
         specifier: workspace:*
         version: link:../packages/ui
+      '@solid-primitives/event-listener':
+        specifier: ^2.4.0
+        version: 2.4.0(solid-js@1.9.4)
       '@solidjs/router':
         specifier: ^0.15.3
         version: 0.15.3(solid-js@1.9.4)
