@@ -1,4 +1,4 @@
-import { type Component, createSignal, onMount } from "solid-js";
+import { type Component, createEffect, createSignal, on, onMount } from "solid-js";
 
 import { makeEventListener } from "@solid-primitives/event-listener";
 
@@ -70,17 +70,19 @@ const BookmarkTree: Component = () => {
     });
   };
 
-  onMount(() => {
-    if (ref) {
-      for (const child of ref.children) {
-        makeDragStartEventListener(child as HTMLDivElement);
-        makeDragEndEventListener(child as HTMLDivElement);
+  createEffect(
+    on(bookmarks, () => {
+      if (ref) {
+        for (const child of ref.children) {
+          makeDragStartEventListener(child as HTMLDivElement);
+          makeDragEndEventListener(child as HTMLDivElement);
+        }
+        makeDragOverEventListener(ref);
+        makeDragEnterEventListener(ref);
+        makeDropEventListener(ref);
       }
-      makeDragOverEventListener(ref);
-      makeDragEnterEventListener(ref);
-      makeDropEventListener(ref);
-    }
-  });
+    }),
+  );
 
   return (
     <div id="bookmark-tree" ref={ref}>
