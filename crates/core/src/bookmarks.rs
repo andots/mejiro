@@ -247,9 +247,9 @@ impl Bookmarks {
             .ok_or(CoreError::NodeNotFound(destination_index))?;
 
         if destination_index == 1 {
-            // if destination is root, append source node under the root
+            // if destination is root, prepend source node under the root
             source_node_id.detach(&mut self.arena);
-            dest_node_id.checked_append(source_node_id, &mut self.arena)?;
+            dest_node_id.checked_prepend(source_node_id, &mut self.arena)?;
         } else {
             // detach origin node and insert after target node
             source_node_id.detach(&mut self.arena);
@@ -365,16 +365,16 @@ mod tests {
         let mut bookmarks = create_test_bookmarks();
         bookmarks.detach_and_insert_after(6, 1)?;
         let root = bookmarks.get_root_node_id()?;
-        let vec: Vec<usize> = vec![1, 2, 3, 4, 5, 6, 7, 8];
+        let vec: Vec<usize> = vec![1, 6, 7, 8, 2, 3, 4, 5];
         // tree is like
         // root
+        //  |- n_6
+        //  |   |- n_7
+        //  |   |- n_8
         //  |- n_2
         //  |- n_3
         //  |- n_4
         //  |   |- n_5
-        //  |- n_6
-        //  |   |- n_7
-        //  |   |- n_8
         for (i, node_id) in root.descendants(&bookmarks.arena).enumerate() {
             let id: usize = node_id.into();
             assert_eq!(id, vec[i]);
