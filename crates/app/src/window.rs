@@ -67,10 +67,15 @@ fn create_app_webview(
     app_handle: &tauri::AppHandle,
     settings: &UserSettings,
 ) -> tauri::Result<WebviewBuilder<tauri::Wry>> {
+    // auto resize is enabled
+    // data directory is set to the app directory
+    // disable tauri's drag and drop handler
+    // incognito mode is enabled if the user settings is set to incognito
     let mut builder =
         WebviewBuilder::new(APP_WEBVIEW_LABEL, WebviewUrl::App(APP_WEBVIEW_URL.into()))
             .auto_resize()
             .data_directory(app_handle.get_app_dir())
+            .disable_drag_drop_handler()
             .incognito(settings.incognito);
 
     #[cfg(target_os = "windows")]
@@ -91,9 +96,16 @@ fn create_external_webview(
         .unwrap_or_else(|_| Url::parse(default_start_page_url().as_str()).unwrap());
 
     let handle = app_handle.clone();
+
+    // auto resize is enabled
+    // data directory is set to the app directory
+    // disable tauri's drag and drop handler
+    // incognito mode is enabled if the user settings is set to incognito
     let mut builder = WebviewBuilder::new(EXTERNAL_WEBVIEW_LABEL, WebviewUrl::External(url))
         .auto_resize()
         .data_directory(app_handle.get_app_dir())
+        .disable_drag_drop_handler()
+        .incognito(settings.incognito)
         .on_navigation(move |url| {
             // This happens when the first navigation only, SPA navigations can't be captured by this
             handle
@@ -111,8 +123,7 @@ fn create_external_webview(
                 // webview.eval(include_str!("../js/eval.js")).ok();
             }
         })
-        .initialization_script(include_str!("../js/external.js"))
-        .incognito(settings.incognito);
+        .initialization_script(include_str!("../js/external.js"));
 
     #[cfg(target_os = "windows")]
     if !settings.gpu_acceleration_enabled {
