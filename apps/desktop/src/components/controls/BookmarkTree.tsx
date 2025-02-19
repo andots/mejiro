@@ -43,6 +43,7 @@ import { makeEventListener } from "@solid-primitives/event-listener";
 const BookmarkTree: Component = () => {
   const bookmarks = useBookmarkState((state) => state.bookmarks);
   let ref!: HTMLDivElement;
+  const [indicatorId, setIndicatorId] = createSignal<number>(0);
 
   const makeDragStartEventListener = (el: HTMLDivElement) => {
     makeEventListener(el, "dragstart", (ev) => {
@@ -68,16 +69,18 @@ const BookmarkTree: Component = () => {
         ev.dataTransfer.dropEffect = "move";
         const draggingItem = el.querySelector(".dragging");
         if (draggingItem) {
-          const sibilings = Array.from(el.children);
+          const sibilings = Array.from(el.children as HTMLCollectionOf<HTMLDivElement>);
           const target = sibilings.find((sibiling) => {
             const targetRect = sibiling.getBoundingClientRect();
             // return e.clientY <= targetRect.top + targetRect.height / 2;
             return ev.clientY < targetRect.bottom;
           });
           if (target) {
-            target.classList.add("border-b", "border-sidebar-accent");
-          } else {
-            // nextSibiling.classList.remove("border-b-2", "border-sidebar-accent");
+            console.log(target.id);
+            const match = target.id.match(/bookmark-(\d+)/);
+            if (match) {
+              setIndicatorId(Number.parseInt(match[1]));
+            }
           }
         }
       }
@@ -114,7 +117,7 @@ const BookmarkTree: Component = () => {
 
   return (
     <div id="bookmark-tree" ref={ref}>
-      <BookmarkNode bookmark={bookmarks()} level={0} />
+      <BookmarkNode indicatorId={indicatorId()} bookmark={bookmarks()} level={0} />
     </div>
   );
 };
@@ -122,6 +125,7 @@ const BookmarkTree: Component = () => {
 type BookmarkNodeProps = {
   bookmark: Bookmark;
   level: number;
+  indicatorId: number;
 };
 
 const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
@@ -194,48 +198,55 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
       <ContextMenu onOpenChange={(isOpen) => handleContextMenu(isOpen)}>
         <ContextMenuTrigger draggable={true} id={`bookmark-${props.bookmark.index}`}>
           <div
-            class={
-              "flex items-center text-left hover:bg-sidebar-accent transition-colors duration-150"
-            }
+            class={"flex flex-col text-left hover:bg-sidebar-accent transition-colors duration-150"}
             style={{ "padding-left": `${props.level * 8}px` }}
           >
-            {/* Navigation Arrow */}
-            <div class="flex items-center justify-center">
+            <div class="flex flex-row">
+              {/* Navigation Arrow */}
+              <div class="flex items-center justify-center">
+                <div
+                  class="w-[18px] flex items-center justify-center"
+                  onClick={toggleFolder}
+                  onKeyDown={handleKeydown}
+                >
+                  <Show when={hasChildren()}>
+                    <div class="rounded hover:bg-stone-300 cursor-pointer">
+                      <NavigationArrowIcon isOpen={isOpen()} size={16} />
+                    </div>
+                  </Show>
+                </div>
+              </div>
+
               <div
-                class="w-[18px] flex items-center justify-center"
-                onClick={toggleFolder}
+                class="flex items-center w-full cursor-pointer"
+                onClick={handleNodeClick}
                 onKeyDown={handleKeydown}
               >
-                <Show when={hasChildren()}>
-                  <div class="rounded hover:bg-stone-300 cursor-pointer">
-                    <NavigationArrowIcon isOpen={isOpen()} size={16} />
-                  </div>
-                </Show>
+                {/* Folder or Favicon */}
+                <div class="flex items-center justify-center w-[20px] mr-0.5">
+                  <Switch>
+                    <Match when={isFolder()}>
+                      <FolderIcon isOpen={isOpen()} size={18} />
+                    </Match>
+                    <Match when={isBookmark()}>
+                      <Favicon url={`https://${props.bookmark.host}`} width="18" height="18" />
+                    </Match>
+                  </Switch>
+                </div>
+
+                {/* Title */}
+                <div class="text-sm overflow-hidden whitespace-nowrap text-ellipsis">
+                  {props.bookmark.index} - {props.bookmark.title}
+                </div>
               </div>
             </div>
 
-            <div
-              class="flex items-center w-full cursor-pointer py-0.5"
-              onClick={handleNodeClick}
-              onKeyDown={handleKeydown}
-            >
-              {/* Folder or Favicon */}
-              <div class="flex items-center justify-center w-[20px] mr-0.5">
-                <Switch>
-                  <Match when={isFolder()}>
-                    <FolderIcon isOpen={isOpen()} size={18} />
-                  </Match>
-                  <Match when={isBookmark()}>
-                    <Favicon url={`https://${props.bookmark.host}`} width="18" height="18" />
-                  </Match>
-                </Switch>
-              </div>
-
-              {/* Title */}
-              <div class="text-sm overflow-hidden whitespace-nowrap text-ellipsis">
-                {props.bookmark.title}
-              </div>
-            </div>
+            <Show when={props.bookmark.index === props.indicatorId}>
+              <div class="w-[200px] h-[4px] border-b-2 border-blue-300" />
+            </Show>
+            <Show when={props.bookmark.index !== props.indicatorId}>
+              <div class="w-[200px] h-[6px]" />
+            </Show>
           </div>
         </ContextMenuTrigger>
 
@@ -273,7 +284,13 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
 
       <Show when={hasChildren() && isOpen()}>
         <For each={props.bookmark.children}>
-          {(child) => <BookmarkNode bookmark={child} level={props.level + 1} />}
+          {(child) => (
+            <BookmarkNode
+              indicatorId={props.indicatorId}
+              bookmark={child}
+              level={props.level + 1}
+            />
+          )}
         </For>
       </Show>
     </>
