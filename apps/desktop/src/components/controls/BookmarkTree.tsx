@@ -13,16 +13,19 @@ const BookmarkTree: Component = () => {
 
   const makeDragStartEventListener = (el: HTMLDivElement) => {
     makeEventListener(el, "dragstart", (ev) => {
-      const origin = ev.target as HTMLDivElement;
-      ev.dataTransfer?.setData("text/plain", origin.id);
-      setTimeout(() => origin.classList.add("dragging"), 0);
+      const source = ev.target as HTMLDivElement;
+      const match = source.id.match(/bookmark-(\d+)/);
+      if (match) {
+        ev.dataTransfer?.setData("text/plain", match[1]);
+        setTimeout(() => source.classList.add("dragging"), 0);
+      }
     });
   };
 
   const makeDragEndEventListener = (el: HTMLDivElement) => {
     makeEventListener(el, "dragend", (ev) => {
-      const origin = ev.target as HTMLDivElement;
-      origin.classList.remove("dragging");
+      const source = ev.target as HTMLDivElement;
+      source.classList.remove("dragging");
       setIndicatorId(0);
     });
   };
@@ -35,12 +38,12 @@ const BookmarkTree: Component = () => {
         const draggingItem = el.querySelector(".dragging");
         if (draggingItem) {
           const sibilings = Array.from(el.children as HTMLCollectionOf<HTMLDivElement>);
-          const target = sibilings.find((sibiling) => {
-            const targetRect = sibiling.getBoundingClientRect();
-            return ev.clientY < targetRect.bottom;
+          const destination = sibilings.find((sibiling) => {
+            const destinationRect = sibiling.getBoundingClientRect();
+            return ev.clientY < destinationRect.bottom;
           });
-          if (target) {
-            const match = target.id.match(/bookmark-(\d+)/);
+          if (destination) {
+            const match = destination.id.match(/bookmark-(\d+)/);
             if (match) {
               setIndicatorId(Number.parseInt(match[1]));
             }
@@ -61,8 +64,12 @@ const BookmarkTree: Component = () => {
       ev.preventDefault();
       if (ev.dataTransfer) {
         const data = ev.dataTransfer.getData("text/plain");
-        // TODO: move bookmark with backend
-        console.log(`origin: ${data} - target: ${indicatorId()}`);
+        const source_index = Number.parseInt(data);
+        const destination_index = indicatorId();
+        if (source_index > 0 && destination_index > 0 && source_index !== destination_index) {
+          console.log(`source: ${source_index}, destination: ${destination_index}`);
+          useBookmarkState.getState().detachAndInsertAfter(source_index, destination_index);
+        }
       }
     });
   };

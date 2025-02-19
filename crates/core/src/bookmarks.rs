@@ -229,7 +229,7 @@ impl Bookmarks {
         Ok(())
     }
 
-    pub fn move_subtree_after(
+    pub fn detach_and_insert_after(
         &mut self,
         source_index: usize,
         destination_index: usize,
@@ -327,9 +327,9 @@ mod tests {
     }
 
     #[test]
-    fn test_move_subtree() -> anyhow::Result<()> {
+    fn test_detach_and_insert_after() -> anyhow::Result<()> {
         let mut bookmarks = create_test_bookmarks();
-        bookmarks.move_subtree_after(4, 2)?;
+        bookmarks.detach_and_insert_after(4, 2)?;
         let root = bookmarks.get_root_node_id()?;
         let vec: Vec<usize> = vec![1, 2, 4, 5, 6, 3];
         // tree is like
