@@ -13,18 +13,16 @@ const BookmarkTree: Component = () => {
 
   const makeDragStartEventListener = (el: HTMLDivElement) => {
     makeEventListener(el, "dragstart", (ev) => {
-      const target = ev.target as HTMLDivElement;
-      ev.dataTransfer?.setData("text/plain", target.id);
-      setTimeout(() => target.classList.add("dragging"), 0);
-      console.log("drag start");
+      const origin = ev.target as HTMLDivElement;
+      ev.dataTransfer?.setData("text/plain", origin.id);
+      setTimeout(() => origin.classList.add("dragging"), 0);
     });
   };
 
   const makeDragEndEventListener = (el: HTMLDivElement) => {
     makeEventListener(el, "dragend", (ev) => {
-      const target = ev.target as HTMLDivElement;
-      target.classList.remove("dragging");
-      console.log("drag end");
+      const origin = ev.target as HTMLDivElement;
+      origin.classList.remove("dragging");
       setIndicatorId(0);
     });
   };
@@ -32,18 +30,16 @@ const BookmarkTree: Component = () => {
   const makeDragOverEventListener = (el: HTMLDivElement) => {
     makeEventListener(el, "dragover", (ev) => {
       ev.preventDefault();
-      if (el && ev.dataTransfer) {
+      if (ev.dataTransfer) {
         ev.dataTransfer.dropEffect = "move";
         const draggingItem = el.querySelector(".dragging");
         if (draggingItem) {
           const sibilings = Array.from(el.children as HTMLCollectionOf<HTMLDivElement>);
           const target = sibilings.find((sibiling) => {
             const targetRect = sibiling.getBoundingClientRect();
-            // return e.clientY <= targetRect.top + targetRect.height / 2;
             return ev.clientY < targetRect.bottom;
           });
           if (target) {
-            console.log(target.id);
             const match = target.id.match(/bookmark-(\d+)/);
             if (match) {
               setIndicatorId(Number.parseInt(match[1]));
@@ -65,7 +61,8 @@ const BookmarkTree: Component = () => {
       ev.preventDefault();
       if (ev.dataTransfer) {
         const data = ev.dataTransfer.getData("text/plain");
-        console.log(`dropped: ${data}`);
+        // TODO: move bookmark with backend
+        console.log(`origin: ${data} - target: ${indicatorId()}`);
       }
     });
   };
