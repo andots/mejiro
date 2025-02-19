@@ -115,6 +115,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
             }
             style={{ "padding-left": `${props.level * 8}px` }}
           >
+            {/* Navigation Arrow */}
             <div class="flex items-center justify-center">
               <div
                 class="w-[18px] flex items-center justify-center"
@@ -130,27 +131,24 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
             </div>
 
             <div
-              class="flex items-center w-full cursor-pointer"
+              class="flex items-center w-full cursor-pointer py-0.5"
               onClick={handleNodeClick}
               onKeyDown={handleKeydown}
             >
-              <div class="mr-0.5">
+              {/* Folder or Favicon */}
+              <div class="flex items-center justify-center w-[20px] mr-0.5">
                 <Switch>
                   <Match when={isFolder()}>
-                    <div class="w-[20px]">
-                      <FolderIcon isOpen={isOpen()} size={18} />
-                    </div>
+                    <FolderIcon isOpen={isOpen()} size={18} />
                   </Match>
                   <Match when={isBookmark()}>
-                    <div class="w-[20px]">
-                      <Favicon url={`https://${props.bookmark.host}`} width="18" height="18" />
-                    </div>
+                    <Favicon url={`https://${props.bookmark.host}`} width="18" height="18" />
                   </Match>
                 </Switch>
               </div>
 
               {/* Title */}
-              <div class="overflow-hidden whitespace-nowrap text-ellipsis">
+              <div class="text-sm overflow-hidden whitespace-nowrap text-ellipsis">
                 {props.bookmark.title}
               </div>
             </div>
