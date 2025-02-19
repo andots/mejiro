@@ -111,15 +111,19 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
         <ContextMenuTrigger>
           <div
             class={
-              "flex items-center text-left text-sm py-1 hover:bg-sidebar-accent transition-colors duration-150"
+              "flex items-center text-left hover:bg-sidebar-accent transition-colors duration-150"
             }
             style={{ "padding-left": `${props.level * 8}px` }}
           >
             <div class="flex items-center justify-center">
-              <div class="w-[20px]" onClick={toggleFolder} onKeyDown={handleKeydown}>
+              <div
+                class="w-[18px] flex items-center justify-center"
+                onClick={toggleFolder}
+                onKeyDown={handleKeydown}
+              >
                 <Show when={hasChildren()}>
                   <div class="rounded hover:bg-stone-300 cursor-pointer">
-                    <NavigationArrowIcon isOpen={isOpen()} />
+                    <NavigationArrowIcon isOpen={isOpen()} size={16} />
                   </div>
                 </Show>
               </div>
@@ -134,7 +138,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
                 <Switch>
                   <Match when={isFolder()}>
                     <div class="w-[20px]">
-                      <FolderIcon isOpen={isOpen()} />
+                      <FolderIcon isOpen={isOpen()} size={18} />
                     </div>
                   </Match>
                   <Match when={isBookmark()}>
@@ -146,7 +150,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
               </div>
 
               {/* Title */}
-              <div class="text-sidebar-foreground overflow-hidden whitespace-nowrap text-ellipsis">
+              <div class="overflow-hidden whitespace-nowrap text-ellipsis">
                 {props.bookmark.title}
               </div>
             </div>
