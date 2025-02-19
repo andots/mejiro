@@ -44,54 +44,74 @@ const BookmarkTree: Component = () => {
   const bookmarks = useBookmarkState((state) => state.bookmarks);
   let ref!: HTMLDivElement;
 
+  const makeDragStartEventListener = (child: HTMLDivElement) => {
+    makeEventListener(child, "dragstart", (ev) => {
+      const target = ev.target as HTMLDivElement;
+      ev.dataTransfer?.setData("text/plain", target.id);
+      setTimeout(() => target.classList.add("dragging"), 0);
+      console.log("drag start");
+    });
+  };
+
+  const makeDragEndEventListener = (child: HTMLDivElement) => {
+    makeEventListener(child, "dragend", (ev) => {
+      const target = ev.target as HTMLDivElement;
+      target.classList.remove("dragging");
+      console.log("drag end");
+    });
+  };
+
+  const makeDragOverEventListener = (child: HTMLDivElement) => {
+    makeEventListener(child, "dragover", (ev) => {
+      ev.preventDefault();
+      if (ref && ev.dataTransfer) {
+        ev.dataTransfer.dropEffect = "move";
+        const draggingItem = ref.querySelector(".dragging");
+        if (draggingItem) {
+          const sibilings = Array.from(ref.children);
+          const target = sibilings.find((sibiling) => {
+            const targetRect = sibiling.getBoundingClientRect();
+            // return e.clientY <= targetRect.top + targetRect.height / 2;
+            return ev.clientY < targetRect.bottom;
+          });
+          if (target) {
+            target.classList.add("border-b", "border-sidebar-accent");
+          } else {
+            // nextSibiling.classList.remove("border-b-2", "border-sidebar-accent");
+          }
+        }
+      }
+    });
+  };
+
+  const makeDragEnterEventListener = (child: HTMLDivElement) => {
+    makeEventListener(child, "dragenter", (ev) => {
+      ev.preventDefault();
+    });
+  };
+
+  const makeDropEventListener = (child: HTMLDivElement) => {
+    makeEventListener(child, "drop", (ev) => {
+      ev.preventDefault();
+      if (ev.dataTransfer) {
+        const data = ev.dataTransfer.getData("text/plain");
+        console.log(`dropped: ${data}`);
+      }
+    });
+  };
+
   onMount(() => {
     if (ref) {
       for (const child of ref.children) {
-        makeEventListener(child as HTMLElement, "dragstart", (e) => {
-          console.log("drag start");
-          const target = e.target as HTMLElement;
-          e.dataTransfer?.setData("text/plain", target.id);
-          setTimeout(() => target.classList.add("dragging"), 0);
-        });
-        makeEventListener(child as HTMLElement, "dragend", (e) => {
-          console.log("drag end");
-          const target = e.target as HTMLElement;
-          target.classList.remove("dragging");
-        });
+        makeDragStartEventListener(child as HTMLDivElement);
+        makeDragEndEventListener(child as HTMLDivElement);
       }
       // dragOver
-      makeEventListener(ref, "dragover", (e) => {
-        e.preventDefault();
-        if (ref && e.dataTransfer) {
-          e.dataTransfer.dropEffect = "move";
-          const draggingItem = ref.querySelector(".dragging");
-          if (draggingItem) {
-            const sibilings = Array.from(ref.children);
-            const target = sibilings.find((sibiling) => {
-              const targetRect = sibiling.getBoundingClientRect();
-              // return e.clientY <= targetRect.top + targetRect.height / 2;
-              return e.clientY <= targetRect.bottom;
-            });
-            if (target) {
-              target.classList.add("border-b", "border-sidebar-accent");
-            } else {
-              // nextSibiling.classList.remove("border-b-2", "border-sidebar-accent");
-            }
-          }
-        }
-      });
+      makeDragOverEventListener(ref);
       // dragEnter
-      makeEventListener(ref, "dragenter", (e) => {
-        e.preventDefault();
-      });
+      makeDragEnterEventListener(ref);
       // dragDrop
-      makeEventListener(ref, "drop", (e) => {
-        e.preventDefault();
-        if (e.dataTransfer) {
-          const data = e.dataTransfer.getData("text/plain");
-          console.log(`dropped: ${data}`);
-        }
-      });
+      makeDropEventListener(ref);
     }
   });
 
