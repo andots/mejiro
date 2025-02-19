@@ -44,8 +44,8 @@ const BookmarkTree: Component = () => {
   const bookmarks = useBookmarkState((state) => state.bookmarks);
   let ref!: HTMLDivElement;
 
-  const makeDragStartEventListener = (child: HTMLDivElement) => {
-    makeEventListener(child, "dragstart", (ev) => {
+  const makeDragStartEventListener = (el: HTMLDivElement) => {
+    makeEventListener(el, "dragstart", (ev) => {
       const target = ev.target as HTMLDivElement;
       ev.dataTransfer?.setData("text/plain", target.id);
       setTimeout(() => target.classList.add("dragging"), 0);
@@ -53,22 +53,22 @@ const BookmarkTree: Component = () => {
     });
   };
 
-  const makeDragEndEventListener = (child: HTMLDivElement) => {
-    makeEventListener(child, "dragend", (ev) => {
+  const makeDragEndEventListener = (el: HTMLDivElement) => {
+    makeEventListener(el, "dragend", (ev) => {
       const target = ev.target as HTMLDivElement;
       target.classList.remove("dragging");
       console.log("drag end");
     });
   };
 
-  const makeDragOverEventListener = (child: HTMLDivElement) => {
-    makeEventListener(child, "dragover", (ev) => {
+  const makeDragOverEventListener = (el: HTMLDivElement) => {
+    makeEventListener(el, "dragover", (ev) => {
       ev.preventDefault();
-      if (ref && ev.dataTransfer) {
+      if (el && ev.dataTransfer) {
         ev.dataTransfer.dropEffect = "move";
-        const draggingItem = ref.querySelector(".dragging");
+        const draggingItem = el.querySelector(".dragging");
         if (draggingItem) {
-          const sibilings = Array.from(ref.children);
+          const sibilings = Array.from(el.children);
           const target = sibilings.find((sibiling) => {
             const targetRect = sibiling.getBoundingClientRect();
             // return e.clientY <= targetRect.top + targetRect.height / 2;
@@ -84,14 +84,14 @@ const BookmarkTree: Component = () => {
     });
   };
 
-  const makeDragEnterEventListener = (child: HTMLDivElement) => {
-    makeEventListener(child, "dragenter", (ev) => {
+  const makeDragEnterEventListener = (el: HTMLDivElement) => {
+    makeEventListener(el, "dragenter", (ev) => {
       ev.preventDefault();
     });
   };
 
-  const makeDropEventListener = (child: HTMLDivElement) => {
-    makeEventListener(child, "drop", (ev) => {
+  const makeDropEventListener = (el: HTMLDivElement) => {
+    makeEventListener(el, "drop", (ev) => {
       ev.preventDefault();
       if (ev.dataTransfer) {
         const data = ev.dataTransfer.getData("text/plain");
@@ -106,11 +106,8 @@ const BookmarkTree: Component = () => {
         makeDragStartEventListener(child as HTMLDivElement);
         makeDragEndEventListener(child as HTMLDivElement);
       }
-      // dragOver
       makeDragOverEventListener(ref);
-      // dragEnter
       makeDragEnterEventListener(ref);
-      // dragDrop
       makeDropEventListener(ref);
     }
   });
