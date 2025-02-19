@@ -25,6 +25,7 @@ const BookmarkTree: Component = () => {
       const target = ev.target as HTMLDivElement;
       target.classList.remove("dragging");
       console.log("drag end");
+      setIndicatorId(0);
     });
   };
 

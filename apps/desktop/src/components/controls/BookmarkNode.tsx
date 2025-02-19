@@ -104,9 +104,11 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
       <ContextMenu onOpenChange={(isOpen) => handleContextMenu(isOpen)}>
         <ContextMenuTrigger draggable={true} id={`bookmark-${props.bookmark.index}`}>
           <div
-            class={"flex flex-col text-left hover:bg-sidebar-accent transition-colors duration-150"}
+            class={"flex flex-col hover:bg-sidebar-accent transition-colors duration-150"}
             style={{ "padding-left": `${props.level * 8}px` }}
           >
+            <div class="w-[200px] h-[4px]" />
+
             <div class="flex flex-row">
               {/* Navigation Arrow */}
               <div class="flex items-center justify-center">
@@ -151,7 +153,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
               <div class="w-[200px] h-[4px] border-b-2 border-blue-300" />
             </Show>
             <Show when={props.bookmark.index !== props.indicatorId}>
-              <div class="w-[200px] h-[6px]" />
+              <div class="w-[200px] h-[4px]" />
             </Show>
           </div>
         </ContextMenuTrigger>
