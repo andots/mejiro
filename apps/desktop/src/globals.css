@@ -4,14 +4,6 @@
 
 /* @import "@fontsource/inter/latin-400.css"; */
 
-/*
-  TODO find a way to remove focus outline for context menu
-  Remove undesired focus black outline for context menu, but this is not recommended for accessibility.
-*/
-*:focus {
-    outline: none;
-}
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -158,4 +150,27 @@
 
 [data-corvu-resizable-panel]:has(+ [data-corvu-resizable-handle][data-dragging]) iframe {
   pointer-events: none;
+}
+
+/*
+  Default styles for the entire app
+*/
+body {
+  user-select: none;
+}
+
+img {
+  -webkit-user-drag: none;
+}
+
+img[draggable=true] {
+  -webkit-user-drag: auto;
+}
+
+/*
+  TODO find a way to remove focus outline for context menu
+  Remove undesired focus black outline for context menu, but this is not recommended for accessibility.
+*/
+*:focus {
+    outline: none;
 }

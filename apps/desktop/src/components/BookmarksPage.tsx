@@ -11,13 +11,9 @@ const BookmarksPage: Component = () => {
 
   return (
     // TODO: determine sidebar width based on externalState
-    <div class={cn(externalState() === "right" ? "w-full" : "w-full")}>
-      <div class="mb-2">
-        <RootChildrenSelect />
-      </div>
-      <div>
-        <BookmarkTree />
-      </div>
+    <div class={cn(externalState() === "right" ? "w-full" : "w-full", "space-y-2")}>
+      <RootChildrenSelect />
+      <BookmarkTree />
     </div>
   );
 };

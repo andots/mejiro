@@ -32,7 +32,21 @@ import Favicon from "../icons/Favicon";
 const BookmarkTree: Component = () => {
   const bookmarks = useBookmarkState((state) => state.bookmarks);
 
-  return <BookmarkNode bookmark={bookmarks()} level={0} />;
+  const handleDrop = (e: DragEvent) => {
+    e.preventDefault();
+    console.log("drop");
+  };
+
+  const handleDragOver = (e: DragEvent) => {
+    e.preventDefault();
+    // console.log("drag over");
+  };
+
+  return (
+    <div id="bookmark-tree" onDrop={handleDrop} onDragOver={handleDragOver}>
+      <BookmarkNode bookmark={bookmarks()} level={0} />
+    </div>
+  );
 };
 
 type BookmarkNodeProps = {
@@ -60,11 +74,11 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
     if (props.bookmark.url && isBookmark()) {
       if (externalState() === "right") {
         // Navigate to the URL
-        navigateToUrl(props.bookmark.url);
+        // navigateToUrl(props.bookmark.url);
       } else if (externalState() === "hidden") {
         // Open the right panel and navigate to the URL
         useWindowState.getState().changeExternalState("right");
-        navigateToUrl(props.bookmark.url);
+        // navigateToUrl(props.bookmark.url);
       }
     }
   };
@@ -105,11 +119,25 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
     //
   };
 
+  const handleDragStart = (e: DragEvent) => {
+    console.log("drag start");
+    e.dataTransfer?.setData("text/plain", `${props.bookmark.index}`);
+  };
+
+  const handleDrangEnd = (e: DragEvent) => {
+    console.log("drag end");
+  };
+
   return (
-    <div>
+    <>
       <ContextMenu onOpenChange={(isOpen) => handleContextMenu(isOpen)}>
-        <ContextMenuTrigger>
+        <ContextMenuTrigger
+          draggable={true}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDrangEnd}
+        >
           <div
+            id={`bookmark-${props.bookmark.index}`}
             class={
               "flex items-center text-left hover:bg-sidebar-accent transition-colors duration-150"
             }
@@ -192,7 +220,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
           {(child) => <BookmarkNode bookmark={child} level={props.level + 1} />}
         </For>
       </Show>
-    </div>
+    </>
   );
 };
 
