@@ -239,16 +239,22 @@ impl Bookmarks {
             return Err(CoreError::CannotMoveRoot());
         }
 
-        let origin_node_id = self
+        let source_node_id = self
             .find_node_id_by_index(source_index)
             .ok_or(CoreError::NodeNotFound(source_index))?;
-        let target_node_id = self
+        let dest_node_id = self
             .find_node_id_by_index(destination_index)
             .ok_or(CoreError::NodeNotFound(destination_index))?;
 
-        // detach origin node and insert after target node
-        origin_node_id.detach(&mut self.arena);
-        target_node_id.checked_insert_after(origin_node_id, &mut self.arena)?;
+        if destination_index == 1 {
+            // if destination is root, append source node under the root
+            source_node_id.detach(&mut self.arena);
+            dest_node_id.checked_append(source_node_id, &mut self.arena)?;
+        } else {
+            // detach origin node and insert after target node
+            source_node_id.detach(&mut self.arena);
+            dest_node_id.checked_insert_after(source_node_id, &mut self.arena)?;
+        }
 
         Ok(())
     }
@@ -313,13 +319,18 @@ mod tests {
         let n_4 = BookmarkData::try_new_bookmark("n_4", "https://docs.rs/abc").unwrap();
         let n_5 = BookmarkData::try_new_bookmark("n_5", "https://docs.rs/abc").unwrap();
         let n_6 = BookmarkData::try_new_bookmark("n_6", "https://docs.rs/abc").unwrap();
+        let n_7 = BookmarkData::try_new_bookmark("n_7", "https://docs.rs/abc").unwrap();
+        let n_8 = BookmarkData::try_new_bookmark("n_8", "https://docs.rs/abc").unwrap();
         tree!(&mut arena,
             root => {
                 n_2,
                 n_3,
                 n_4 => {
                     n_5,
-                    n_6,
+                    n_6 => {
+                        n_7,
+                        n_8,
+                    }
                 }
             }
         );
@@ -331,18 +342,45 @@ mod tests {
         let mut bookmarks = create_test_bookmarks();
         bookmarks.detach_and_insert_after(4, 2)?;
         let root = bookmarks.get_root_node_id()?;
-        let vec: Vec<usize> = vec![1, 2, 4, 5, 6, 3];
+        let vec: Vec<usize> = vec![1, 2, 4, 5, 6, 7, 8, 3];
         // tree is like
         // root
         //  |- n_2
         //  |- n_4
         //  |   |- n_5
         //  |   |- n_6
+        //  |       |- n_7
+        //  |       |- n_8
         //  |- n_3
         for (i, node_id) in root.descendants(&bookmarks.arena).enumerate() {
             let id: usize = node_id.into();
             assert_eq!(id, vec[i]);
         }
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_detach_and_insert_after_to_root() -> anyhow::Result<()> {
+        let mut bookmarks = create_test_bookmarks();
+        bookmarks.detach_and_insert_after(6, 1)?;
+        let root = bookmarks.get_root_node_id()?;
+        let vec: Vec<usize> = vec![1, 2, 3, 4, 5, 6, 7, 8];
+        // tree is like
+        // root
+        //  |- n_2
+        //  |- n_3
+        //  |- n_4
+        //  |   |- n_5
+        //  |- n_6
+        //  |   |- n_7
+        //  |   |- n_8
+        for (i, node_id) in root.descendants(&bookmarks.arena).enumerate() {
+            let id: usize = node_id.into();
+            assert_eq!(id, vec[i]);
+        }
+
+        // println!("{}", bookmarks.to_nested_json_pretty(1)?);
 
         Ok(())
     }
@@ -401,7 +439,7 @@ mod tests {
 
         // remove wrong index must be error
         assert!(bookmarks.remove_subtree(100).is_err());
-        assert_eq!(bookmarks.arena.count(), 6);
+        assert_eq!(bookmarks.arena.count(), 8);
 
         // try to remove root node must be error
         assert!(bookmarks.remove_subtree(1).is_err());
@@ -415,8 +453,8 @@ mod tests {
         bookmarks.remove_subtree(3)?;
         bookmarks.remove_subtree(4)?;
 
-        // internal arena count must be still 6
-        assert_eq!(bookmarks.arena.count(), 6);
+        // internal arena count must be still 8
+        assert_eq!(bookmarks.arena.count(), 8);
 
         println!("{}", bookmarks.to_nested_json_pretty(1)?);
 
@@ -506,16 +544,18 @@ mod tests {
         bookmarks.add_folder(1, "new folder 1")?;
         let root_id = bookmarks.find_node_id_by_index(1).unwrap();
         assert_eq!(root_id.children(&bookmarks.arena).count(), 4);
+
         // add folder to n_2
         let n_2_id = bookmarks.find_node_id_by_index(2).unwrap();
         assert_eq!(n_2_id.children(&bookmarks.arena).count(), 0);
         bookmarks.add_folder(2, "new folder 2")?;
         assert_eq!(n_2_id.children(&bookmarks.arena).count(), 1);
+
         // add folder to n_6
         let n_6_id = bookmarks.find_node_id_by_index(6).unwrap();
-        assert_eq!(n_6_id.children(&bookmarks.arena).count(), 0);
+        assert_eq!(n_6_id.children(&bookmarks.arena).count(), 2);
         bookmarks.add_folder(6, "new folder 3")?;
-        assert_eq!(n_6_id.children(&bookmarks.arena).count(), 1);
+        assert_eq!(n_6_id.children(&bookmarks.arena).count(), 3);
 
         // add folder to non-exist node must be error
         assert!(bookmarks.add_folder(100, "new folder 4").is_err());
