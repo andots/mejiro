@@ -119,7 +119,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
                 onKeyDown={handleKeydown}
               >
                 {/* Folder or Favicon */}
-                <div class="flex items-center justify-center w-[20px] mr-0.5">
+                <div class="flex items-center justify-center w-[20px]">
                   <Switch>
                     <Match when={isFolder()}>
                       <FolderIcon isOpen={isOpen()} size={18} />
@@ -132,12 +132,13 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
 
                 {/* Title */}
                 <div
-                  class="text-sm overflow-hidden whitespace-nowrap text-ellipsis"
+                  class="text-sm pl-0.5 overflow-hidden whitespace-nowrap text-ellipsis"
                   classList={{
                     "bg-blue-300": isDraggingInside(),
                   }}
                 >
-                  {props.bookmark.index} - {props.bookmark.title}
+                  {/* {props.bookmark.index} - {props.bookmark.title} */}
+                  {props.bookmark.title}
                 </div>
               </div>
             </div>

@@ -11,6 +11,7 @@ const BookmarkTree: Component = () => {
   let ref!: HTMLDivElement;
 
   const bookmarks = useBookmarkState((state) => state.bookmarks);
+  const [currentTopLevel, setCurrentTopLevel] = createSignal(bookmarks().index);
 
   const [dragging, setDragging] = createSignal<Dragging>({
     sourceIndex: -1,
@@ -72,6 +73,17 @@ const BookmarkTree: Component = () => {
             const match = closest.id.match(/bookmark-(\d+)/);
             if (match) {
               const destinationIndex = Number.parseInt(match[1]);
+
+              // if the destination is the current top level, then force to be inside
+              if (destinationIndex === currentTopLevel()) {
+                setDragging({
+                  sourceIndex: dragging().sourceIndex,
+                  destinationIndex,
+                  state: "inside",
+                });
+                return;
+              }
+
               const rect = closest.getBoundingClientRect();
               const isInside = ev.clientY <= rect.top + rect.height / 2;
               if (isInside) {
@@ -140,6 +152,10 @@ const BookmarkTree: Component = () => {
         makeDragEnterEventListener(ref);
         makeDropEventListener(ref);
       }
+
+      // FIXME: this happens twice after droped
+      setCurrentTopLevel(bookmarks().index);
+      console.log(`createEffect: currentTopLevel: ${currentTopLevel()}`);
     }),
   );
 
