@@ -258,6 +258,30 @@ impl Bookmarks {
 
         Ok(())
     }
+
+    pub fn move_to_children(
+        &mut self,
+        source_index: usize,
+        destination_index: usize,
+    ) -> Result<(), CoreError> {
+        // if source node is root, return error
+        if source_index == 1 {
+            return Err(CoreError::CannotMoveRoot());
+        }
+
+        let source_node_id = self
+            .find_node_id_by_index(source_index)
+            .ok_or(CoreError::NodeNotFound(source_index))?;
+        let dest_node_id = self
+            .find_node_id_by_index(destination_index)
+            .ok_or(CoreError::NodeNotFound(destination_index))?;
+
+        // detach and move to the dest children (append - to the end)
+        source_node_id.detach(&mut self.arena);
+        dest_node_id.checked_append(source_node_id, &mut self.arena)?;
+
+        Ok(())
+    }
 }
 
 #[cfg(test)]
@@ -335,6 +359,29 @@ mod tests {
             }
         );
         Bookmarks::new(arena)
+    }
+
+    #[test]
+    fn test_move_to_children() -> anyhow::Result<()> {
+        let mut bookmarks = create_test_bookmarks();
+        bookmarks.move_to_children(4, 2)?;
+        let root = bookmarks.get_root_node_id()?;
+        let vec: Vec<usize> = vec![1, 2, 4, 5, 6, 7, 8, 3];
+        // tree is like
+        // root
+        //  |- n_2
+        //  |    |- n_4
+        //  |       |- n_5
+        //  |       |- n_6
+        //  |           |- n_7
+        //  |           |- n_8
+        //  |- n_3
+        for (i, node_id) in root.descendants(&bookmarks.arena).enumerate() {
+            let id: usize = node_id.into();
+            assert_eq!(id, vec[i]);
+        }
+
+        Ok(())
     }
 
     #[test]
