@@ -72,31 +72,10 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
 
   const handleKeydown = (e: KeyboardEvent) => {};
 
-  const handleAddBookmark = (index: number) => {};
-
-  const handleAddFolder = (index: number) => {
-    useAddFolderDialog.getState().setParentIndex(index);
-    useAddFolderDialog.getState().setOpen(true);
-  };
-
-  const handleEdit = (index: number) => {
-    useEditDialog.getState().setTarget({ index, title: props.bookmark.title });
-    useEditDialog.getState().setOpen(true);
-  };
-
-  const handleRemove = (index: number) => {
-    useDeleteConfirmDialog.getState().setTarget({ index, title: props.bookmark.title });
-    useDeleteConfirmDialog.getState().setOpen(true);
-  };
-
   const handleContextMenu = (isOpen: boolean) => {
     if (externalState() === "right" && isOpen) {
       useWindowState.getState().changeExternalState("hidden");
     }
-  };
-
-  const handlePinToToolbar = (url: string | null) => {
-    //
   };
 
   return (
@@ -163,36 +142,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
           </div>
         </ContextMenuTrigger>
 
-        <ContextMenuPortal>
-          <ContextMenuContent class="w-48">
-            <ContextMenuItem onClick={() => handleAddFolder(props.bookmark.index)}>
-              <span>Add Folder</span>
-            </ContextMenuItem>
-
-            <ContextMenuItem onClick={() => handleAddBookmark(props.bookmark.index)} disabled>
-              <span>Add Bookmark (WIP)</span>
-            </ContextMenuItem>
-
-            <ContextMenuSeparator />
-
-            <ContextMenuItem onClick={() => handleEdit(props.bookmark.index)}>
-              <span>Edit</span>
-            </ContextMenuItem>
-
-            <Show when={props.bookmark.node_type === "Bookmark"}>
-              <ContextMenuItem onClick={() => handlePinToToolbar(props.bookmark.url)} disabled>
-                <span>Pin to Toolbar (WIP)</span>
-              </ContextMenuItem>
-            </Show>
-
-            <Show when={props.bookmark.node_type !== "Root"}>
-              <ContextMenuSeparator />
-              <ContextMenuItem onClick={() => handleRemove(props.bookmark.index)}>
-                <span class="text-destructive">Delete</span>
-              </ContextMenuItem>
-            </Show>
-          </ContextMenuContent>
-        </ContextMenuPortal>
+        <BookmarkContextMenuPortal bookmark={props.bookmark} />
       </ContextMenu>
 
       <Show when={hasChildren() && isOpen()}>
@@ -203,6 +153,62 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
         </For>
       </Show>
     </>
+  );
+};
+
+const BookmarkContextMenuPortal = (props: { bookmark: Bookmark }) => {
+  const handleAddBookmark = (index: number) => {};
+
+  const handleAddFolder = (index: number) => {
+    useAddFolderDialog.getState().setParentIndex(index);
+    useAddFolderDialog.getState().setOpen(true);
+  };
+
+  const handleEdit = (index: number) => {
+    useEditDialog.getState().setTarget({ index, title: props.bookmark.title });
+    useEditDialog.getState().setOpen(true);
+  };
+
+  const handleRemove = (index: number) => {
+    useDeleteConfirmDialog.getState().setTarget({ index, title: props.bookmark.title });
+    useDeleteConfirmDialog.getState().setOpen(true);
+  };
+
+  const handlePinToToolbar = (url: string | null) => {
+    //
+  };
+
+  return (
+    <ContextMenuPortal>
+      <ContextMenuContent class="w-48">
+        <ContextMenuItem onClick={() => handleAddFolder(props.bookmark.index)}>
+          <span>Add Folder</span>
+        </ContextMenuItem>
+
+        <ContextMenuItem onClick={() => handleAddBookmark(props.bookmark.index)} disabled>
+          <span>Add Bookmark (WIP)</span>
+        </ContextMenuItem>
+
+        <ContextMenuSeparator />
+
+        <ContextMenuItem onClick={() => handleEdit(props.bookmark.index)}>
+          <span>Edit</span>
+        </ContextMenuItem>
+
+        <Show when={props.bookmark.node_type === "Bookmark"}>
+          <ContextMenuItem onClick={() => handlePinToToolbar(props.bookmark.url)} disabled>
+            <span>Pin to Toolbar (WIP)</span>
+          </ContextMenuItem>
+        </Show>
+
+        <Show when={props.bookmark.node_type !== "Root"}>
+          <ContextMenuSeparator />
+          <ContextMenuItem onClick={() => handleRemove(props.bookmark.index)}>
+            <span class="text-destructive">Delete</span>
+          </ContextMenuItem>
+        </Show>
+      </ContextMenuContent>
+    </ContextMenuPortal>
   );
 };
 
