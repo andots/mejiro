@@ -16,7 +16,7 @@ type BookmarkState = {
   MoveToChildren: (sourceIndex: number, destinationIndex: number) => Promise<void>;
 };
 
-export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
+export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
   folders: [],
   bookmarks: {
     index: 1,
@@ -41,7 +41,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
   },
   addBookmark: async (url, title) => {
     // get current top of bookmark index that shown in the UI as a starting point
-    const startingIndex = getCurrentStatingIndex();
+    const startingIndex = get().bookmarks.index;
     const data = await Invoke.AddBookmark(url, title, startingIndex);
     const tree = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks: tree }));
@@ -49,8 +49,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
     useBookmarkState.getState().getFolders();
   },
   removeBookmark: async (index) => {
-    // get current top of bookmark index that shown in the UI as a starting point
-    const startingIndex = getCurrentStatingIndex();
+    const startingIndex = get().bookmarks.index;
     const data = await Invoke.RemoveBookmark(index, startingIndex);
     const tree = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks: tree }));
@@ -58,8 +57,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
     useBookmarkState.getState().getFolders();
   },
   updateBookmarkTitle: async (index, title) => {
-    // get current top of bookmark index that shown in the UI as a starting point
-    const startingIndex = getCurrentStatingIndex();
+    const startingIndex = get().bookmarks.index;
     const data = await Invoke.UpdateBookmarkTitle(index, title, startingIndex);
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
@@ -67,8 +65,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
     useBookmarkState.getState().getFolders();
   },
   addFolder: async (parentIndex, title) => {
-    // get current top of bookmark index that shown in the UI as a starting point
-    const startingIndex = getCurrentStatingIndex();
+    const startingIndex = get().bookmarks.index;
     const data = await Invoke.AddFolder(parentIndex, title, startingIndex);
     const tree = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks: tree }));
@@ -76,8 +73,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
     useBookmarkState.getState().getFolders();
   },
   detachAndInsertAfter: async (sourceIndex, destinationIndex) => {
-    // get current top of bookmark index that shown in the UI as a starting point
-    const startingIndex = getCurrentStatingIndex();
+    const startingIndex = get().bookmarks.index;
     const data = await Invoke.DetachAndInsertAfter(sourceIndex, destinationIndex, startingIndex);
     const tree = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks: tree }));
@@ -85,8 +81,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
     useBookmarkState.getState().getFolders();
   },
   MoveToChildren: async (sourceIndex, destinationIndex) => {
-    // get current top of bookmark index that shown in the UI as a starting point
-    const startingIndex = getCurrentStatingIndex();
+    const startingIndex = get().bookmarks.index;
     const data = await Invoke.MoveToChildren(sourceIndex, destinationIndex, startingIndex);
     const tree = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks: tree }));
@@ -94,9 +89,3 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
     useBookmarkState.getState().getFolders();
   },
 }));
-
-// FIXME: cleanups create outside a createRoot or render will never be run
-const getCurrentStatingIndex = () => {
-  const bookmarks = useBookmarkState((state) => state.bookmarks);
-  return bookmarks().index;
-};
