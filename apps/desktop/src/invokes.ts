@@ -26,13 +26,9 @@ export const Invoke = {
     // returned json string is a nested tree of bookmarks
     return invoke<string>("add_folder", { parentIndex, title, startingIndex });
   },
-  DetachAndInsertAfter: async (
-    sourceIndex: number,
-    destinationIndex: number,
-    startingIndex: number,
-  ) => {
+  InsertAfter: async (sourceIndex: number, destinationIndex: number, startingIndex: number) => {
     // returned json string is a nested tree of bookmarks
-    return invoke<string>("detach_and_insert_after", {
+    return invoke<string>("insert_after", {
       sourceIndex,
       destinationIndex,
       startingIndex,

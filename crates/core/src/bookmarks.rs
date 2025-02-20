@@ -229,7 +229,7 @@ impl Bookmarks {
         Ok(())
     }
 
-    pub fn detach_and_insert_after(
+    pub fn insert_after(
         &mut self,
         source_index: usize,
         destination_index: usize,
@@ -382,9 +382,9 @@ mod tests {
     }
 
     #[test]
-    fn test_detach_and_insert_after() -> anyhow::Result<()> {
+    fn test_insert_after() -> anyhow::Result<()> {
         let mut bookmarks = create_test_bookmarks();
-        bookmarks.detach_and_insert_after(4, 2)?;
+        bookmarks.insert_after(4, 2)?;
         let root = bookmarks.get_root_node_id()?;
         let vec: Vec<usize> = vec![1, 2, 4, 5, 6, 7, 8, 3];
         // tree is like
@@ -405,9 +405,9 @@ mod tests {
     }
 
     #[test]
-    fn test_detach_and_insert_after_to_root() -> anyhow::Result<()> {
+    fn test_insert_after_to_root() -> anyhow::Result<()> {
         let mut bookmarks = create_test_bookmarks();
-        bookmarks.detach_and_insert_after(6, 1)?;
+        bookmarks.insert_after(6, 1)?;
         let root = bookmarks.get_root_node_id()?;
         let vec: Vec<usize> = vec![1, 6, 7, 8, 2, 3, 4, 5];
         // tree is like

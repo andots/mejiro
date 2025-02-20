@@ -74,7 +74,7 @@ pub fn run() {
             commands::bookmarks::remove_bookmark,
             commands::bookmarks::update_bookmark_title,
             commands::bookmarks::add_folder,
-            commands::bookmarks::detach_and_insert_after,
+            commands::bookmarks::insert_after,
             commands::bookmarks::move_to_children,
             commands::settings::get_settings,
             commands::settings::update_settings,

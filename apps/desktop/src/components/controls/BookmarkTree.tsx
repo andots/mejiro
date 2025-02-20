@@ -119,11 +119,11 @@ const BookmarkTree: Component = () => {
         if (dragging().state === "inside") {
           useBookmarkState
             .getState()
-            .MoveToChildren(dragging().sourceIndex, dragging().destinationIndex);
+            .moveToChildren(dragging().sourceIndex, dragging().destinationIndex);
         } else if (dragging().state === "after") {
           useBookmarkState
             .getState()
-            .detachAndInsertAfter(dragging().sourceIndex, dragging().destinationIndex);
+            .insertAfter(dragging().sourceIndex, dragging().destinationIndex);
         }
       }
     });

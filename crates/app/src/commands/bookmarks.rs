@@ -88,7 +88,7 @@ pub fn add_folder(
 }
 
 #[tauri::command]
-pub fn detach_and_insert_after(
+pub fn insert_after(
     state: tauri::State<'_, Mutex<Bookmarks>>,
     source_index: usize,
     destination_index: usize,
@@ -97,7 +97,7 @@ pub fn detach_and_insert_after(
     let mut bookmarks = state
         .lock()
         .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
-    bookmarks.detach_and_insert_after(source_index, destination_index)?;
+    bookmarks.insert_after(source_index, destination_index)?;
 
     Ok(bookmarks.to_nested_json(starting_index)?)
 }
