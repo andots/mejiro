@@ -1,6 +1,6 @@
 import { type Component, For, Match, Show, Switch, createSignal } from "solid-js";
 
-import type { Bookmark } from "../../types";
+import type { Bookmark, Dragging } from "../../types";
 
 import {
   ContextMenu,
@@ -31,7 +31,7 @@ import Favicon from "../icons/Favicon";
 type BookmarkNodeProps = {
   bookmark: Bookmark;
   level: number;
-  indicatorId: number;
+  dragging: Dragging;
 };
 
 const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
@@ -150,12 +150,15 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
               </div>
             </div>
 
-            {/* Indicator */}
-            <Show when={props.bookmark.index === props.indicatorId}>
+            {/* After Indicator */}
+            <Show
+              when={
+                props.dragging.destinationId === props.bookmark.index &&
+                props.dragging.state === "after"
+              }
+              fallback={<div class="w-[200px] h-[4px]" />}
+            >
               <div class="w-[200px] h-[4px] border-b-2 border-blue-300" />
-            </Show>
-            <Show when={props.bookmark.index !== props.indicatorId}>
-              <div class="w-[200px] h-[4px]" />
             </Show>
           </div>
         </ContextMenuTrigger>
@@ -195,11 +198,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
       <Show when={hasChildren() && isOpen()}>
         <For each={props.bookmark.children}>
           {(child) => (
-            <BookmarkNode
-              indicatorId={props.indicatorId}
-              bookmark={child}
-              level={props.level + 1}
-            />
+            <BookmarkNode dragging={props.dragging} bookmark={child} level={props.level + 1} />
           )}
         </For>
       </Show>

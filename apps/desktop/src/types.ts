@@ -1,3 +1,4 @@
+//! Must sync with core/src/nested.rs
 export type Bookmark = {
   index: number;
   title: string;
@@ -42,4 +43,10 @@ export type Rect = {
 export type Bounds = {
   position: { Physical: { x: number; y: number } };
   size: { Physical: { width: number; height: number } };
+};
+
+export type Dragging = {
+  sourceId: number;
+  destinationId: number;
+  state: "inside" | "after" | "none";
 };
