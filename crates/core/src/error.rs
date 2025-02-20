@@ -33,4 +33,7 @@ pub enum CoreError {
 
     #[error("Cannot move root")]
     CannotMoveRoot(),
+
+    #[error("Source and destination are the same")]
+    SameSourceAndDestination(),
 }

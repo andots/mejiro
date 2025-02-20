@@ -239,6 +239,11 @@ impl Bookmarks {
             return Err(CoreError::CannotMoveRoot());
         }
 
+        // if source and destination is same, return error
+        if source_index == destination_index {
+            return Err(CoreError::SameSourceAndDestination());
+        }
+
         let source_node_id = self
             .find_node_id_by_index(source_index)
             .ok_or(CoreError::NodeNotFound(source_index))?;
@@ -265,6 +270,11 @@ impl Bookmarks {
         // if source node is root, return error
         if source_index == 1 {
             return Err(CoreError::CannotMoveRoot());
+        }
+
+        // if source and destination is same, return error
+        if source_index == destination_index {
+            return Err(CoreError::SameSourceAndDestination());
         }
 
         let source_node_id = self
@@ -362,8 +372,6 @@ mod tests {
     fn test_move_to_children() -> anyhow::Result<()> {
         let mut bookmarks = create_test_bookmarks();
         bookmarks.move_to_children(4, 2)?;
-        let root = bookmarks.get_root_node_id()?;
-        let vec: Vec<usize> = vec![1, 2, 4, 5, 6, 7, 8, 3];
         // tree is like
         // root
         //  |- n_2
@@ -373,10 +381,44 @@ mod tests {
         //  |           |- n_7
         //  |           |- n_8
         //  |- n_3
+        let root = bookmarks.get_root_node_id()?;
+        let vec: Vec<usize> = vec![1, 2, 4, 5, 6, 7, 8, 3];
         for (i, node_id) in root.descendants(&bookmarks.arena).enumerate() {
             let id: usize = node_id.into();
             assert_eq!(id, vec[i]);
         }
+
+        // try to move root node must be error
+        let err = bookmarks.move_to_children(1, 2);
+        assert!(err.is_err());
+        assert_eq!(
+            err.unwrap_err().to_string(),
+            CoreError::CannotMoveRoot().to_string()
+        );
+
+        // try to move to non-exist node must be error
+        let err = bookmarks.move_to_children(100, 2);
+        assert!(err.is_err());
+        assert_eq!(
+            err.unwrap_err().to_string(),
+            CoreError::NodeNotFound(100).to_string()
+        );
+
+        // try to move from non-exist node must be error
+        let err = bookmarks.move_to_children(2, 100);
+        assert!(err.is_err());
+        assert_eq!(
+            err.unwrap_err().to_string(),
+            CoreError::NodeNotFound(100).to_string()
+        );
+
+        // try to move to same node must be error
+        let err = bookmarks.move_to_children(2, 2);
+        assert!(err.is_err());
+        assert_eq!(
+            err.unwrap_err().to_string(),
+            CoreError::SameSourceAndDestination().to_string()
+        );
 
         Ok(())
     }
@@ -400,6 +442,38 @@ mod tests {
             let id: usize = node_id.into();
             assert_eq!(id, vec[i]);
         }
+
+        // try to move root node must be error
+        let err = bookmarks.insert_after(1, 2);
+        assert!(err.is_err());
+        assert_eq!(
+            err.unwrap_err().to_string(),
+            CoreError::CannotMoveRoot().to_string()
+        );
+
+        // try to move to non-exist node must be error
+        let err = bookmarks.insert_after(100, 2);
+        assert!(err.is_err());
+        assert_eq!(
+            err.unwrap_err().to_string(),
+            CoreError::NodeNotFound(100).to_string()
+        );
+
+        // try to move from non-exist node must be error
+        let err = bookmarks.insert_after(2, 100);
+        assert!(err.is_err());
+        assert_eq!(
+            err.unwrap_err().to_string(),
+            CoreError::NodeNotFound(100).to_string()
+        );
+
+        // try to insert same node must be error
+        let err = bookmarks.insert_after(4, 4);
+        assert!(err.is_err());
+        assert_eq!(
+            err.unwrap_err().to_string(),
+            CoreError::SameSourceAndDestination().to_string()
+        );
 
         Ok(())
     }
