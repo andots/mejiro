@@ -11,6 +11,7 @@ const BookmarkTree: Component = () => {
 
   const bookmarks = useBookmarkState((state) => state.bookmarks);
   const [indicatorId, setIndicatorId] = createSignal<number>(-1);
+  const [insideId, setInsideId] = createSignal<number>(-1);
 
   // dragstart event
   const makeDragStartEventListener = (el: HTMLDivElement) => {
@@ -43,15 +44,29 @@ const BookmarkTree: Component = () => {
         ev.dataTransfer.dropEffect = "move";
         const draggingItem = el.querySelector(".dragging");
         if (draggingItem) {
-          const sibilings = Array.from(el.children as HTMLCollectionOf<HTMLDivElement>);
-          const destination = sibilings.find((sibiling) => {
-            const destinationRect = sibiling.getBoundingClientRect();
+          // TODO: 自分以外を除外
+          const children = Array.from(el.children as HTMLCollectionOf<HTMLDivElement>);
+          // find the closest destination by ev.clientY from children
+          const closest = children.find((dest) => {
+            const destinationRect = dest.getBoundingClientRect();
             return ev.clientY < destinationRect.bottom;
           });
-          if (destination) {
-            const match = destination.id.match(/bookmark-(\d+)/);
+          if (closest) {
+            const match = closest.id.match(/bookmark-(\d+)/);
             if (match) {
-              setIndicatorId(Number.parseInt(match[1]));
+              const id = Number.parseInt(match[1]);
+              const rect = closest.getBoundingClientRect();
+              const isInside = ev.clientY < rect.top + rect.height / 2;
+              if (isInside) {
+                // inside the destination
+                setIndicatorId(-1);
+                setInsideId(id);
+                console.log(`inside: ${id}`);
+              } else {
+                setInsideId(-1);
+                setIndicatorId(id);
+                console.log(`indicator: ${indicatorId()}`);
+              }
             }
           }
         }
