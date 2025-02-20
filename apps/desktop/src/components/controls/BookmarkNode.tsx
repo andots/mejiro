@@ -43,9 +43,13 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
   const isFolder = () =>
     props.bookmark.node_type === "Folder" || props.bookmark.node_type === "Root";
   const isBookmark = () => props.bookmark.node_type === "Bookmark";
+
+  // for draggable
+  const isRoot = () => props.bookmark.node_type === "Root";
+  const isTopLevel = () => props.level === 0;
+  const isDraggable = () => !isRoot() && !isTopLevel();
   const isDraggingInside = () =>
     props.dragging.destinationIndex === props.bookmark.index && props.dragging.state === "inside";
-  const isRoot = () => props.bookmark.node_type === "Root";
 
   const handleNodeClick = (e: MouseEvent) => {
     // If the node has children and is not a bookmark, toggle the folder
@@ -84,7 +88,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
   return (
     <>
       <ContextMenu onOpenChange={(isOpen) => handleContextMenu(isOpen)}>
-        <ContextMenuTrigger draggable={!isRoot()} id={`bookmark-${props.bookmark.index}`}>
+        <ContextMenuTrigger draggable={isDraggable()} id={`bookmark-${props.bookmark.index}`}>
           <div
             class={"flex flex-col hover:bg-sidebar-accent transition-colors duration-150"}
             style={{ "padding-left": `${props.level * 8}px` }}
