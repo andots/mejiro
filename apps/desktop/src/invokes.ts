@@ -38,6 +38,10 @@ export const Invoke = {
       startingIndex,
     });
   },
+  MoveToChildren: async (sourceIndex: number, destinationIndex: number, startingIndex: number) => {
+    // returned json string is a nested tree of bookmarks
+    return invoke<string>("move_to_children", { sourceIndex, destinationIndex, startingIndex });
+  },
 
   // External Webview commands
   NavigateWebviewUrl: async (url: string) => {

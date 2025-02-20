@@ -101,3 +101,18 @@ pub fn detach_and_insert_after(
 
     Ok(bookmarks.to_nested_json(starting_index)?)
 }
+
+#[tauri::command]
+pub fn move_to_children(
+    state: tauri::State<'_, Mutex<Bookmarks>>,
+    source_index: usize,
+    destination_index: usize,
+    starting_index: usize,
+) -> Result<String, AppError> {
+    let mut bookmarks = state
+        .lock()
+        .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
+    bookmarks.move_to_children(source_index, destination_index)?;
+
+    Ok(bookmarks.to_nested_json(starting_index)?)
+}

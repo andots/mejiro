@@ -13,6 +13,7 @@ type BookmarkState = {
   updateBookmarkTitle: (index: number, title: string) => Promise<void>;
   addFolder: (parentIndex: number, title: string) => Promise<void>;
   detachAndInsertAfter: (sourceIndex: number, destinationIndex: number) => Promise<void>;
+  MoveToChildren: (sourceIndex: number, destinationIndex: number) => Promise<void>;
 };
 
 export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
@@ -78,6 +79,15 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
     // get current top of bookmark index that shown in the UI as a starting point
     const startingIndex = getCurrentStatingIndex();
     const data = await Invoke.DetachAndInsertAfter(sourceIndex, destinationIndex, startingIndex);
+    const tree = JSON.parse(data) as Bookmark;
+    set(() => ({ bookmarks: tree }));
+    // update the folders list
+    useBookmarkState.getState().getFolders();
+  },
+  MoveToChildren: async (sourceIndex, destinationIndex) => {
+    // get current top of bookmark index that shown in the UI as a starting point
+    const startingIndex = getCurrentStatingIndex();
+    const data = await Invoke.MoveToChildren(sourceIndex, destinationIndex, startingIndex);
     const tree = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks: tree }));
     // update the folders list

@@ -13,8 +13,8 @@ const BookmarkTree: Component = () => {
   const bookmarks = useBookmarkState((state) => state.bookmarks);
 
   const [dragging, setDragging] = createSignal<Dragging>({
-    sourceId: -1,
-    destinationId: -1,
+    sourceIndex: -1,
+    destinationIndex: -1,
     state: "none",
   });
 
@@ -30,8 +30,8 @@ const BookmarkTree: Component = () => {
 
         // Set sourceId
         setDragging({
-          sourceId: Number.parseInt(match[1]),
-          destinationId: -1,
+          sourceIndex: Number.parseInt(match[1]),
+          destinationIndex: -1,
           state: "none",
         });
       }
@@ -47,8 +47,8 @@ const BookmarkTree: Component = () => {
 
       // Reset dragging state
       setDragging({
-        sourceId: -1,
-        destinationId: -1,
+        sourceIndex: -1,
+        destinationIndex: -1,
         state: "none",
       });
     });
@@ -71,21 +71,21 @@ const BookmarkTree: Component = () => {
           if (closest) {
             const match = closest.id.match(/bookmark-(\d+)/);
             if (match) {
-              const id = Number.parseInt(match[1]);
+              const destinationIndex = Number.parseInt(match[1]);
               const rect = closest.getBoundingClientRect();
               const isInside = ev.clientY <= rect.top + rect.height / 2;
               if (isInside) {
                 // inside the destination
                 setDragging({
-                  sourceId: dragging().sourceId,
-                  destinationId: id,
+                  sourceIndex: dragging().sourceIndex,
+                  destinationIndex,
                   state: "inside",
                 });
               } else {
                 // after the destination
                 setDragging({
-                  sourceId: dragging().sourceId,
-                  destinationId: id,
+                  sourceIndex: dragging().sourceIndex,
+                  destinationIndex,
                   state: "after",
                 });
               }
@@ -109,21 +109,21 @@ const BookmarkTree: Component = () => {
       ev.preventDefault();
       // make sure souceId is not root and destinationId is over root, and sourceId is not equal to destinationId
       if (
-        dragging().sourceId >= 2 &&
-        dragging().destinationId >= 1 &&
-        dragging().sourceId !== dragging().destinationId
+        dragging().sourceIndex >= 2 &&
+        dragging().destinationIndex >= 1 &&
+        dragging().sourceIndex !== dragging().destinationIndex
       ) {
         console.log(
-          `Dropped: {sourceId: ${dragging().sourceId}, destinationId: ${dragging().destinationId}, state: ${dragging().state}}`,
+          `Dropped: {sourceId: ${dragging().sourceIndex}, destinationId: ${dragging().destinationIndex}, state: ${dragging().state}}`,
         );
         if (dragging().state === "inside") {
-          // TODO: move tree with append
+          useBookmarkState
+            .getState()
+            .MoveToChildren(dragging().sourceIndex, dragging().destinationIndex);
         } else if (dragging().state === "after") {
-          // TODO: move tree with insertAfter
-          // useBookmarkState.getState().detachAndInsertAfter(
-          //   draggingState().sourceId,
-          //   draggingState().destinationId,
-          // );
+          useBookmarkState
+            .getState()
+            .detachAndInsertAfter(dragging().sourceIndex, dragging().destinationIndex);
         }
       }
     });

@@ -46,7 +46,7 @@ export type Bounds = {
 };
 
 export type Dragging = {
-  sourceId: number;
-  destinationId: number;
+  sourceIndex: number;
+  destinationIndex: number;
   state: "inside" | "after" | "none";
 };

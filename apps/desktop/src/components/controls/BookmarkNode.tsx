@@ -153,7 +153,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
             {/* After Indicator */}
             <Show
               when={
-                props.dragging.destinationId === props.bookmark.index &&
+                props.dragging.destinationIndex === props.bookmark.index &&
                 props.dragging.state === "after"
               }
               fallback={<div class="w-[200px] h-[4px]" />}
