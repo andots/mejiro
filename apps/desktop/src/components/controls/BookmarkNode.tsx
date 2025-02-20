@@ -52,20 +52,20 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
     props.dragging.destinationIndex === props.bookmark.index && props.dragging.state === "inside";
 
   const handleNodeClick = (e: MouseEvent) => {
+    e.preventDefault();
     // If the node has children and is not a bookmark, toggle the folder
     if (hasChildren() && !isBookmark()) {
-      e.preventDefault();
       setIsOpen(!isOpen());
     }
     // If the node is a bookmark, navigate to the URL
     if (props.bookmark.url && isBookmark()) {
       if (externalState() === "right") {
         // Navigate to the URL
-        // navigateToUrl(props.bookmark.url);
+        navigateToUrl(props.bookmark.url);
       } else if (externalState() === "hidden") {
         // Open the right panel and navigate to the URL
         useWindowState.getState().changeExternalState("right");
-        // navigateToUrl(props.bookmark.url);
+        navigateToUrl(props.bookmark.url);
       }
     }
   };
