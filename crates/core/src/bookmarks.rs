@@ -248,11 +248,9 @@ impl Bookmarks {
 
         if destination_index == 1 {
             // if destination is root, prepend source node under the root
-            source_node_id.detach(&mut self.arena);
             dest_node_id.checked_prepend(source_node_id, &mut self.arena)?;
         } else {
-            // detach origin node and insert after target node
-            source_node_id.detach(&mut self.arena);
+            // insert after target node
             dest_node_id.checked_insert_after(source_node_id, &mut self.arena)?;
         }
 
@@ -276,8 +274,7 @@ impl Bookmarks {
             .find_node_id_by_index(destination_index)
             .ok_or(CoreError::NodeNotFound(destination_index))?;
 
-        // detach and move to the dest children (append - to the end)
-        source_node_id.detach(&mut self.arena);
+        // move to the dest children (append - to the end)
         dest_node_id.checked_append(source_node_id, &mut self.arena)?;
 
         Ok(())
@@ -450,14 +447,15 @@ mod tests {
         let n_2 = arena.get_node_id_at(NonZeroUsize::new(2).unwrap()).unwrap();
         println!("{:?}", n_1.debug_pretty_print(&arena));
         let n_4 = arena.get_node_id_at(NonZeroUsize::new(4).unwrap()).unwrap();
-        n_4.detach(&mut arena);
-        println!("after detach n_1");
-        println!("{:?}", n_1.debug_pretty_print(&arena));
-        println!("after detach n_4");
-        println!("{:?}", n_4.debug_pretty_print(&arena));
-        println!("after insert n_4 after n_2");
-        n_2.checked_insert_after(n_4, &mut arena).unwrap();
-        println!("{:?}", n_1.debug_pretty_print(&arena));
+        // append n_4 to n_2
+        match n_2.checked_append(n_4, &mut arena) {
+            Ok(_) => {
+                println!("{:?}", n_1.debug_pretty_print(&arena));
+            }
+            Err(e) => {
+                println!("{:?}", e);
+            }
+        }
     }
 
     #[test]
