@@ -13,7 +13,7 @@ type BookmarkState = {
   updateBookmarkTitle: (index: number, title: string) => Promise<void>;
   addFolder: (parentIndex: number, title: string) => Promise<void>;
   insertAfter: (sourceIndex: number, destinationIndex: number) => Promise<void>;
-  moveToChildren: (sourceIndex: number, destinationIndex: number) => Promise<void>;
+  appendToChild: (sourceIndex: number, destinationIndex: number) => Promise<void>;
 };
 
 export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
@@ -80,9 +80,9 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
     // update the folders list
     useBookmarkState.getState().getFolders();
   },
-  moveToChildren: async (sourceIndex, destinationIndex) => {
+  appendToChild: async (sourceIndex, destinationIndex) => {
     const startingIndex = get().bookmarks.index;
-    const data = await Invoke.MoveToChildren(sourceIndex, destinationIndex, startingIndex);
+    const data = await Invoke.AppendToChild(sourceIndex, destinationIndex, startingIndex);
     const tree = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks: tree }));
     // update the folders list

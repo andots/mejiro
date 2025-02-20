@@ -103,7 +103,7 @@ pub fn insert_after(
 }
 
 #[tauri::command]
-pub fn move_to_children(
+pub fn append_to_child(
     state: tauri::State<'_, Mutex<Bookmarks>>,
     source_index: usize,
     destination_index: usize,
@@ -112,7 +112,7 @@ pub fn move_to_children(
     let mut bookmarks = state
         .lock()
         .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
-    bookmarks.move_to_children(source_index, destination_index)?;
+    bookmarks.append_to_child(source_index, destination_index)?;
 
     Ok(bookmarks.to_nested_json(starting_index)?)
 }

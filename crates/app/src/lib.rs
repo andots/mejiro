@@ -75,7 +75,7 @@ pub fn run() {
             commands::bookmarks::update_bookmark_title,
             commands::bookmarks::add_folder,
             commands::bookmarks::insert_after,
-            commands::bookmarks::move_to_children,
+            commands::bookmarks::append_to_child,
             commands::settings::get_settings,
             commands::settings::update_settings,
             commands::external::send_page_title,

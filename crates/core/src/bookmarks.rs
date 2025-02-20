@@ -262,7 +262,7 @@ impl Bookmarks {
         Ok(())
     }
 
-    pub fn move_to_children(
+    pub fn append_to_child(
         &mut self,
         source_index: usize,
         destination_index: usize,
@@ -369,9 +369,9 @@ mod tests {
     }
 
     #[test]
-    fn test_move_to_children() -> anyhow::Result<()> {
+    fn test_append_to_child() -> anyhow::Result<()> {
         let mut bookmarks = create_test_bookmarks();
-        bookmarks.move_to_children(4, 2)?;
+        bookmarks.append_to_child(4, 2)?;
         // tree is like
         // root
         //  |- n_2
@@ -389,7 +389,7 @@ mod tests {
         }
 
         // try to move root node must be error
-        let err = bookmarks.move_to_children(1, 2);
+        let err = bookmarks.append_to_child(1, 2);
         assert!(err.is_err());
         assert_eq!(
             err.unwrap_err().to_string(),
@@ -397,7 +397,7 @@ mod tests {
         );
 
         // try to move to non-exist node must be error
-        let err = bookmarks.move_to_children(100, 2);
+        let err = bookmarks.append_to_child(100, 2);
         assert!(err.is_err());
         assert_eq!(
             err.unwrap_err().to_string(),
@@ -405,7 +405,7 @@ mod tests {
         );
 
         // try to move from non-exist node must be error
-        let err = bookmarks.move_to_children(2, 100);
+        let err = bookmarks.append_to_child(2, 100);
         assert!(err.is_err());
         assert_eq!(
             err.unwrap_err().to_string(),
@@ -413,7 +413,7 @@ mod tests {
         );
 
         // try to move to same node must be error
-        let err = bookmarks.move_to_children(2, 2);
+        let err = bookmarks.append_to_child(2, 2);
         assert!(err.is_err());
         assert_eq!(
             err.unwrap_err().to_string(),
