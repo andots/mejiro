@@ -7,12 +7,15 @@ import { useBookmarkState } from "../../stores/bookmarks";
 import BookmarkNode from "./BookmarkNode";
 
 const BookmarkTree: Component = () => {
-  const bookmarks = useBookmarkState((state) => state.bookmarks);
   let ref!: HTMLDivElement;
-  const [indicatorId, setIndicatorId] = createSignal<number>(0);
 
+  const bookmarks = useBookmarkState((state) => state.bookmarks);
+  const [indicatorId, setIndicatorId] = createSignal<number>(-1);
+
+  // dragstart event
   const makeDragStartEventListener = (el: HTMLDivElement) => {
     makeEventListener(el, "dragstart", (ev) => {
+      // TODO: use el, not ev.target?
       const source = ev.target as HTMLDivElement;
       const match = source.id.match(/bookmark-(\d+)/);
       if (match) {
@@ -22,14 +25,17 @@ const BookmarkTree: Component = () => {
     });
   };
 
+  // dragend event
   const makeDragEndEventListener = (el: HTMLDivElement) => {
     makeEventListener(el, "dragend", (ev) => {
       const source = ev.target as HTMLDivElement;
       source.classList.remove("dragging");
-      setIndicatorId(0);
+      // reset indicator id
+      setIndicatorId(-1);
     });
   };
 
+  // dragover event
   const makeDragOverEventListener = (el: HTMLDivElement) => {
     makeEventListener(el, "dragover", (ev) => {
       ev.preventDefault();
@@ -53,12 +59,14 @@ const BookmarkTree: Component = () => {
     });
   };
 
+  // dragenter event
   const makeDragEnterEventListener = (el: HTMLDivElement) => {
     makeEventListener(el, "dragenter", (ev) => {
       ev.preventDefault();
     });
   };
 
+  // drop event
   const makeDropEventListener = (el: HTMLDivElement) => {
     makeEventListener(el, "drop", (ev) => {
       ev.preventDefault();
@@ -68,7 +76,8 @@ const BookmarkTree: Component = () => {
         const destination_index = indicatorId();
         if (source_index > 0 && destination_index > 0 && source_index !== destination_index) {
           console.log(`source: ${source_index}, destination: ${destination_index}`);
-          useBookmarkState.getState().detachAndInsertAfter(source_index, destination_index);
+          // TODO: need to implement this
+          // useBookmarkState.getState().detachAndInsertAfter(source_index, destination_index);
         }
       }
     });

@@ -107,6 +107,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
             class={"flex flex-col hover:bg-sidebar-accent transition-colors duration-150"}
             style={{ "padding-left": `${props.level * 8}px` }}
           >
+            {/* Empty fixed space for Indicator */}
             <div class="w-[200px] h-[4px]" />
 
             <div class="flex flex-row">
@@ -149,6 +150,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
               </div>
             </div>
 
+            {/* Indicator */}
             <Show when={props.bookmark.index === props.indicatorId}>
               <div class="w-[200px] h-[4px] border-b-2 border-blue-300" />
             </Show>
