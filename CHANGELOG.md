@@ -1,5 +1,32 @@
 # Changelog
 
+# [0.12.0](https://github.com/andots/mejiro/compare/v0.11.0...v0.12.0) (2025-02-20)
+
+
+### Bug Fixes
+
+* add error handling for moving to the same node and improve existing error checks ([ce527d4](https://github.com/andots/mejiro/commit/ce527d430ce22ee2ae26e2105b842f74f276bed2))
+* append under root when destination is root ([cc1b5c9](https://github.com/andots/mejiro/commit/cc1b5c9f10f7d8d3f5e7df02bd21e03bb5156c39))
+* disabling tauri's drag and drop handler ([427b617](https://github.com/andots/mejiro/commit/427b6172356a7109259febb5dcdd4837c27a9d1c))
+* prepend to the root, not append ([12f4d56](https://github.com/andots/mejiro/commit/12f4d56225121dbb45155adf4c687ca7f60f8b37))
+* prevent default action on bookmark node click and navigate to url ([a36f2e4](https://github.com/andots/mejiro/commit/a36f2e4b7ce283193ba366d5178bd3a56ef30673))
+* root and top level node should not be draggable ([2b144fb](https://github.com/andots/mejiro/commit/2b144fb1b4f50f5c2b25df4e66b0d795c751afce))
+* root should not be draggable ([8341c0a](https://github.com/andots/mejiro/commit/8341c0ac0c3c069bce86beafbcfe2ca356c0f769))
+* simplify node movement logic by removing unnecessary detach calls ([e3c0639](https://github.com/andots/mejiro/commit/e3c06394e86412adfa05bc5f0c1c74b4ef319ae6))
+* use createEffect for drag event listeners in BookmarkTree component ([761fdfa](https://github.com/andots/mejiro/commit/761fdfa335f5dd48282f1489f0404c725d148c99))
+
+
+### Features
+
+* add indicator for currently dragged bookmark in BookmarkTree component ([2e565a9](https://github.com/andots/mejiro/commit/2e565a905cc2151055c1d5eeb420b12cd0ce5baa))
+* add move_subtree_after method ([51ec515](https://github.com/andots/mejiro/commit/51ec515e8c53c46c9add156ab201fca575700a95))
+* distinguish between inside and indicator states ([0f98f5c](https://github.com/andots/mejiro/commit/0f98f5cd017d517eaa4005b303d9da3a08a57919))
+* force to be inside for current top level ([c9c918e](https://github.com/andots/mejiro/commit/c9c918e64268c49ff5bd0941fbeee43e91ecdb1b))
+* implement move_to_children method for moving nodes to destination children ([23b18ab](https://github.com/andots/mejiro/commit/23b18ab1db6cfd88c8d02dcf4fb06f361af4d9eb))
+* integrate detach and insert after functionality for bookmarks ([b094ea6](https://github.com/andots/mejiro/commit/b094ea64d4f61b1012b0343071e099b787742c43))
+* integrate move to children method to frontend ([740ff94](https://github.com/andots/mejiro/commit/740ff946ae48fc5e168b3431edf657a7949345d7))
+* pass dragging state (none, after, inside) as props to BookmarkNode ([986ec5e](https://github.com/andots/mejiro/commit/986ec5e97ffb6f94d224f0b1264ab8f72d7cd481))
+
 # [0.11.0](https://github.com/andots/mejiro/compare/v0.10.0...v0.11.0) (2025-02-18)
 
 
