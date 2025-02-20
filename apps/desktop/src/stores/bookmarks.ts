@@ -95,6 +95,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set) => ({
   },
 }));
 
+// FIXME: cleanups create outside a createRoot or render will never be run
 const getCurrentStatingIndex = () => {
   const bookmarks = useBookmarkState((state) => state.bookmarks);
   return bookmarks().index;

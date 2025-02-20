@@ -43,6 +43,8 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
   const isFolder = () =>
     props.bookmark.node_type === "Folder" || props.bookmark.node_type === "Root";
   const isBookmark = () => props.bookmark.node_type === "Bookmark";
+  const isDraggingInside = () =>
+    props.dragging.destinationIndex === props.bookmark.index && props.dragging.state === "inside";
 
   const handleNodeClick = (e: MouseEvent) => {
     // If the node has children and is not a bookmark, toggle the folder
@@ -105,6 +107,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
                 </div>
               </div>
 
+              {/* Node (Folder/Favicon + Title) */}
               <div
                 class="flex items-center w-full cursor-pointer"
                 onClick={handleNodeClick}
@@ -123,7 +126,12 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
                 </div>
 
                 {/* Title */}
-                <div class="text-sm overflow-hidden whitespace-nowrap text-ellipsis">
+                <div
+                  class="text-sm overflow-hidden whitespace-nowrap text-ellipsis"
+                  classList={{
+                    "bg-blue-300": isDraggingInside(),
+                  }}
+                >
                   {props.bookmark.index} - {props.bookmark.title}
                 </div>
               </div>
