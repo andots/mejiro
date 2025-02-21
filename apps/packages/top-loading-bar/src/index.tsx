@@ -46,7 +46,7 @@ type Props = {
 
 const LoadingBar: Component<Props> = (_props) => {
   const defaultProps = {
-    height: "2px",
+    // height: "2px",
     className: "",
     color: "red",
     background: "transparent",
@@ -91,8 +91,7 @@ const LoadingBar: Component<Props> = (_props) => {
     position: "fixed",
     top: 0,
     left: 0,
-    //! height: props.height,
-    height: "2px",
+    height: props.height ? `${props.height}px` : "2px",
     background: props.background,
     "z-index": 99999999999,
     width: `${100}%`,
