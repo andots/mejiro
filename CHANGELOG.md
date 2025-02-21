@@ -1,5 +1,19 @@
 # Changelog
 
+# [0.13.0](https://github.com/andots/mejiro/compare/v0.12.0...v0.13.0) (2025-02-21)
+
+
+### Bug Fixes
+
+* add conditional rendering for folders and improve initial value handling in RootChildrenSelect ([1440c08](https://github.com/andots/mejiro/commit/1440c086d38017763c31a83fcc0b83974651765a))
+* handle null bookmarks and improve current top-level retrieval in BookmarkTree ([5ad42fb](https://github.com/andots/mejiro/commit/5ad42fbc867c19eaa902e576c1c2e81554c34a09))
+
+
+### Features
+
+* add is_open property to BookmarkData and implement toggle/set methods in Bookmarks ([cad529d](https://github.com/andots/mejiro/commit/cad529d399988f16c34e1a6355e8181fb5718393))
+* integrate toggle and set methods with frontend ([23e58d4](https://github.com/andots/mejiro/commit/23e58d469acca248f82ab0c749397b8dd64de5d3))
+
 # [0.12.0](https://github.com/andots/mejiro/compare/v0.11.0...v0.12.0) (2025-02-20)
 
 
