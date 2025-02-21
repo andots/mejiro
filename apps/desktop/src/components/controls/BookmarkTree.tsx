@@ -1,7 +1,6 @@
-import { type Component, createEffect, createSignal, on, onMount, Show } from "solid-js";
+import { type Component, createEffect, createSignal, on, Show } from "solid-js";
 
 import { makeEventListener } from "@solid-primitives/event-listener";
-import { createMutationObserver } from "@solid-primitives/mutation-observer";
 
 import { useBookmarkState } from "../../stores/bookmarks";
 
@@ -18,14 +17,6 @@ const BookmarkTree: Component = () => {
     sourceIndex: -1,
     destinationIndex: -1,
     state: "none",
-  });
-
-  onMount(() => {
-    // console.log("onMount: BookmarkTree");
-    // useBookmarkState.getState().getBookmarks(1);
-    // createMutationObserver(ref, { childList: true }, (records) => {
-    //   console.log("MutationObserver: ", records);
-    // });
   });
 
   createEffect(
