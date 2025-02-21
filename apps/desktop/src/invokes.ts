@@ -10,33 +10,33 @@ export const Invoke = {
   GetRootAndChildrenFolders: async () => {
     return invoke<FolderData[]>("get_root_and_children_folders", {});
   },
-  AddBookmark: async (url: string, title: string | null | undefined, startingIndex: number) => {
+  AddBookmark: async (url: string, title: string | null | undefined, topLevelIndex: number) => {
     // returned json string is a nested tree of bookmarks
-    return invoke<string>("add_bookmark", { url, title, startingIndex });
+    return invoke<string>("add_bookmark", { url, title, topLevelIndex });
   },
-  RemoveBookmark: async (index: number, startingIndex: number) => {
+  RemoveBookmark: async (index: number, topLevelIndex: number) => {
     // returned json string is a nested tree of bookmarks
-    return invoke<string>("remove_bookmark", { index, startingIndex });
+    return invoke<string>("remove_bookmark", { index, topLevelIndex });
   },
-  UpdateBookmarkTitle: async (index: number, title: string, startingIndex: number) => {
+  UpdateBookmarkTitle: async (index: number, title: string, topLevelIndex: number) => {
     // returned json string is a nested tree of bookmarks
-    return invoke<string>("update_bookmark_title", { index, title, startingIndex });
+    return invoke<string>("update_bookmark_title", { index, title, topLevelIndex });
   },
-  AddFolder: async (parentIndex: number, title: string, startingIndex: number) => {
+  AddFolder: async (parentIndex: number, title: string, topLevelIndex: number) => {
     // returned json string is a nested tree of bookmarks
-    return invoke<string>("add_folder", { parentIndex, title, startingIndex });
+    return invoke<string>("add_folder", { parentIndex, title, topLevelIndex });
   },
-  InsertAfter: async (sourceIndex: number, destinationIndex: number, startingIndex: number) => {
+  InsertAfter: async (sourceIndex: number, destinationIndex: number, topLevelIndex: number) => {
     // returned json string is a nested tree of bookmarks
     return invoke<string>("insert_after", {
       sourceIndex,
       destinationIndex,
-      startingIndex,
+      topLevelIndex,
     });
   },
-  AppendToChild: async (sourceIndex: number, destinationIndex: number, startingIndex: number) => {
+  AppendToChild: async (sourceIndex: number, destinationIndex: number, topLevelIndex: number) => {
     // returned json string is a nested tree of bookmarks
-    return invoke<string>("append_to_child", { sourceIndex, destinationIndex, startingIndex });
+    return invoke<string>("append_to_child", { sourceIndex, destinationIndex, topLevelIndex });
   },
 
   // External Webview commands

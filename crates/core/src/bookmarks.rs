@@ -187,7 +187,7 @@ impl Bookmarks {
         &mut self,
         url: String,
         title: Option<String>,
-        starting_index: usize,
+        top_level_index: usize,
     ) -> Result<(), CoreError> {
         // if title is None, use url as title
         let title = title.unwrap_or(url.clone());
@@ -201,10 +201,10 @@ impl Bookmarks {
             .pop();
         let base_url_str = base_url.as_str();
 
-        let start_node_id = self
-            .find_node_id_by_index(starting_index)
+        let top_node_id = self
+            .find_node_id_by_index(top_level_index)
             .ok_or(CoreError::NodeNotFound(1))?;
-        let target = start_node_id.descendants(&self.arena).find(|node_id| {
+        let target = top_node_id.descendants(&self.arena).find(|node_id| {
             if let Some(node) = self.find_node_by_node_id(*node_id) {
                 if let Some(node_url) = &node.get().url {
                     if node_url.as_str().starts_with(base_url_str) {
@@ -221,9 +221,9 @@ impl Bookmarks {
             let new_node = self.arena.new_node(bookmark);
             target.checked_append(new_node, &mut self.arena)?;
         } else {
-            // if not found target, append new node to the starting node
+            // if not found target, append new node to the top node
             let new_node = self.arena.new_node(bookmark);
-            start_node_id.checked_append(new_node, &mut self.arena)?;
+            top_node_id.checked_append(new_node, &mut self.arena)?;
         }
 
         Ok(())

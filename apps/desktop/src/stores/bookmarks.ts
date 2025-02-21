@@ -41,48 +41,48 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
   },
   addBookmark: async (url, title) => {
     // get current top of bookmark index that shown in the UI as a starting point
-    const startingIndex = get().getCurrentTopLevel();
-    const data = await Invoke.AddBookmark(url, title, startingIndex);
+    const topLevelIndex = get().getCurrentTopLevel();
+    const data = await Invoke.AddBookmark(url, title, topLevelIndex);
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
     // update the folders list
     get().getFolders();
   },
   removeBookmark: async (index) => {
-    const startingIndex = get().getCurrentTopLevel();
-    const data = await Invoke.RemoveBookmark(index, startingIndex);
+    const topLevelIndex = get().getCurrentTopLevel();
+    const data = await Invoke.RemoveBookmark(index, topLevelIndex);
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
     // update the folders list
     get().getFolders();
   },
   updateBookmarkTitle: async (index, title) => {
-    const startingIndex = get().getCurrentTopLevel();
-    const data = await Invoke.UpdateBookmarkTitle(index, title, startingIndex);
+    const topLevelIndex = get().getCurrentTopLevel();
+    const data = await Invoke.UpdateBookmarkTitle(index, title, topLevelIndex);
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
     // update the folders list
     get().getFolders();
   },
   addFolder: async (parentIndex, title) => {
-    const startingIndex = get().getCurrentTopLevel();
-    const data = await Invoke.AddFolder(parentIndex, title, startingIndex);
+    const topLevelIndex = get().getCurrentTopLevel();
+    const data = await Invoke.AddFolder(parentIndex, title, topLevelIndex);
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
     // update the folders list
     get().getFolders();
   },
   insertAfter: async (sourceIndex, destinationIndex) => {
-    const startingIndex = get().getCurrentTopLevel();
-    const data = await Invoke.InsertAfter(sourceIndex, destinationIndex, startingIndex);
+    const topLevelIndex = get().getCurrentTopLevel();
+    const data = await Invoke.InsertAfter(sourceIndex, destinationIndex, topLevelIndex);
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
     // update the folders list
     get().getFolders();
   },
   appendToChild: async (sourceIndex, destinationIndex) => {
-    const startingIndex = get().getCurrentTopLevel();
-    const data = await Invoke.AppendToChild(sourceIndex, destinationIndex, startingIndex);
+    const topLevelIndex = get().getCurrentTopLevel();
+    const data = await Invoke.AppendToChild(sourceIndex, destinationIndex, topLevelIndex);
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
     // update the folders list
