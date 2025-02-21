@@ -35,24 +35,24 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
     // can't accept index 0 because indextree starts from 1
     if (index >= 1) {
       const data = await Invoke.GetNestedJson(index);
-      const tree = JSON.parse(data) as Bookmark;
-      set(() => ({ bookmarks: tree }));
+      const bookmarks = JSON.parse(data) as Bookmark;
+      set(() => ({ bookmarks }));
     }
   },
   addBookmark: async (url, title) => {
     // get current top of bookmark index that shown in the UI as a starting point
     const startingIndex = get().bookmarks.index;
     const data = await Invoke.AddBookmark(url, title, startingIndex);
-    const tree = JSON.parse(data) as Bookmark;
-    set(() => ({ bookmarks: tree }));
+    const bookmarks = JSON.parse(data) as Bookmark;
+    set(() => ({ bookmarks }));
     // update the folders list
     useBookmarkState.getState().getFolders();
   },
   removeBookmark: async (index) => {
     const startingIndex = get().bookmarks.index;
     const data = await Invoke.RemoveBookmark(index, startingIndex);
-    const tree = JSON.parse(data) as Bookmark;
-    set(() => ({ bookmarks: tree }));
+    const bookmarks = JSON.parse(data) as Bookmark;
+    set(() => ({ bookmarks }));
     // update the folders list
     useBookmarkState.getState().getFolders();
   },
@@ -67,24 +67,24 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
   addFolder: async (parentIndex, title) => {
     const startingIndex = get().bookmarks.index;
     const data = await Invoke.AddFolder(parentIndex, title, startingIndex);
-    const tree = JSON.parse(data) as Bookmark;
-    set(() => ({ bookmarks: tree }));
+    const bookmarks = JSON.parse(data) as Bookmark;
+    set(() => ({ bookmarks }));
     // update the folders list
     useBookmarkState.getState().getFolders();
   },
   insertAfter: async (sourceIndex, destinationIndex) => {
     const startingIndex = get().bookmarks.index;
     const data = await Invoke.InsertAfter(sourceIndex, destinationIndex, startingIndex);
-    const tree = JSON.parse(data) as Bookmark;
-    set(() => ({ bookmarks: tree }));
+    const bookmarks = JSON.parse(data) as Bookmark;
+    set(() => ({ bookmarks }));
     // update the folders list
     useBookmarkState.getState().getFolders();
   },
   appendToChild: async (sourceIndex, destinationIndex) => {
     const startingIndex = get().bookmarks.index;
     const data = await Invoke.AppendToChild(sourceIndex, destinationIndex, startingIndex);
-    const tree = JSON.parse(data) as Bookmark;
-    set(() => ({ bookmarks: tree }));
+    const bookmarks = JSON.parse(data) as Bookmark;
+    set(() => ({ bookmarks }));
     // update the folders list
     useBookmarkState.getState().getFolders();
   },
