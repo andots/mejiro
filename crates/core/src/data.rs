@@ -4,7 +4,7 @@ use url::Url;
 use crate::{error::CoreError, utils::get_unix_timestamp};
 
 /// https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/bookmarks/BookmarkTreeNodeType
-#[derive(Debug, PartialEq, Eq, Clone, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
 pub enum NodeType {
     Root,
     Bookmark,
@@ -13,7 +13,7 @@ pub enum NodeType {
 }
 
 /// https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/bookmarks/BookmarkTreeNode
-#[derive(Debug, PartialEq, Eq, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BookmarkData {
     /// Title
     pub title: String,
