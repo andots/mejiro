@@ -139,9 +139,6 @@ const BookmarkTree: Component = () => {
         dragging().destinationIndex >= 1 &&
         dragging().sourceIndex !== dragging().destinationIndex
       ) {
-        console.log(
-          `Dropped: {sourceId: ${dragging().sourceIndex}, destinationId: ${dragging().destinationIndex}, state: ${dragging().state}}`,
-        );
         if (dragging().state === "inside") {
           useBookmarkState
             .getState()
