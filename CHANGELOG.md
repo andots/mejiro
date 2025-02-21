@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.13.1](https://github.com/andots/mejiro/compare/v0.13.0...v0.13.1) (2025-02-21)
+
+
+### Bug Fixes
+
+* add loading state to start page URL update and update getSettings to return a promise ([2fdf3c1](https://github.com/andots/mejiro/commit/2fdf3c1f2b42e36292a068ec1ab94cb3a3010a30))
+* title/url detection improved, eval scripts on page load ([314a60e](https://github.com/andots/mejiro/commit/314a60ea308b5030ad427f97cbf4b92071b5d93f))
+
 # [0.13.0](https://github.com/andots/mejiro/compare/v0.12.0...v0.13.0) (2025-02-21)
 
 
