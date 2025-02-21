@@ -1,5 +1,18 @@
 # Changelog
 
+# [0.14.0](https://github.com/andots/mejiro/compare/v0.13.1...v0.14.0) (2025-02-21)
+
+
+### Bug Fixes
+
+* update build targets to only include MSI ([0e9e4a7](https://github.com/andots/mejiro/commit/0e9e4a773aca3a925aab745adc437068c1d87039))
+
+
+### Features
+
+* add top-loading bar component ([ad44326](https://github.com/andots/mejiro/commit/ad443260a98147c88c76467bfdf9ea5a3a42cc65))
+* integrate page navigation event with loading bar ([9990378](https://github.com/andots/mejiro/commit/999037841e37125f09a9e3ba8c821db3df70f0fc))
+
 ## [0.13.1](https://github.com/andots/mejiro/compare/v0.13.0...v0.13.1) (2025-02-21)
 
 
