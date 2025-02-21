@@ -6,16 +6,8 @@ export type Bookmark = {
   host: string | null;
   node_type: "Root" | "Folder" | "Bookmark" | "Separator";
   date_added: number;
+  is_open: boolean;
   children: Bookmark[];
-};
-
-//! Must sync with core/src/data.rs
-export type BookmarkData = {
-  title: string;
-  url: string | null;
-  host: string | null;
-  node_type: "Root" | "Folder" | "Bookmark" | "Separator";
-  date_added: number | null;
 };
 
 //! Must sync with core/src/data.rs

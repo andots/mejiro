@@ -116,3 +116,32 @@ pub fn append_to_child(
 
     Ok(bookmarks.to_nested_json(top_level_index)?)
 }
+
+#[tauri::command]
+pub fn set_is_open(
+    state: tauri::State<'_, Mutex<Bookmarks>>,
+    index: usize,
+    is_open: bool,
+    top_level_index: usize,
+) -> Result<String, AppError> {
+    let mut bookmarks = state
+        .lock()
+        .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
+    bookmarks.set_is_open(index, is_open)?;
+
+    Ok(bookmarks.to_nested_json(top_level_index)?)
+}
+
+#[tauri::command]
+pub fn toggle_is_open(
+    state: tauri::State<'_, Mutex<Bookmarks>>,
+    index: usize,
+    top_level_index: usize,
+) -> Result<String, AppError> {
+    let mut bookmarks = state
+        .lock()
+        .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
+    bookmarks.toggle_is_open(index)?;
+
+    Ok(bookmarks.to_nested_json(top_level_index)?)
+}

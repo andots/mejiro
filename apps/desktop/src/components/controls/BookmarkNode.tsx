@@ -27,6 +27,7 @@ import { useWindowState } from "../../stores/window";
 import NavigationArrowIcon from "../icons/NavigationArrowIcon";
 import FolderIcon from "../icons/FolderIcon";
 import Favicon from "../icons/Favicon";
+import { useBookmarkState } from "../../stores/bookmarks";
 
 type BookmarkNodeProps = {
   bookmark: Bookmark;
@@ -38,7 +39,8 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
   const externalState = useWindowState((state) => state.externalState);
   const navigateToUrl = useUrlState((state) => state.navigateToUrl);
 
-  const [isOpen, setIsOpen] = createSignal(true);
+  // destructuring props as reactive
+  const isOpen = () => props.bookmark.is_open;
   const hasChildren = () => props.bookmark.children?.length > 0;
   const isFolder = () =>
     props.bookmark.node_type === "Folder" || props.bookmark.node_type === "Root";
@@ -53,27 +55,25 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
 
   const handleNodeClick = (e: MouseEvent) => {
     e.preventDefault();
-    // If the node has children and is not a bookmark, toggle the folder
-    if (hasChildren() && !isBookmark()) {
-      setIsOpen(!isOpen());
-    }
-    // If the node is a bookmark, navigate to the URL
-    if (props.bookmark.url && isBookmark()) {
+    if (hasChildren() && isFolder()) {
+      // If the node has children and is folder, toggle the open state
+      useBookmarkState.getState().toggleIsOpen(props.bookmark.index);
+    } else if (props.bookmark.url && isBookmark()) {
       if (externalState() === "right") {
-        // Navigate to the URL
+        // navigate to the bookmark url
         navigateToUrl(props.bookmark.url);
       } else if (externalState() === "hidden") {
-        // Open the right panel and navigate to the URL
+        // show the external webview and navigate to the url
         useWindowState.getState().changeExternalState("right");
         navigateToUrl(props.bookmark.url);
       }
     }
   };
 
-  const toggleFolder = (e: MouseEvent) => {
+  const toggleIsOpen = (e: MouseEvent) => {
+    e.preventDefault();
     if (hasChildren()) {
-      e.preventDefault();
-      setIsOpen(!isOpen());
+      useBookmarkState.getState().toggleIsOpen(props.bookmark.index);
     }
   };
 
@@ -101,7 +101,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
               <div class="flex items-center justify-center">
                 <div
                   class="w-[18px] flex items-center justify-center"
-                  onClick={toggleFolder}
+                  onClick={toggleIsOpen}
                   onKeyDown={handleKeydown}
                 >
                   <Show when={hasChildren()}>

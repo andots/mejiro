@@ -38,6 +38,14 @@ export const Invoke = {
     // returned json string is a nested tree of bookmarks
     return invoke<string>("append_to_child", { sourceIndex, destinationIndex, topLevelIndex });
   },
+  SetIsOpen: async (index: number, isOpen: boolean, topLevelIndex: number) => {
+    // returned json string is a nested tree of Bookmarks
+    return invoke<string>("set_is_open", { index, isOpen, topLevelIndex });
+  },
+  ToggleIsOpen: async (index: number, topLevelIndex: number) => {
+    // returned json string is a nested tree of Bookmarks
+    return invoke<string>("toggle_is_open", { index, topLevelIndex });
+  },
 
   // External Webview commands
   NavigateWebviewUrl: async (url: string) => {
