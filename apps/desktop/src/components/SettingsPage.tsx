@@ -21,6 +21,8 @@ const SettingsPage: Component = () => {
   const [pinnedUrls, setPinnedUrls] = createSignal(settings().pinned_urls);
   const [newPinnedUrl, setNewPinnedUrl] = createSignal("");
 
+  const [isUpdating, setIsUpdating] = createSignal(false);
+
   const handleGpuAccelerationChange = (value: boolean) => {
     setGpuAcceleration(value);
     updateSettings({ ...settings(), gpu_acceleration_enabled: value });
@@ -31,9 +33,12 @@ const SettingsPage: Component = () => {
     updateSettings({ ...settings(), incognito: value });
   };
 
-  const handleStartPageUrlUpdate = () => {
+  const handleStartPageUrlUpdate = async () => {
     if (validateUrl(startPageUrl())) {
-      updateSettings({ ...settings(), start_page_url: startPageUrl() });
+      setIsUpdating(true);
+      await updateSettings({ ...settings(), start_page_url: startPageUrl() });
+      // wait for 500ms before setting isUpdating to false
+      setTimeout(() => setIsUpdating(false), 500);
     }
   };
 
@@ -109,7 +114,7 @@ const SettingsPage: Component = () => {
                   onInput={(e) => setStartPageUrl(e.currentTarget.value)}
                 />
               </TextField>
-              <Button class="w-20" onClick={handleStartPageUrlUpdate}>
+              <Button class="w-20" onClick={handleStartPageUrlUpdate} disabled={isUpdating()}>
                 Update
               </Button>
             </CardContent>

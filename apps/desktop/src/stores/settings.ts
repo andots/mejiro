@@ -5,7 +5,7 @@ import { useUrlState } from "./url";
 
 interface UserSettingsState {
   settings: UserSettings;
-  getSettings: () => void;
+  getSettings: () => Promise<void>;
   updateSettings: (settings: UserSettings) => Promise<void>;
 }
 
