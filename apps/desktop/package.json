@@ -28,6 +28,7 @@
   "devDependencies": {
     "@repo/tailwind-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
+    "@repo/top-loading-bar": "workspace:*",
     "tailwindcss": "^3.4.17",
     "tailwindcss-animate": "^1.0.7"
   }

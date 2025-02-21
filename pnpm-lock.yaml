@@ -90,6 +90,9 @@ importers:
       '@repo/tailwind-config':
         specifier: workspace:*
         version: link:../packages/tailwind-config
+      '@repo/top-loading-bar':
+        specifier: workspace:*
+        version: link:../packages/top-loading-bar
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../packages/typescript-config
@@ -114,6 +117,16 @@ importers:
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.17)
+
+  apps/packages/top-loading-bar:
+    dependencies:
+      solid-js:
+        specifier: ^1.9.4
+        version: 1.9.4
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
 
   apps/packages/typescript-config: {}
 
