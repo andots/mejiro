@@ -1,6 +1,7 @@
 import { type Component, createEffect, createSignal, on, onMount } from "solid-js";
 
 import { makeEventListener } from "@solid-primitives/event-listener";
+import { createMutationObserver } from "@solid-primitives/mutation-observer";
 
 import { useBookmarkState } from "../../stores/bookmarks";
 
@@ -12,6 +13,32 @@ const BookmarkTree: Component = () => {
 
   const bookmarks = useBookmarkState((state) => state.bookmarks);
   const [currentTopLevel, setCurrentTopLevel] = createSignal(bookmarks().index);
+
+  onMount(() => {
+    // console.log("onMount: BookmarkTree");
+    // useBookmarkState.getState().getBookmarks(1);
+    // createMutationObserver(ref, { childList: true }, (records) => {
+    //   console.log("MutationObserver: ", records);
+    // });
+  });
+
+  createEffect(
+    on(bookmarks, () => {
+      if (ref) {
+        for (const child of ref.children) {
+          makeDragStartEventListener(child as HTMLDivElement);
+          makeDragEndEventListener(child as HTMLDivElement);
+        }
+        makeDragOverEventListener(ref);
+        makeDragEnterEventListener(ref);
+        makeDropEventListener(ref);
+      }
+
+      // FIXME: this happens twice after droped
+      setCurrentTopLevel(bookmarks().index);
+      // console.log(`createEffect: currentTopLevel: ${currentTopLevel()}`);
+    }),
+  );
 
   const [dragging, setDragging] = createSignal<Dragging>({
     sourceIndex: -1,
@@ -140,24 +167,6 @@ const BookmarkTree: Component = () => {
       }
     });
   };
-
-  createEffect(
-    on(bookmarks, () => {
-      if (ref) {
-        for (const child of ref.children) {
-          makeDragStartEventListener(child as HTMLDivElement);
-          makeDragEndEventListener(child as HTMLDivElement);
-        }
-        makeDragOverEventListener(ref);
-        makeDragEnterEventListener(ref);
-        makeDropEventListener(ref);
-      }
-
-      // FIXME: this happens twice after droped
-      setCurrentTopLevel(bookmarks().index);
-      console.log(`createEffect: currentTopLevel: ${currentTopLevel()}`);
-    }),
-  );
 
   return (
     <div id="bookmark-tree" ref={ref}>

@@ -20,7 +20,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
   folders: [],
   bookmarks: {
     index: 1,
-    title: "All Bookmarks",
+    title: "",
     url: null,
     host: null,
     node_type: "Root",

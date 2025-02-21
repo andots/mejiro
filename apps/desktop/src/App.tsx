@@ -1,5 +1,5 @@
 import type { Component } from "solid-js";
-import { Show, createEffect, lazy, on, onCleanup, onMount } from "solid-js";
+import { Show, lazy, onCleanup, onMount } from "solid-js";
 
 import type { UnlistenFn } from "@tauri-apps/api/event";
 import { listen } from "@tauri-apps/api/event";
@@ -10,7 +10,6 @@ import ToolBar from "./components/controls/ToolBar";
 import AddFolderDialog from "./components/dialogs/AddFolderDialog";
 import BookmarkEditDialog from "./components/dialogs/BookmarkEditDialog";
 import { AppEvent } from "./constants";
-import { useBookmarkState } from "./stores/bookmarks";
 import { useSettingsState } from "./stores/settings";
 import { useUrlState } from "./stores/url";
 import { usePageState } from "./stores/pages";
@@ -22,8 +21,6 @@ let unlistenTitleChanged: UnlistenFn | undefined;
 
 const initializeApp = async () => {
   // get data from rust side for zustand stores
-  useBookmarkState.getState().getFolders();
-  useBookmarkState.getState().getBookmarks(1);
   useSettingsState.getState().getSettings();
 
   // listen for settings updates on rust side
