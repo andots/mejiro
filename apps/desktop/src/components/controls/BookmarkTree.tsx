@@ -12,7 +12,7 @@ const BookmarkTree: Component = () => {
   let ref!: HTMLDivElement;
 
   const bookmarks = useBookmarkState((state) => state.bookmarks);
-  const currentTopLevel = useBookmarkState.getState().getCurrentTopLevel;
+  const getCurrentTopLevel = useBookmarkState((state) => state.getCurrentTopLevel);
 
   const [dragging, setDragging] = createSignal<Dragging>({
     sourceIndex: -1,
@@ -98,7 +98,7 @@ const BookmarkTree: Component = () => {
               const destinationIndex = Number.parseInt(match[1]);
 
               // if the destination is the current top level, then force to be inside
-              if (destinationIndex === currentTopLevel()) {
+              if (destinationIndex === getCurrentTopLevel()) {
                 setDragging({
                   sourceIndex: dragging().sourceIndex,
                   destinationIndex,
