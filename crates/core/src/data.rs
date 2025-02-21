@@ -25,6 +25,13 @@ pub struct BookmarkData {
     pub node_type: NodeType,
     /// Unix timestamp in milliseconds
     pub date_added: Option<u64>,
+    /// Whether bookmark is open
+    #[serde(default = "default_is_open")]
+    pub is_open: bool,
+}
+
+fn default_is_open() -> bool {
+    true
 }
 
 #[derive(Debug, Serialize)]
@@ -50,6 +57,7 @@ impl BookmarkData {
             host: url.and_then(|u| u.host_str().map(|s| s.to_string())),
             node_type,
             date_added: get_unix_timestamp(),
+            is_open: default_is_open(),
         }
     }
 

@@ -77,6 +77,13 @@ impl Bookmarks {
         }
     }
 
+    fn get_mut_node_by_index(&mut self, index: usize) -> Option<&mut Node<BookmarkData>> {
+        match self.find_node_id_by_index(index) {
+            Some(node_id) => self.arena.get_mut(node_id),
+            None => None,
+        }
+    }
+
     fn find_node_by_node_id(&self, node_id: NodeId) -> Option<&Node<BookmarkData>> {
         self.arena.get(node_id)
     }
@@ -149,13 +156,27 @@ impl Bookmarks {
 
 /// Tree manupulation
 impl Bookmarks {
-    pub fn update_title(&mut self, index: usize, title: String) -> Result<(), CoreError> {
-        let node_id = self
-            .find_node_id_by_index(index)
-            .ok_or(CoreError::NodeNotFound(index))?;
+    pub fn set_is_open(&mut self, index: usize, is_open: bool) -> Result<(), CoreError> {
         let node = self
-            .arena
-            .get_mut(node_id)
+            .get_mut_node_by_index(index)
+            .ok_or(CoreError::NodeNotFound(index))?;
+        let data = node.get_mut();
+        data.is_open = is_open;
+        Ok(())
+    }
+
+    pub fn toggle_is_open(&mut self, index: usize) -> Result<(), CoreError> {
+        let node = self
+            .get_mut_node_by_index(index)
+            .ok_or(CoreError::NodeNotFound(index))?;
+        let data = node.get_mut();
+        data.is_open = !data.is_open;
+        Ok(())
+    }
+
+    pub fn update_title(&mut self, index: usize, title: String) -> Result<(), CoreError> {
+        let node = self
+            .get_mut_node_by_index(index)
             .ok_or(CoreError::NodeNotFound(index))?;
         let data = node.get_mut();
         data.title = title;
@@ -653,6 +674,40 @@ mod tests {
         assert_eq!(node.get().title, "new title");
         // println!("{}", bookmarks.to_nested_json_pretty(1)?);
         // println!("{:?}", bookmarks.get_root_and_children_folders()?);
+        Ok(())
+    }
+
+    #[test]
+    fn test_toggle_is_open() -> anyhow::Result<()> {
+        let mut bookmarks = create_test_bookmarks();
+        let node = bookmarks.find_node_by_index(1).unwrap();
+        assert!(node.get().is_open);
+
+        bookmarks.toggle_is_open(1)?;
+        let node = bookmarks.find_node_by_index(1).unwrap();
+        assert!(!node.get().is_open);
+
+        bookmarks.toggle_is_open(1)?;
+        let node = bookmarks.find_node_by_index(1).unwrap();
+        assert!(node.get().is_open);
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_set_is_open() -> anyhow::Result<()> {
+        let mut bookmarks = create_test_bookmarks();
+        let node = bookmarks.find_node_by_index(1).unwrap();
+        assert!(node.get().is_open);
+
+        bookmarks.set_is_open(1, false)?;
+        let node = bookmarks.find_node_by_index(1).unwrap();
+        assert!(!node.get().is_open);
+
+        bookmarks.set_is_open(1, true)?;
+        let node = bookmarks.find_node_by_index(1).unwrap();
+        assert!(node.get().is_open);
+
         Ok(())
     }
 
