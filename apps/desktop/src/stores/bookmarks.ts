@@ -46,7 +46,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
     // update the folders list
-    useBookmarkState.getState().getFolders();
+    get().getFolders();
   },
   removeBookmark: async (index) => {
     const startingIndex = get().bookmarks.index;
@@ -54,7 +54,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
     // update the folders list
-    useBookmarkState.getState().getFolders();
+    get().getFolders();
   },
   updateBookmarkTitle: async (index, title) => {
     const startingIndex = get().bookmarks.index;
@@ -62,7 +62,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
     // update the folders list
-    useBookmarkState.getState().getFolders();
+    get().getFolders();
   },
   addFolder: async (parentIndex, title) => {
     const startingIndex = get().bookmarks.index;
@@ -70,7 +70,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
     // update the folders list
-    useBookmarkState.getState().getFolders();
+    get().getFolders();
   },
   insertAfter: async (sourceIndex, destinationIndex) => {
     const startingIndex = get().bookmarks.index;
@@ -78,7 +78,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
     // update the folders list
-    useBookmarkState.getState().getFolders();
+    get().getFolders();
   },
   appendToChild: async (sourceIndex, destinationIndex) => {
     const startingIndex = get().bookmarks.index;
@@ -86,6 +86,6 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
     // update the folders list
-    useBookmarkState.getState().getFolders();
+    get().getFolders();
   },
 }));
