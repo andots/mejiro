@@ -1,4 +1,4 @@
-import { type Component, createEffect, createSignal, on, onMount } from "solid-js";
+import { type Component, createEffect, createSignal, on, onMount, Show } from "solid-js";
 
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { createMutationObserver } from "@solid-primitives/mutation-observer";
@@ -12,7 +12,13 @@ const BookmarkTree: Component = () => {
   let ref!: HTMLDivElement;
 
   const bookmarks = useBookmarkState((state) => state.bookmarks);
-  const [currentTopLevel, setCurrentTopLevel] = createSignal(bookmarks().index);
+  const currentTopLevel = useBookmarkState.getState().getCurrentTopLevel;
+
+  const [dragging, setDragging] = createSignal<Dragging>({
+    sourceIndex: -1,
+    destinationIndex: -1,
+    state: "none",
+  });
 
   onMount(() => {
     // console.log("onMount: BookmarkTree");
@@ -33,18 +39,8 @@ const BookmarkTree: Component = () => {
         makeDragEnterEventListener(ref);
         makeDropEventListener(ref);
       }
-
-      // FIXME: this happens twice after droped
-      setCurrentTopLevel(bookmarks().index);
-      // console.log(`createEffect: currentTopLevel: ${currentTopLevel()}`);
     }),
   );
-
-  const [dragging, setDragging] = createSignal<Dragging>({
-    sourceIndex: -1,
-    destinationIndex: -1,
-    state: "none",
-  });
 
   // dragstart event
   const makeDragStartEventListener = (el: HTMLDivElement) => {
@@ -170,7 +166,10 @@ const BookmarkTree: Component = () => {
 
   return (
     <div id="bookmark-tree" ref={ref}>
-      <BookmarkNode dragging={dragging()} bookmark={bookmarks()} level={0} />
+      <Show when={bookmarks() !== null}>
+        {/* biome-ignore lint/style/noNonNullAssertion: <explanation> */}
+        <BookmarkNode dragging={dragging()} bookmark={bookmarks()!} level={0} />
+      </Show>
     </div>
   );
 };
