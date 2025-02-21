@@ -117,13 +117,14 @@ fn create_external_webview(
                 .ok();
             true
         })
-        .on_page_load(|_webview, payload| {
+        .on_page_load(|webview, payload| {
             if let PageLoadEvent::Finished = payload.event() {
                 // This happens when the page is loaded
-                // webview.eval(include_str!("../js/eval.js")).ok();
+                // Inject the title observer and url observer scripts
+                let _ = webview.eval(include_str!("../js/title-observer.js"));
+                let _ = webview.eval(include_str!("../js/url-observer.js"));
             }
-        })
-        .initialization_script(include_str!("../js/external.js"));
+        });
 
     #[cfg(target_os = "windows")]
     if !settings.gpu_acceleration_enabled {
