@@ -1,4 +1,4 @@
-import { onMount, type Component } from "solid-js";
+import { onMount, Show, type Component } from "solid-js";
 
 import RootChildrenSelect from "./controls/RootChildrenSelect";
 
@@ -17,11 +17,13 @@ const BookmarksPage: Component = () => {
   });
 
   return (
-    // TODO: determine sidebar width based on externalState
-    <div class={cn(externalState() === "right" ? "w-full" : "w-full", "space-y-2")}>
-      <RootChildrenSelect folders={folders()} />
-      <BookmarkTree />
-    </div>
+    <Show when={folders().length > 0}>
+      {/* TODO: determine sidebar width based on externalState */}
+      <div class={cn(externalState() === "right" ? "w-full" : "w-full", "space-y-2")}>
+        <RootChildrenSelect folders={folders()} />
+        <BookmarkTree />
+      </div>
+    </Show>
   );
 };
 

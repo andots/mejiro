@@ -1,4 +1,4 @@
-import { type Component, createSignal, onMount } from "solid-js";
+import { type Component, createEffect, createSignal, onMount } from "solid-js";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/ui/select";
 import { useBookmarkState } from "../../stores/bookmarks";
@@ -11,18 +11,17 @@ type Props = {
 };
 
 const RootChildrenSelect: Component<Props> = (props) => {
-  const [value, setValue] = createSignal<FolderData | null>(null);
+  const [value, setValue] = createSignal<FolderData>(props.folders[0]);
 
   onMount(() => {
-    // console.log("onMount: RootChildrenSelect", props.folders);
-    if (props.folders.length > 0) {
-      setValue(props.folders[0]);
+    if (value().index >= 1) {
+      useBookmarkState.getState().getBookmarks(value().index);
     }
   });
 
   const handleOnChange = (val: FolderData | null) => {
+    // console.log("RootChildrenSelect handleOnChange", val);
     if (val !== null && val.index >= 1) {
-      // console.log("RootChildrenSelect handleOnChange", value);
       setValue(val);
       useBookmarkState.getState().getBookmarks(val.index);
     }
