@@ -23,9 +23,11 @@ impl Bookmarks {
 
     /// Count all bookmarks in arena
     pub fn count_bookmarks(&self) -> usize {
+        // filter removed nodes, then filter bookmark nodes, and count them
         self.arena
             .iter()
-            .filter(|node| node.get().node_type == NodeType::Bookmark && !node.is_removed())
+            .filter(|node| !node.is_removed())
+            .filter(|node| node.get().node_type == NodeType::Bookmark)
             .count()
     }
 

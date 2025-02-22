@@ -201,8 +201,8 @@ mod tests {
         // internal arena count must be still 8
         assert_eq!(bookmarks.count_all_nodes(), 8);
 
-        // // bookmarks count must be 0
-        // assert_eq!(bookmarks.count_bookmarks(), 0);
+        // bookmarks count must be 0
+        assert_eq!(bookmarks.count_bookmarks(), 0);
 
         println!("{}", bookmarks.to_nested_json_pretty(1)?);
 
