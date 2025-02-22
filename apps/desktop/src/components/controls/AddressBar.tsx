@@ -19,14 +19,14 @@ const AddressBar: Component = () => {
   const [isHttps, setIsHttps] = createSignal<boolean>(true);
   const [isValidUrl, setIsValidUrl] = createSignal<boolean>(false);
 
-  const [isFavorited, setIsFavorited] = createSignal(false);
+  const [isStar, setIsStar] = createSignal(false);
 
   createEffect(
     on(url, (u) => {
       if (u === "") {
         return;
       }
-      setIsFavorited(false);
+      setIsStar(false);
       setIsHttps(u.toLowerCase().startsWith("https://"));
       try {
         const v = new URL(u);
@@ -37,10 +37,12 @@ const AddressBar: Component = () => {
     }),
   );
 
-  // TODO load favorites from state
-  const toggleFavorite = () => {
-    addBookmark(url(), title());
-    setIsFavorited(!isFavorited());
+  const handleClickStar = async () => {
+    setIsStar(true);
+    await addBookmark(url(), title());
+    setTimeout(() => {
+      setIsStar(false);
+    }, 2000);
   };
 
   const handleRefresh = () => {
@@ -86,14 +88,14 @@ const AddressBar: Component = () => {
           {/* Favorite Button */}
           <button
             type="button"
-            onClick={toggleFavorite}
+            onClick={handleClickStar}
             class="p-1 hover:bg-gray-200 rounded-full transition-colors"
           >
-            <Show when={isFavorited()}>
-              <OcticonStarFill24 class="text-yellow-500 fill-current" />
-            </Show>
-            <Show when={!isFavorited()}>
+            <Show when={!isStar()}>
               <OcticonStar24 />
+            </Show>
+            <Show when={isStar()}>
+              <OcticonStarFill24 class="text-yellow-500 fill-current" />
             </Show>
           </button>
         </div>
