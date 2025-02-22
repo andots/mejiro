@@ -60,9 +60,17 @@ impl Bookmarks {
 
 /// Wrapper for indextree::Arena
 impl Bookmarks {
-    /// Get count of nodes including removed nodes
-    pub fn count(&self) -> usize {
+    /// Count all nodes including folders, bookmarks, and removed nodes in arena
+    pub fn count_all_nodes(&self) -> usize {
         self.arena.count()
+    }
+
+    /// Count all bookmarks in arena
+    pub fn count_bookmarks(&self) -> usize {
+        self.arena
+            .iter()
+            .filter(|node| node.get().node_type == NodeType::Bookmark && !node.is_removed())
+            .count()
     }
 
     /// Find NodeId by index
