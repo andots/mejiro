@@ -105,10 +105,3 @@ impl Bookmarks {
         Ok(vec)
     }
 }
-
-// pub fn find_node_id_by_index(&self, index: usize) -> Option<NodeId> {
-//     match NonZeroUsize::new(index) {
-//         Some(index) => self.arena.get_node_id_at(index),
-//         None => None,
-//     }
-// }
