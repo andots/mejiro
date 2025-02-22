@@ -1,12 +1,7 @@
 import { Button } from "@repo/ui/button";
 import { type Component, For, Show } from "solid-js";
 
-import {
-  OcticonGear24,
-  OcticonPencil24,
-  OcticonSidebarCollapse24,
-  OcticonSidebarExpand24,
-} from "@repo/ui/icons";
+import { OcticonGear24, OcticonSidebarCollapse24, OcticonSidebarExpand24 } from "@repo/ui/icons";
 import { useSettingsState } from "../../stores/settings";
 import { useUrlState } from "../../stores/url";
 import { useWindowState } from "../../stores/window";
@@ -32,15 +27,6 @@ const ToolBar: Component = () => {
       changeExternalState("right");
     } else if (externalState() === "hidden") {
       changeExternalState("right");
-    }
-  };
-
-  const handleEditButton = () => {
-    setPage("home");
-    if (externalState() === "hidden") {
-      changeExternalState("right");
-    } else {
-      changeExternalState("hidden");
     }
   };
 
@@ -81,15 +67,6 @@ const ToolBar: Component = () => {
         <Show when={externalState() === "full"}>
           <OcticonSidebarExpand24 />
         </Show>
-      </Button>
-
-      <Button
-        class="w-9 h-9 m-0 p-2 [&_svg]:size-6 [&_svg]:shrink-0"
-        variant="ghost"
-        size="icon"
-        onClick={handleEditButton}
-      >
-        <OcticonPencil24 />
       </Button>
 
       {/* pinned url favicons */}
