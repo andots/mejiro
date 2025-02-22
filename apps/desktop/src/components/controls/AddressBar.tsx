@@ -3,10 +3,10 @@ import { Show, createEffect, createSignal, on } from "solid-js";
 
 import {
   IcBaselineRefresh,
-  IcOutlineLock,
-  IcOutlineLockOpen,
+  OcticonLock24,
   OcticonStar24,
   OcticonStarFill24,
+  OcticonUnlock24,
 } from "@repo/ui/icons";
 import { useBookmarkState } from "../../stores/bookmarks";
 import { useUrlState } from "../../stores/url";
@@ -43,8 +43,15 @@ const AddressBar: Component = () => {
     setIsFavorited(!isFavorited());
   };
 
-  const refresh = () => {
-    //
+  const handleRefresh = () => {
+    navigateToUrl(url());
+  };
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === "Enter") {
+      const target = e.target as HTMLInputElement;
+      navigateToUrl(target.value);
+    }
   };
 
   return (
@@ -53,19 +60,14 @@ const AddressBar: Component = () => {
         class={`flex items-center w-[570px] h-[30px] px-4 bg-gray-100 border ${isValidUrl() ? "border-gray-300" : "border-red-300"} rounded-lg hover:bg-gray-50`}
       >
         {/* Security Icon */}
-        {isHttps() ? <IcOutlineLock /> : <IcOutlineLockOpen />}
+        {isHttps() ? <OcticonLock24 /> : <OcticonUnlock24 />}
 
         {/* URL Text */}
         <div class="flex-1 flex items-center">
           <input
             value={url()}
             class="w-full px-2 text-sm bg-gray-100 text-gray-600 outline-none focus:outline-none"
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                const target = e.target as HTMLInputElement;
-                navigateToUrl(target.value);
-              }
-            }}
+            onKeyDown={(e) => handleKeyDown(e)}
           />
         </div>
 
@@ -73,7 +75,7 @@ const AddressBar: Component = () => {
         <div class="flex items-center space-x-2 ml-2">
           {/* Refresh Button */}
           <button
-            onClick={() => refresh()}
+            onClick={() => handleRefresh()}
             class="p-1 hover:bg-gray-200 rounded-full transition-colors"
             title="Refresh page"
             type="button"
@@ -96,23 +98,6 @@ const AddressBar: Component = () => {
           </button>
         </div>
       </div>
-
-      {/* Star Button */}
-      {/* <div class="ml-2">
-        <Button
-          onClick={toggleFavorite}
-          class="w-9 h-9 m-0 p-2 [&_svg]:size-5 [&_svg]:shrink-0"
-          variant="ghost"
-          size="icon"
-        >
-          <Show when={isFavorited()}>
-            <OcticonStarFill24 class="text-yellow-500 fill-current" />
-          </Show>
-          <Show when={!isFavorited()}>
-            <OcticonStar24 />
-          </Show>
-        </Button>
-      </div> */}
     </div>
   );
 };
