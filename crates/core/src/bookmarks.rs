@@ -17,15 +17,11 @@ impl Default for Bookmarks {
     fn default() -> Self {
         let mut arena: Arena<BookmarkData> = Arena::new();
         let root = BookmarkData::new_root();
-        let group1 = BookmarkData::new_folder("Group 1");
-        let group2 = BookmarkData::new_folder("Group 2");
-        let group3 = BookmarkData::new_folder("Group 3");
+        let toolbar = BookmarkData::new_folder("Toolbar");
         tree!(
             &mut arena,
             root => {
-                group1,
-                group2,
-                group3,
+                toolbar,
             }
         );
         Self { arena }
@@ -65,7 +61,7 @@ impl Bookmarks {
 /// Wrapper for indextree::Arena
 impl Bookmarks {
     /// Find NodeId by index
-    fn find_node_id_by_index(&self, index: usize) -> Option<NodeId> {
+    pub fn find_node_id_by_index(&self, index: usize) -> Option<NodeId> {
         match NonZeroUsize::new(index) {
             Some(index) => self.arena.get_node_id_at(index),
             None => None,
@@ -73,8 +69,16 @@ impl Bookmarks {
     }
 
     /// Find Node by NodeId
-    fn find_node_by_node_id(&self, node_id: NodeId) -> Option<&Node<BookmarkData>> {
+    pub fn find_node_by_node_id(&self, node_id: NodeId) -> Option<&Node<BookmarkData>> {
         self.arena.get(node_id)
+    }
+
+    /// Find immutable Node by index
+    pub fn find_node_by_index(&self, index: usize) -> Option<&Node<BookmarkData>> {
+        match self.find_node_id_by_index(index) {
+            Some(node_id) => self.arena.get(node_id),
+            None => None,
+        }
     }
 
     /// Get mutable Node by index
@@ -84,21 +88,12 @@ impl Bookmarks {
             None => None,
         }
     }
-
-    /// Find immutable Node by index
-    #[allow(dead_code)]
-    fn find_node_by_index(&self, index: usize) -> Option<&Node<BookmarkData>> {
-        match self.find_node_id_by_index(index) {
-            Some(node_id) => self.arena.get(node_id),
-            None => None,
-        }
-    }
 }
 
 /// Root related functions
 impl Bookmarks {
     /// Get root node id (root node is always index 1)
-    fn get_root_node_id(&self) -> Result<NodeId, CoreError> {
+    pub fn get_root_node_id(&self) -> Result<NodeId, CoreError> {
         self.find_node_id_by_index(1)
             .ok_or(CoreError::NodeNotFound(1))
     }
