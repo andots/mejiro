@@ -7,9 +7,7 @@ use super::Bookmarks;
 impl Bookmarks {
     /// Set is_open flag
     pub fn set_is_open(&mut self, index: usize, is_open: bool) -> Result<(), CoreError> {
-        let node = self
-            .get_mut_node_by_index(index)
-            .ok_or(CoreError::NodeNotFound(index))?;
+        let node = self.get_mut_node_by_index(index)?;
         let data = node.get_mut();
         data.is_open = is_open;
         Ok(())
@@ -17,9 +15,7 @@ impl Bookmarks {
 
     /// Toggle is_open flag
     pub fn toggle_is_open(&mut self, index: usize) -> Result<(), CoreError> {
-        let node = self
-            .get_mut_node_by_index(index)
-            .ok_or(CoreError::NodeNotFound(index))?;
+        let node = self.get_mut_node_by_index(index)?;
         let data = node.get_mut();
         data.is_open = !data.is_open;
         Ok(())
@@ -27,9 +23,7 @@ impl Bookmarks {
 
     /// Update title
     pub fn update_title(&mut self, index: usize, title: String) -> Result<(), CoreError> {
-        let node = self
-            .get_mut_node_by_index(index)
-            .ok_or(CoreError::NodeNotFound(index))?;
+        let node = self.get_mut_node_by_index(index)?;
         let data = node.get_mut();
         data.title = title;
         Ok(())

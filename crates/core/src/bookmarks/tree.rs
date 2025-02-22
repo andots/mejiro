@@ -56,11 +56,11 @@ impl Bookmarks {
     pub(crate) fn get_mut_node_by_index(
         &mut self,
         index: usize,
-    ) -> Option<&mut Node<BookmarkData>> {
-        match self.find_node_id_by_index(index) {
-            Ok(node_id) => self.arena.get_mut(node_id),
-            Err(_) => None,
-        }
+    ) -> Result<&mut Node<BookmarkData>, CoreError> {
+        let node_id = self.find_node_id_by_index(index)?;
+        self.arena
+            .get_mut(node_id)
+            .ok_or(CoreError::NodeNotFound(index))
     }
 }
 
