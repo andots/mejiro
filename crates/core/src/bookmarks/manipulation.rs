@@ -40,18 +40,14 @@ impl Bookmarks {
         if index == 1 {
             return Err(CoreError::CannotRemoveRoot());
         }
-        let node_id = self
-            .find_node_id_by_index(index)
-            .ok_or(CoreError::NodeNotFound(index))?;
+        let node_id = self.find_node_id_by_index(index)?;
         node_id.remove_subtree(&mut self.arena);
         Ok(())
     }
 
     /// Add folder
     pub fn add_folder(&mut self, parent_index: usize, title: &str) -> Result<(), CoreError> {
-        let parent_node_id = self
-            .find_node_id_by_index(parent_index)
-            .ok_or(CoreError::NodeNotFound(parent_index))?;
+        let parent_node_id = self.find_node_id_by_index(parent_index)?;
         let new_folder = BookmarkData::new_folder(title);
         let new_node = self.arena.new_node(new_folder);
         parent_node_id.checked_append(new_node, &mut self.arena)?;
@@ -81,9 +77,7 @@ impl Bookmarks {
             .pop();
         let base_url_str = base_url.as_str();
 
-        let top_node_id = self
-            .find_node_id_by_index(top_level_index)
-            .ok_or(CoreError::NodeNotFound(1))?;
+        let top_node_id = self.find_node_id_by_index(top_level_index)?;
         let target = top_node_id.descendants(&self.arena).find(|node_id| {
             if let Some(node) = self.find_node_by_node_id(*node_id) {
                 if let Some(node_url) = &node.get().url {
@@ -125,12 +119,8 @@ impl Bookmarks {
             return Err(CoreError::SameSourceAndDestination());
         }
 
-        let source_node_id = self
-            .find_node_id_by_index(source_index)
-            .ok_or(CoreError::NodeNotFound(source_index))?;
-        let dest_node_id = self
-            .find_node_id_by_index(destination_index)
-            .ok_or(CoreError::NodeNotFound(destination_index))?;
+        let source_node_id = self.find_node_id_by_index(source_index)?;
+        let dest_node_id = self.find_node_id_by_index(destination_index)?;
 
         if destination_index == 1 {
             // if destination is root, prepend source node under the root
@@ -159,12 +149,8 @@ impl Bookmarks {
             return Err(CoreError::SameSourceAndDestination());
         }
 
-        let source_node_id = self
-            .find_node_id_by_index(source_index)
-            .ok_or(CoreError::NodeNotFound(source_index))?;
-        let dest_node_id = self
-            .find_node_id_by_index(destination_index)
-            .ok_or(CoreError::NodeNotFound(destination_index))?;
+        let source_node_id = self.find_node_id_by_index(source_index)?;
+        let dest_node_id = self.find_node_id_by_index(destination_index)?;
 
         // move to the dest children (append - to the end)
         dest_node_id.checked_append(source_node_id, &mut self.arena)?;

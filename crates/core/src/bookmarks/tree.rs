@@ -30,11 +30,11 @@ impl Bookmarks {
     }
 
     /// Find NodeId by index
-    pub fn find_node_id_by_index(&self, index: usize) -> Option<NodeId> {
-        match NonZeroUsize::new(index) {
-            Some(index) => self.arena.get_node_id_at(index),
-            None => None,
-        }
+    pub fn find_node_id_by_index(&self, index: usize) -> Result<NodeId, CoreError> {
+        let id = NonZeroUsize::new(index).ok_or(CoreError::NoneZeroUsize())?;
+        self.arena
+            .get_node_id_at(id)
+            .ok_or(CoreError::NodeNotFound(index))
     }
 
     /// Find Node by NodeId
@@ -45,8 +45,8 @@ impl Bookmarks {
     /// Find immutable Node by index
     pub fn find_node_by_index(&self, index: usize) -> Option<&Node<BookmarkData>> {
         match self.find_node_id_by_index(index) {
-            Some(node_id) => self.arena.get(node_id),
-            None => None,
+            Ok(node_id) => self.arena.get(node_id),
+            Err(_) => None,
         }
     }
 
@@ -56,8 +56,8 @@ impl Bookmarks {
         index: usize,
     ) -> Option<&mut Node<BookmarkData>> {
         match self.find_node_id_by_index(index) {
-            Some(node_id) => self.arena.get_mut(node_id),
-            None => None,
+            Ok(node_id) => self.arena.get_mut(node_id),
+            Err(_) => None,
         }
     }
 }
@@ -67,7 +67,6 @@ impl Bookmarks {
     /// Get root node id (root node is always index 1)
     pub fn get_root_node_id(&self) -> Result<NodeId, CoreError> {
         self.find_node_id_by_index(1)
-            .ok_or(CoreError::NodeNotFound(1))
     }
 
     /// Get root children as Vec<BookmarkData>
@@ -104,3 +103,10 @@ impl Bookmarks {
         Ok(vec)
     }
 }
+
+// pub fn find_node_id_by_index(&self, index: usize) -> Option<NodeId> {
+//     match NonZeroUsize::new(index) {
+//         Some(index) => self.arena.get_node_id_at(index),
+//         None => None,
+//     }
+// }

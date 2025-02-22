@@ -189,17 +189,20 @@ mod tests {
         // try to remove root node must be error
         assert!(bookmarks.remove_subtree(1).is_err());
 
-        // remove n_2
+        // remove n_2, then find n_2 must be error
         bookmarks.remove_subtree(2)?;
         let me = bookmarks.find_node_id_by_index(2);
-        assert!(me.is_none());
+        assert!(me.is_err());
 
-        // remove n_4
+        // remove n_3, n_4
         bookmarks.remove_subtree(3)?;
         bookmarks.remove_subtree(4)?;
 
         // internal arena count must be still 8
         assert_eq!(bookmarks.count_all_nodes(), 8);
+
+        // // bookmarks count must be 0
+        // assert_eq!(bookmarks.count_bookmarks(), 0);
 
         println!("{}", bookmarks.to_nested_json_pretty(1)?);
 

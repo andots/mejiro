@@ -16,6 +16,9 @@ pub enum CoreError {
     #[error("URL error: {0}")]
     InvalidUrl(#[from] url::ParseError),
 
+    #[error("NoneZeroUsize")]
+    NoneZeroUsize(),
+
     #[error("Node not found: {0}")]
     NestedNode(NonZero<usize>),
 
