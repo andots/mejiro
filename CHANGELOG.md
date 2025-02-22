@@ -1,5 +1,19 @@
 # Changelog
 
+# [0.15.0](https://github.com/andots/mejiro/compare/v0.14.0...v0.15.0) (2025-02-22)
+
+
+### Bug Fixes
+
+* improve count_bookmarks method by filtering removed nodes first ([4fc3264](https://github.com/andots/mejiro/commit/4fc32642df58916abbf97c4a4d021802f59450ec))
+
+
+### Features
+
+*  Bookmarks::default() make root and toolbar folder ([02a695f](https://github.com/andots/mejiro/commit/02a695f3d034d0c02d29f3b331292d9e2f423d0b))
+* add count method to Bookmarks and update tests ([26141dc](https://github.com/andots/mejiro/commit/26141dcce6fb205fc80662ac96d2af4c0929bb53))
+* add count_all_nodes and count_bookmarks methods to Bookmarks ([abdd568](https://github.com/andots/mejiro/commit/abdd5689a9901cd3ad86ab394511339d6c6bdbf3))
+
 # [0.14.0](https://github.com/andots/mejiro/compare/v0.13.1...v0.14.0) (2025-02-21)
 
 
