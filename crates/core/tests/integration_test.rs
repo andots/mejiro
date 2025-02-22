@@ -5,7 +5,7 @@ mod tests {
     #[test]
     fn test_default() -> anyhow::Result<()> {
         let bookmarks = Bookmarks::default();
-        assert_eq!(bookmarks.arena.count(), 2);
+        assert_eq!(bookmarks.count(), 2);
 
         let root = bookmarks
             .find_node_by_index(1)

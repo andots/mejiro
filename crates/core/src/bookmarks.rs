@@ -10,7 +10,7 @@ use crate::{
 };
 
 pub struct Bookmarks {
-    pub arena: Arena<BookmarkData>,
+    arena: Arena<BookmarkData>,
 }
 
 impl Default for Bookmarks {
@@ -60,6 +60,11 @@ impl Bookmarks {
 
 /// Wrapper for indextree::Arena
 impl Bookmarks {
+    /// Get count of nodes including removed nodes
+    pub fn count(&self) -> usize {
+        self.arena.count()
+    }
+
     /// Find NodeId by index
     pub fn find_node_id_by_index(&self, index: usize) -> Option<NodeId> {
         match NonZeroUsize::new(index) {
