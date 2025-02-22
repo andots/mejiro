@@ -40,6 +40,7 @@ impl Bookmarks {
 
 /// File I/O
 impl Bookmarks {
+    /// Load Arena from file (JSON format)
     pub fn load_from_file<P>(path: P) -> Result<Self, CoreError>
     where
         P: AsRef<Path>,
@@ -50,6 +51,7 @@ impl Bookmarks {
         Ok(Self::new(arena))
     }
 
+    /// Save Arena to file (JSON format)
     pub fn save_to_file<P>(&self, path: P) -> Result<(), CoreError>
     where
         P: AsRef<Path>,
@@ -62,6 +64,7 @@ impl Bookmarks {
 
 /// Wrapper for indextree::Arena
 impl Bookmarks {
+    /// Find NodeId by index
     fn find_node_id_by_index(&self, index: usize) -> Option<NodeId> {
         match NonZeroUsize::new(index) {
             Some(index) => self.arena.get_node_id_at(index),
@@ -69,14 +72,12 @@ impl Bookmarks {
         }
     }
 
-    #[allow(dead_code)]
-    fn find_node_by_index(&self, index: usize) -> Option<&Node<BookmarkData>> {
-        match self.find_node_id_by_index(index) {
-            Some(node_id) => self.arena.get(node_id),
-            None => None,
-        }
+    /// Find Node by NodeId
+    fn find_node_by_node_id(&self, node_id: NodeId) -> Option<&Node<BookmarkData>> {
+        self.arena.get(node_id)
     }
 
+    /// Get mutable Node by index
     fn get_mut_node_by_index(&mut self, index: usize) -> Option<&mut Node<BookmarkData>> {
         match self.find_node_id_by_index(index) {
             Some(node_id) => self.arena.get_mut(node_id),
@@ -84,18 +85,25 @@ impl Bookmarks {
         }
     }
 
-    fn find_node_by_node_id(&self, node_id: NodeId) -> Option<&Node<BookmarkData>> {
-        self.arena.get(node_id)
+    /// Find immutable Node by index
+    #[allow(dead_code)]
+    fn find_node_by_index(&self, index: usize) -> Option<&Node<BookmarkData>> {
+        match self.find_node_id_by_index(index) {
+            Some(node_id) => self.arena.get(node_id),
+            None => None,
+        }
     }
 }
 
-/// Root node stuff
+/// Root related functions
 impl Bookmarks {
+    /// Get root node id (root node is always index 1)
     fn get_root_node_id(&self) -> Result<NodeId, CoreError> {
         self.find_node_id_by_index(1)
             .ok_or(CoreError::NodeNotFound(1))
     }
 
+    /// Get root children as Vec<BookmarkData>
     pub fn get_root_children(&self) -> Result<Vec<BookmarkData>, CoreError> {
         let root_id = self.get_root_node_id()?;
         let root_children = root_id
@@ -106,6 +114,7 @@ impl Bookmarks {
         Ok(root_children)
     }
 
+    /// Get root and children folders as Vec<FolderData>
     pub fn get_root_and_children_folders(&self) -> Result<Vec<FolderData>, CoreError> {
         let root_id = self.get_root_node_id()?;
         let mut vec: Vec<FolderData> = Vec::new();
@@ -131,12 +140,12 @@ impl Bookmarks {
 
 /// Converting to JSON
 impl Bookmarks {
-    /// Arena to JSON to save file
+    /// Arena to JSON string
     pub fn to_json(&self) -> Result<String, CoreError> {
         Ok(serde_json::to_string(&self.arena)?)
     }
 
-    /// Generate nested JSON for frontend
+    /// Arena to nested JSON string (frontend friendly)
     pub fn to_nested_json(&self, index: usize) -> Result<String, CoreError> {
         let node_id = self
             .find_node_id_by_index(index)
@@ -145,6 +154,7 @@ impl Bookmarks {
         Ok(serde_json::to_string(&value)?)
     }
 
+    /// Arena to nested JSON string (frontend friendly) with pretty format
     pub fn to_nested_json_pretty(&self, index: usize) -> Result<String, CoreError> {
         let node_id = self
             .find_node_id_by_index(index)
@@ -156,6 +166,7 @@ impl Bookmarks {
 
 /// Tree manupulation
 impl Bookmarks {
+    /// Set is_open flag
     pub fn set_is_open(&mut self, index: usize, is_open: bool) -> Result<(), CoreError> {
         let node = self
             .get_mut_node_by_index(index)
@@ -165,6 +176,7 @@ impl Bookmarks {
         Ok(())
     }
 
+    /// Toggle is_open flag
     pub fn toggle_is_open(&mut self, index: usize) -> Result<(), CoreError> {
         let node = self
             .get_mut_node_by_index(index)
@@ -174,6 +186,7 @@ impl Bookmarks {
         Ok(())
     }
 
+    /// Update title
     pub fn update_title(&mut self, index: usize, title: String) -> Result<(), CoreError> {
         let node = self
             .get_mut_node_by_index(index)
@@ -183,6 +196,7 @@ impl Bookmarks {
         Ok(())
     }
 
+    /// Remove subtree
     pub fn remove_subtree(&mut self, index: usize) -> Result<(), CoreError> {
         if index == 1 {
             return Err(CoreError::CannotRemoveRoot());
@@ -194,6 +208,7 @@ impl Bookmarks {
         Ok(())
     }
 
+    /// Add folder
     pub fn add_folder(&mut self, parent_index: usize, title: &str) -> Result<(), CoreError> {
         let parent_node_id = self
             .find_node_id_by_index(parent_index)
@@ -204,6 +219,8 @@ impl Bookmarks {
         Ok(())
     }
 
+    /// Adds a new bookmark by comparing paths between the given URL and existing URLs
+    /// If no matching URL is found, adds a new node to the top node
     pub fn add_bookmark(
         &mut self,
         url: String,
@@ -212,7 +229,10 @@ impl Bookmarks {
     ) -> Result<(), CoreError> {
         // if title is None, use url as title
         let title = title.unwrap_or(url.clone());
-        // 与えられたURLの一つ上の階層のURLを取得
+
+        // get the URL of one level above the given URL as base_url_str
+        // https://docs.rs/tauri/latest/tauri/webview/struct.Color.html
+        // -> https://docs.rs/tauri/latest/tauri/webview/
         let parsed_url = Url::parse(&url)?;
         let mut base_url = parsed_url.clone();
         base_url
@@ -250,6 +270,7 @@ impl Bookmarks {
         Ok(())
     }
 
+    /// Insert after the source node to the destination node
     pub fn insert_after(
         &mut self,
         source_index: usize,
@@ -283,6 +304,7 @@ impl Bookmarks {
         Ok(())
     }
 
+    /// Append the source node to the destination node
     pub fn append_to_child(
         &mut self,
         source_index: usize,
