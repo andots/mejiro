@@ -1,6 +1,6 @@
 use std::num::NonZeroUsize;
 
-use indextree::{Node, NodeId};
+use indextree::{Arena, Node, NodeId};
 
 use crate::{
     data::{BookmarkData, FolderData, NodeType},
@@ -11,6 +11,11 @@ use super::Bookmarks;
 
 /// Wrapper for indextree::Arena
 impl Bookmarks {
+    /// Get immutable arena
+    pub fn arena(&self) -> &Arena<BookmarkData> {
+        &self.arena
+    }
+
     /// Count all nodes including folders, bookmarks, and removed nodes in arena
     pub fn count_all_nodes(&self) -> usize {
         self.arena.count()
