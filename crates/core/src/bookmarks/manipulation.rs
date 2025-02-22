@@ -73,7 +73,7 @@ impl Bookmarks {
 
         let top_node_id = self.find_node_id_by_index(top_level_index)?;
         let target = top_node_id.descendants(&self.arena).find(|node_id| {
-            if let Some(node) = self.find_node_by_node_id(*node_id) {
+            if let Ok(node) = self.find_node_by_node_id(*node_id) {
                 if let Some(node_url) = &node.get().url {
                     if node_url.as_str().starts_with(base_url_str) {
                         return true;

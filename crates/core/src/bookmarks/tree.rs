@@ -40,8 +40,10 @@ impl Bookmarks {
     }
 
     /// Find Node by NodeId
-    pub fn find_node_by_node_id(&self, node_id: NodeId) -> Option<&Node<BookmarkData>> {
-        self.arena.get(node_id)
+    pub fn find_node_by_node_id(&self, node_id: NodeId) -> Result<&Node<BookmarkData>, CoreError> {
+        self.arena
+            .get(node_id)
+            .ok_or(CoreError::NodeNotFound(node_id.into()))
     }
 
     /// Find immutable Node by index
@@ -76,7 +78,7 @@ impl Bookmarks {
         let root_id = self.get_root_node_id()?;
         let root_children = root_id
             .children(&self.arena)
-            .filter_map(|node_id| self.find_node_by_node_id(node_id))
+            .filter_map(|node_id| self.find_node_by_node_id(node_id).ok())
             .map(|n| n.get().clone())
             .collect::<Vec<_>>();
         Ok(root_children)
@@ -87,14 +89,12 @@ impl Bookmarks {
         let root_id = self.get_root_node_id()?;
         let mut vec: Vec<FolderData> = Vec::new();
         // push root folder at first
-        let root = self
-            .find_node_by_node_id(root_id)
-            .ok_or(CoreError::NodeNotFound(1))?;
+        let root = self.find_node_by_node_id(root_id)?;
         let root_data = root.get();
         vec.push(FolderData::new(root_id.into(), root_data.title.clone()));
 
         for node_id in root_id.children(&self.arena) {
-            if let Some(node) = self.find_node_by_node_id(node_id) {
+            if let Ok(node) = self.find_node_by_node_id(node_id) {
                 let data = node.get();
                 // only push if the node is folder
                 if data.node_type == NodeType::Folder {
