@@ -22,6 +22,9 @@ pub enum CoreError {
     #[error("Node not found: {0}")]
     NestedNode(NonZero<usize>),
 
+    #[error("NodeId not found: {0}")]
+    NodeIdNotFound(usize),
+
     #[error("Node not found: {0}")]
     NodeNotFound(usize),
 

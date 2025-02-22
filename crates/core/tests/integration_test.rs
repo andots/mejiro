@@ -19,9 +19,7 @@ mod tests {
         assert_eq!(bookmarks.count_all_nodes(), 2);
         assert_eq!(bookmarks.count_bookmarks(), 0);
 
-        let root = bookmarks
-            .find_node_by_index(1)
-            .ok_or(CoreError::NodeNotFound(1))?;
+        let root = bookmarks.find_node_by_index(1)?;
         let root_data = root.get();
         assert_eq!(root_data.title, "All Bookmarks");
         assert_eq!(root_data.node_type, NodeType::Root);
@@ -29,9 +27,7 @@ mod tests {
         assert_eq!(root_data.host, None);
         assert!(root_data.is_open);
 
-        let toolbar = bookmarks
-            .find_node_by_index(2)
-            .ok_or(CoreError::NodeNotFound(2))?;
+        let toolbar = bookmarks.find_node_by_index(2)?;
         let toolbar_data = toolbar.get();
         assert_eq!(toolbar_data.title, "Toolbar");
         assert_eq!(toolbar_data.node_type, NodeType::Folder);
@@ -75,7 +71,7 @@ mod tests {
         assert!(err.is_err());
         assert_eq!(
             err.unwrap_err().to_string(),
-            CoreError::NodeNotFound(100).to_string()
+            CoreError::NodeIdNotFound(100).to_string()
         );
 
         // try to move from non-exist node must be error
@@ -83,7 +79,7 @@ mod tests {
         assert!(err.is_err());
         assert_eq!(
             err.unwrap_err().to_string(),
-            CoreError::NodeNotFound(100).to_string()
+            CoreError::NodeIdNotFound(100).to_string()
         );
 
         // try to move to same node must be error
@@ -130,7 +126,7 @@ mod tests {
         assert!(err.is_err());
         assert_eq!(
             err.unwrap_err().to_string(),
-            CoreError::NodeNotFound(100).to_string()
+            CoreError::NodeIdNotFound(100).to_string()
         );
 
         // try to move from non-exist node must be error
@@ -138,7 +134,7 @@ mod tests {
         assert!(err.is_err());
         assert_eq!(
             err.unwrap_err().to_string(),
-            CoreError::NodeNotFound(100).to_string()
+            CoreError::NodeIdNotFound(100).to_string()
         );
 
         // try to insert same node must be error
@@ -247,9 +243,9 @@ mod tests {
         let mut bookmarks = create_test_bookmarks();
         bookmarks.update_title(1, "new root name".to_string())?;
         bookmarks.update_title(2, "new title".to_string())?;
-        let node = bookmarks.find_node_by_index(1).unwrap();
+        let node = bookmarks.find_node_by_index(1)?;
         assert_eq!(node.get().title, "new root name");
-        let node = bookmarks.find_node_by_index(2).unwrap();
+        let node = bookmarks.find_node_by_index(2)?;
         assert_eq!(node.get().title, "new title");
         // println!("{}", bookmarks.to_nested_json_pretty(1)?);
         // println!("{:?}", bookmarks.get_root_and_children_folders()?);
@@ -259,15 +255,15 @@ mod tests {
     #[test]
     fn test_toggle_is_open() -> anyhow::Result<()> {
         let mut bookmarks = create_test_bookmarks();
-        let node = bookmarks.find_node_by_index(1).unwrap();
+        let node = bookmarks.find_node_by_index(1)?;
         assert!(node.get().is_open);
 
         bookmarks.toggle_is_open(1)?;
-        let node = bookmarks.find_node_by_index(1).unwrap();
+        let node = bookmarks.find_node_by_index(1)?;
         assert!(!node.get().is_open);
 
         bookmarks.toggle_is_open(1)?;
-        let node = bookmarks.find_node_by_index(1).unwrap();
+        let node = bookmarks.find_node_by_index(1)?;
         assert!(node.get().is_open);
 
         Ok(())
@@ -276,15 +272,15 @@ mod tests {
     #[test]
     fn test_set_is_open() -> anyhow::Result<()> {
         let mut bookmarks = create_test_bookmarks();
-        let node = bookmarks.find_node_by_index(1).unwrap();
+        let node = bookmarks.find_node_by_index(1)?;
         assert!(node.get().is_open);
 
         bookmarks.set_is_open(1, false)?;
-        let node = bookmarks.find_node_by_index(1).unwrap();
+        let node = bookmarks.find_node_by_index(1)?;
         assert!(!node.get().is_open);
 
         bookmarks.set_is_open(1, true)?;
-        let node = bookmarks.find_node_by_index(1).unwrap();
+        let node = bookmarks.find_node_by_index(1)?;
         assert!(node.get().is_open);
 
         Ok(())
@@ -295,17 +291,17 @@ mod tests {
         let mut bookmarks = create_test_bookmarks();
         // add folder to root
         bookmarks.add_folder(1, "new folder 1")?;
-        let root_id = bookmarks.find_node_id_by_index(1).unwrap();
+        let root_id = bookmarks.find_node_id_by_index(1)?;
         assert_eq!(root_id.children(bookmarks.arena()).count(), 4);
 
         // add folder to n_2
-        let n_2_id = bookmarks.find_node_id_by_index(2).unwrap();
+        let n_2_id = bookmarks.find_node_id_by_index(2)?;
         assert_eq!(n_2_id.children(bookmarks.arena()).count(), 0);
         bookmarks.add_folder(2, "new folder 2")?;
         assert_eq!(n_2_id.children(bookmarks.arena()).count(), 1);
 
         // add folder to n_6
-        let n_6_id = bookmarks.find_node_id_by_index(6).unwrap();
+        let n_6_id = bookmarks.find_node_id_by_index(6)?;
         assert_eq!(n_6_id.children(bookmarks.arena()).count(), 2);
         bookmarks.add_folder(6, "new folder 3")?;
         assert_eq!(n_6_id.children(bookmarks.arena()).count(), 3);

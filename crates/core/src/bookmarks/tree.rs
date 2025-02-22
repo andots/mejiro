@@ -36,7 +36,7 @@ impl Bookmarks {
         let id = NonZeroUsize::new(index).ok_or(CoreError::NoneZeroUsize())?;
         self.arena
             .get_node_id_at(id)
-            .ok_or(CoreError::NodeNotFound(index))
+            .ok_or(CoreError::NodeIdNotFound(index))
     }
 
     /// Find Node by NodeId
@@ -45,11 +45,11 @@ impl Bookmarks {
     }
 
     /// Find immutable Node by index
-    pub fn find_node_by_index(&self, index: usize) -> Option<&Node<BookmarkData>> {
-        match self.find_node_id_by_index(index) {
-            Ok(node_id) => self.arena.get(node_id),
-            Err(_) => None,
-        }
+    pub fn find_node_by_index(&self, index: usize) -> Result<&Node<BookmarkData>, CoreError> {
+        let node_id = self.find_node_id_by_index(index)?;
+        self.arena
+            .get(node_id)
+            .ok_or(CoreError::NodeNotFound(index))
     }
 
     /// Get mutable Node by index
