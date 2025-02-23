@@ -22,7 +22,8 @@ const BookmarkTree: Component = () => {
 
   createEffect(
     on(bookmarks, () => {
-      if (ref) {
+      if (bookmarks() !== null && ref) {
+        console.log("createEffect: bookmarks changed");
         for (const child of ref.children) {
           dragStartEventListener(child as HTMLDivElement);
           dragEndEventListener(child as HTMLDivElement);
@@ -34,6 +35,7 @@ const BookmarkTree: Component = () => {
     }),
   );
 
+  // DragEvent will be ...
   // dragstart -> dragenter -> dragover -> drop -> dragend
 
   // dragstart event
@@ -145,6 +147,8 @@ const BookmarkTree: Component = () => {
   // dragend event
   const dragEndEventListener = (el: HTMLDivElement) => {
     makeEventListener(el, "dragend", (ev) => {
+      // make sure to clear the data, but is this necessary??
+      ev.dataTransfer?.clearData();
       // Reset dragging state
       setDragging({
         sourceIndex: -1,

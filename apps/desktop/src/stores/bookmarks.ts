@@ -55,7 +55,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
     // update the folders list
-    get().getFolders();
+    // get().getFolders();
   },
   appendBookmarkToToolbar: async (title, url) => {
     const topLevelIndex = get().getCurrentTopLevel();
@@ -69,7 +69,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
     // update the folders list
-    get().getFolders();
+    // get().getFolders();
   },
   updateBookmarkTitle: async (index, title) => {
     const topLevelIndex = get().getCurrentTopLevel();
@@ -77,7 +77,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
     // update the folders list
-    get().getFolders();
+    // get().getFolders();
   },
   addFolder: async (parentIndex, title) => {
     const topLevelIndex = get().getCurrentTopLevel();
@@ -85,7 +85,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
     // update the folders list
-    get().getFolders();
+    // get().getFolders();
   },
   insertAfter: async (sourceIndex, destinationIndex) => {
     const topLevelIndex = get().getCurrentTopLevel();
@@ -93,7 +93,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
     // update the folders list
-    get().getFolders();
+    // get().getFolders();
   },
   appendToChild: async (sourceIndex, destinationIndex) => {
     const topLevelIndex = get().getCurrentTopLevel();
@@ -101,7 +101,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
     // update the folders list
-    get().getFolders();
+    // get().getFolders();
   },
   toggleIsOpen: async (index) => {
     const topLevelIndex = get().getCurrentTopLevel();
