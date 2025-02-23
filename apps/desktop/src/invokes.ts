@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import type { PhysicalPosition, PhysicalSize } from "@tauri-apps/api/dpi";
-import type { Bounds, FolderData, Rect, UserSettings } from "./types";
+import type { ToolbarBookmarkData, Bounds, FolderData, Rect, UserSettings } from "./types";
 
 export const Invoke = {
   // Bookmarks commands
@@ -9,6 +9,9 @@ export const Invoke = {
   },
   GetRootAndChildrenFolders: async () => {
     return invoke<FolderData[]>("get_root_and_children_folders", {});
+  },
+  GetToolbarBookmarks: async () => {
+    return invoke<ToolbarBookmarkData[]>("get_toolbar_bookmarks", {});
   },
   AddBookmark: async (url: string, title: string | null | undefined, topLevelIndex: number) => {
     // returned json string is a nested tree of bookmarks

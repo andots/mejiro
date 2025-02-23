@@ -16,6 +16,13 @@ export type FolderData = {
   title: string;
 };
 
+export type ToolbarBookmarkData = {
+  index: number;
+  title: string;
+  url: string;
+  host: string;
+};
+
 //! Must sync with rust struct in app/settings.rs
 export type UserSettings = {
   language: string;

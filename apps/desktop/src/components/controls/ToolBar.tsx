@@ -1,16 +1,24 @@
 import { Button } from "@repo/ui/button";
-import { type Component, For, Show } from "solid-js";
+import { type Component, createEffect, For, on, Show } from "solid-js";
 
 import { OcticonGear24, OcticonSidebarCollapse24, OcticonSidebarExpand24 } from "@repo/ui/icons";
-import { useSettingsState } from "../../stores/settings";
 import { useUrlState } from "../../stores/url";
 import { useWindowState } from "../../stores/window";
 import AddressBar from "./AddressBar";
 import Favicon from "../icons/Favicon";
 import { usePageState } from "../../stores/pages";
+import { useBookmarkState } from "../../stores/bookmarks";
 
 const ToolBar: Component = () => {
-  const settings = useSettingsState((state) => state.settings);
+  const bookmarks = useBookmarkState((state) => state.bookmarks);
+  const toolbarBookmarks = useBookmarkState((state) => state.toolbarBookmarks);
+
+  createEffect(
+    on(bookmarks, () => {
+      useBookmarkState.getState().getToolbarBookmarks();
+    }),
+  );
+
   const navigateToUrl = useUrlState((state) => state.navigateToUrl);
 
   const externalState = useWindowState((state) => state.externalState);
@@ -71,10 +79,14 @@ const ToolBar: Component = () => {
 
       {/* pinned url favicons */}
       <div class="flex items-center ml-2">
-        <For each={settings()?.pinned_urls}>
-          {(url) => (
-            <Button variant="ghost" class="w-9 h-9 p-2" onClick={() => handlePinnedUrl(url)}>
-              <Favicon url={url} width="18" height="18" />
+        <For each={toolbarBookmarks()}>
+          {(bookmark) => (
+            <Button
+              variant="ghost"
+              class="w-9 h-9 p-2"
+              onClick={() => handlePinnedUrl(bookmark.url)}
+            >
+              <Favicon url={`https://${bookmark.host}`} width="18" height="18" />
             </Button>
           )}
         </For>
