@@ -17,12 +17,6 @@ export const useSettingsState = createWithSignal<UserSettingsState>((set) => ({
     gpu_acceleration_enabled: false,
     incognito: true,
     start_page_url: "https://search.brave.com/",
-    pinned_urls: [
-      "https://search.brave.com/",
-      "https://docs.rs",
-      "https://crates.io",
-      "https://github.com/search",
-    ],
   },
   getSettings: async () => {
     const settings = await Invoke.GetSettings();

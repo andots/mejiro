@@ -30,7 +30,6 @@ export type UserSettings = {
   gpu_acceleration_enabled: boolean;
   incognito: boolean;
   start_page_url: string;
-  pinned_urls: string[];
 };
 
 export type Rect = {

@@ -1,4 +1,4 @@
-import { createSignal, For, Show, type Component } from "solid-js";
+import { createSignal, type Component } from "solid-js";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo/ui/card";
 import { Switch, SwitchControl, SwitchThumb } from "@repo/ui/switch";
@@ -18,8 +18,6 @@ const SettingsPage: Component = () => {
   const [gpuAcceleration, setGpuAcceleration] = createSignal(settings().gpu_acceleration_enabled);
   const [incognito, setIncognito] = createSignal(settings().incognito);
   const [startPageUrl, setStartPageUrl] = createSignal(settings().start_page_url);
-  const [pinnedUrls, setPinnedUrls] = createSignal(settings().pinned_urls);
-  const [newPinnedUrl, setNewPinnedUrl] = createSignal("");
 
   const [isUpdating, setIsUpdating] = createSignal(false);
 
@@ -41,23 +39,6 @@ const SettingsPage: Component = () => {
       setTimeout(() => setIsUpdating(false), 500);
     }
   };
-
-  const handleDeletePinnedUrl = (url: string) => {
-    const urls = pinnedUrls().filter((u) => u !== url);
-    setPinnedUrls(urls);
-    updateSettings({ ...settings(), pinned_urls: pinnedUrls() });
-  };
-
-  const handleAddNewPinnedUrl = () => {
-    if (validateUrl(newPinnedUrl())) {
-      setPinnedUrls([...pinnedUrls(), newPinnedUrl()]);
-      updateSettings({ ...settings(), pinned_urls: pinnedUrls() });
-      setNewPinnedUrl("");
-    }
-  };
-
-  // const handleLanguageChange = () => {};
-  // const handleThemeChange = () => {};
 
   return (
     <div class="max-w-2xl m-auto my-4">
@@ -117,55 +98,6 @@ const SettingsPage: Component = () => {
               <Button class="w-20" onClick={handleStartPageUrlUpdate} disabled={isUpdating()}>
                 Update
               </Button>
-            </CardContent>
-          </Card>
-
-          {/* Pinned URLs Section */}
-          <Card class="w-full p-5">
-            <CardTitle class="pb-2 text-base">Pinned to Tool Bar</CardTitle>
-            <CardDescription class="mb-2">
-              These pages will be shown on the top toolbar.
-            </CardDescription>
-            <CardContent class="p-2 space-y-6">
-              <div class="flex-col space-y-4">
-                <For each={pinnedUrls()}>
-                  {(url) => (
-                    <div class="flex flex-row justify-between items-center">
-                      <TextField class="w-10/12">
-                        <TextFieldInput
-                          type="url"
-                          id="new-url"
-                          value={url}
-                          disabled
-                          class="disabled:cursor-default"
-                        />
-                      </TextField>
-                      <Button
-                        variant="destructive"
-                        class="w-20"
-                        onClick={() => handleDeletePinnedUrl(url)}
-                      >
-                        Delete
-                      </Button>
-                    </div>
-                  )}
-                </For>
-              </div>
-
-              <div class="flex flex-row justify-between items-center">
-                <TextField class="w-10/12">
-                  <TextFieldInput
-                    type="url"
-                    id="new-url"
-                    placeholder="Enter url..."
-                    value={newPinnedUrl()}
-                    onInput={(e) => setNewPinnedUrl(e.currentTarget.value)}
-                  />
-                </TextField>
-                <Button class="w-20" onClick={handleAddNewPinnedUrl}>
-                  Add
-                </Button>
-              </div>
             </CardContent>
           </Card>
         </CardContent>
