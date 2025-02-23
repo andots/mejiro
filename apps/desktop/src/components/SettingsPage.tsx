@@ -1,4 +1,4 @@
-import { createSignal, type Component } from "solid-js";
+import { createSignal, For, type Component } from "solid-js";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo/ui/card";
 import { Switch, SwitchControl, SwitchThumb } from "@repo/ui/switch";
@@ -6,6 +6,8 @@ import { TextField, TextFieldInput } from "@repo/ui/text-field";
 import { Button } from "@repo/ui/button";
 import { useSettingsState } from "../stores/settings";
 import { validateUrl } from "../utils";
+import { RecommendedSites } from "../constants";
+import Favicon from "./icons/Favicon";
 
 // import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/ui/select";
 
@@ -98,6 +100,42 @@ const SettingsPage: Component = () => {
               <Button class="w-20" onClick={handleStartPageUrlUpdate} disabled={isUpdating()}>
                 Update
               </Button>
+            </CardContent>
+          </Card>
+
+          {/* Toolbar Recommend */}
+          <Card class="w-full p-5">
+            <CardTitle class="pb-2 text-base">Toolbar Settings</CardTitle>
+            <CardDescription class="mb-2">
+              <p>
+                If there is a <span class="font-bold">"Toolbar"</span> folder in the root directory
+                and you place bookmarks in that folder, those bookmarks will automatically be pinned
+                to the Toolbar as Quick Navigation Favicons. You can easily add bookmarks to the{" "}
+                <span class="font-bold">"Toolbar"</span> by selecting below our recommended sites.
+              </p>
+            </CardDescription>
+            <CardContent class="flex flex-col w-full p-2 space-y-4">
+              <For each={RecommendedSites}>
+                {({ name, sites }) => {
+                  return (
+                    <div class="w-full space-y-2">
+                      <h4 class="border-b-2">{name}</h4>
+                      <div class="flex flex-row flex-wrap">
+                        <For each={sites}>
+                          {({ title, url }) => {
+                            return (
+                              <Button variant="outline" size="sm" class="mb-2 mr-2">
+                                <Favicon url={url} width={"20px"} height={"20px"} />
+                                {title}
+                              </Button>
+                            );
+                          }}
+                        </For>
+                      </div>
+                    </div>
+                  );
+                }}
+              </For>
             </CardContent>
           </Card>
         </CardContent>
