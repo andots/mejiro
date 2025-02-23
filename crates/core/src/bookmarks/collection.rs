@@ -1,3 +1,5 @@
+use indextree::NodeId;
+
 use crate::{
     data::{BookmarkData, FolderData, NodeType, ToolbarBookmarkData},
     error::CoreError,
@@ -38,12 +40,11 @@ impl Bookmarks {
         Ok(vec)
     }
 
-    /// Get toolbar bookmarks as Vec<ToolbarBookmarkData>
-    pub fn get_toolbar_bookmarks(&self) -> Vec<ToolbarBookmarkData> {
+    fn get_toolbar_node_id(&self) -> Option<NodeId> {
         // find root node_id, return empty vec if not found
         let root_id = match self.get_root_node_id() {
             Ok(id) => id,
-            Err(_) => return Vec::new(),
+            Err(_) => return None,
         };
 
         // find a folder named "Toolbar" under root
@@ -55,8 +56,12 @@ impl Bookmarks {
                 false
             }
         });
+        toolbar_id
+    }
 
-        if let Some(toolbar_id) = toolbar_id {
+    /// Get toolbar bookmarks as Vec<ToolbarBookmarkData>
+    pub fn get_toolbar_bookmarks(&self) -> Vec<ToolbarBookmarkData> {
+        if let Some(toolbar_id) = self.get_toolbar_node_id() {
             let bookmarks = toolbar_id
                 .children(&self.arena)
                 .filter_map(|node_id| {
