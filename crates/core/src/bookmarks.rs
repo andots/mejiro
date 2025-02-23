@@ -1,3 +1,4 @@
+pub mod collection;
 pub mod io;
 pub mod json;
 pub mod manipulation;

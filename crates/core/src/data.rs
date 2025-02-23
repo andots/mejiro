@@ -34,21 +34,6 @@ fn default_is_open() -> bool {
     true
 }
 
-#[derive(Debug, Serialize)]
-pub struct FolderData {
-    pub index: usize,
-    pub title: String,
-}
-
-impl FolderData {
-    pub fn new(index: usize, title: impl Into<String>) -> Self {
-        Self {
-            index,
-            title: title.into(),
-        }
-    }
-}
-
 impl BookmarkData {
     fn new(title: &str, url: Option<Url>, node_type: NodeType) -> Self {
         Self {
@@ -77,6 +62,29 @@ impl BookmarkData {
             Err(CoreError::NotWebUrl(parsed_url.to_string()))
         }
     }
+}
+
+#[derive(Debug, Serialize)]
+pub struct FolderData {
+    pub index: usize,
+    pub title: String,
+}
+
+impl FolderData {
+    pub fn new(index: usize, title: impl Into<String>) -> Self {
+        Self {
+            index,
+            title: title.into(),
+        }
+    }
+}
+
+#[derive(Debug, Serialize)]
+pub struct ToolbarBookmarkData {
+    pub index: usize,
+    pub title: String,
+    pub url: String,
+    pub host: String,
 }
 
 #[cfg(test)]
