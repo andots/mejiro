@@ -17,66 +17,59 @@ const BookmarkTree: Component = () => {
     sourceIndex: -1,
     destinationIndex: -1,
     state: "none",
+    source: null,
   });
 
   createEffect(
     on(bookmarks, () => {
       if (ref) {
         for (const child of ref.children) {
-          makeDragStartEventListener(child as HTMLDivElement);
-          makeDragEndEventListener(child as HTMLDivElement);
+          dragStartEventListener(child as HTMLDivElement);
+          dragEndEventListener(child as HTMLDivElement);
         }
-        makeDragOverEventListener(ref);
-        makeDragEnterEventListener(ref);
-        makeDropEventListener(ref);
+        dragEnterEventListener(ref);
+        dragOverEventListener(ref);
+        dropEventListener(ref);
       }
     }),
   );
 
+  // dragstart -> dragenter -> dragover -> drop -> dragend
+
   // dragstart event
-  const makeDragStartEventListener = (el: HTMLDivElement) => {
+  const dragStartEventListener = (el: HTMLDivElement) => {
     makeEventListener(el, "dragstart", (ev) => {
       // TODO: use el, not ev.target?
       const source = ev.target as HTMLDivElement;
       const match = source.id.match(/bookmark-(\d+)/);
       if (match) {
         ev.dataTransfer?.setData("text/plain", match[1]);
-        setTimeout(() => source.classList.add("dragging"), 0);
 
         // Set sourceId
         setDragging({
           sourceIndex: Number.parseInt(match[1]),
           destinationIndex: -1,
           state: "none",
+          source,
         });
       }
     });
   };
 
-  // dragend event
-  // dragstart -> dragenter -> dragover -> drop -> dragend
-  const makeDragEndEventListener = (el: HTMLDivElement) => {
-    makeEventListener(el, "dragend", (ev) => {
-      const source = ev.target as HTMLDivElement;
-      source.classList.remove("dragging");
-
-      // Reset dragging state
-      setDragging({
-        sourceIndex: -1,
-        destinationIndex: -1,
-        state: "none",
-      });
+  // dragenter event
+  const dragEnterEventListener = (el: HTMLDivElement) => {
+    makeEventListener(el, "dragenter", (ev) => {
+      ev.preventDefault();
     });
   };
 
   // dragover event
-  const makeDragOverEventListener = (el: HTMLDivElement) => {
+  const dragOverEventListener = (el: HTMLDivElement) => {
     makeEventListener(el, "dragover", (ev) => {
       ev.preventDefault();
       if (ev.dataTransfer) {
         ev.dataTransfer.dropEffect = "move";
-        const draggingItem = el.querySelector(".dragging") as HTMLDivElement;
-        if (draggingItem) {
+        if (dragging().source) {
           // find the closest destination by ev.clientY from children
           const children = Array.from(el.children as HTMLCollectionOf<HTMLDivElement>);
           const closest = children.find((dest) => {
@@ -94,6 +87,7 @@ const BookmarkTree: Component = () => {
                   sourceIndex: dragging().sourceIndex,
                   destinationIndex,
                   state: "inside",
+                  source: dragging().source,
                 });
                 return;
               }
@@ -106,6 +100,7 @@ const BookmarkTree: Component = () => {
                   sourceIndex: dragging().sourceIndex,
                   destinationIndex,
                   state: "inside",
+                  source: dragging().source,
                 });
               } else {
                 // after the destination
@@ -113,6 +108,7 @@ const BookmarkTree: Component = () => {
                   sourceIndex: dragging().sourceIndex,
                   destinationIndex,
                   state: "after",
+                  source: dragging().source,
                 });
               }
             }
@@ -122,15 +118,8 @@ const BookmarkTree: Component = () => {
     });
   };
 
-  // dragenter event
-  const makeDragEnterEventListener = (el: HTMLDivElement) => {
-    makeEventListener(el, "dragenter", (ev) => {
-      ev.preventDefault();
-    });
-  };
-
   // drop event
-  const makeDropEventListener = (el: HTMLDivElement) => {
+  const dropEventListener = (el: HTMLDivElement) => {
     makeEventListener(el, "drop", (ev) => {
       ev.preventDefault();
       // make sure souceId is not root and destinationId is over root, and sourceId is not equal to destinationId
@@ -144,11 +133,25 @@ const BookmarkTree: Component = () => {
             .getState()
             .appendToChild(dragging().sourceIndex, dragging().destinationIndex);
         } else if (dragging().state === "after") {
+          // FIXME: crush when drop to self children
           useBookmarkState
             .getState()
             .insertAfter(dragging().sourceIndex, dragging().destinationIndex);
         }
       }
+    });
+  };
+
+  // dragend event
+  const dragEndEventListener = (el: HTMLDivElement) => {
+    makeEventListener(el, "dragend", (ev) => {
+      // Reset dragging state
+      setDragging({
+        sourceIndex: -1,
+        destinationIndex: -1,
+        state: "none",
+        source: null,
+      });
     });
   };
 
@@ -163,14 +166,3 @@ const BookmarkTree: Component = () => {
 };
 
 export default BookmarkTree;
-
-// if (ev.dataTransfer) {
-//   const data = ev.dataTransfer.getData("text/plain");
-//   const source_index = Number.parseInt(data);
-//   const destination_index = indicatorId();
-//   if (source_index > 0 && destination_index > 0 && source_index !== destination_index) {
-//     console.log(`source: ${source_index}, destination: ${destination_index}`);
-//     // TODO: need to implement this
-//     // useBookmarkState.getState().detachAndInsertAfter(source_index, destination_index);
-//   }
-// }
