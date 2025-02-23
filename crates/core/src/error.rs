@@ -42,4 +42,7 @@ pub enum CoreError {
 
     #[error("Source and destination are the same")]
     SameSourceAndDestination(),
+
+    #[error("Toolbar Folder Not Found")]
+    ToolbarFolderNotFound(),
 }

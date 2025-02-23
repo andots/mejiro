@@ -69,4 +69,21 @@ impl Bookmarks {
     pub fn get_root_node_id(&self) -> Result<NodeId, CoreError> {
         self.find_node_id_by_index(1)
     }
+
+    /// Get toolbar node id
+    pub fn get_toolbar_node_id(&self) -> Result<NodeId, CoreError> {
+        let root_id = self.get_root_node_id()?;
+
+        // find a folder named "Toolbar" under root
+        let toolbar_node_id = root_id.children(&self.arena).find(|node_id| {
+            if let Ok(node) = self.find_node_by_node_id(*node_id) {
+                let data = node.get();
+                data.node_type == NodeType::Folder && data.title == "Toolbar"
+            } else {
+                false
+            }
+        });
+
+        toolbar_node_id.ok_or(CoreError::ToolbarFolderNotFound())
+    }
 }

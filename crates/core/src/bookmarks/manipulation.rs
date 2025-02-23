@@ -151,4 +151,13 @@ impl Bookmarks {
 
         Ok(())
     }
+
+    /// Add bookmark to Toolbar folder
+    pub fn append_bookmark_to_toolbar(&mut self, title: &str, url: &str) -> Result<(), CoreError> {
+        let toolbar_id = self.get_toolbar_node_id()?;
+        let bookmark = BookmarkData::try_new_bookmark(title, url)?;
+        let new_node = self.arena.new_node(bookmark);
+        toolbar_id.checked_append(new_node, &mut self.arena)?;
+        Ok(())
+    }
 }

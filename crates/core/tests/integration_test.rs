@@ -366,4 +366,32 @@ mod tests {
         println!("{:?}", toolbar_bookmarks);
         Ok(())
     }
+
+    #[test]
+    fn test_append_bookmark_to_toolbar() -> anyhow::Result<()> {
+        let mut bookmarks = Bookmarks::default();
+        let toolbar = bookmarks.get_toolbar_node_id().unwrap();
+
+        // there is Toolbar folder in default
+        bookmarks.append_bookmark_to_toolbar("title", "https://docs.rs")?;
+        assert_eq!(bookmarks.count_bookmarks(), 1);
+        assert_eq!(toolbar.children(bookmarks.arena()).count(), 1);
+
+        bookmarks.append_bookmark_to_toolbar("title2", "https://docs.rs")?;
+        assert_eq!(bookmarks.count_bookmarks(), 2);
+        assert_eq!(toolbar.children(bookmarks.arena()).count(), 2);
+
+        // remove toolbar folder, index is 2 (root is 1)
+        bookmarks.remove_subtree(2)?;
+
+        // then add bookmark to toolbar must be error
+        let result = bookmarks.append_bookmark_to_toolbar("title3", "https://docs.rs");
+        assert!(result.is_err());
+        assert_eq!(
+            result.unwrap_err().to_string(),
+            "Toolbar Folder Not Found".to_string()
+        );
+
+        Ok(())
+    }
 }
