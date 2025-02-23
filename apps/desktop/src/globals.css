@@ -174,3 +174,15 @@ img[draggable=true] {
 *:focus {
     outline: none;
 }
+
+/* Remove browser scrollbar */
+.app {
+  height: 100vh;
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.app::-webkit-scrollbar{
+  display:none;
+}

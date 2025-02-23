@@ -75,7 +75,7 @@ const App: Component = () => {
   });
 
   return (
-    <div class="w-full flex flex-col">
+    <div class="app w-full flex flex-col bg-sidebar">
       <div class="sticky top-0 z-50 w-full h-[40px] border-b border-sidebar-border bg-sidebar text-sidebar-foreground">
         <LoadingBar
           color="#8ec5ff"
@@ -87,9 +87,9 @@ const App: Component = () => {
         />
         <ToolBar />
       </div>
-      <main class="flex-col py-2 px-1 bg-sidebar text-sidebar-foreground">
+      <main class="flex-col px-1 bg-sidebar text-sidebar-foreground">
         <Show when={page() === "home"}>
-          <div class="h-[calc(100vh_-_40px)] ">
+          <div class="h-[calc(100vh_-_40px)] pt-2">
             <BookmarksPage />
           </div>
         </Show>
