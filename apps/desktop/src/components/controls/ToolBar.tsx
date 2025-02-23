@@ -110,7 +110,7 @@ const ToolBar: Component = () => {
               class="w-9 h-9 p-2"
               onClick={() => handlePinnedUrl(bookmark.url)}
             >
-              <Favicon url={`https://${bookmark.host}`} width="18" height="18" />
+              <Favicon url={bookmark.url} width="18" height="18" />
             </Button>
           )}
         </For>

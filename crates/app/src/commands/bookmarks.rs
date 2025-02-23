@@ -57,6 +57,21 @@ pub async fn add_bookmark(
 }
 
 #[tauri::command]
+pub fn append_bookmark_to_toolbar(
+    state: tauri::State<'_, Mutex<Bookmarks>>,
+    title: String,
+    url: String,
+    top_level_index: usize,
+) -> Result<String, AppError> {
+    let mut bookmarks = state
+        .lock()
+        .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
+    bookmarks.append_bookmark_to_toolbar(&title, &url)?;
+
+    Ok(bookmarks.to_nested_json(top_level_index)?)
+}
+
+#[tauri::command]
 pub fn remove_bookmark(
     state: tauri::State<'_, Mutex<Bookmarks>>,
     index: usize,

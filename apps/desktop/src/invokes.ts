@@ -17,6 +17,10 @@ export const Invoke = {
     // returned json string is a nested tree of bookmarks
     return invoke<string>("add_bookmark", { url, title, topLevelIndex });
   },
+  AppendBookmarkToToolbar: async (title: string, url: string, topLevelIndex: number) => {
+    // returned json string is a nested tree of bookmarks
+    return invoke<string>("append_bookmark_to_toolbar", { title, url, topLevelIndex });
+  },
   RemoveBookmark: async (index: number, topLevelIndex: number) => {
     // returned json string is a nested tree of bookmarks
     return invoke<string>("remove_bookmark", { index, topLevelIndex });

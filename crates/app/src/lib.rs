@@ -72,6 +72,7 @@ pub fn run() {
             commands::bookmarks::get_root_and_children_folders,
             commands::bookmarks::get_toolbar_bookmarks,
             commands::bookmarks::add_bookmark,
+            commands::bookmarks::append_bookmark_to_toolbar,
             commands::bookmarks::remove_bookmark,
             commands::bookmarks::update_bookmark_title,
             commands::bookmarks::add_folder,

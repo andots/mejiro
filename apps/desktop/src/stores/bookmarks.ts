@@ -12,6 +12,7 @@ type BookmarkState = {
   getBookmarks: (index: number) => Promise<void>;
   getToolbarBookmarks: () => Promise<void>;
   addBookmark: (url: string, title: string) => Promise<void>;
+  appendBookmarkToToolbar: (title: string, url: string) => Promise<void>;
   removeBookmark: (index: number) => Promise<void>;
   updateBookmarkTitle: (index: number, title: string) => Promise<void>;
   addFolder: (parentIndex: number, title: string) => Promise<void>;
@@ -55,6 +56,12 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
     set(() => ({ bookmarks }));
     // update the folders list
     get().getFolders();
+  },
+  appendBookmarkToToolbar: async (title, url) => {
+    const topLevelIndex = get().getCurrentTopLevel();
+    const data = await Invoke.AppendBookmarkToToolbar(title, url, topLevelIndex);
+    const bookmarks = JSON.parse(data) as Bookmark;
+    set(() => ({ bookmarks }));
   },
   removeBookmark: async (index) => {
     const topLevelIndex = get().getCurrentTopLevel();

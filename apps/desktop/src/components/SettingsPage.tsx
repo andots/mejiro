@@ -8,6 +8,7 @@ import { useSettingsState } from "../stores/settings";
 import { validateUrl } from "../utils";
 import { RecommendedSites } from "../constants";
 import Favicon from "./icons/Favicon";
+import { useBookmarkState } from "../stores/bookmarks";
 
 // import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/ui/select";
 
@@ -40,6 +41,10 @@ const SettingsPage: Component = () => {
       // wait for 500ms before setting isUpdating to false
       setTimeout(() => setIsUpdating(false), 500);
     }
+  };
+
+  const handleAppendBookmarkToToolbar = async (title: string, url: string) => {
+    useBookmarkState.getState().appendBookmarkToToolbar(title, url);
   };
 
   return (
@@ -120,11 +125,16 @@ const SettingsPage: Component = () => {
                   return (
                     <div class="w-full space-y-2">
                       <h4 class="border-b-2">{name}</h4>
-                      <div class="flex flex-row flex-wrap">
+                      <div class="flex flex-row flex-wrap pt-1">
                         <For each={sites}>
                           {({ title, url }) => {
                             return (
-                              <Button variant="outline" size="sm" class="mb-2 mr-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                class="mb-2 mr-2"
+                                onClick={() => handleAppendBookmarkToToolbar(title, url)}
+                              >
                                 <Favicon url={url} width={"20px"} height={"20px"} />
                                 {title}
                               </Button>
