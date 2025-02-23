@@ -87,12 +87,16 @@ const App: Component = () => {
         />
         <ToolBar />
       </div>
-      <main class="flex-col h-[calc(100vh_-_40px)] py-2 px-1 border border-border/40 bg-sidebar text-sidebar-foreground">
+      <main class="flex-col py-2 px-1 bg-sidebar text-sidebar-foreground">
         <Show when={page() === "home"}>
-          <BookmarksPage />
+          <div class="h-[calc(100vh_-_40px)] ">
+            <BookmarksPage />
+          </div>
         </Show>
         <Show when={page() === "settings"}>
-          <SettingsPage />
+          <div class="h-full">
+            <SettingsPage />
+          </div>
         </Show>
       </main>
       <BookmarkEditDialog />
