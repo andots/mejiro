@@ -1,17 +1,24 @@
 import { Button } from "@repo/ui/button";
 import { type Component, createEffect, For, on, Show } from "solid-js";
 
-import { OcticonGear24, OcticonSidebarCollapse24, OcticonSidebarExpand24 } from "@repo/ui/icons";
+import {
+  OcticonGear24,
+  OcticonHome24,
+  OcticonSidebarCollapse24,
+  OcticonSidebarExpand24,
+} from "@repo/ui/icons";
 import { useUrlState } from "../../stores/url";
 import { useWindowState } from "../../stores/window";
 import AddressBar from "./AddressBar";
 import Favicon from "../icons/Favicon";
 import { usePageState } from "../../stores/pages";
 import { useBookmarkState } from "../../stores/bookmarks";
+import { useSettingsState } from "../../stores/settings";
 
 const ToolBar: Component = () => {
   const bookmarks = useBookmarkState((state) => state.bookmarks);
   const toolbarBookmarks = useBookmarkState((state) => state.toolbarBookmarks);
+  const settings = useSettingsState((state) => state.settings);
 
   createEffect(
     on(bookmarks, () => {
@@ -34,6 +41,14 @@ const ToolBar: Component = () => {
     } else if (externalState() === "full") {
       changeExternalState("right");
     } else if (externalState() === "hidden") {
+      changeExternalState("right");
+    }
+  };
+
+  const handleHome = () => {
+    setPage("home");
+    navigateToUrl(settings().start_page_url);
+    if (externalState() === "hidden") {
       changeExternalState("right");
     }
   };
@@ -75,6 +90,15 @@ const ToolBar: Component = () => {
         <Show when={externalState() === "full"}>
           <OcticonSidebarExpand24 />
         </Show>
+      </Button>
+
+      <Button
+        class="w-9 h-9 m-0 p-2 [&_svg]:size-6 [&_svg]:shrink-0"
+        variant="ghost"
+        size="icon"
+        onClick={handleHome}
+      >
+        <OcticonHome24 />
       </Button>
 
       {/* pinned url favicons */}
