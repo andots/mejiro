@@ -1,5 +1,18 @@
 # Changelog
 
+# [0.17.0](https://github.com/andots/mejiro/compare/v0.16.0...v0.17.0) (2025-02-23)
+
+
+### Bug Fixes
+
+* **front:** stop rendering twice on bookmarks change and remove getFolders after invoking ([27d6e33](https://github.com/andots/mejiro/commit/27d6e33a0cfd4b335a7851207528582e3de3310a))
+* simplify using signals for dragging source div ([e9a842b](https://github.com/andots/mejiro/commit/e9a842bd6783f3964eb8f247d3438ffc0499f227))
+
+
+### Features
+
+* **core:** prevent moving bookmarks to descendants ([f06d2d2](https://github.com/andots/mejiro/commit/f06d2d27cd2d8f8786210d51cf0b50b3d2adbe29))
+
 # [0.16.0](https://github.com/andots/mejiro/compare/v0.15.0...v0.16.0) (2025-02-23)
 
 
