@@ -1,11 +1,10 @@
 use crate::{
-    data::{BookmarkData, FolderData, NodeType},
+    data::{BookmarkData, FolderData, NodeType, ToolbarBookmarkData},
     error::CoreError,
 };
 
 use super::Bookmarks;
 
-/// Root related functions
 impl Bookmarks {
     /// Get root children as Vec<BookmarkData>
     pub fn get_root_children(&self) -> Result<Vec<BookmarkData>, CoreError> {
@@ -37,5 +36,53 @@ impl Bookmarks {
             }
         }
         Ok(vec)
+    }
+
+    /// Get toolbar bookmarks as Vec<ToolbarBookmarkData>
+    pub fn get_toolbar_bookmarks(&self) -> Vec<ToolbarBookmarkData> {
+        // find root node_id, return empty vec if not found
+        let root_id = match self.get_root_node_id() {
+            Ok(id) => id,
+            Err(_) => return Vec::new(),
+        };
+
+        // find a folder named "Toolbar" under root
+        let toolbar_id = root_id.children(&self.arena).find(|node_id| {
+            if let Ok(node) = self.find_node_by_node_id(*node_id) {
+                let data = node.get();
+                data.node_type == NodeType::Folder && data.title == "Toolbar"
+            } else {
+                false
+            }
+        });
+
+        if let Some(toolbar_id) = toolbar_id {
+            let bookmarks = toolbar_id
+                .children(&self.arena)
+                .filter_map(|node_id| {
+                    self.find_node_by_node_id(node_id).ok().and_then(|node| {
+                        if node.is_removed() {
+                            return None;
+                        }
+
+                        let data = node.get();
+                        match (&data.node_type, &data.url, &data.host) {
+                            (NodeType::Bookmark, Some(url), Some(host)) => {
+                                Some(ToolbarBookmarkData {
+                                    index: node_id.into(),
+                                    title: data.title.clone(),
+                                    url: url.to_string(),
+                                    host: host.clone(),
+                                })
+                            }
+                            _ => None,
+                        }
+                    })
+                })
+                .collect::<Vec<_>>();
+            bookmarks
+        } else {
+            Vec::new()
+        }
     }
 }

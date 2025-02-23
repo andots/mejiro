@@ -1,6 +1,9 @@
 use std::sync::Mutex;
 
-use mejiro_core::{bookmarks::Bookmarks, data::FolderData};
+use mejiro_core::{
+    bookmarks::Bookmarks,
+    data::{FolderData, ToolbarBookmarkData},
+};
 
 use crate::error::AppError;
 
@@ -26,6 +29,16 @@ pub fn get_root_and_children_folders(
         .lock()
         .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
     Ok(bookmarks.get_root_and_children_folders()?)
+}
+
+#[tauri::command]
+pub fn get_toolbar_bookmarks(
+    state: tauri::State<'_, Mutex<Bookmarks>>,
+) -> Result<Vec<ToolbarBookmarkData>, AppError> {
+    let bookmarks = state
+        .lock()
+        .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
+    Ok(bookmarks.get_toolbar_bookmarks())
 }
 
 #[tauri::command]

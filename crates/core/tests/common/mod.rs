@@ -48,10 +48,18 @@ pub fn create_test_bookmarks() -> Bookmarks {
 pub fn create_realistic_bookmarks() -> Bookmarks {
     let mut arena = Arena::new();
     let root = BookmarkData::new_root();
+    let tool_bar = BookmarkData::new_folder("Toolbar");
     let rust_folder = BookmarkData::new_folder("Rust");
     let frontend_folder = BookmarkData::new_folder("Frontend");
     tree!(&mut arena,
         root => {
+            tool_bar => {
+                BookmarkData::try_new_bookmark("Google", "https://www.google.com/").unwrap(),
+                BookmarkData::try_new_bookmark("GitHub", "https://github.com/").unwrap(),
+                BookmarkData::try_new_bookmark("YouTube", "https://www.youtube.com/").unwrap(),
+                BookmarkData::try_new_bookmark("Github Search", "https://github.com/search").unwrap(),
+                BookmarkData::new_folder("Inside Toolbar"),
+            },
             rust_folder => {
                 BookmarkData::try_new_bookmark("tauri - Rust", "https://docs.rs/tauri/latest/tauri/").unwrap() => {
                     BookmarkData::try_new_bookmark("App in tauri - Rust", "https://docs.rs/tauri/latest/tauri/struct.App.html").unwrap(),

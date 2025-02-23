@@ -2,8 +2,6 @@ mod common;
 
 #[cfg(test)]
 mod tests {
-    use std::{fs, io::Write};
-
     use indextree::{macros::tree, Arena};
     use mejiro_core::{
         bookmarks::Bookmarks,
@@ -11,7 +9,7 @@ mod tests {
         error::CoreError,
     };
 
-    use crate::common::{create_realistic_bookmarks, create_test_bookmarks, get_outs_path};
+    use crate::common::{create_realistic_bookmarks, create_test_bookmarks};
 
     #[test]
     fn test_default() -> anyhow::Result<()> {
@@ -341,23 +339,31 @@ mod tests {
         Ok(())
     }
 
-    // TODO: remove this test, and write better one
     #[test]
-    fn test_create_realistic_arena() -> anyhow::Result<()> {
-        let bookmarks = create_realistic_bookmarks();
+    fn test_get_toolbar_bookmarks() -> anyhow::Result<()> {
+        let mut bookmarks = create_realistic_bookmarks();
+        let toolbar_bookmarks = bookmarks.get_toolbar_bookmarks();
+        assert_eq!(toolbar_bookmarks.len(), 4);
+        let google = toolbar_bookmarks.first().unwrap();
+        assert_eq!(google.title, "Google");
+        let github = toolbar_bookmarks.get(1).unwrap();
+        assert_eq!(github.title, "GitHub");
+        let youtube = toolbar_bookmarks.get(2).unwrap();
+        assert_eq!(youtube.title, "YouTube");
+        let github_search = toolbar_bookmarks.last().unwrap();
+        assert_eq!(github_search.title, "Github Search");
 
-        let path = get_outs_path().join("bookmarks.json");
-        let mut file = fs::File::create(path)?;
-        let json = bookmarks.to_json()?;
-        file.write_all(json.as_bytes())?;
+        // remove item
+        bookmarks.remove_subtree(3)?;
+        let toolbar_bookmarks = bookmarks.get_toolbar_bookmarks();
+        assert_eq!(toolbar_bookmarks.len(), 3);
 
-        let path = get_outs_path().join("nested_bookmarks.json");
-        let mut file = fs::File::create(path)?;
-        let json = bookmarks.to_nested_json(1)?;
-        file.write_all(json.as_bytes())?;
+        // remove toolbar folder
+        bookmarks.remove_subtree(2)?;
+        let toolbar_bookmarks = bookmarks.get_toolbar_bookmarks();
+        assert_eq!(toolbar_bookmarks.len(), 0);
 
-        assert_eq!(bookmarks.count_all_nodes(), 16);
-
+        println!("{:?}", toolbar_bookmarks);
         Ok(())
     }
 }
