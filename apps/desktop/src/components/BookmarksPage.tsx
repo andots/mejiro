@@ -12,7 +12,6 @@ const BookmarksPage: Component = () => {
   const folders = useBookmarkState((state) => state.folders);
 
   onMount(async () => {
-    // console.log("onMount: BookmarksPage");
     await useBookmarkState.getState().getFolders();
   });
 

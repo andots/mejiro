@@ -54,7 +54,6 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
     // update the folders list
-    // TODO: this should be done in createEffect on bookmarks (RootChildrenSelect.tsx)
     get().getFolders();
   },
   removeBookmark: async (index) => {
