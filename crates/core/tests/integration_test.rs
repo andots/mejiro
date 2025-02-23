@@ -92,6 +92,17 @@ mod tests {
     }
 
     #[test]
+    fn test_append_to_child_to_descendant() -> anyhow::Result<()> {
+        let mut bookmarks = create_test_bookmarks();
+        let result = bookmarks.append_to_child(6, 7);
+        assert_eq!(
+            result.unwrap_err().to_string(),
+            "Cannot move to descendant".to_string()
+        );
+        Ok(())
+    }
+
+    #[test]
     fn test_insert_after() -> anyhow::Result<()> {
         let mut bookmarks = create_test_bookmarks();
         bookmarks.insert_after(4, 2)?;
@@ -166,8 +177,18 @@ mod tests {
             assert_eq!(id, vec[i]);
         }
 
-        // println!("{}", bookmarks.to_nested_json_pretty(1)?);
+        Ok(())
+    }
 
+    #[test]
+    fn test_insert_after_to_descendant() -> anyhow::Result<()> {
+        let mut bookmarks = create_test_bookmarks();
+
+        let result = bookmarks.insert_after(6, 7);
+        assert_eq!(
+            result.unwrap_err().to_string(),
+            "Cannot move to descendant".to_string()
+        );
         Ok(())
     }
 

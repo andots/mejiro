@@ -45,4 +45,7 @@ pub enum CoreError {
 
     #[error("Toolbar Folder Not Found")]
     ToolbarFolderNotFound(),
+
+    #[error("Cannot move to descendant")]
+    CannotMoveToDescendant(),
 }

@@ -116,6 +116,14 @@ impl Bookmarks {
         let source_node_id = self.find_node_id_by_index(source_index)?;
         let dest_node_id = self.find_node_id_by_index(destination_index)?;
 
+        // check that dest_node_id is not a descendant of source_node_id
+        if source_node_id
+            .descendants(&self.arena)
+            .any(|node_id| node_id == dest_node_id)
+        {
+            return Err(CoreError::CannotMoveToDescendant());
+        }
+
         if destination_index == 1 {
             // if destination is root, prepend source node under the root
             dest_node_id.checked_prepend(source_node_id, &mut self.arena)?;
@@ -145,6 +153,14 @@ impl Bookmarks {
 
         let source_node_id = self.find_node_id_by_index(source_index)?;
         let dest_node_id = self.find_node_id_by_index(destination_index)?;
+
+        // check that dest_node_id is not a descendant of source_node_id
+        if source_node_id
+            .descendants(&self.arena)
+            .any(|node_id| node_id == dest_node_id)
+        {
+            return Err(CoreError::CannotMoveToDescendant());
+        }
 
         // move to the dest children (append - to the end)
         dest_node_id.checked_append(source_node_id, &mut self.arena)?;

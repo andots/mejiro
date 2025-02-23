@@ -131,11 +131,12 @@ const BookmarkTree: Component = () => {
         dragging().sourceIndex !== dragging().destinationIndex
       ) {
         if (dragging().state === "inside") {
+          // console.log(`inside: ${dragging().sourceIndex} -> ${dragging().destinationIndex}`);
           useBookmarkState
             .getState()
             .appendToChild(dragging().sourceIndex, dragging().destinationIndex);
         } else if (dragging().state === "after") {
-          // FIXME: crush when drop to self children
+          // console.log(`after: ${dragging().sourceIndex} -> ${dragging().destinationIndex}`);
           useBookmarkState
             .getState()
             .insertAfter(dragging().sourceIndex, dragging().destinationIndex);
