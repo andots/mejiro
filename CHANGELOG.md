@@ -1,5 +1,24 @@
 # Changelog
 
+# [0.16.0](https://github.com/andots/mejiro/compare/v0.15.0...v0.16.0) (2025-02-23)
+
+
+### Bug Fixes
+
+* **app:** remove pinned URLs stuff ([0dffff5](https://github.com/andots/mejiro/commit/0dffff59718bee08c5434f899f82ddc2eb3435c0))
+* **front:** adjust layout for Bookmarks and Settings pages to ensure proper height ([710547d](https://github.com/andots/mejiro/commit/710547d6d78fb06d95d23b97e0887213852c21e2))
+* **front:** remove pinned URLs stuffs  from settings page and related state ([7054ede](https://github.com/andots/mejiro/commit/7054ede6e528162a98ddff156bb7596373beb06e))
+* **front:** update layout and styling for App component to enhance scrollbar visibility and spacing ([1142f16](https://github.com/andots/mejiro/commit/1142f163a15208d249287d2b73679253dc8e1246))
+
+
+### Features
+
+* add functionality to retrieve toolbar bookmarks ([e7a6177](https://github.com/andots/mejiro/commit/e7a6177a8d71326ea63d9474d6091526f116e62e))
+* **core:** append bookmark to toolbar functionality and error handling for missing toolbar folder ([2f95ee3](https://github.com/andots/mejiro/commit/2f95ee3fca02266629c142e670f27fe07de8f758))
+* **front:** add home button to toolbar with navigation functionality ([f9bfaa2](https://github.com/andots/mejiro/commit/f9bfaa2a4cfb18b4ca84dee0ae3778283c24a41a))
+* **front:** implement toolbar bookmarks retrieval and display in the toolbar ([cdc2bcd](https://github.com/andots/mejiro/commit/cdc2bcd4327ff2d4305f7085b491e1d2e14f6227))
+* **front:** integrate append bookmark to toolbar functionality ([d2200f1](https://github.com/andots/mejiro/commit/d2200f10866bf45b40492bf46a43dce8ab205c78))
+
 # [0.15.0](https://github.com/andots/mejiro/compare/v0.14.0...v0.15.0) (2025-02-22)
 
 
