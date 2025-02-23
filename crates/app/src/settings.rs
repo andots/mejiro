@@ -16,9 +16,6 @@ pub struct UserSettings {
 
     #[serde(default = "default_start_page_url")]
     pub start_page_url: String,
-
-    #[serde(default = "default_pinned_urls")]
-    pub pinned_urls: Vec<String>,
 }
 
 fn default_language() -> String {
@@ -41,15 +38,6 @@ pub fn default_start_page_url() -> String {
     "https://search.brave.com/".to_string()
 }
 
-fn default_pinned_urls() -> Vec<String> {
-    vec![
-        "https://search.brave.com/".to_string(),
-        "https://docs.rs".to_string(),
-        "https://crates.io".to_string(),
-        "https://github.com/search".to_string(),
-    ]
-}
-
 impl Default for UserSettings {
     fn default() -> Self {
         Self {
@@ -58,7 +46,6 @@ impl Default for UserSettings {
             gpu_acceleration_enabled: default_gpu_acceleration_enabled(),
             incognito: default_incognito(),
             start_page_url: default_start_page_url(),
-            pinned_urls: default_pinned_urls(),
         }
     }
 }

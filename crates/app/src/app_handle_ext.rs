@@ -112,6 +112,7 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
                 match serde_json::from_reader(reader) {
                     Ok(settings) => settings,
                     Err(e) => {
+                        // TODO: if the file is corrupted, rename it to .bak and create a new one
                         log::warn!("Load default settings: {:?}", e);
                         UserSettings::default()
                     }
@@ -135,7 +136,6 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
             gpu_acceleration_enabled: value.gpu_acceleration_enabled,
             incognito: value.incognito,
             start_page_url: value.start_page_url.clone(),
-            pinned_urls: value.pinned_urls.clone(),
         };
         let path = self.get_settings_file_path();
         let file = fs::File::create(path)?;
@@ -189,6 +189,7 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
         match Bookmarks::load_from_file(path) {
             Ok(v) => v,
             Err(e) => {
+                // TODO: if the file is corrupted, rename it to .bak and create a new one
                 log::warn!("Load default bookmarks: {:?}", e);
                 Bookmarks::default()
             }
