@@ -18,3 +18,7 @@ export const validateUrl = (url: string): boolean => {
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+export const isDev = () => {
+  return import.meta.env.DEV;
+};

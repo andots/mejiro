@@ -6,6 +6,7 @@ import { useBookmarkState } from "../../stores/bookmarks";
 
 import BookmarkNode from "./BookmarkNode";
 import type { Bookmark, Dragging } from "../../types";
+import { isDev } from "../../utils";
 
 type Props = {
   bookmark: Bookmark;
@@ -25,7 +26,9 @@ const BookmarkTree: Component<Props> = (props) => {
 
   createEffect(() => {
     if (ref) {
-      // console.log("createEffect: bookmarks changed: ", props.bookmark);
+      if (isDev()) {
+        console.log("createEffect: bookmarks changed: ", ref);
+      }
       for (const child of ref.children) {
         dragStartEventListener(child as HTMLDivElement);
         dragEndEventListener(child as HTMLDivElement);
@@ -42,7 +45,6 @@ const BookmarkTree: Component<Props> = (props) => {
   // dragstart event
   const dragStartEventListener = (el: HTMLDivElement) => {
     makeEventListener(el, "dragstart", (ev) => {
-      // TODO: use el, not ev.target?
       const source = ev.target as HTMLDivElement;
       const match = source.id.match(/bookmark-(\d+)/);
       if (match) {
@@ -70,50 +72,48 @@ const BookmarkTree: Component<Props> = (props) => {
   const dragOverEventListener = (el: HTMLDivElement) => {
     makeEventListener(el, "dragover", (ev) => {
       ev.preventDefault();
-      if (ev.dataTransfer) {
+      if (ev.dataTransfer && dragging().source) {
         ev.dataTransfer.dropEffect = "move";
-        if (dragging().source) {
-          // find the closest destination by ev.clientY from children
-          const children = Array.from(el.children as HTMLCollectionOf<HTMLDivElement>);
-          const closest = children.find((dest) => {
-            const destinationRect = dest.getBoundingClientRect();
-            return ev.clientY < destinationRect.bottom;
-          });
-          if (closest) {
-            const match = closest.id.match(/bookmark-(\d+)/);
-            if (match) {
-              const destinationIndex = Number.parseInt(match[1]);
+        // find the closest destination by ev.clientY from children
+        const children = Array.from(el.children as HTMLCollectionOf<HTMLDivElement>);
+        const closest = children.find((dest) => {
+          const destinationRect = dest.getBoundingClientRect();
+          return ev.clientY < destinationRect.bottom;
+        });
+        if (closest) {
+          const match = closest.id.match(/bookmark-(\d+)/);
+          if (match) {
+            const destinationIndex = Number.parseInt(match[1]);
 
-              // if the destination is the current top level, then force to be inside
-              if (destinationIndex === getCurrentTopLevel()) {
-                setDragging({
-                  sourceIndex: dragging().sourceIndex,
-                  destinationIndex,
-                  state: "inside",
-                  source: dragging().source,
-                });
-                return;
-              }
+            // if the destination is the current top level, then force to be inside
+            if (destinationIndex === getCurrentTopLevel()) {
+              setDragging({
+                sourceIndex: dragging().sourceIndex,
+                destinationIndex,
+                state: "inside",
+                source: dragging().source,
+              });
+              return;
+            }
 
-              const rect = closest.getBoundingClientRect();
-              const isInside = ev.clientY <= rect.top + rect.height / 2;
-              if (isInside) {
-                // inside the destination
-                setDragging({
-                  sourceIndex: dragging().sourceIndex,
-                  destinationIndex,
-                  state: "inside",
-                  source: dragging().source,
-                });
-              } else {
-                // after the destination
-                setDragging({
-                  sourceIndex: dragging().sourceIndex,
-                  destinationIndex,
-                  state: "after",
-                  source: dragging().source,
-                });
-              }
+            const rect = closest.getBoundingClientRect();
+            const isInside = ev.clientY <= rect.top + rect.height / 2;
+            if (isInside) {
+              // inside the destination
+              setDragging({
+                sourceIndex: dragging().sourceIndex,
+                destinationIndex,
+                state: "inside",
+                source: dragging().source,
+              });
+            } else {
+              // after the destination
+              setDragging({
+                sourceIndex: dragging().sourceIndex,
+                destinationIndex,
+                state: "after",
+                source: dragging().source,
+              });
             }
           }
         }
@@ -132,12 +132,16 @@ const BookmarkTree: Component<Props> = (props) => {
         dragging().sourceIndex !== dragging().destinationIndex
       ) {
         if (dragging().state === "inside") {
-          // console.log(`inside: ${dragging().sourceIndex} -> ${dragging().destinationIndex}`);
+          if (isDev()) {
+            console.log(`inside: ${dragging().sourceIndex} -> ${dragging().destinationIndex}`);
+          }
           useBookmarkState
             .getState()
             .appendToChild(dragging().sourceIndex, dragging().destinationIndex);
         } else if (dragging().state === "after") {
-          // console.log(`after: ${dragging().sourceIndex} -> ${dragging().destinationIndex}`);
+          if (isDev()) {
+            console.log(`after: ${dragging().sourceIndex} -> ${dragging().destinationIndex}`);
+          }
           useBookmarkState
             .getState()
             .insertAfter(dragging().sourceIndex, dragging().destinationIndex);

@@ -1,4 +1,4 @@
-import { type Component, For, Match, Show, Switch, createSignal } from "solid-js";
+import { type Component, For, Match, Show, Switch } from "solid-js";
 
 import type { Bookmark, Dragging } from "../../types";
 
@@ -28,6 +28,7 @@ import NavigationArrowIcon from "../icons/NavigationArrowIcon";
 import FolderIcon from "../icons/FolderIcon";
 import Favicon from "../icons/Favicon";
 import { useBookmarkState } from "../../stores/bookmarks";
+import { isDev } from "../../utils";
 
 type BookmarkNodeProps = {
   bookmark: Bookmark;
@@ -45,6 +46,8 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
   const isFolder = () =>
     props.bookmark.node_type === "Folder" || props.bookmark.node_type === "Root";
   const isBookmark = () => props.bookmark.node_type === "Bookmark";
+  const title = () =>
+    isDev() ? `${props.bookmark.index} - ${props.bookmark.title}` : props.bookmark.title;
 
   // for draggable
   const isRoot = () => props.bookmark.node_type === "Root";
@@ -137,8 +140,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
                     "bg-blue-300": isDraggingInside(),
                   }}
                 >
-                  {/* {props.bookmark.index} - {props.bookmark.title} */}
-                  {props.bookmark.title}
+                  {title()}
                 </div>
               </div>
             </div>
