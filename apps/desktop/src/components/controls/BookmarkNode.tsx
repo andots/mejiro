@@ -91,7 +91,13 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
   return (
     <>
       <ContextMenu onOpenChange={(isOpen) => handleContextMenu(isOpen)}>
-        <ContextMenuTrigger draggable={isDraggable()} id={`bookmark-${props.bookmark.index}`}>
+        <ContextMenuTrigger
+          draggable={isDraggable()}
+          id={`bookmark-${props.bookmark.index}`}
+          classList={{
+            hasChildren: hasChildren(),
+          }}
+        >
           <div
             class={"flex flex-col hover:bg-sidebar-accent transition-colors duration-150"}
             style={{ "padding-left": `${props.level * 8}px` }}

@@ -1,4 +1,4 @@
-import { type Component, createEffect, createSignal } from "solid-js";
+import { type Component, createEffect, createSignal, on } from "solid-js";
 
 import { makeEventListener } from "@solid-primitives/event-listener";
 
@@ -22,22 +22,27 @@ const BookmarkTree: Component<Props> = (props) => {
     destinationIndex: -1,
     state: "none",
     source: null,
+    destination: null,
   });
 
-  createEffect(() => {
-    if (ref) {
-      if (isDev()) {
-        console.log("createEffect: bookmarks changed: ", ref);
+  // props.bookmark should be reactive, and when it changes, we need to re-attach event listeners
+  const bookmark = () => props.bookmark;
+  createEffect(
+    on(bookmark, () => {
+      if (ref) {
+        if (isDev()) {
+          console.log("createEffect: bookmarks changed: ", ref);
+        }
+        for (const child of ref.children) {
+          dragStartEventListener(child as HTMLDivElement);
+          dragEndEventListener(child as HTMLDivElement);
+        }
+        dragEnterEventListener(ref);
+        dragOverEventListener(ref);
+        dropEventListener(ref);
       }
-      for (const child of ref.children) {
-        dragStartEventListener(child as HTMLDivElement);
-        dragEndEventListener(child as HTMLDivElement);
-      }
-      dragEnterEventListener(ref);
-      dragOverEventListener(ref);
-      dropEventListener(ref);
-    }
-  });
+    }),
+  );
 
   // DragEvent will be ...
   // dragstart -> dragenter -> dragover -> drop -> dragend
@@ -56,6 +61,7 @@ const BookmarkTree: Component<Props> = (props) => {
           destinationIndex: -1,
           state: "none",
           source,
+          destination: null,
         });
       }
     });
@@ -92,6 +98,7 @@ const BookmarkTree: Component<Props> = (props) => {
                 destinationIndex,
                 state: "inside",
                 source: dragging().source,
+                destination: closest,
               });
               return;
             }
@@ -105,6 +112,7 @@ const BookmarkTree: Component<Props> = (props) => {
                 destinationIndex,
                 state: "inside",
                 source: dragging().source,
+                destination: closest,
               });
             } else {
               // after the destination
@@ -113,6 +121,7 @@ const BookmarkTree: Component<Props> = (props) => {
                 destinationIndex,
                 state: "after",
                 source: dragging().source,
+                destination: closest,
               });
             }
           }
@@ -125,6 +134,11 @@ const BookmarkTree: Component<Props> = (props) => {
   const dropEventListener = (el: HTMLDivElement) => {
     makeEventListener(el, "drop", (ev) => {
       ev.preventDefault();
+      if (isDev()) {
+        console.log(
+          `${dragging().state}: ${dragging().sourceIndex} -> ${dragging().destinationIndex}`,
+        );
+      }
       // make sure souceId is not root and destinationId is over root, and sourceId is not equal to destinationId
       if (
         dragging().sourceIndex >= 2 &&
@@ -132,19 +146,17 @@ const BookmarkTree: Component<Props> = (props) => {
         dragging().sourceIndex !== dragging().destinationIndex
       ) {
         if (dragging().state === "inside") {
-          if (isDev()) {
-            console.log(`inside: ${dragging().sourceIndex} -> ${dragging().destinationIndex}`);
-          }
           useBookmarkState
             .getState()
             .appendToChild(dragging().sourceIndex, dragging().destinationIndex);
         } else if (dragging().state === "after") {
-          if (isDev()) {
-            console.log(`after: ${dragging().sourceIndex} -> ${dragging().destinationIndex}`);
+          if (dragging().destination?.classList.contains("hasChildren")) {
+            // TODO: prepend to the first child
+          } else {
+            useBookmarkState
+              .getState()
+              .insertAfter(dragging().sourceIndex, dragging().destinationIndex);
           }
-          useBookmarkState
-            .getState()
-            .insertAfter(dragging().sourceIndex, dragging().destinationIndex);
         }
       }
     });
@@ -161,6 +173,7 @@ const BookmarkTree: Component<Props> = (props) => {
         destinationIndex: -1,
         state: "none",
         source: null,
+        destination: null,
       });
     });
   };
