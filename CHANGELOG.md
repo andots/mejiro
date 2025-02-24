@@ -1,5 +1,28 @@
 # Changelog
 
+# [0.18.0](https://github.com/andots/mejiro/compare/v0.17.0...v0.18.0) (2025-02-24)
+
+
+### Bug Fixes
+
+* **app:** import webview label constant in cfg(debug_assertions) ([9599fdb](https://github.com/andots/mejiro/commit/9599fdb2bbb5bbbaf16c360eb64a0fecb5d45960))
+* **core:** add validation to prevent prepending as first child to the parent ([db39856](https://github.com/andots/mejiro/commit/db398566c9fbc4606b742e6738e189c9c2c6d281))
+* **front:** add favicon link and remove unused favicon.svg ([4f8589f](https://github.com/andots/mejiro/commit/4f8589fc3ed412f656d9e621f55326652a2b775b))
+* **front:** disable default right-click context menu and remove unused lifecycle methods ([e237ca3](https://github.com/andots/mejiro/commit/e237ca3a343ba78289973897293576a5570ed72c))
+* **front:** dragging signal should have destination div, and watch its hasChildren classList ([0c6888b](https://github.com/andots/mejiro/commit/0c6888bb2e315ff1d30eba4d852943503c454d91))
+* **front:** dragging source check while dragover ([eab8e6d](https://github.com/andots/mejiro/commit/eab8e6d28acb3cabfc177137de99432ace2f9e6c))
+* **front:** get backend state in initApp that is run before render to avoid undesired re-render ([22538d7](https://github.com/andots/mejiro/commit/22538d776f1fa0380566e6f3412b6200cf1ec1ff))
+* **front:** pass bookmarks as props to BookmarkTree component and clean up unused code ([e1da182](https://github.com/andots/mejiro/commit/e1da18234245c0693a78f22b3b8927c33452430e))
+
+
+### Features
+
+* **app:** integrate insert_before functionality for bookmarks ([629e919](https://github.com/andots/mejiro/commit/629e919853a420b1144f8c8e7a567d6791560adc))
+* **app:** integrate prepend_to_child functionality for app and frontend ([66a18f9](https://github.com/andots/mejiro/commit/66a18f9e062b643514affda078a108ac439cff2c))
+* **core:** add insert_before method for inserting nodes before a target node ([7132fa3](https://github.com/andots/mejiro/commit/7132fa3acf8d351459693dd6dd22e8a1121a2e11))
+* **core:** add prepend_to_child method for moving bookmarks and corresponding tests ([1fda647](https://github.com/andots/mejiro/commit/1fda64789654fb92d2c8fe9b6bcd9b7569a8a0cf))
+* **front:** prevent to dropping to self children with DOM tree check, UI disable it while dragging ([80b2d95](https://github.com/andots/mejiro/commit/80b2d95eaa0ce3992c317da37b7d71518cc31e3b))
+
 # [0.17.0](https://github.com/andots/mejiro/compare/v0.16.0...v0.17.0) (2025-02-23)
 
 
