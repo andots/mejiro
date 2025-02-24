@@ -131,6 +131,21 @@ pub fn insert_after(
 }
 
 #[tauri::command]
+pub fn insert_before(
+    state: tauri::State<'_, Mutex<Bookmarks>>,
+    source_index: usize,
+    destination_index: usize,
+    top_level_index: usize,
+) -> Result<String, AppError> {
+    let mut bookmarks = state
+        .lock()
+        .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
+    bookmarks.insert_before(source_index, destination_index)?;
+
+    Ok(bookmarks.to_nested_json(top_level_index)?)
+}
+
+#[tauri::command]
 pub fn append_to_child(
     state: tauri::State<'_, Mutex<Bookmarks>>,
     source_index: usize,

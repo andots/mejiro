@@ -41,6 +41,14 @@ export const Invoke = {
       topLevelIndex,
     });
   },
+  InsertBefore: async (sourceIndex: number, destinationIndex: number, topLevelIndex: number) => {
+    // returned json string is a nested tree of bookmarks
+    return invoke<string>("insert_before", {
+      sourceIndex,
+      destinationIndex,
+      topLevelIndex,
+    });
+  },
   AppendToChild: async (sourceIndex: number, destinationIndex: number, topLevelIndex: number) => {
     // returned json string is a nested tree of bookmarks
     return invoke<string>("append_to_child", { sourceIndex, destinationIndex, topLevelIndex });

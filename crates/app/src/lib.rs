@@ -85,6 +85,7 @@ pub fn run() {
             commands::bookmarks::update_bookmark_title,
             commands::bookmarks::add_folder,
             commands::bookmarks::insert_after,
+            commands::bookmarks::insert_before,
             commands::bookmarks::append_to_child,
             commands::bookmarks::prepend_to_child,
             commands::bookmarks::set_is_open,

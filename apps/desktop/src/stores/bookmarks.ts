@@ -17,6 +17,7 @@ type BookmarkState = {
   updateBookmarkTitle: (index: number, title: string) => Promise<void>;
   addFolder: (parentIndex: number, title: string) => Promise<void>;
   insertAfter: (sourceIndex: number, destinationIndex: number) => Promise<void>;
+  insertBefore: (sourceIndex: number, destinationIndex: number) => Promise<void>;
   appendToChild: (sourceIndex: number, destinationIndex: number) => Promise<void>;
   prependToChild: (sourceIndex: number, destinationIndex: number) => Promise<void>;
   toggleIsOpen: (index: number) => Promise<void>;
@@ -95,6 +96,12 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
     set(() => ({ bookmarks }));
     // update the folders list
     // get().getFolders();
+  },
+  insertBefore: async (sourceIndex, destinationIndex) => {
+    const topLevelIndex = get().getCurrentTopLevel();
+    const data = await Invoke.InsertBefore(sourceIndex, destinationIndex, topLevelIndex);
+    const bookmarks = JSON.parse(data) as Bookmark;
+    set(() => ({ bookmarks }));
   },
   appendToChild: async (sourceIndex, destinationIndex) => {
     const topLevelIndex = get().getCurrentTopLevel();
