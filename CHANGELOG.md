@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.18.1](https://github.com/andots/mejiro/compare/v0.18.0...v0.18.1) (2025-02-24)
+
+
+### Bug Fixes
+
+* **front:** check if the node is open and has children to determine whether to prepend/insert after ([1635f80](https://github.com/andots/mejiro/commit/1635f8053250cd729806f1ce9b03eff2ba23e462))
+
 # [0.18.0](https://github.com/andots/mejiro/compare/v0.17.0...v0.18.0) (2025-02-24)
 
 
