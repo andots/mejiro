@@ -19,8 +19,6 @@
     "@tauri-apps/cli": "^2.2.7",
     "husky": "^9.1.7",
     "release-it": "^18.1.2",
-    "turbo": "^2.4.2",
-    "vite": "^6.1.0",
-    "vite-tsconfig-paths": "^5.1.4"
+    "turbo": "^2.4.2"
   }
 }
