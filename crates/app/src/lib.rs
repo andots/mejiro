@@ -4,7 +4,7 @@ use tauri::Manager;
 use tauri_plugin_updater::UpdaterExt;
 
 use app_handle_ext::AppHandleExt;
-use constants::{APP_WEBVIEW_LABEL, MAINWINDOW_LABEL};
+use constants::MAINWINDOW_LABEL;
 use window::create_window;
 
 mod app_handle_ext;
@@ -59,6 +59,7 @@ pub fn run() {
             // Open devtools when debug build
             #[cfg(debug_assertions)]
             {
+                use constants::APP_WEBVIEW_LABEL;
                 app.get_webview(APP_WEBVIEW_LABEL)
                     .expect("failed to get webview")
                     .open_devtools();
