@@ -169,11 +169,14 @@ const BookmarkTree: Component<Props> = (props) => {
           useBookmarkState.getState().appendToChild(sourceIndex, destinationIndex);
         } else if (state === "after") {
           const hasChildren = destination?.classList.contains("hasChildren");
+          const isOpen = destination?.classList.contains("isOpen");
           if (hasChildren) {
-            // if destination has children, prepend to the first child
-            useBookmarkState.getState().prependToChild(sourceIndex, destinationIndex);
+            if (isOpen) {
+              useBookmarkState.getState().prependToChild(sourceIndex, destinationIndex);
+            } else {
+              useBookmarkState.getState().insertAfter(sourceIndex, destinationIndex);
+            }
           } else {
-            // if destination has no children, insert after the destination
             useBookmarkState.getState().insertAfter(sourceIndex, destinationIndex);
           }
         }

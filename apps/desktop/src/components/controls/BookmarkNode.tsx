@@ -97,6 +97,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
           class="dropzone"
           classList={{
             hasChildren: hasChildren(),
+            isOpen: isOpen(),
           }}
         >
           <div
