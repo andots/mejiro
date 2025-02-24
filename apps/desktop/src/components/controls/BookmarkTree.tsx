@@ -15,8 +15,6 @@ type Props = {
 const BookmarkTree: Component<Props> = (props) => {
   let ref!: HTMLDivElement;
 
-  const getCurrentTopLevel = useBookmarkState((state) => state.getCurrentTopLevel);
-
   const [dragging, setDragging] = createSignal<Dragging>({
     sourceIndex: -1,
     destinationIndex: -1,
@@ -90,19 +88,6 @@ const BookmarkTree: Component<Props> = (props) => {
           const match = closest.id.match(/bookmark-(\d+)/);
           if (match) {
             const destinationIndex = Number.parseInt(match[1]);
-
-            // if the destination is the current top level, then force to be inside
-            if (destinationIndex === getCurrentTopLevel()) {
-              setDragging({
-                sourceIndex: dragging().sourceIndex,
-                destinationIndex,
-                state: "inside",
-                source: dragging().source,
-                destination: closest,
-              });
-              return;
-            }
-
             const rect = closest.getBoundingClientRect();
             const isInside = ev.clientY <= rect.top + rect.height / 2;
             if (isInside) {
@@ -150,8 +135,11 @@ const BookmarkTree: Component<Props> = (props) => {
             .getState()
             .appendToChild(dragging().sourceIndex, dragging().destinationIndex);
         } else if (dragging().state === "after") {
-          if (dragging().destination?.classList.contains("hasChildren")) {
-            // TODO: prepend to the first child
+          const hasChildren = dragging().destination?.classList.contains("hasChildren");
+          if (hasChildren) {
+            useBookmarkState
+              .getState()
+              .prependToChild(dragging().sourceIndex, dragging().destinationIndex);
           } else {
             useBookmarkState
               .getState()

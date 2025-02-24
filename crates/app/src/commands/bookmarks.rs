@@ -146,6 +146,21 @@ pub fn append_to_child(
 }
 
 #[tauri::command]
+pub fn prepend_to_child(
+    state: tauri::State<'_, Mutex<Bookmarks>>,
+    source_index: usize,
+    destination_index: usize,
+    top_level_index: usize,
+) -> Result<String, AppError> {
+    let mut bookmarks = state
+        .lock()
+        .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
+    bookmarks.prepend_to_child(source_index, destination_index)?;
+
+    Ok(bookmarks.to_nested_json(top_level_index)?)
+}
+
+#[tauri::command]
 pub fn set_is_open(
     state: tauri::State<'_, Mutex<Bookmarks>>,
     index: usize,
