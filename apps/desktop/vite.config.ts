@@ -30,7 +30,7 @@ export default defineConfig({
     // produce sourcemaps for debug builds
     sourcemap: !!process.env.TAURI_ENV_DEBUG,
     // outdir
-    outDir: "../../target-frontend/web",
+    outDir: "../../target-frontend/desktop",
     emptyOutDir: true,
   },
 });

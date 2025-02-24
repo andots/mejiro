@@ -17,7 +17,7 @@ webbuild:
   pnpm run turbo build
 
 webpreview:
-  pnpm run turbo build && pnpm --filter mejiro-web astro preview
+  pnpm run turbo build && pnpm --filter mejiro-desktop vite preview
 
 release:
   pnpm run release

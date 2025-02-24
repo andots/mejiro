@@ -1,12 +1,13 @@
 {
-  "name": "mejiro-web",
+  "name": "mejiro-desktop",
   "type": "module",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "vite": "vite"
   },
   "dependencies": {
     "@fontsource/inter": "^5.1.1",

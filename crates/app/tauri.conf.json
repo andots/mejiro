@@ -3,7 +3,7 @@
   "productName": "Mejiro",
   "identifier": "com.andots.mejiro",
   "build": {
-    "frontendDist": "../../target-frontend/web",
+    "frontendDist": "../../target-frontend/desktop",
     "devUrl": "http://localhost:1420",
     "beforeDevCommand": "pnpm run turbo dev",
     "beforeBuildCommand": "pnpm run turbo build"
