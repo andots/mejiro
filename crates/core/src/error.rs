@@ -48,4 +48,7 @@ pub enum CoreError {
 
     #[error("Cannot move to descendant")]
     CannotMoveToDescendant(),
+
+    #[error("Cannot prepend as a first child")]
+    CannotPrependAsFirstChild(),
 }

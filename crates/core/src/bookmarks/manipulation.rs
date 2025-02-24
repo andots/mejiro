@@ -177,6 +177,12 @@ impl Bookmarks {
         let (source_node_id, dest_node_id) =
             self.validate_movable(source_index, destination_index)?;
 
+        // check that source node is not the first child of the dest node
+        let dest_first_child = dest_node_id.children(&self.arena).next();
+        if dest_first_child == Some(source_node_id) {
+            return Err(CoreError::CannotPrependAsFirstChild());
+        }
+
         // move to the dest children (prepend - to the front)
         dest_node_id.checked_prepend(source_node_id, &mut self.arena)?;
 

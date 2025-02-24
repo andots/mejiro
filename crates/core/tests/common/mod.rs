@@ -19,9 +19,21 @@ pub fn get_outs_path() -> &'static PathBuf {
     })
 }
 
+pub fn create_simple_bookmarks() -> Bookmarks {
+    let mut arena = Arena::new();
+    let n_1 = BookmarkData::new_root();
+    let n_2 = BookmarkData::try_new_bookmark("n_2", "https://docs.rs/abc").unwrap();
+    tree!(&mut arena,
+        n_1 => {
+            n_2,
+        }
+    );
+    Bookmarks::new(arena)
+}
+
 pub fn create_test_bookmarks() -> Bookmarks {
     let mut arena = Arena::new();
-    let root = BookmarkData::new_root();
+    let n_1 = BookmarkData::new_root();
     let n_2 = BookmarkData::try_new_bookmark("n_2", "https://docs.rs/abc").unwrap();
     let n_3 = BookmarkData::try_new_bookmark("n_3", "https://docs.rs/abc").unwrap();
     let n_4 = BookmarkData::try_new_bookmark("n_4", "https://docs.rs/abc").unwrap();
@@ -30,7 +42,7 @@ pub fn create_test_bookmarks() -> Bookmarks {
     let n_7 = BookmarkData::try_new_bookmark("n_7", "https://docs.rs/abc").unwrap();
     let n_8 = BookmarkData::try_new_bookmark("n_8", "https://docs.rs/abc").unwrap();
     tree!(&mut arena,
-        root => {
+        n_1 => {
             n_2,
             n_3,
             n_4 => {

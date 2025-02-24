@@ -9,7 +9,9 @@ mod tests {
         error::CoreError,
     };
 
-    use crate::common::{create_realistic_bookmarks, create_test_bookmarks};
+    use crate::common::{
+        create_realistic_bookmarks, create_simple_bookmarks, create_test_bookmarks,
+    };
 
     #[test]
     fn test_default() -> anyhow::Result<()> {
@@ -203,6 +205,18 @@ mod tests {
             let id: usize = node_id.into();
             assert_eq!(id, vec[i]);
         }
+        Ok(())
+    }
+
+    #[test]
+    fn test_prepend_to_self_parent() -> anyhow::Result<()> {
+        let mut bookmarks = create_simple_bookmarks();
+        let result = bookmarks.prepend_to_child(2, 1);
+        assert!(result.is_err());
+        assert_eq!(
+            result.unwrap_err().to_string(),
+            "Cannot prepend as a first child".to_string()
+        );
         Ok(())
     }
 
