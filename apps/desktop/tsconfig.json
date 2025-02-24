@@ -3,8 +3,8 @@
   "compilerOptions": {
     "paths": {
       "~/*": ["./src/*"]
-    }
-    // "types": ["unplugin-icons/types/solid"]
+    },
+    "types": ["vite/client"]
   },
   "include": [".astro/types.d.ts", "**/*"],
   "exclude": ["dist"]
