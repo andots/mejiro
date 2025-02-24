@@ -4,7 +4,7 @@ use tauri::Manager;
 use tauri_plugin_updater::UpdaterExt;
 
 use app_handle_ext::AppHandleExt;
-use constants::MAINWINDOW_LABEL;
+use constants::{APP_WEBVIEW_LABEL, MAINWINDOW_LABEL};
 use window::create_window;
 
 mod app_handle_ext;
@@ -55,6 +55,14 @@ pub fn run() {
             let settings = app.handle().load_user_settings();
             create_window(app.handle(), &settings)?;
             app.manage(Mutex::new(settings));
+
+            // Open devtools when debug build
+            #[cfg(debug_assertions)]
+            {
+                app.get_webview(APP_WEBVIEW_LABEL)
+                    .expect("failed to get webview")
+                    .open_devtools();
+            }
 
             Ok(())
         })
