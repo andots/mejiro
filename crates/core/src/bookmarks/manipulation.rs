@@ -168,6 +168,38 @@ impl Bookmarks {
         Ok(())
     }
 
+    pub fn prepend_to_child(
+        &mut self,
+        source_index: usize,
+        destination_index: usize,
+    ) -> Result<(), CoreError> {
+        // if source node is root, return error
+        if source_index == 1 {
+            return Err(CoreError::CannotMoveRoot());
+        }
+
+        // if source and destination is same, return error
+        if source_index == destination_index {
+            return Err(CoreError::SameSourceAndDestination());
+        }
+
+        let source_node_id = self.find_node_id_by_index(source_index)?;
+        let dest_node_id = self.find_node_id_by_index(destination_index)?;
+
+        // check that dest_node_id is not a descendant of source_node_id
+        if source_node_id
+            .descendants(&self.arena)
+            .any(|node_id| node_id == dest_node_id)
+        {
+            return Err(CoreError::CannotMoveToDescendant());
+        }
+
+        // move to the dest children (prepend - to the front)
+        dest_node_id.checked_prepend(source_node_id, &mut self.arena)?;
+
+        Ok(())
+    }
+
     /// Add bookmark to Toolbar folder
     pub fn append_bookmark_to_toolbar(&mut self, title: &str, url: &str) -> Result<(), CoreError> {
         let toolbar_id = self.get_toolbar_node_id()?;

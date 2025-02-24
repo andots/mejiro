@@ -193,6 +193,30 @@ mod tests {
     }
 
     #[test]
+    fn test_prepend_to_child() -> anyhow::Result<()> {
+        let mut bookmarks = create_test_bookmarks();
+        bookmarks.prepend_to_child(6, 4)?;
+        let root = bookmarks.get_root_node_id()?;
+        let vec: Vec<usize> = vec![1, 2, 3, 4, 6, 7, 8, 5];
+        for (i, node_id) in root.descendants(bookmarks.arena()).enumerate() {
+            let id: usize = node_id.into();
+            assert_eq!(id, vec[i]);
+        }
+        Ok(())
+    }
+
+    #[test]
+    fn test_prepend_to_child_to_descendant() -> anyhow::Result<()> {
+        let mut bookmarks = create_test_bookmarks();
+        let result = bookmarks.prepend_to_child(6, 7);
+        assert_eq!(
+            result.unwrap_err().to_string(),
+            "Cannot move to descendant".to_string()
+        );
+        Ok(())
+    }
+
+    #[test]
     fn test_remove_subtree() -> anyhow::Result<()> {
         // let arena = create_test_tree();
         let mut bookmarks = create_test_bookmarks();
