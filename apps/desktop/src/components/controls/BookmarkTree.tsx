@@ -119,31 +119,20 @@ const BookmarkTree: Component<Props> = (props) => {
   const dropEventListener = (el: HTMLDivElement) => {
     makeEventListener(el, "drop", (ev) => {
       ev.preventDefault();
-      if (isDev()) {
-        console.log(
-          `${dragging().state}: ${dragging().sourceIndex} -> ${dragging().destinationIndex}`,
-        );
-      }
+      const { source, destination, sourceIndex, destinationIndex, state } = dragging();
       // make sure souceId is not root and destinationId is over root, and sourceId is not equal to destinationId
-      if (
-        dragging().sourceIndex >= 2 &&
-        dragging().destinationIndex >= 1 &&
-        dragging().sourceIndex !== dragging().destinationIndex
-      ) {
-        if (dragging().state === "inside") {
-          useBookmarkState
-            .getState()
-            .appendToChild(dragging().sourceIndex, dragging().destinationIndex);
-        } else if (dragging().state === "after") {
-          const hasChildren = dragging().destination?.classList.contains("hasChildren");
+      if (sourceIndex >= 2 && destinationIndex >= 1 && sourceIndex !== destinationIndex) {
+        if (isDev()) {
+          console.log(`${state}: ${sourceIndex} -> ${destinationIndex}`);
+        }
+        if (state === "inside") {
+          useBookmarkState.getState().appendToChild(sourceIndex, destinationIndex);
+        } else if (state === "after") {
+          const hasChildren = destination?.classList.contains("hasChildren");
           if (hasChildren) {
-            useBookmarkState
-              .getState()
-              .prependToChild(dragging().sourceIndex, dragging().destinationIndex);
+            useBookmarkState.getState().prependToChild(sourceIndex, destinationIndex);
           } else {
-            useBookmarkState
-              .getState()
-              .insertAfter(dragging().sourceIndex, dragging().destinationIndex);
+            useBookmarkState.getState().insertAfter(sourceIndex, destinationIndex);
           }
         }
       }
