@@ -34,9 +34,12 @@ const BookmarkTree: Component<Props> = (props) => {
         if (isDev()) {
           console.log("createEffect: bookmarks changed: ", droppableRef);
         }
-        for (const el of droppableRef.querySelectorAll('li[draggable="true"]')) {
-          dragStartEventListener(el as HTMLLIElement);
-          dragEndEventListener(el as HTMLLIElement);
+        const draggables = droppableRef.querySelectorAll(
+          "div[draggable='true']",
+        ) as NodeListOf<HTMLDivElement>;
+        for (const el of draggables) {
+          dragStartEventListener(el);
+          dragEndEventListener(el);
         }
         dragEnterEventListener(droppableRef);
         dragOverEventListener(droppableRef);
@@ -46,9 +49,9 @@ const BookmarkTree: Component<Props> = (props) => {
   );
 
   // dragstart event
-  const dragStartEventListener = (draggableElement: HTMLLIElement) => {
+  const dragStartEventListener = (draggableElement: HTMLDivElement) => {
     makeEventListener(draggableElement, "dragstart", (ev) => {
-      const source = ev.target as HTMLLIElement;
+      const source = ev.target as HTMLDivElement;
       const match = source.id.match(/bookmark-(\d+)/);
       if (match) {
         ev.dataTransfer?.setData("text/plain", match[1]);
@@ -66,7 +69,7 @@ const BookmarkTree: Component<Props> = (props) => {
   };
 
   // dragend event
-  const dragEndEventListener = (draggableElement: HTMLLIElement) => {
+  const dragEndEventListener = (draggableElement: HTMLDivElement) => {
     makeEventListener(draggableElement, "dragend", (ev) => {
       // make sure to clear the data, but is this necessary??
       ev.dataTransfer?.clearData();
@@ -88,8 +91,11 @@ const BookmarkTree: Component<Props> = (props) => {
       const source = dragging().source;
       const enterNode = ev.target as Node;
       if (source && enterNode) {
-        if (!source.contains(enterNode)) {
+        if (!source.parentNode?.contains(enterNode)) {
           ev.preventDefault();
+          if (ev.dataTransfer) {
+            ev.dataTransfer.dropEffect = "move";
+          }
         }
       }
     });
@@ -102,47 +108,49 @@ const BookmarkTree: Component<Props> = (props) => {
       const source = dragging().source;
       const destNode = ev.target as Node;
       if (source && destNode) {
-        if (!source.contains(destNode)) {
+        if (!source.parentNode?.contains(destNode)) {
           ev.preventDefault();
+
+          if (ev.dataTransfer) {
+            ev.dataTransfer.dropEffect = "move";
+            const elements = droppableElement.querySelectorAll(
+              "div.dropzone",
+            ) as NodeListOf<HTMLDivElement>;
+
+            const closest = Array.from(elements).find((dest) => {
+              const destRect = dest.getBoundingClientRect();
+              return ev.clientY < destRect.bottom;
+            });
+            if (closest) {
+              const match = closest.id.match(/bookmark-(\d+)/);
+              if (match) {
+                const destinationIndex = Number.parseInt(match[1]);
+                const rect = closest.getBoundingClientRect();
+                const isInside = ev.clientY <= rect.top + rect.height / 2;
+                if (isInside) {
+                  // inside the destination
+                  setDragging({
+                    sourceIndex: dragging().sourceIndex,
+                    destinationIndex,
+                    state: "inside",
+                    source: dragging().source,
+                    destination: closest,
+                  });
+                } else {
+                  // after the destination
+                  setDragging({
+                    sourceIndex: dragging().sourceIndex,
+                    destinationIndex,
+                    state: "after",
+                    source: dragging().source,
+                    destination: closest,
+                  });
+                }
+              }
+            }
+          }
         }
       }
-
-      // if (ev.dataTransfer && dragging().source) {
-      //   ev.dataTransfer.dropEffect = "move";
-      //   // find the closest destination by ev.clientY from children
-      //   const children = Array.from(droppableElement.children as HTMLCollectionOf<HTMLDivElement>);
-      //   const closest = children.find((dest) => {
-      //     const destinationRect = dest.getBoundingClientRect();
-      //     return ev.clientY < destinationRect.bottom;
-      //   });
-      //   if (closest) {
-      //     const match = closest.id.match(/bookmark-(\d+)/);
-      //     if (match) {
-      //       const destinationIndex = Number.parseInt(match[1]);
-      //       const rect = closest.getBoundingClientRect();
-      //       const isInside = ev.clientY <= rect.top + rect.height / 2;
-      //       if (isInside) {
-      //         // inside the destination
-      //         setDragging({
-      //           sourceIndex: dragging().sourceIndex,
-      //           destinationIndex,
-      //           state: "inside",
-      //           source: dragging().source,
-      //           destination: closest,
-      //         });
-      //       } else {
-      //         // after the destination
-      //         setDragging({
-      //           sourceIndex: dragging().sourceIndex,
-      //           destinationIndex,
-      //           state: "after",
-      //           source: dragging().source,
-      //           destination: closest,
-      //         });
-      //       }
-      //     }
-      //   }
-      // }
     });
   };
 
@@ -158,18 +166,15 @@ const BookmarkTree: Component<Props> = (props) => {
         }
         if (state === "inside") {
           // if state is inside, append to the last child of destination
-          // console.log("appendToChild");
-          // useBookmarkState.getState().appendToChild(sourceIndex, destinationIndex);
+          useBookmarkState.getState().appendToChild(sourceIndex, destinationIndex);
         } else if (state === "after") {
           const hasChildren = destination?.classList.contains("hasChildren");
           if (hasChildren) {
             // if destination has children, prepend to the first child
-            // console.log("prependToChild");
-            // useBookmarkState.getState().prependToChild(sourceIndex, destinationIndex);
+            useBookmarkState.getState().prependToChild(sourceIndex, destinationIndex);
           } else {
             // if destination has no children, insert after the destination
-            // console.log("insertAfter");
-            // useBookmarkState.getState().insertAfter(sourceIndex, destinationIndex);
+            useBookmarkState.getState().insertAfter(sourceIndex, destinationIndex);
           }
         }
       }

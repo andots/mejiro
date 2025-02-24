@@ -89,20 +89,15 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
   };
 
   return (
-    <li
-      draggable={isDraggable()}
-      id={`bookmark-${props.bookmark.index}`}
-      classList={{
-        hasChildren: hasChildren(),
-      }}
-    >
+    <li>
       <ContextMenu onOpenChange={(isOpen) => handleContextMenu(isOpen)}>
         <ContextMenuTrigger
-        // draggable={isDraggable()}
-        // id={`bookmark-${props.bookmark.index}`}
-        // classList={{
-        //   hasChildren: hasChildren(),
-        // }}
+          draggable={isDraggable()}
+          id={`bookmark-${props.bookmark.index}`}
+          class="dropzone"
+          classList={{
+            hasChildren: hasChildren(),
+          }}
         >
           <div
             class={"flex flex-col hover:bg-sidebar-accent transition-colors duration-150"}

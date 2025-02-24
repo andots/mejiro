@@ -47,6 +47,6 @@ export type Dragging = {
   sourceIndex: number;
   destinationIndex: number;
   state: "inside" | "after" | "none";
-  source: HTMLDivElement | HTMLLIElement | null;
-  destination: HTMLDivElement | HTMLLIElement | null;
+  source: HTMLDivElement | null;
+  destination: HTMLDivElement | null;
 };
