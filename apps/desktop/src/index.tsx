@@ -22,6 +22,11 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
 
 const initApp = async () => {
   console.log("Initializing app");
+
+  // disable default browser right click context menu
+  // Ctrl + Shift + I will still work for opening dev tools
+  document.oncontextmenu = () => false;
+
   // get data from rust side for zustand stores
   await useBookmarkState.getState().getFolders();
   await useSettingsState.getState().getSettings();

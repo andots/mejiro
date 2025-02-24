@@ -1,5 +1,5 @@
 import type { Component } from "solid-js";
-import { Show, lazy, onCleanup, onMount } from "solid-js";
+import { Show, lazy } from "solid-js";
 
 import ToolBar from "./components/controls/ToolBar";
 import AddFolderDialog from "./components/dialogs/AddFolderDialog";
@@ -17,15 +17,6 @@ const App: Component = () => {
   const page = usePageState((state) => state.page);
   const progress = useUrlState((state) => state.progress);
   const setProgress = useUrlState((state) => state.setProgress);
-
-  onMount(async () => {
-    // disable right click context menu
-    document.oncontextmenu = () => true;
-  });
-
-  onCleanup(() => {
-    // removeEventListeners();
-  });
 
   return (
     <div class="app w-full flex flex-col bg-sidebar">
