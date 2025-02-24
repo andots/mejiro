@@ -4,8 +4,13 @@ import { render } from "solid-js/web";
 import App from "./App";
 import "./globals.css";
 
+import { listen } from "@tauri-apps/api/event";
+
 import { useBookmarkState } from "./stores/bookmarks";
 import { useSettingsState } from "./stores/settings";
+import { useUrlState } from "./stores/url";
+
+import { AppEvent } from "./constants";
 
 const root = document.getElementById("root");
 
@@ -20,6 +25,23 @@ const initApp = async () => {
   // get data from rust side for zustand stores
   await useBookmarkState.getState().getFolders();
   await useSettingsState.getState().getSettings();
+
+  // listen for settings updates on rust side
+  await listen<string>(AppEvent.SettingsUpdated, (event) => {
+    // debug(event.payload);
+  });
+
+  // listen for external navigation events on rust side
+  await listen<string>(AppEvent.ExternalNavigation, (event) => {
+    useUrlState.getState().setProgress(0);
+    useUrlState.getState().setUrl(event.payload);
+    useUrlState.getState().setProgress(100);
+  });
+
+  // listen for external page loaded events on rust side
+  await listen<string>(AppEvent.ExternalTitleChanged, (event) => {
+    useUrlState.getState().setTitle(event.payload);
+  });
 };
 
 initApp().then(() => {
