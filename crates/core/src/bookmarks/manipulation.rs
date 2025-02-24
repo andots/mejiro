@@ -1,3 +1,4 @@
+use indextree::NodeId;
 use url::Url;
 
 use crate::{data::BookmarkData, error::CoreError};
@@ -97,13 +98,12 @@ impl Bookmarks {
         Ok(())
     }
 
-    /// Insert after the source node to the destination node
-    pub fn insert_after(
-        &mut self,
+    fn validate_movable(
+        &self,
         source_index: usize,
         destination_index: usize,
-    ) -> Result<(), CoreError> {
-        // if origin node is root, return error
+    ) -> Result<(NodeId, NodeId), CoreError> {
+        // if source node is root, return error
         if source_index == 1 {
             return Err(CoreError::CannotMoveRoot());
         }
@@ -123,6 +123,18 @@ impl Bookmarks {
         {
             return Err(CoreError::CannotMoveToDescendant());
         }
+
+        Ok((source_node_id, dest_node_id))
+    }
+
+    /// Insert after the source node to the destination node
+    pub fn insert_after(
+        &mut self,
+        source_index: usize,
+        destination_index: usize,
+    ) -> Result<(), CoreError> {
+        let (source_node_id, dest_node_id) =
+            self.validate_movable(source_index, destination_index)?;
 
         if destination_index == 1 {
             // if destination is root, prepend source node under the root
@@ -141,26 +153,8 @@ impl Bookmarks {
         source_index: usize,
         destination_index: usize,
     ) -> Result<(), CoreError> {
-        // if source node is root, return error
-        if source_index == 1 {
-            return Err(CoreError::CannotMoveRoot());
-        }
-
-        // if source and destination is same, return error
-        if source_index == destination_index {
-            return Err(CoreError::SameSourceAndDestination());
-        }
-
-        let source_node_id = self.find_node_id_by_index(source_index)?;
-        let dest_node_id = self.find_node_id_by_index(destination_index)?;
-
-        // check that dest_node_id is not a descendant of source_node_id
-        if source_node_id
-            .descendants(&self.arena)
-            .any(|node_id| node_id == dest_node_id)
-        {
-            return Err(CoreError::CannotMoveToDescendant());
-        }
+        let (source_node_id, dest_node_id) =
+            self.validate_movable(source_index, destination_index)?;
 
         // move to the dest children (append - to the end)
         dest_node_id.checked_append(source_node_id, &mut self.arena)?;
@@ -168,31 +162,14 @@ impl Bookmarks {
         Ok(())
     }
 
+    /// Prepend the source node to the destination node
     pub fn prepend_to_child(
         &mut self,
         source_index: usize,
         destination_index: usize,
     ) -> Result<(), CoreError> {
-        // if source node is root, return error
-        if source_index == 1 {
-            return Err(CoreError::CannotMoveRoot());
-        }
-
-        // if source and destination is same, return error
-        if source_index == destination_index {
-            return Err(CoreError::SameSourceAndDestination());
-        }
-
-        let source_node_id = self.find_node_id_by_index(source_index)?;
-        let dest_node_id = self.find_node_id_by_index(destination_index)?;
-
-        // check that dest_node_id is not a descendant of source_node_id
-        if source_node_id
-            .descendants(&self.arena)
-            .any(|node_id| node_id == dest_node_id)
-        {
-            return Err(CoreError::CannotMoveToDescendant());
-        }
+        let (source_node_id, dest_node_id) =
+            self.validate_movable(source_index, destination_index)?;
 
         // move to the dest children (prepend - to the front)
         dest_node_id.checked_prepend(source_node_id, &mut self.arena)?;

@@ -185,6 +185,7 @@ mod tests {
         let mut bookmarks = create_test_bookmarks();
 
         let result = bookmarks.insert_after(6, 7);
+        assert!(result.is_err());
         assert_eq!(
             result.unwrap_err().to_string(),
             "Cannot move to descendant".to_string()
@@ -209,6 +210,7 @@ mod tests {
     fn test_prepend_to_child_to_descendant() -> anyhow::Result<()> {
         let mut bookmarks = create_test_bookmarks();
         let result = bookmarks.prepend_to_child(6, 7);
+        assert!(result.is_err());
         assert_eq!(
             result.unwrap_err().to_string(),
             "Cannot move to descendant".to_string()
