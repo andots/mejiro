@@ -39,7 +39,8 @@ const BookmarksPage: Component = () => {
         />
       </Show>
       <Show when={bookmarks() !== null}>
-        <BookmarkTree />
+        {/* biome-ignore lint/style/noNonNullAssertion: <explanation> */}
+        <BookmarkTree bookmark={bookmarks()!} />
       </Show>
     </div>
   );

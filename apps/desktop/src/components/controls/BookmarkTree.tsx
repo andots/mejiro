@@ -1,16 +1,19 @@
-import { type Component, createEffect, createSignal, on, Show } from "solid-js";
+import { type Component, createEffect, createSignal } from "solid-js";
 
 import { makeEventListener } from "@solid-primitives/event-listener";
 
 import { useBookmarkState } from "../../stores/bookmarks";
 
 import BookmarkNode from "./BookmarkNode";
-import type { Dragging } from "../../types";
+import type { Bookmark, Dragging } from "../../types";
 
-const BookmarkTree: Component = () => {
+type Props = {
+  bookmark: Bookmark;
+};
+
+const BookmarkTree: Component<Props> = (props) => {
   let ref!: HTMLDivElement;
 
-  const bookmarks = useBookmarkState((state) => state.bookmarks);
   const getCurrentTopLevel = useBookmarkState((state) => state.getCurrentTopLevel);
 
   const [dragging, setDragging] = createSignal<Dragging>({
@@ -20,20 +23,18 @@ const BookmarkTree: Component = () => {
     source: null,
   });
 
-  createEffect(
-    on(bookmarks, () => {
-      if (bookmarks() !== null && ref) {
-        // console.log("createEffect: bookmarks changed: ", bookmarks());
-        for (const child of ref.children) {
-          dragStartEventListener(child as HTMLDivElement);
-          dragEndEventListener(child as HTMLDivElement);
-        }
-        dragEnterEventListener(ref);
-        dragOverEventListener(ref);
-        dropEventListener(ref);
+  createEffect(() => {
+    if (ref) {
+      // console.log("createEffect: bookmarks changed: ", props.bookmark);
+      for (const child of ref.children) {
+        dragStartEventListener(child as HTMLDivElement);
+        dragEndEventListener(child as HTMLDivElement);
       }
-    }),
-  );
+      dragEnterEventListener(ref);
+      dragOverEventListener(ref);
+      dropEventListener(ref);
+    }
+  });
 
   // DragEvent will be ...
   // dragstart -> dragenter -> dragover -> drop -> dragend
@@ -162,10 +163,7 @@ const BookmarkTree: Component = () => {
 
   return (
     <div id="bookmark-tree" ref={ref}>
-      <Show when={bookmarks() !== null}>
-        {/* biome-ignore lint/style/noNonNullAssertion: <explanation> */}
-        <BookmarkNode dragging={dragging()} bookmark={bookmarks()!} level={0} />
-      </Show>
+      <BookmarkNode dragging={dragging()} bookmark={props.bookmark} level={0} />
     </div>
   );
 };
