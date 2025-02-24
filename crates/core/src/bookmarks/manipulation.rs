@@ -153,6 +153,21 @@ impl Bookmarks {
         Ok(())
     }
 
+    /// Insert before the source node to the destination node
+    pub fn insert_before(
+        &mut self,
+        source_index: usize,
+        destination_index: usize,
+    ) -> Result<(), CoreError> {
+        let (source_node_id, dest_node_id) =
+            self.validate_movable(source_index, destination_index)?;
+
+        // insert before target node
+        dest_node_id.checked_insert_before(source_node_id, &mut self.arena)?;
+
+        Ok(())
+    }
+
     /// Append the source node to the destination node
     pub fn append_to_child(
         &mut self,

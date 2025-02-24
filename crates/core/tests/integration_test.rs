@@ -196,6 +196,65 @@ mod tests {
     }
 
     #[test]
+    fn test_insert_before() -> anyhow::Result<()> {
+        let mut bookmarks = create_test_bookmarks();
+        bookmarks.insert_before(4, 2)?;
+
+        let root = bookmarks.get_root_node_id()?;
+        let vec: Vec<usize> = vec![1, 4, 5, 6, 7, 8, 2, 3];
+        for (i, node_id) in root.descendants(bookmarks.arena()).enumerate() {
+            let id: usize = node_id.into();
+            assert_eq!(id, vec[i]);
+        }
+
+        // try to move root node must be error
+        let err = bookmarks.insert_before(1, 2);
+        assert!(err.is_err());
+        assert_eq!(
+            err.unwrap_err().to_string(),
+            CoreError::CannotMoveRoot().to_string()
+        );
+
+        // try to move to non-exist node must be error
+        let err = bookmarks.insert_before(100, 2);
+        assert!(err.is_err());
+        assert_eq!(
+            err.unwrap_err().to_string(),
+            CoreError::NodeIdNotFound(100).to_string()
+        );
+
+        // try to move from non-exist node must be error
+        let err = bookmarks.insert_before(2, 100);
+        assert!(err.is_err());
+        assert_eq!(
+            err.unwrap_err().to_string(),
+            CoreError::NodeIdNotFound(100).to_string()
+        );
+
+        // try to insert same node must be error
+        let err = bookmarks.insert_before(4, 4);
+        assert!(err.is_err());
+        assert_eq!(
+            err.unwrap_err().to_string(),
+            CoreError::SameSourceAndDestination().to_string()
+        );
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_insert_before_to_descendant_must_be_err() -> anyhow::Result<()> {
+        let mut bookmarks = create_test_bookmarks();
+        let result = bookmarks.insert_before(6, 7);
+        assert!(result.is_err());
+        assert_eq!(
+            result.unwrap_err().to_string(),
+            "Cannot move to descendant".to_string()
+        );
+        Ok(())
+    }
+
+    #[test]
     fn test_prepend_to_child() -> anyhow::Result<()> {
         let mut bookmarks = create_test_bookmarks();
         bookmarks.prepend_to_child(6, 4)?;
