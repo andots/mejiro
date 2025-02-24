@@ -5,6 +5,7 @@ use crate::{data::BookmarkData, error::CoreError};
 
 use super::Bookmarks;
 
+/// Updating
 impl Bookmarks {
     /// Set is_open flag
     pub fn set_is_open(&mut self, index: usize, is_open: bool) -> Result<(), CoreError> {
@@ -29,17 +30,10 @@ impl Bookmarks {
         data.title = title;
         Ok(())
     }
+}
 
-    /// Remove subtree
-    pub fn remove_subtree(&mut self, index: usize) -> Result<(), CoreError> {
-        if index == 1 {
-            return Err(CoreError::CannotRemoveRoot());
-        }
-        let node_id = self.find_node_id_by_index(index)?;
-        node_id.remove_subtree(&mut self.arena);
-        Ok(())
-    }
-
+/// Adding
+impl Bookmarks {
     /// Add folder
     pub fn add_folder(&mut self, parent_index: usize, title: &str) -> Result<(), CoreError> {
         let parent_node_id = self.find_node_id_by_index(parent_index)?;
@@ -98,6 +92,18 @@ impl Bookmarks {
         Ok(())
     }
 
+    /// Add bookmark to Toolbar folder
+    pub fn append_bookmark_to_toolbar(&mut self, title: &str, url: &str) -> Result<(), CoreError> {
+        let toolbar_id = self.get_toolbar_node_id()?;
+        let bookmark = BookmarkData::try_new_bookmark(title, url)?;
+        let new_node = self.arena.new_node(bookmark);
+        toolbar_id.checked_append(new_node, &mut self.arena)?;
+        Ok(())
+    }
+}
+
+/// Moving
+impl Bookmarks {
     fn validate_movable(
         &self,
         source_index: usize,
@@ -176,13 +182,17 @@ impl Bookmarks {
 
         Ok(())
     }
+}
 
-    /// Add bookmark to Toolbar folder
-    pub fn append_bookmark_to_toolbar(&mut self, title: &str, url: &str) -> Result<(), CoreError> {
-        let toolbar_id = self.get_toolbar_node_id()?;
-        let bookmark = BookmarkData::try_new_bookmark(title, url)?;
-        let new_node = self.arena.new_node(bookmark);
-        toolbar_id.checked_append(new_node, &mut self.arena)?;
+/// Removing
+impl Bookmarks {
+    /// Remove subtree
+    pub fn remove_subtree(&mut self, index: usize) -> Result<(), CoreError> {
+        if index == 1 {
+            return Err(CoreError::CannotRemoveRoot());
+        }
+        let node_id = self.find_node_id_by_index(index)?;
+        node_id.remove_subtree(&mut self.arena);
         Ok(())
     }
 }
