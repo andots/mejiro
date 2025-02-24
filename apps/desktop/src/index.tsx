@@ -4,6 +4,9 @@ import { render } from "solid-js/web";
 import App from "./App";
 import "./globals.css";
 
+import { useBookmarkState } from "./stores/bookmarks";
+import { useSettingsState } from "./stores/settings";
+
 const root = document.getElementById("root");
 
 if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
@@ -12,5 +15,14 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
   );
 }
 
-// biome-ignore lint/style/noNonNullAssertion: <explanation>
-render(() => <App />, root!);
+const initApp = async () => {
+  console.log("Initializing app");
+  // get data from rust side for zustand stores
+  await useBookmarkState.getState().getFolders();
+  await useSettingsState.getState().getSettings();
+};
+
+initApp().then(() => {
+  // biome-ignore lint/style/noNonNullAssertion: <explanation>
+  render(() => <App />, root!);
+});

@@ -23,7 +23,7 @@ const BookmarkTree: Component = () => {
   createEffect(
     on(bookmarks, () => {
       if (bookmarks() !== null && ref) {
-        console.log("createEffect: bookmarks changed");
+        // console.log("createEffect: bookmarks changed: ", bookmarks());
         for (const child of ref.children) {
           dragStartEventListener(child as HTMLDivElement);
           dragEndEventListener(child as HTMLDivElement);

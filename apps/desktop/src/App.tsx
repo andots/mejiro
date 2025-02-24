@@ -10,7 +10,6 @@ import ToolBar from "./components/controls/ToolBar";
 import AddFolderDialog from "./components/dialogs/AddFolderDialog";
 import BookmarkEditDialog from "./components/dialogs/BookmarkEditDialog";
 import { AppEvent } from "./constants";
-import { useSettingsState } from "./stores/settings";
 import { useUrlState } from "./stores/url";
 import { usePageState } from "./stores/pages";
 import DeleteConfirmDialog from "./components/dialogs/DeleteConfirmDialog";
@@ -22,9 +21,6 @@ let unlistenNavigation: UnlistenFn | undefined;
 let unlistenTitleChanged: UnlistenFn | undefined;
 
 const initializeApp = async () => {
-  // get data from rust side for zustand stores
-  useSettingsState.getState().getSettings();
-
   // listen for settings updates on rust side
   unlistenSettingsUpdated = await listen<string>(AppEvent.SettingsUpdated, (event) => {
     debug(event.payload);
