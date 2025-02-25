@@ -7,12 +7,12 @@ import type { Bookmark } from "../../types";
 import { isDev } from "../../utils";
 import { useDragging } from "../../stores/dragging";
 
+// Drag and drop events sequence:
+// dragstart(node) -> dragenter(droppable) -> dragover(droppable) -> drop(droppable) -> dragend(node)
+
 type Props = {
   bookmark: Bookmark;
 };
-
-// DragEvent will be ...
-// dragstart(node) -> dragenter(droppable) -> dragover(droppable) -> drop(droppable) -> dragend(node)
 
 const BookmarkTree: Component<Props> = (props) => {
   let droppableRef!: HTMLUListElement;
@@ -37,7 +37,7 @@ const BookmarkTree: Component<Props> = (props) => {
     const destNode = ev.target as Node;
     if (source && destNode) {
       if (!source.parentNode?.contains(destNode)) {
-        // droppable
+        // droppable, do ev.preventDefault() to allow drop
         ev.preventDefault();
 
         if (ev.dataTransfer) {
@@ -66,7 +66,9 @@ const BookmarkTree: Component<Props> = (props) => {
           }
         }
       } else {
-        // not droppable
+        // dest is a descendant of source, so cannot droppable.
+        // prohibit drop icon will be shown
+        // dragging mode should be null here
         dragging().setMode(null);
       }
     }
@@ -74,30 +76,30 @@ const BookmarkTree: Component<Props> = (props) => {
 
   const handleDrop = (ev: DragEvent) => {
     ev.preventDefault();
-    // const source = draggingState().source;
-    const destination = dragging().destination;
     const mode = dragging().mode;
     const sourceIndex = dragging().sourceIndex;
     const destinationIndex = dragging().destinationIndex;
 
-    // make sure souceId is not root and destinationId is over root, and sourceId is not equal to destinationId
+    if (isDev()) console.log(`${mode}: ${sourceIndex} -> ${destinationIndex}`);
+
     if (sourceIndex >= 2 && destinationIndex >= 1 && sourceIndex !== destinationIndex) {
-      if (isDev()) {
-        console.log(`${mode}: ${sourceIndex} -> ${destinationIndex}`);
-      }
       if (mode === "inside") {
-        // if state is inside, append to the last child of destination
+        // if mode is inside, append to the last child of destination
         useBookmarkState.getState().appendToChild(sourceIndex, destinationIndex);
       } else if (mode === "after") {
+        const destination = dragging().destination;
         const hasChildren = destination?.classList.contains("hasChildren");
         const isOpen = destination?.classList.contains("isOpen");
         if (hasChildren) {
           if (isOpen) {
+            // if has children and is open, prepend to the first child
             useBookmarkState.getState().prependToChild(sourceIndex, destinationIndex);
           } else {
+            // if has children and is closed, insert after the destination
             useBookmarkState.getState().insertAfter(sourceIndex, destinationIndex);
           }
         } else {
+          // if not has children, insert after the destination
           useBookmarkState.getState().insertAfter(sourceIndex, destinationIndex);
         }
       }
