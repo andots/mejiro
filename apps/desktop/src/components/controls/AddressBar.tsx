@@ -10,6 +10,7 @@ import {
 } from "@repo/ui/icons";
 import { useBookmarkState } from "../../stores/bookmarks";
 import { useUrlState } from "../../stores/url";
+import { cn } from "../../utils";
 
 const AddressBar: Component = () => {
   const url = useUrlState((state) => state.url);
@@ -57,48 +58,44 @@ const AddressBar: Component = () => {
   };
 
   return (
-    <div class="flex items-center justify-center max-w-4xl mx-auto h-full">
-      <div
-        class={`flex items-center w-[570px] h-[30px] px-4 bg-gray-100 border ${isValidUrl() ? "border-gray-300" : "border-red-300"} rounded-lg hover:bg-gray-50`}
-      >
-        {/* Security Icon */}
-        {isHttps() ? <OcticonLock24 /> : <OcticonUnlock24 />}
+    <div class={cn("flex items-center h-[30px] w-full px-2 border rounded bg-background")}>
+      {/* Security Icon */}
+      {isHttps() ? <OcticonLock24 /> : <OcticonUnlock24 />}
 
-        {/* URL Text */}
-        <div class="flex-1 flex items-center">
-          <input
-            value={url()}
-            class="w-full px-2 text-sm bg-gray-100 text-gray-600 outline-none focus:outline-none"
-            onKeyDown={(e) => handleKeyDown(e)}
-          />
-        </div>
+      {/* URL Text */}
+      <div class="flex-1 flex items-center">
+        <input
+          value={url()}
+          class="w-full px-2 text-sm outline-none focus:outline-none"
+          onKeyDown={(e) => handleKeyDown(e)}
+        />
+      </div>
 
-        {/* Action Buttons */}
-        <div class="flex items-center space-x-2 ml-2">
-          {/* Refresh Button */}
-          <button
-            onClick={() => handleRefresh()}
-            class="p-1 hover:bg-gray-200 rounded-full transition-colors"
-            title="Refresh page"
-            type="button"
-          >
-            <IcBaselineRefresh />
-          </button>
+      {/* Action Buttons */}
+      <div class="flex items-center space-x-2">
+        {/* Refresh Button */}
+        <button
+          onClick={() => handleRefresh()}
+          class="p-1 hover:bg-sidebar-accent rounded-full transition-colors"
+          title="Refresh page"
+          type="button"
+        >
+          <IcBaselineRefresh />
+        </button>
 
-          {/* Favorite Button */}
-          <button
-            type="button"
-            onClick={handleClickStar}
-            class="p-1 hover:bg-gray-200 rounded-full transition-colors"
-          >
-            <Show when={!isStar()}>
-              <OcticonStar24 />
-            </Show>
-            <Show when={isStar()}>
-              <OcticonStarFill24 class="text-yellow-500 fill-current" />
-            </Show>
-          </button>
-        </div>
+        {/* Favorite Button */}
+        <button
+          type="button"
+          onClick={handleClickStar}
+          class="p-1 hover:bg-sidebar-accent rounded-full transition-colors"
+        >
+          <Show when={!isStar()}>
+            <OcticonStar24 />
+          </Show>
+          <Show when={isStar()}>
+            <OcticonStarFill24 class="text-yellow-500 fill-current" />
+          </Show>
+        </button>
       </div>
     </div>
   );

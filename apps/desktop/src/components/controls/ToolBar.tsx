@@ -72,62 +72,68 @@ const ToolBar: Component = () => {
   };
 
   return (
-    <div class="flex justify-center items-center w-full h-full px-2">
-      {/* menu button */}
-      <Button
-        class="w-9 h-9 m-0 p-2 [&_svg]:size-6 [&_svg]:shrink-0"
-        variant="ghost"
-        size="icon"
-        onClick={handleSidebar}
-      >
-        <Show when={externalState() === "right"}>
-          <OcticonSidebarCollapse24 />
-        </Show>
-        <Show when={externalState() === "hidden"}>
-          {/* <OcticonSidebar24 /> */}
-          <OcticonSidebarCollapse24 />
-        </Show>
-        <Show when={externalState() === "full"}>
-          <OcticonSidebarExpand24 />
-        </Show>
-      </Button>
+    <div class="flex items-center w-full h-full px-2">
+      <div class="flex flex-row items-center">
+        {/* menu button */}
+        <Button
+          class="w-9 h-9 m-0 p-2 [&_svg]:size-6 [&_svg]:shrink-0"
+          variant="ghost"
+          size="icon"
+          onClick={handleSidebar}
+        >
+          <Show when={externalState() === "right"}>
+            <OcticonSidebarCollapse24 />
+          </Show>
+          <Show when={externalState() === "hidden"}>
+            {/* <OcticonSidebar24 /> */}
+            <OcticonSidebarCollapse24 />
+          </Show>
+          <Show when={externalState() === "full"}>
+            <OcticonSidebarExpand24 />
+          </Show>
+        </Button>
 
-      <Button
-        class="w-9 h-9 m-0 p-2 [&_svg]:size-6 [&_svg]:shrink-0"
-        variant="ghost"
-        size="icon"
-        onClick={handleHome}
-      >
-        <OcticonHome24 />
-      </Button>
+        <Button
+          class="w-9 h-9 m-0 p-2 [&_svg]:size-6 [&_svg]:shrink-0"
+          variant="ghost"
+          size="icon"
+          onClick={handleHome}
+        >
+          <OcticonHome24 />
+        </Button>
 
-      {/* pinned url favicons */}
-      <div class="flex items-center ml-2">
-        <For each={toolbarBookmarks()}>
-          {(bookmark) => (
-            <Button
-              variant="ghost"
-              class="w-9 h-9 p-2"
-              onClick={() => handlePinnedUrl(bookmark.url)}
-            >
-              <Favicon url={bookmark.url} width="18" height="18" />
-            </Button>
-          )}
-        </For>
+        {/* pinned url favicons */}
+        <div class="flex items-center ml-2">
+          <For each={toolbarBookmarks()}>
+            {(bookmark) => (
+              <Button
+                variant="ghost"
+                class="w-9 h-9 p-2"
+                onClick={() => handlePinnedUrl(bookmark.url)}
+              >
+                <Favicon url={bookmark.url} width="18" height="18" />
+              </Button>
+            )}
+          </For>
+        </div>
       </div>
 
       {/* address bar */}
-      <AddressBar />
+      <div class="flex-1 mx-10">
+        <AddressBar />
+      </div>
 
-      {/* settings button */}
-      <Button
-        class="w-9 h-9 m-0 p-2 [&_svg]:size-5 [&_svg]:shrink-0"
-        variant="ghost"
-        size="icon"
-        onClick={() => handleSettings()}
-      >
-        <OcticonGear24 />
-      </Button>
+      <div class="flex-none">
+        {/* settings button */}
+        <Button
+          class="w-9 h-9 m-0 p-2 [&_svg]:size-5 [&_svg]:shrink-0"
+          variant="ghost"
+          size="icon"
+          onClick={() => handleSettings()}
+        >
+          <OcticonGear24 />
+        </Button>
+      </div>
     </div>
   );
 };
