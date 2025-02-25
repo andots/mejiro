@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.19.1](https://github.com/andots/mejiro/compare/v0.19.0...v0.19.1) (2025-02-25)
+
+
+### Bug Fixes
+
+* **front:** don't show Delete context menu if it's not removable (root or current top level) ([67f533a](https://github.com/andots/mejiro/commit/67f533a21d797789d75b60fc77c301c007587b39))
+* **front:** ensure folders list updates after bookmark operations ([96cae15](https://github.com/andots/mejiro/commit/96cae1595aa19c4e0ba9bc0cca990577a186e0d3))
+
 # [0.19.0](https://github.com/andots/mejiro/compare/v0.18.1...v0.19.0) (2025-02-25)
 
 
