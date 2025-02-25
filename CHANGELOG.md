@@ -1,5 +1,18 @@
 # Changelog
 
+# [0.19.0](https://github.com/andots/mejiro/compare/v0.18.1...v0.19.0) (2025-02-25)
+
+
+### Bug Fixes
+
+* **front:** prevent event propagation on bookmark node toggle, set cursor-pointer correctly ([da1643b](https://github.com/andots/mejiro/commit/da1643b5ece7ac0ce9a8179d9f5b1e636d6a96ad))
+* **front:** set mode to null when not droppable ([b8b0134](https://github.com/andots/mejiro/commit/b8b0134d31cfe446feb7544fd465187e8f43fcd6))
+
+
+### Features
+
+* **front:** improve drag&drop feature, simplify code using zustand ([05f28a0](https://github.com/andots/mejiro/commit/05f28a0683756acf4c594fcb021a0b9edac4001e))
+
 ## [0.18.1](https://github.com/andots/mejiro/compare/v0.18.0...v0.18.1) (2025-02-24)
 
 
