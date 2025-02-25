@@ -75,6 +75,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
 
   const toggleIsOpen = (e: MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     if (hasChildren()) {
       useBookmarkState.getState().toggleIsOpen(props.bookmark.index);
     }
@@ -99,9 +100,13 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
             hasChildren: hasChildren(),
             isOpen: isOpen(),
           }}
+          onClick={handleNodeClick}
+          onKeyDown={handleKeydown}
         >
           <div
-            class={"flex flex-col hover:bg-sidebar-accent transition-colors duration-150"}
+            class={
+              "flex flex-col hover:bg-sidebar-accent transition-colors duration-150 cursor-pointer"
+            }
             style={{ "padding-left": `${props.level * 8}px` }}
           >
             {/* Empty fixed space for Indicator */}
@@ -116,19 +121,15 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
                   onKeyDown={handleKeydown}
                 >
                   <Show when={hasChildren()}>
-                    <div class="rounded hover:bg-stone-300 cursor-pointer">
+                    <div class="rounded hover:bg-stone-300">
                       <NavigationArrowIcon isOpen={isOpen()} size={16} />
                     </div>
                   </Show>
                 </div>
               </div>
 
-              {/* Node (Folder/Favicon + Title) */}
-              <div
-                class="flex items-center w-full cursor-pointer"
-                onClick={handleNodeClick}
-                onKeyDown={handleKeydown}
-              >
+              {/* Folder/Favicon + Title */}
+              <div class="flex items-center w-full">
                 {/* Folder or Favicon */}
                 <div class="flex items-center justify-center w-[20px]">
                   <Switch>
