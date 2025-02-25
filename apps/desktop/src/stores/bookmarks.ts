@@ -56,8 +56,6 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
     const data = await Invoke.AddBookmark(url, title, topLevelIndex);
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
-    // update the folders list
-    // get().getFolders();
   },
   appendBookmarkToToolbar: async (title, url) => {
     const topLevelIndex = get().getCurrentTopLevel();
@@ -70,8 +68,6 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
     const data = await Invoke.RemoveBookmark(index, topLevelIndex);
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
-    // update the folders list
-    // get().getFolders();
   },
   updateBookmarkTitle: async (index, title) => {
     const topLevelIndex = get().getCurrentTopLevel();
@@ -79,7 +75,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
     // update the folders list
-    // get().getFolders();
+    get().getFolders();
   },
   addFolder: async (parentIndex, title) => {
     const topLevelIndex = get().getCurrentTopLevel();
@@ -87,7 +83,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
     // update the folders list
-    // get().getFolders();
+    get().getFolders();
   },
   insertAfter: async (sourceIndex, destinationIndex) => {
     const topLevelIndex = get().getCurrentTopLevel();
@@ -95,13 +91,15 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
     // update the folders list
-    // get().getFolders();
+    get().getFolders();
   },
   insertBefore: async (sourceIndex, destinationIndex) => {
     const topLevelIndex = get().getCurrentTopLevel();
     const data = await Invoke.InsertBefore(sourceIndex, destinationIndex, topLevelIndex);
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
+    // update the folders list
+    get().getFolders();
   },
   appendToChild: async (sourceIndex, destinationIndex) => {
     const topLevelIndex = get().getCurrentTopLevel();
@@ -109,13 +107,15 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
     // update the folders list
-    // get().getFolders();
+    get().getFolders();
   },
   prependToChild: async (sourceIndex, destinationIndex) => {
     const topLevelIndex = get().getCurrentTopLevel();
     const data = await Invoke.PrependToChild(sourceIndex, destinationIndex, topLevelIndex);
     const bookmarks = JSON.parse(data) as Bookmark;
     set(() => ({ bookmarks }));
+    // update the folders list
+    get().getFolders();
   },
   toggleIsOpen: async (index) => {
     const topLevelIndex = get().getCurrentTopLevel();
