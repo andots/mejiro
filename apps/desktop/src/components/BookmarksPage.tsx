@@ -32,18 +32,27 @@ const BookmarksPage: Component = () => {
   };
 
   return (
-    <div class={cn(externalState() === "right" ? "w-full" : "w-full", "space-y-2")}>
-      <Show when={folders().length > 0 && selectValue() !== null}>
-        <RootChildrenSelect
-          folders={folders()}
-          value={selectValue()}
-          onChange={(val) => handleSelectChange(val)}
-        />
-      </Show>
-      <Show when={bookmarks() !== null}>
-        {/* biome-ignore lint/style/noNonNullAssertion: <explanation> */}
-        <BookmarkTree bookmark={bookmarks()!} />
-      </Show>
+    <div
+      class={cn(
+        externalState() === "right" ? "w-full" : "w-full",
+        "flex flex-col h-full bg-sidebar text-sidebar-foreground",
+      )}
+    >
+      <div class="flex-none h-[40px] mb-2">
+        <Show when={folders().length > 0 && selectValue() !== null}>
+          <RootChildrenSelect
+            folders={folders()}
+            value={selectValue()}
+            onChange={(val) => handleSelectChange(val)}
+          />
+        </Show>
+      </div>
+      <div class="flex-1 overflow-y-auto">
+        <Show when={bookmarks() !== null}>
+          {/* biome-ignore lint/style/noNonNullAssertion: <explanation> */}
+          <BookmarkTree bookmark={bookmarks()!} />
+        </Show>
+      </div>
     </div>
   );
 };

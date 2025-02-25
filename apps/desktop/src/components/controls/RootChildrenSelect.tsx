@@ -13,7 +13,7 @@ type Props = {
 
 const RootChildrenSelect: Component<Props> = (props) => {
   return (
-    <div class="h-[40px]">
+    <div>
       <Select
         options={props.folders}
         optionValue="index"
