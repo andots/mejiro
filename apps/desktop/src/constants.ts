@@ -9,14 +9,6 @@ export const ROUTES = {
   HOME: "/",
 } as const;
 
-//! Must sync events.rs
-export const AppEvent = {
-  SettingsUpdated: "app://settings-updated",
-  ExternalPageLoaded: "app://external-page-loaded",
-  ExternalNavigation: "app://external-navigation",
-  ExternalTitleChanged: "app://external-title-changed",
-};
-
 type Site = {
   title: string;
   url: string;

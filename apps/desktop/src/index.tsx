@@ -10,7 +10,7 @@ import { useBookmarkState } from "./stores/bookmarks";
 import { useSettingsState } from "./stores/settings";
 import { useUrlState } from "./stores/url";
 
-import { AppEvent } from "./constants";
+import { AppEvent } from "./events";
 
 const root = document.getElementById("root");
 
@@ -38,14 +38,18 @@ const initApp = async () => {
 
   // listen for external navigation events on rust side
   await listen<string>(AppEvent.ExternalNavigation, (event) => {
-    useUrlState.getState().setProgress(0);
     useUrlState.getState().setUrl(event.payload);
-    useUrlState.getState().setProgress(100);
   });
 
   // listen for external page loaded events on rust side
   await listen<string>(AppEvent.ExternalTitleChanged, (event) => {
     useUrlState.getState().setTitle(event.payload);
+  });
+
+  await listen<string>(AppEvent.ExternalUrlChanged, (event) => {
+    useUrlState.getState().setProgress(0);
+    useUrlState.getState().setUrl(event.payload);
+    useUrlState.getState().setProgress(100);
   });
 };
 

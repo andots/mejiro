@@ -11,14 +11,17 @@ pub enum AppEvent {
     SettingsUpdated,
 
     #[allow(dead_code)]
-    #[strum(serialize = "app://external-page-loaded")]
+    #[strum(serialize = "external://page-loaded")]
     ExternalPageLoaded,
 
-    #[strum(serialize = "app://external-navigation")]
+    #[strum(serialize = "external://navigation")]
     ExternalNavigation,
 
-    #[strum(serialize = "app://external-title-changed")]
+    #[strum(serialize = "external://title-changed")]
     ExternalTitleChanged,
+
+    #[strum(serialize = "external://url-changed")]
+    ExternalUrlChanged,
 }
 
 pub fn emit_to_app_webview<S>(
