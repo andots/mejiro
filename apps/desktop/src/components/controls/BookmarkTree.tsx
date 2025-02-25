@@ -37,6 +37,7 @@ const BookmarkTree: Component<Props> = (props) => {
     const destNode = ev.target as Node;
     if (source && destNode) {
       if (!source.parentNode?.contains(destNode)) {
+        // droppable
         ev.preventDefault();
 
         if (ev.dataTransfer) {
@@ -64,6 +65,9 @@ const BookmarkTree: Component<Props> = (props) => {
             }
           }
         }
+      } else {
+        // not droppable
+        dragging().setMode(null);
       }
     }
   };
