@@ -192,7 +192,13 @@ const BookmarkNode: Component<Props> = (props) => {
 };
 
 const BookmarkContextMenuPortal = (props: { bookmark: Bookmark }) => {
-  const handleAddBookmark = (index: number) => {};
+  const currentTopLevel = useBookmarkState((state) => state.getCurrentTopLevel());
+
+  const isRoot = () => props.bookmark.node_type === "Root";
+  const isRemovable = () =>
+    !isRoot() && currentTopLevel() !== -1 && currentTopLevel() !== props.bookmark.index;
+
+  // const handleAddBookmark = (index: number) => {};
 
   const handleAddFolder = (index: number) => {
     useAddFolderDialog.getState().setParentIndex(index);
@@ -205,8 +211,10 @@ const BookmarkContextMenuPortal = (props: { bookmark: Bookmark }) => {
   };
 
   const handleRemove = (index: number) => {
-    useDeleteConfirmDialog.getState().setTarget({ index, title: props.bookmark.title });
-    useDeleteConfirmDialog.getState().setOpen(true);
+    if (isRemovable()) {
+      useDeleteConfirmDialog.getState().setTarget({ index, title: props.bookmark.title });
+      useDeleteConfirmDialog.getState().setOpen(true);
+    }
   };
 
   const handlePinToToolbar = (url: string | null) => {
@@ -220,9 +228,9 @@ const BookmarkContextMenuPortal = (props: { bookmark: Bookmark }) => {
           <span>Add Folder</span>
         </ContextMenuItem>
 
-        <ContextMenuItem onClick={() => handleAddBookmark(props.bookmark.index)} disabled>
+        {/* <ContextMenuItem onClick={() => handleAddBookmark(props.bookmark.index)} disabled>
           <span>Add Bookmark (WIP)</span>
-        </ContextMenuItem>
+        </ContextMenuItem> */}
 
         <ContextMenuSeparator />
 
@@ -236,7 +244,7 @@ const BookmarkContextMenuPortal = (props: { bookmark: Bookmark }) => {
           </ContextMenuItem>
         </Show>
 
-        <Show when={props.bookmark.node_type !== "Root"}>
+        <Show when={isRemovable()}>
           <ContextMenuSeparator />
           <ContextMenuItem onClick={() => handleRemove(props.bookmark.index)}>
             <span class="text-destructive">Delete</span>
