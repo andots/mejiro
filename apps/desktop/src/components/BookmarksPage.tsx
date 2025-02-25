@@ -4,7 +4,7 @@ import RootChildrenSelect from "./controls/RootChildrenSelect";
 
 import BookmarkTree from "./controls/BookmarkTree";
 import { useWindowState } from "../stores/window";
-import { cn } from "../utils";
+import { cn, isDev } from "../utils";
 import { useBookmarkState } from "../stores/bookmarks";
 import type { FolderData } from "../types";
 
@@ -24,6 +24,8 @@ const BookmarksPage: Component = () => {
 
   const handleSelectChange = (val: FolderData | null) => {
     if (val !== null && val.index >= 1) {
+      if (isDev()) console.log("handleSelectChange Folder: ", val);
+
       setSelectValue(val);
       useBookmarkState.getState().getBookmarks(val.index);
     }

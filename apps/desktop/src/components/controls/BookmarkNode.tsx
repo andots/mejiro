@@ -29,16 +29,17 @@ import FolderIcon from "../icons/FolderIcon";
 import Favicon from "../icons/Favicon";
 import { useBookmarkState } from "../../stores/bookmarks";
 import { isDev } from "../../utils";
+import { useDragging } from "../../stores/dragging";
 
-type BookmarkNodeProps = {
+type Props = {
   bookmark: Bookmark;
   level: number;
-  dragging: Dragging;
 };
 
-const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
+const BookmarkNode: Component<Props> = (props) => {
   const externalState = useWindowState((state) => state.externalState);
   const navigateToUrl = useUrlState((state) => state.navigateToUrl);
+  const dragging = useDragging();
 
   // destructuring props as reactive
   const isOpen = () => props.bookmark.is_open;
@@ -54,7 +55,9 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
   const isTopLevel = () => props.level === 0;
   const isDraggable = () => !isRoot() && !isTopLevel();
   const isDraggingInside = () =>
-    props.dragging.destinationIndex === props.bookmark.index && props.dragging.state === "inside";
+    dragging().destinationIndex === props.bookmark.index && dragging().mode === "inside";
+  const shouldShowIndicator = () =>
+    dragging().destinationIndex === props.bookmark.index && dragging().mode === "after";
 
   const handleNodeClick = (e: MouseEvent) => {
     e.preventDefault();
@@ -89,6 +92,17 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
     }
   };
 
+  const handleDragStart = (e: DragEvent) => {
+    if (isDraggable()) {
+      dragging().reset();
+      dragging().setSource(e.target as HTMLDivElement);
+    }
+  };
+
+  const handleDragEnd = (e: DragEvent) => {
+    dragging().reset();
+  };
+
   return (
     <li>
       <ContextMenu onOpenChange={(isOpen) => handleContextMenu(isOpen)}>
@@ -102,6 +116,8 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
           }}
           onClick={handleNodeClick}
           onKeyDown={handleKeydown}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
         >
           <div
             class={
@@ -155,13 +171,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
             </div>
 
             {/* After Indicator */}
-            <Show
-              when={
-                props.dragging.destinationIndex === props.bookmark.index &&
-                props.dragging.state === "after"
-              }
-              fallback={<div class="w-[200px] h-[4px]" />}
-            >
+            <Show when={shouldShowIndicator()} fallback={<div class="w-[200px] h-[4px]" />}>
               <div class="w-[200px] h-[4px] border-b-2 border-blue-300" />
             </Show>
           </div>
@@ -173,9 +183,7 @@ const BookmarkNode: Component<BookmarkNodeProps> = (props) => {
       <Show when={hasChildren() && isOpen()}>
         <ul>
           <For each={props.bookmark.children}>
-            {(child) => (
-              <BookmarkNode dragging={props.dragging} bookmark={child} level={props.level + 1} />
-            )}
+            {(child) => <BookmarkNode bookmark={child} level={props.level + 1} />}
           </For>
         </ul>
       </Show>
