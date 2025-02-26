@@ -72,7 +72,7 @@ const ToolBar: Component = () => {
   };
 
   return (
-    <div class="flex items-center w-full h-full px-2">
+    <div class="flex items-center w-full h-[40px] px-2">
       <div class="flex flex-row items-center">
         {/* menu button */}
         <Button
@@ -119,7 +119,7 @@ const ToolBar: Component = () => {
       </div>
 
       {/* address bar */}
-      <div class="flex-1 mx-10">
+      <div class="flex-1 mx-8">
         <AddressBar />
       </div>
 
