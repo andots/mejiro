@@ -63,7 +63,7 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
     }
 
     /// Get the app directory (DATA_DIR/${bundle_identifier}) and create it if not exists.
-    /// This function will panic if it fails to get the app config dir.
+    /// This function will panic if it fails to get the app dir.
     /// |Platform | Value                                    | Example                                  |
     /// | ------- | ---------------------------------------- | ---------------------------------------- |
     /// | Linux   | `$XDG_DATA_HOME` or `$HOME`/.local/share | /home/alice/.local/share                 |
@@ -78,16 +78,17 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
         match path.try_exists() {
             Ok(exists) => {
                 if !exists {
-                    // create the app config dir if it doesn't exist
+                    // create the app dir if it doesn't exist
                     fs::create_dir_all(&path).expect("Failed to create app config dir");
                     log::info!("App data dir created: {:?}", path);
                 }
+                path
             }
             Err(e) => {
                 log::error!("Error checking app data dir: {:?}", e);
+                panic!("Failed to check app data dir");
             }
         }
-        path
     }
 
     fn get_file_path_from_app_dir(&self, file_name: FileName) -> PathBuf {
