@@ -73,16 +73,18 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
         let path = self
             .path()
             .app_data_dir()
-            .expect("failed to get app config dir");
+            .expect("Failed to get app data dir");
+
         match path.try_exists() {
             Ok(exists) => {
                 if !exists {
                     // create the app config dir if it doesn't exist
-                    fs::create_dir_all(path.clone()).expect("failed to create app config dir");
+                    fs::create_dir_all(&path).expect("Failed to create app config dir");
+                    log::info!("App data dir created: {:?}", path);
                 }
             }
             Err(e) => {
-                log::error!("Error checking app config dir: {:?}", e);
+                log::error!("Error checking app data dir: {:?}", e);
             }
         }
         path
@@ -186,13 +188,31 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
 
     fn load_bookmarks(&self) -> Bookmarks {
         let path = self.get_bookmarks_file_path();
-        match Bookmarks::load_from_file(path) {
-            Ok(v) => v,
-            Err(e) => {
-                // TODO: if the file is corrupted, rename it to .bak and create a new one
-                log::warn!("Load default bookmarks: {:?}", e);
-                Bookmarks::default()
+        if path.exists() {
+            log::info!("Bookmarks file found: {:?}", path);
+            // create backup before loading
+            let backup_path = path.with_extension("bak");
+            match fs::copy(&path, &backup_path) {
+                Ok(_) => {
+                    log::info!("Backup created: {:?}", backup_path);
+                }
+                Err(e) => {
+                    log::warn!("Failed to create backup: {:?}", e);
+                }
             }
+            match Bookmarks::load_from_file(path) {
+                Ok(bookmarks) => bookmarks,
+                Err(e) => {
+                    log::warn!("Load default bookmarks: {:?}", e);
+                    Bookmarks::default()
+                }
+            }
+        } else {
+            log::warn!(
+                "Bookmarks file not found, load default bookmarks: {:?}",
+                path
+            );
+            Bookmarks::default()
         }
     }
 
