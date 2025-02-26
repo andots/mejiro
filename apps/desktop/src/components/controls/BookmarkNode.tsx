@@ -131,23 +131,23 @@ const BookmarkNode: Component<Props> = (props) => {
             <div class="flex flex-row">
               {/* Navigation Arrow */}
               <div class="flex items-center justify-center">
-                <div
-                  class="w-[18px] flex items-center justify-center"
-                  onClick={toggleIsOpen}
-                  onKeyDown={handleKeydown}
-                >
-                  <Show when={hasChildren()}>
-                    <div class="rounded hover:bg-stone-300">
+                <Show when={hasChildren()} fallback={<div class="w-[18px] h-[18px]" />}>
+                  <button
+                    class="w-[18px] h-[18px] flex items-center justify-center hover:bg-stone-300 rounded"
+                    onClick={toggleIsOpen}
+                    type="button"
+                  >
+                    <div>
                       <NavigationArrowIcon isOpen={isOpen()} size={16} />
                     </div>
-                  </Show>
-                </div>
+                  </button>
+                </Show>
               </div>
 
               {/* Folder/Favicon + Title */}
               <div class="flex items-center w-full">
                 {/* Folder or Favicon */}
-                <div class="flex items-center justify-center w-[20px]">
+                <div class="flex items-center justify-center w-[18px] h-[18px]">
                   <Switch>
                     <Match when={isFolder()}>
                       <FolderIcon isOpen={isOpen()} size={18} />
@@ -160,7 +160,7 @@ const BookmarkNode: Component<Props> = (props) => {
 
                 {/* Title */}
                 <div
-                  class="text-sm pl-0.5 overflow-hidden whitespace-nowrap text-ellipsis"
+                  class="text-[13px] pl-1 overflow-hidden whitespace-nowrap text-ellipsis"
                   classList={{
                     "bg-blue-300": isDraggingInside(),
                   }}
