@@ -79,10 +79,14 @@ fn create_app_webview(
             .incognito(settings.incognito);
 
     #[cfg(target_os = "windows")]
-    if !settings.gpu_acceleration_enabled {
-        builder = builder.additional_browser_args(
-            "--disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection --disable-gpu",
-        );
+    {
+        if !settings.gpu_acceleration_enabled {
+            builder = builder.additional_browser_args(
+                "--disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection --disable-gpu",
+            );
+        }
+        // enable devtools on windows for release builds (need cargo feature `devtools`)
+        builder = builder.devtools(true);
     }
 
     Ok(builder)
