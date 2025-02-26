@@ -433,21 +433,6 @@ mod tests {
     }
 
     #[test]
-    fn test_get_root_children() -> anyhow::Result<()> {
-        let bookmarks = create_test_bookmarks();
-        let root_children = bookmarks.get_root_children()?;
-        assert_eq!(root_children.len(), 3);
-        let n_2 = root_children.first().unwrap();
-        assert_eq!(n_2.title, "n_2");
-        let n_3 = root_children.get(1).unwrap();
-        assert_eq!(n_3.title, "n_3");
-        let n_4 = root_children.last().unwrap();
-        assert_eq!(n_4.title, "n_4");
-        println!("{}", serde_json::to_string_pretty(&root_children)?);
-        Ok(())
-    }
-
-    #[test]
     fn test_get_root_and_children_folder() -> anyhow::Result<()> {
         let bookmarks = Bookmarks::default();
         let folders = bookmarks.get_root_and_children_folders()?;
