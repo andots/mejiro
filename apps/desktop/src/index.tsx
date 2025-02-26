@@ -11,6 +11,7 @@ import { useSettingsState } from "./stores/settings";
 import { useUrlState } from "./stores/url";
 
 import { AppEvent } from "./events";
+import { Invoke } from "./invokes";
 
 const root = document.getElementById("root");
 
@@ -31,7 +32,7 @@ const initApp = async () => {
   await useBookmarkState.getState().getFolders();
   await useSettingsState.getState().getSettings();
 
-  // listen for settings updates on rust side
+  // listen for settings updated events on rust side
   await listen<string>(AppEvent.SettingsUpdated, (event) => {
     // debug(event.payload);
   });
@@ -41,16 +42,24 @@ const initApp = async () => {
     useUrlState.getState().setUrl(event.payload);
   });
 
-  // listen for external page loaded events on rust side
+  // listen for external title changed events on rust side
   await listen<string>(AppEvent.ExternalTitleChanged, (event) => {
     useUrlState.getState().setTitle(event.payload);
   });
 
+  // listen for external url changed events on rust side
   await listen<string>(AppEvent.ExternalUrlChanged, (event) => {
     useUrlState.getState().setProgress(0);
     useUrlState.getState().setUrl(event.payload);
     useUrlState.getState().setProgress(100);
   });
+
+  // Since the initial ExternalTitleChanged event for start_page_url emitted
+  // from the Rust side occurs before the frontend initialization,
+  // it is necessary to retrieve the external webview title here.
+  // GetExternalWebviewTitle() executes a script on the Rust side to fetch the title,
+  // which then emits the ExternalTitleChanged event that the above listener will handle.
+  await Invoke.GetExternalWebviewTitle();
 };
 
 initApp().then(() => {

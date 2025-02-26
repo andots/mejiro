@@ -73,6 +73,9 @@ export const Invoke = {
   GetExternalWebviewUrl: async () => {
     return invoke<string>("get_external_webview_url", {});
   },
+  GetExternalWebviewTitle: async () => {
+    return invoke<string>("get_external_webview_title", {});
+  },
   HideExternalWebview: async () => {
     return invoke("hide_external_webview", {});
   },

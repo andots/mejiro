@@ -77,6 +77,7 @@ pub fn run() {
             commands::webviews::get_external_webview_bounds,
             commands::webviews::set_external_webview_bounds,
             commands::webviews::get_external_webview_url,
+            commands::webviews::get_external_webview_title,
             commands::bookmarks::get_nested_json,
             commands::bookmarks::get_root_and_children_folders,
             commands::bookmarks::get_toolbar_bookmarks,
