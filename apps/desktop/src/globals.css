@@ -133,21 +133,6 @@
   }
 }
 
-::-webkit-scrollbar {
-  width: 16px;
-}
-
-::-webkit-scrollbar-thumb {
-  border-radius: 9999px;
-  border: 4px solid transparent;
-  background-clip: content-box;
-  @apply bg-accent;
-}
-
-::-webkit-scrollbar-corner {
-  display: none;
-}
-
 [data-corvu-resizable-panel]:has(+ [data-corvu-resizable-handle][data-dragging]) iframe {
   pointer-events: none;
 }
@@ -185,4 +170,20 @@ img[draggable=true] {
 
 .app::-webkit-scrollbar{
   display:none;
+}
+
+::-webkit-scrollbar {
+  /* width: 16px; */
+  width: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+  border: 4px solid transparent;
+  background-clip: content-box;
+  @apply bg-accent;
+}
+
+::-webkit-scrollbar-corner {
+  display: none;
 }
