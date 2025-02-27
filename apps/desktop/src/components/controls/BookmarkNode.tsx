@@ -121,22 +121,19 @@ const BookmarkNode: Component<Props> = (props) => {
           onDragEnd={handleDragEnd}
         >
           <div
-            class={cn(
-              "flex flex-col hover:bg-sidebar-accent transition-colors duration-150 cursor-pointer",
-              "overflow-hidden whitespace-nowrap text-ellipsis",
-            )}
+            class="flex flex-col hover:bg-sidebar-accent transition-colors duration-150 cursor-pointer"
             style={{ "padding-left": `${props.level * 8}px` }}
           >
             {/* Empty fixed space for Indicator */}
             <div style={{ width: INDICATOR_WIDTH, height: INDICATOR_HEIGHT }} />
 
-            <div class="flex flex-row items-center">
+            <div class="flex flex-row">
               {/* Navigation Arrow */}
               <div style={{ width: BLOCK_SIZE, height: BLOCK_SIZE }}>
                 <Show when={hasChildren()}>
                   <button
                     style={{ width: BLOCK_SIZE, height: BLOCK_SIZE }}
-                    class="hover:bg-stone-300 rounded"
+                    class="flex items-center justify-center hover:bg-stone-300 rounded"
                     onClick={toggleIsOpen}
                     type="button"
                   >
@@ -149,18 +146,21 @@ const BookmarkNode: Component<Props> = (props) => {
               <div class="flex flex-row items-center">
                 {/* Folder or Favicon */}
                 <div style={{ width: BLOCK_SIZE, height: BLOCK_SIZE }}>
-                  <Show when={isFolder()}>
-                    <FolderIcon isOpen={isOpen()} size={16} />
-                  </Show>
-                  <Show when={isBookmark()}>
-                    <Favicon url={`https://${props.bookmark.host}`} width="16" height="16" />
-                  </Show>
+                  <div class="flex items-center justify-center">
+                    <Show when={isFolder()}>
+                      <FolderIcon isOpen={isOpen()} size={16} />
+                    </Show>
+                    <Show when={isBookmark()}>
+                      <Favicon url={`https://${props.bookmark.host}`} width="16" height="16" />
+                    </Show>
+                  </div>
                 </div>
 
                 {/* Title */}
                 <div
                   class="pl-1 overflow-hidden whitespace-nowrap text-ellipsis"
-                  style={{ "font-size": "13px", width: "100px" }}
+                  // TODO this should be set from state
+                  style={{ width: "100px", "font-size": "13px" }}
                   classList={{
                     "bg-blue-300": isDraggingInside(),
                   }}
@@ -171,15 +171,13 @@ const BookmarkNode: Component<Props> = (props) => {
             </div>
 
             {/* After Indicator */}
-            <Show
-              when={shouldShowIndicator()}
-              fallback={<div style={{ width: INDICATOR_WIDTH, height: INDICATOR_HEIGHT }} />}
-            >
-              <div
-                class={cn("border-b-2", "bg-blue-300")}
-                style={{ width: INDICATOR_WIDTH, height: INDICATOR_HEIGHT }}
-              />
-            </Show>
+            <div
+              style={{ width: INDICATOR_WIDTH, height: INDICATOR_HEIGHT }}
+              classList={{
+                "border-b-2": shouldShowIndicator(),
+                "bg-blue-300": shouldShowIndicator(),
+              }}
+            />
           </div>
         </ContextMenuTrigger>
 
