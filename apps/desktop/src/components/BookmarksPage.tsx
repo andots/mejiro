@@ -19,6 +19,7 @@ const BookmarksPage: Component = () => {
   const setSidebarWidth = useWindowState((state) => state.setSidebarWidth);
 
   const [selectValue, setSelectValue] = createSignal<FolderData | null>(null);
+  const [isResizing, setIsResizing] = createSignal(false);
 
   onMount(async () => {
     if (folders().length > 0) {
@@ -49,13 +50,16 @@ const BookmarksPage: Component = () => {
           newWidth >= SIDEBAR_MIN_WIDTH &&
           newWidth <= SIDEBAR_MAX_WIDTH
         ) {
+          setIsResizing(true);
           setSidebarWidth(newWidth);
         }
       },
       onMouseUp: (e) => {
+        setIsResizing(false);
         document.body.style.cursor = "auto";
       },
       onClick: (e) => {
+        setIsResizing(false);
         document.body.style.cursor = "auto";
       },
     });
@@ -87,9 +91,13 @@ const BookmarksPage: Component = () => {
 
       {/* Resizer */}
       <div
-        class="cursor-col-resize bg-sidebar-accent hover:bg-sidebar-ring transition-colors duration-150"
+        class="cursor-col-resize hover:bg-sidebar-ring transition-colors duration-150"
         style={{ width: `${RESIZE_HANDLE_WIDTH}px` }}
         onMouseDown={handleResizerMouseDown}
+        classList={{
+          "bg-sidebar-ring": isResizing(),
+          "bg-sidebar-accent": !isResizing(),
+        }}
       />
 
       {/* Empty area */}
