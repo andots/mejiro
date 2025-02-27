@@ -1,6 +1,8 @@
 export const INDICATOR_WIDTH = "100px";
 export const INDICATOR_HEIGHT = "4px";
 export const BLOCK_SIZE = "18px";
+export const RESIZE_HANDLE_WIDTH = 4;
+export const SELECT_BOX_WIDTH = "170px";
 
 export const ROUTES = {
   HOME: "/",

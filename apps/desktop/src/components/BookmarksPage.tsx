@@ -7,11 +7,14 @@ import { useWindowState } from "../stores/window";
 import { cn, isDev } from "../utils";
 import { useBookmarkState } from "../stores/bookmarks";
 import type { FolderData } from "../types";
+import { RESIZE_HANDLE_WIDTH } from "../constants";
 
 const BookmarksPage: Component = () => {
-  const externalState = useWindowState((state) => state.externalState);
   const bookmarks = useBookmarkState((state) => state.bookmarks);
   const folders = useBookmarkState((state) => state.folders);
+
+  const externalState = useWindowState((state) => state.externalState);
+  const sidebarWidth = useWindowState((state) => state.sidebarWidth);
 
   const [selectValue, setSelectValue] = createSignal<FolderData | null>(null);
 
@@ -43,7 +46,10 @@ const BookmarksPage: Component = () => {
             />
           </Show>
         </div>
-        <div class="overflow-x-hidden" style={{ width: "190px", "padding-left": "2px" }}>
+        <div
+          style={{ width: `${sidebarWidth() - RESIZE_HANDLE_WIDTH}px`, "padding-left": "2px" }}
+          class="overflow-x-hidden"
+        >
           <Show when={bookmarks() !== null}>
             {/* biome-ignore lint/style/noNonNullAssertion: <explanation> */}
             <BookmarkTree bookmark={bookmarks()!} />
@@ -52,7 +58,7 @@ const BookmarksPage: Component = () => {
       </div>
       <div
         class="cursor-col-resize bg-sidebar-accent hover:bg-sidebar-ring transition-colors duration-150"
-        style={{ width: "4px" }}
+        style={{ width: `${RESIZE_HANDLE_WIDTH}px` }}
       />
       <div class="w-full bg-white" />
     </div>
