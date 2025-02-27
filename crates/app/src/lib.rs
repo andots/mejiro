@@ -59,8 +59,13 @@ pub fn run() {
             app.manage(Mutex::new(bookmarks));
 
             let settings = app.handle().load_user_settings();
+            app.manage(Mutex::new(settings.clone()));
+
+            // create_window() must be called after app.manage() because frontend might call getting
+            // bookmarks and settings from tauri state before they are managed. (especially in relaese build)
+            // TODO: settings that required to be loaded before creating window should be separeted from user settings.
+            // TODO: e.g. user preferences as frontend dynamic settings and config as backend static settings. (restart required)
             create_window(app.handle(), &settings)?;
-            app.manage(Mutex::new(settings));
 
             // Open devtools when debug build
             #[cfg(debug_assertions)]
