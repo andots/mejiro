@@ -1,12 +1,7 @@
 import { Button } from "@repo/ui/button";
-import { type Component, createEffect, For, on, Show } from "solid-js";
+import { type Component, createEffect, For, on } from "solid-js";
 
-import {
-  OcticonGear24,
-  OcticonHome24,
-  OcticonSidebarCollapse24,
-  OcticonSidebarExpand24,
-} from "@repo/ui/icons";
+import { IcBaselineHome, IcBaselineMenu, OcticonGear24 } from "@repo/ui/icons";
 import { useUrlState } from "../../stores/url";
 import { useWindowState } from "../../stores/window";
 import AddressBar from "./AddressBar";
@@ -76,30 +71,21 @@ const ToolBar: Component = () => {
       <div class="flex flex-row items-center">
         {/* menu button */}
         <Button
-          class="w-9 h-9 m-0 p-2 [&_svg]:size-6 [&_svg]:shrink-0"
+          class="w-9 h-9 [&_svg]:size-6 [&_svg]:shrink-0"
           variant="ghost"
           size="icon"
           onClick={handleSidebar}
         >
-          <Show when={externalState() === "right"}>
-            <OcticonSidebarCollapse24 />
-          </Show>
-          <Show when={externalState() === "hidden"}>
-            {/* <OcticonSidebar24 /> */}
-            <OcticonSidebarCollapse24 />
-          </Show>
-          <Show when={externalState() === "full"}>
-            <OcticonSidebarExpand24 />
-          </Show>
+          <IcBaselineMenu />
         </Button>
 
         <Button
-          class="w-9 h-9 m-0 p-2 [&_svg]:size-6 [&_svg]:shrink-0"
+          class="w-9 h-9 [&_svg]:size-6 [&_svg]:shrink-0"
           variant="ghost"
           size="icon"
           onClick={handleHome}
         >
-          <OcticonHome24 />
+          <IcBaselineHome />
         </Button>
 
         {/* pinned url favicons */}
@@ -126,7 +112,7 @@ const ToolBar: Component = () => {
       <div class="flex-none">
         {/* settings button */}
         <Button
-          class="w-9 h-9 m-0 p-2 [&_svg]:size-5 [&_svg]:shrink-0"
+          class="w-9 h-9 [&_svg]:size-5 [&_svg]:shrink-0"
           variant="ghost"
           size="icon"
           onClick={() => handleSettings()}
