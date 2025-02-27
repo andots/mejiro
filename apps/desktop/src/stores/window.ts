@@ -9,7 +9,7 @@ interface WindowState {
   externalState: ExternalState;
   headerHeight: number;
   sidebarWidth: number;
-  setSidebarWidth: (width: number) => void;
+  setSidebarWidth: (newWidth: number) => Promise<void>;
   changeExternalState: (flag: ExternalState) => Promise<void>;
 }
 
@@ -17,8 +17,17 @@ export const useWindowState = createWithSignal<WindowState>((set, get) => ({
   externalState: "right",
   headerHeight: HEADER_HEIGHT,
   sidebarWidth: SIDEBAR_MIN_WIDTH,
-  setSidebarWidth: (width: number) => {
-    set(() => ({ sidebarWidth: width }));
+  setSidebarWidth: async (newWidth: number) => {
+    const appBounds = await Invoke.GetAppWebviewBounds();
+    const externalWidth = appBounds.size.Physical.width - newWidth;
+    const externalHeight = appBounds.size.Physical.height - get().headerHeight;
+    const x = newWidth;
+    const y = get().headerHeight;
+    await Invoke.SetExternalWebviewBounds({
+      size: { width: externalWidth, height: externalHeight },
+      position: { x, y },
+    });
+    set(() => ({ sidebarWidth: newWidth }));
   },
   changeExternalState: async (flag: ExternalState) => {
     const headerHeight = get().headerHeight;
