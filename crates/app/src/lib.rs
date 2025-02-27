@@ -20,6 +20,12 @@ mod window;
 pub fn run() {
     let app = tauri::Builder::default()
         .setup(|app| {
+            #[cfg(desktop)]
+            {
+                app.handle()
+                    .plugin(tauri_plugin_single_instance::init(|_app, _args, _cwd| {}))?;
+            }
+
             // show debug log when debug build
             if cfg!(debug_assertions) {
                 app.handle().plugin(
