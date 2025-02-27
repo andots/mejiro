@@ -62,7 +62,7 @@ const BookmarkNode: Component<Props> = (props) => {
 
   // width
   const paddingLevel = () => props.level * 8;
-  const textWidth = () =>
+  const titleWidth = () =>
     sidebarWidth() - paddingLevel() - RESIZE_HANDLE_WIDTH - BLOCK_SIZE * 2 - 20;
 
   // for draggable
@@ -173,7 +173,10 @@ const BookmarkNode: Component<Props> = (props) => {
                 {/* Title */}
                 <div
                   class="pl-1 overflow-hidden whitespace-nowrap text-ellipsis"
-                  style={{ "font-size": `${BOOKMARK_NODE_FONT_SIZE}px`, width: `${textWidth()}px` }}
+                  style={{
+                    "font-size": `${BOOKMARK_NODE_FONT_SIZE}px`,
+                    width: `${titleWidth()}px`,
+                  }}
                   classList={{
                     "bg-blue-300": isDraggingInside(),
                   }}
