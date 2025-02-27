@@ -79,16 +79,12 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
-            commands::webviews::navigate_webview_url,
             commands::webviews::get_app_webview_bounds,
-            commands::webviews::hide_external_webview,
-            commands::webviews::show_external_webview,
-            commands::webviews::get_external_webview_size,
-            commands::webviews::get_external_webview_position,
-            commands::webviews::get_external_webview_bounds,
-            commands::webviews::set_external_webview_bounds,
-            commands::webviews::get_external_webview_url,
+            commands::webviews::navigate_webview_url,
             commands::webviews::get_external_webview_title,
+            commands::webviews::set_external_webview_bounds,
+            commands::webviews::show_external_webview,
+            commands::webviews::hide_external_webview,
             commands::bookmarks::get_nested_json,
             commands::bookmarks::get_root_and_children_folders,
             commands::bookmarks::get_toolbar_bookmarks,

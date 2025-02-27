@@ -66,33 +66,25 @@ export const Invoke = {
     return invoke<string>("toggle_is_open", { index, topLevelIndex });
   },
 
+  // App Webview commands
+  GetAppWebviewBounds: async () => {
+    return invoke<Bounds>("get_app_webview_bounds", {});
+  },
   // External Webview commands
   NavigateWebviewUrl: async (url: string) => {
     return invoke("navigate_webview_url", { url });
   },
-  GetExternalWebviewUrl: async () => {
-    return invoke<string>("get_external_webview_url", {});
-  },
   GetExternalWebviewTitle: async () => {
     return invoke<string>("get_external_webview_title", {});
   },
-  HideExternalWebview: async () => {
-    return invoke("hide_external_webview", {});
+  SetExternalWebviewBounds: async (bounds: Rect) => {
+    return invoke("set_external_webview_bounds", { bounds });
   },
   ShowExternalWebview: async () => {
     return invoke("show_external_webview", {});
   },
-  GetExternalWebviewSize: async () => {
-    return invoke<PhysicalSize>("get_external_webview_size", {});
-  },
-  GetExternalWebviewPosition: async () => {
-    return invoke<PhysicalPosition>("get_external_webview_position", {});
-  },
-  GetExternalWebviewBounds: async () => {
-    return invoke<Bounds>("get_external_webview_bounds", {});
-  },
-  SetExternalWebviewBounds: async (bounds: Rect) => {
-    return invoke("set_external_webview_bounds", { bounds });
+  HideExternalWebview: async () => {
+    return invoke("hide_external_webview", {});
   },
 
   // Settings commands
@@ -101,10 +93,5 @@ export const Invoke = {
   },
   UpdateSettings: async (settings: UserSettings) => {
     return invoke<UserSettings>("update_settings", { settings });
-  },
-
-  // App Webview commands
-  GetAppWebviewBounds: async () => {
-    return invoke<Bounds>("get_app_webview_bounds", {});
   },
 } as const;

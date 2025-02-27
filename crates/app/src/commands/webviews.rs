@@ -41,6 +41,14 @@ fn get_external_webview(app_handle: tauri::AppHandle) -> Result<tauri::Webview, 
         .ok_or(AppError::WebviewNotFound)
 }
 
+/// Get the size and position of the app webview
+#[tauri::command]
+pub fn get_app_webview_bounds(app_handle: tauri::AppHandle) -> Result<Rect, AppError> {
+    let webview = get_app_webview(app_handle)?;
+    let bounds = webview.bounds()?;
+    Ok(bounds)
+}
+
 /// Navigate the external webview to the given URL
 #[tauri::command]
 pub fn navigate_webview_url(app_handle: tauri::AppHandle, url: String) -> Result<(), AppError> {
@@ -50,20 +58,13 @@ pub fn navigate_webview_url(app_handle: tauri::AppHandle, url: String) -> Result
     Ok(())
 }
 
-/// Get the size and position of the app webview
+/// Get the title of the external webview by evaluating a JavaScript
+/// script sending title to send_page_title and it emits to app webview
 #[tauri::command]
-pub fn get_app_webview_bounds(app_handle: tauri::AppHandle) -> Result<Rect, AppError> {
-    let webview = get_app_webview(app_handle)?;
-    let bounds = webview.bounds()?;
-    Ok(bounds)
-}
-
-/// Get the size and position of the external webview
-#[tauri::command]
-pub fn get_external_webview_bounds(app_handle: tauri::AppHandle) -> Result<Rect, AppError> {
+pub fn get_external_webview_title(app_handle: tauri::AppHandle) -> Result<(), AppError> {
     let webview = get_external_webview(app_handle)?;
-    let bounds = webview.bounds()?;
-    Ok(bounds)
+    let _ = webview.eval(include_str!("../../js/get-title.js"));
+    Ok(())
 }
 
 /// Set the size and position of the external webview
@@ -77,41 +78,12 @@ pub fn set_external_webview_bounds(
     Ok(())
 }
 
-/// Get the URL of the external webview
+/// Show the external webview
 #[tauri::command]
-pub fn get_external_webview_url(app_handle: tauri::AppHandle) -> Result<String, AppError> {
+pub fn show_external_webview(app_handle: tauri::AppHandle) -> Result<(), AppError> {
     let webview = get_external_webview(app_handle)?;
-    let url = webview.url()?;
-    Ok(url.to_string())
-}
-
-/// Get the title of the external webview by evaluating a JavaScript
-/// script sending title to send_page_title and it emits to app webview
-#[tauri::command]
-pub fn get_external_webview_title(app_handle: tauri::AppHandle) -> Result<(), AppError> {
-    let webview = get_external_webview(app_handle)?;
-    let _ = webview.eval(include_str!("../../js/get-title.js"));
+    webview.show()?;
     Ok(())
-}
-
-/// Get the size of the external webview
-#[tauri::command]
-pub fn get_external_webview_size(
-    app_handle: tauri::AppHandle,
-) -> Result<PhysicalSize<u32>, AppError> {
-    let webview = get_external_webview(app_handle)?;
-    let size = webview.size()?;
-    Ok(size)
-}
-
-/// Get the position of the external webview
-#[tauri::command]
-pub fn get_external_webview_position(
-    app_handle: tauri::AppHandle,
-) -> Result<PhysicalPosition<i32>, AppError> {
-    let webview = get_external_webview(app_handle)?;
-    let pos = webview.position()?;
-    Ok(pos)
 }
 
 /// Hide the external webview
@@ -119,13 +91,5 @@ pub fn get_external_webview_position(
 pub fn hide_external_webview(app_handle: tauri::AppHandle) -> Result<(), AppError> {
     let webview = get_external_webview(app_handle)?;
     webview.hide()?;
-    Ok(())
-}
-
-/// Show the external webview
-#[tauri::command]
-pub fn show_external_webview(app_handle: tauri::AppHandle) -> Result<(), AppError> {
-    let webview = get_external_webview(app_handle)?;
-    webview.show()?;
     Ok(())
 }
