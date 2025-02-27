@@ -1,5 +1,21 @@
 # Changelog
 
+# [0.20.0](https://github.com/andots/mejiro/compare/v0.19.2...v0.20.0) (2025-02-27)
+
+
+### Bug Fixes
+
+* **app:** manage user settings before creating the window ([c1e0ab0](https://github.com/andots/mejiro/commit/c1e0ab0da0a575f1ab797587cccf9060ff83e969))
+* **app:** should panic when failing app dir check ([fc936cf](https://github.com/andots/mejiro/commit/fc936cfae216f36eb68b8e43bfe67db7df3e9ae4))
+
+
+### Features
+
+* **app:** app runs as single instance with single-instance plugin ([f5ff45d](https://github.com/andots/mejiro/commit/f5ff45decdfc673577caf1e3d69c00a7150d8a8d))
+* **app:** create backup file before loading bookmarks ([05ba16d](https://github.com/andots/mejiro/commit/05ba16d9787ef2afe70bbd87a2ac8b5948f0cc2a))
+* **app:** enable devtools for Windows in release builds ([97ca7e1](https://github.com/andots/mejiro/commit/97ca7e1ab174e55bc6913df91712de51cb37d19e))
+* **app:** retrieve external webview title for the start url page ([e4df401](https://github.com/andots/mejiro/commit/e4df401c5c285b28edda16703487187201230c6a))
+
 ## [0.19.2](https://github.com/andots/mejiro/compare/v0.19.1...v0.19.2) (2025-02-25)
 
 ## [0.19.1](https://github.com/andots/mejiro/compare/v0.19.0...v0.19.1) (2025-02-25)
