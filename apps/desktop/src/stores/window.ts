@@ -6,14 +6,18 @@ type ExternalState = "full" | "hidden" | "right";
 
 interface WindowState {
   externalState: ExternalState;
+  headerHeight: number;
+  sidebarWidth: number;
   changeExternalState: (flag: ExternalState) => Promise<void>;
 }
 
 export const useWindowState = createWithSignal<WindowState>((set, get) => ({
   externalState: "right",
+  headerHeight: 40,
+  sidebarWidth: 200,
   changeExternalState: async (flag: ExternalState) => {
-    const headerHeight = 40;
-    const sidebarWidth = 200;
+    const headerHeight = get().headerHeight;
+    const sidebarWidth = get().sidebarWidth;
     const appBounds = await Invoke.GetAppWebviewBounds();
     if (flag === "right") {
       // Set the bounds of the external webview to the right side of the app

@@ -1,6 +1,6 @@
-import { type Component, For, Match, Show, Switch } from "solid-js";
+import { type Component, For, Show } from "solid-js";
 
-import type { Bookmark, Dragging } from "../../types";
+import type { Bookmark } from "../../types";
 
 import {
   ContextMenu,
@@ -28,8 +28,9 @@ import NavigationArrowIcon from "../icons/NavigationArrowIcon";
 import FolderIcon from "../icons/FolderIcon";
 import Favicon from "../icons/Favicon";
 import { useBookmarkState } from "../../stores/bookmarks";
-import { isDev } from "../../utils";
+import { cn, isDev } from "../../utils";
 import { useDragging } from "../../stores/dragging";
+import { INDICATOR } from "../../constants";
 
 type Props = {
   bookmark: Bookmark;
@@ -120,20 +121,21 @@ const BookmarkNode: Component<Props> = (props) => {
           onDragEnd={handleDragEnd}
         >
           <div
-            class={
-              "flex flex-col hover:bg-sidebar-accent transition-colors duration-150 cursor-pointer"
-            }
-            style={{ "padding-left": `${props.level * 8}px` }}
+            class={cn(
+              "flex flex-col hover:bg-sidebar-accent transition-colors duration-150 cursor-pointer",
+              "overflow-hidden whitespace-nowrap text-ellipsis",
+            )}
+            style={{ "padding-left": `${props.level * 8}px`, width: "180px" }}
           >
             {/* Empty fixed space for Indicator */}
-            <div class="w-[200px] h-[4px]" />
+            <div style={{ width: INDICATOR.WIDTH, height: INDICATOR.HEIGHT }} />
 
             <div class="flex flex-row">
               {/* Navigation Arrow */}
-              <div class="flex items-center justify-center">
+              <div class="w-[18px] h-[18px]">
                 <Show when={hasChildren()} fallback={<div class="w-[18px] h-[18px]" />}>
                   <button
-                    class="w-[18px] h-[18px] flex items-center justify-center hover:bg-stone-300 rounded"
+                    class="w-[18px] h-[18px] hover:bg-stone-300 rounded"
                     onClick={toggleIsOpen}
                     type="button"
                   >
@@ -148,19 +150,20 @@ const BookmarkNode: Component<Props> = (props) => {
               <div class="flex items-center w-full">
                 {/* Folder or Favicon */}
                 <div class="flex items-center justify-center w-[18px] h-[18px]">
-                  <Switch>
-                    <Match when={isFolder()}>
-                      <FolderIcon isOpen={isOpen()} size={18} />
-                    </Match>
-                    <Match when={isBookmark()}>
+                  <Show when={isFolder()}>
+                    <FolderIcon isOpen={isOpen()} size={18} />
+                  </Show>
+                  <Show when={isBookmark()}>
+                    <div class="w-[18px] h-[18px]">
                       <Favicon url={`https://${props.bookmark.host}`} width="18" height="18" />
-                    </Match>
-                  </Switch>
+                    </div>
+                  </Show>
                 </div>
 
                 {/* Title */}
                 <div
-                  class="text-[13px] pl-1 overflow-hidden whitespace-nowrap text-ellipsis"
+                  class="pl-1 overflow-hidden whitespace-nowrap text-ellipsis"
+                  style={{ "font-size": "13px", width: "100px" }}
                   classList={{
                     "bg-blue-300": isDraggingInside(),
                   }}
@@ -171,8 +174,14 @@ const BookmarkNode: Component<Props> = (props) => {
             </div>
 
             {/* After Indicator */}
-            <Show when={shouldShowIndicator()} fallback={<div class="w-[200px] h-[4px]" />}>
-              <div class="w-[200px] h-[4px] border-b-2 border-blue-300" />
+            <Show
+              when={shouldShowIndicator()}
+              fallback={<div style={{ width: INDICATOR.WIDTH, height: INDICATOR.HEIGHT }} />}
+            >
+              <div
+                class="border-b-2 border-blue-300"
+                style={{ width: INDICATOR.WIDTH, height: INDICATOR.HEIGHT }}
+              />
             </Show>
           </div>
         </ContextMenuTrigger>

@@ -1,3 +1,10 @@
+export const INDICATOR = {
+  WIDTH: "100px",
+  HEIGHT: "4px",
+};
+
+export const SPAN_SIZE = "18px";
+
 export const ICON_SIZE = {
   SMALL: "22",
   NORMAL: "24",

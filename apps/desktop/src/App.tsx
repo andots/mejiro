@@ -31,11 +31,9 @@ const App: Component = () => {
         />
         <ToolBar />
       </div>
-      <main class="flex-col px-1 bg-sidebar text-sidebar-foreground">
+      <main class="bg-sidebar text-sidebar-foreground">
         <Show when={page() === "home"}>
-          <div class="h-[calc(100vh_-_40px)] pt-2">
-            <BookmarksPage />
-          </div>
+          <BookmarksPage />
         </Show>
         <Show when={page() === "settings"}>
           <div class="h-full">

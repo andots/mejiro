@@ -32,27 +32,29 @@ const BookmarksPage: Component = () => {
   };
 
   return (
-    <div
-      class={cn(
-        externalState() === "right" ? "w-full" : "w-full",
-        "flex flex-col h-full bg-sidebar text-sidebar-foreground",
-      )}
-    >
-      <div class="flex-none h-[40px] mb-2">
-        <Show when={folders().length > 0 && selectValue() !== null}>
-          <RootChildrenSelect
-            folders={folders()}
-            value={selectValue()}
-            onChange={(val) => handleSelectChange(val)}
-          />
-        </Show>
+    <div class="flex flex-row h-[calc(100vh_-_40px)]">
+      <div class={cn("flex flex-col h-full bg-sidebar text-sidebar-foreground")}>
+        <div class="flex-none h-[40px] my-2 m-auto">
+          <Show when={folders().length > 0 && selectValue() !== null}>
+            <RootChildrenSelect
+              folders={folders()}
+              value={selectValue()}
+              onChange={(val) => handleSelectChange(val)}
+            />
+          </Show>
+        </div>
+        <div class="overflow-x-hidden" style={{ width: "190px", "padding-left": "2px" }}>
+          <Show when={bookmarks() !== null}>
+            {/* biome-ignore lint/style/noNonNullAssertion: <explanation> */}
+            <BookmarkTree bookmark={bookmarks()!} />
+          </Show>
+        </div>
       </div>
-      <div class="flex-1 overflow-y-auto">
-        <Show when={bookmarks() !== null}>
-          {/* biome-ignore lint/style/noNonNullAssertion: <explanation> */}
-          <BookmarkTree bookmark={bookmarks()!} />
-        </Show>
-      </div>
+      <div
+        class="cursor-col-resize bg-sidebar-accent hover:bg-sidebar-ring transition-colors duration-150"
+        style={{ width: "4px" }}
+      />
+      <div class="w-full bg-white" />
     </div>
   );
 };
