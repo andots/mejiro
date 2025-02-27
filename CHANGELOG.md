@@ -1,5 +1,12 @@
 # Changelog
 
+# [0.21.0](https://github.com/andots/mejiro/compare/v0.20.0...v0.21.0) (2025-02-27)
+
+
+### Features
+
+* **front:** integrate sidebar resizing with external webview ([8d2404b](https://github.com/andots/mejiro/commit/8d2404b898340948e72934f8fd4c5ff83333dd01))
+
 # [0.20.0](https://github.com/andots/mejiro/compare/v0.19.2...v0.20.0) (2025-02-27)
 
 
