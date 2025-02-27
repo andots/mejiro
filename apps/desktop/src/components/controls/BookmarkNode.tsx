@@ -36,6 +36,7 @@ import {
   INDICATOR_HEIGHT,
   RESIZE_HANDLE_WIDTH,
   BLOCK_SIZE,
+  BOOKMARK_NODE_FONT_SIZE,
 } from "../../constants";
 
 type Props = {
@@ -172,7 +173,7 @@ const BookmarkNode: Component<Props> = (props) => {
                 {/* Title */}
                 <div
                   class="pl-1 overflow-hidden whitespace-nowrap text-ellipsis"
-                  style={{ "font-size": "13px", width: `${textWidth()}px` }}
+                  style={{ "font-size": `${BOOKMARK_NODE_FONT_SIZE}px`, width: `${textWidth()}px` }}
                   classList={{
                     "bg-blue-300": isDraggingInside(),
                   }}

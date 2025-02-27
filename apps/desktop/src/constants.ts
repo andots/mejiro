@@ -2,6 +2,7 @@ export const HEADER_HEIGHT = 40;
 export const SIDEBAR_MIN_WIDTH = 200;
 export const SIDEBAR_MAX_WIDTH = 600;
 
+export const BOOKMARK_NODE_FONT_SIZE = 13;
 export const INDICATOR_WIDTH = "100px";
 export const INDICATOR_HEIGHT = "4px";
 export const BLOCK_SIZE = 18;
