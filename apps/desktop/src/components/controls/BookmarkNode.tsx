@@ -30,7 +30,13 @@ import Favicon from "../icons/Favicon";
 import { useBookmarkState } from "../../stores/bookmarks";
 import { cn, isDev } from "../../utils";
 import { useDragging } from "../../stores/dragging";
-import { BLOCK_SIZE, INDICATOR_WIDTH, INDICATOR_HEIGHT } from "../../constants";
+import {
+  BLOCK_SIZE_PX,
+  INDICATOR_WIDTH,
+  INDICATOR_HEIGHT,
+  RESIZE_HANDLE_WIDTH,
+  BLOCK_SIZE,
+} from "../../constants";
 
 type Props = {
   bookmark: Bookmark;
@@ -39,6 +45,7 @@ type Props = {
 
 const BookmarkNode: Component<Props> = (props) => {
   const externalState = useWindowState((state) => state.externalState);
+  const sidebarWidth = useWindowState((state) => state.sidebarWidth);
   const navigateToUrl = useUrlState((state) => state.navigateToUrl);
   const dragging = useDragging();
 
@@ -50,6 +57,12 @@ const BookmarkNode: Component<Props> = (props) => {
   const isBookmark = () => props.bookmark.node_type === "Bookmark";
   const title = () =>
     isDev() ? `${props.bookmark.index} - ${props.bookmark.title}` : props.bookmark.title;
+  // const title = () => (isDev() ? `${props.bookmark.title}` : props.bookmark.title);
+
+  // width
+  const paddingLevel = () => props.level * 8;
+  const textWidth = () =>
+    sidebarWidth() - paddingLevel() - RESIZE_HANDLE_WIDTH - BLOCK_SIZE * 2 - 20;
 
   // for draggable
   const isRoot = () => props.bookmark.node_type === "Root";
@@ -122,17 +135,17 @@ const BookmarkNode: Component<Props> = (props) => {
         >
           <div
             class="flex flex-col hover:bg-sidebar-accent transition-colors duration-150 cursor-pointer"
-            style={{ "padding-left": `${props.level * 8}px` }}
+            style={{ "padding-left": `${paddingLevel()}px` }}
           >
             {/* Empty fixed space for Indicator */}
             <div style={{ width: INDICATOR_WIDTH, height: INDICATOR_HEIGHT }} />
 
             <div class="flex flex-row">
               {/* Navigation Arrow */}
-              <div style={{ width: BLOCK_SIZE, height: BLOCK_SIZE }}>
+              <div style={{ width: BLOCK_SIZE_PX, height: BLOCK_SIZE_PX }}>
                 <Show when={hasChildren()}>
                   <button
-                    style={{ width: BLOCK_SIZE, height: BLOCK_SIZE }}
+                    style={{ width: BLOCK_SIZE_PX, height: BLOCK_SIZE_PX }}
                     class="flex items-center justify-center hover:bg-stone-300 rounded"
                     onClick={toggleIsOpen}
                     type="button"
@@ -145,7 +158,7 @@ const BookmarkNode: Component<Props> = (props) => {
               {/* Folder/Favicon + Title */}
               <div class="flex flex-row items-center">
                 {/* Folder or Favicon */}
-                <div style={{ width: BLOCK_SIZE, height: BLOCK_SIZE }}>
+                <div style={{ width: BLOCK_SIZE_PX, height: BLOCK_SIZE_PX }}>
                   <div class="flex items-center justify-center">
                     <Show when={isFolder()}>
                       <FolderIcon isOpen={isOpen()} size={16} />
@@ -159,8 +172,7 @@ const BookmarkNode: Component<Props> = (props) => {
                 {/* Title */}
                 <div
                   class="pl-1 overflow-hidden whitespace-nowrap text-ellipsis"
-                  // TODO this should be set from state
-                  style={{ width: "100px", "font-size": "13px" }}
+                  style={{ "font-size": "13px", width: `${textWidth()}px` }}
                   classList={{
                     "bg-blue-300": isDraggingInside(),
                   }}

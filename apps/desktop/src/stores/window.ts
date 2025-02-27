@@ -1,6 +1,7 @@
 import { createWithSignal } from "solid-zustand";
 
 import { Invoke } from "../invokes";
+import { SIDEBAR_MIN_WIDTH, HEADER_HEIGHT } from "../constants";
 
 type ExternalState = "full" | "hidden" | "right";
 
@@ -8,13 +9,17 @@ interface WindowState {
   externalState: ExternalState;
   headerHeight: number;
   sidebarWidth: number;
+  setSidebarWidth: (width: number) => void;
   changeExternalState: (flag: ExternalState) => Promise<void>;
 }
 
 export const useWindowState = createWithSignal<WindowState>((set, get) => ({
   externalState: "right",
-  headerHeight: 40,
-  sidebarWidth: 200,
+  headerHeight: HEADER_HEIGHT,
+  sidebarWidth: SIDEBAR_MIN_WIDTH,
+  setSidebarWidth: (width: number) => {
+    set(() => ({ sidebarWidth: width }));
+  },
   changeExternalState: async (flag: ExternalState) => {
     const headerHeight = get().headerHeight;
     const sidebarWidth = get().sidebarWidth;
