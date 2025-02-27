@@ -1,16 +1,6 @@
-export const INDICATOR = {
-  WIDTH: "100px",
-  HEIGHT: "4px",
-};
-
-export const SPAN_SIZE = "18px";
-
-export const ICON_SIZE = {
-  SMALL: "22",
-  NORMAL: "24",
-  MEDIUM: "26",
-  LARGE: "28",
-} as const;
+export const INDICATOR_WIDTH = "100px";
+export const INDICATOR_HEIGHT = "4px";
+export const BLOCK_SIZE = "18px";
 
 export const ROUTES = {
   HOME: "/",

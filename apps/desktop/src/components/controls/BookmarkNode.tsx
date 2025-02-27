@@ -30,7 +30,7 @@ import Favicon from "../icons/Favicon";
 import { useBookmarkState } from "../../stores/bookmarks";
 import { cn, isDev } from "../../utils";
 import { useDragging } from "../../stores/dragging";
-import { INDICATOR } from "../../constants";
+import { BLOCK_SIZE, INDICATOR_WIDTH, INDICATOR_HEIGHT } from "../../constants";
 
 type Props = {
   bookmark: Bookmark;
@@ -125,38 +125,35 @@ const BookmarkNode: Component<Props> = (props) => {
               "flex flex-col hover:bg-sidebar-accent transition-colors duration-150 cursor-pointer",
               "overflow-hidden whitespace-nowrap text-ellipsis",
             )}
-            style={{ "padding-left": `${props.level * 8}px`, width: "180px" }}
+            style={{ "padding-left": `${props.level * 8}px` }}
           >
             {/* Empty fixed space for Indicator */}
-            <div style={{ width: INDICATOR.WIDTH, height: INDICATOR.HEIGHT }} />
+            <div style={{ width: INDICATOR_WIDTH, height: INDICATOR_HEIGHT }} />
 
-            <div class="flex flex-row">
+            <div class="flex flex-row items-center">
               {/* Navigation Arrow */}
-              <div class="w-[18px] h-[18px]">
-                <Show when={hasChildren()} fallback={<div class="w-[18px] h-[18px]" />}>
+              <div style={{ width: BLOCK_SIZE, height: BLOCK_SIZE }}>
+                <Show when={hasChildren()}>
                   <button
-                    class="w-[18px] h-[18px] hover:bg-stone-300 rounded"
+                    style={{ width: BLOCK_SIZE, height: BLOCK_SIZE }}
+                    class="hover:bg-stone-300 rounded"
                     onClick={toggleIsOpen}
                     type="button"
                   >
-                    <div>
-                      <NavigationArrowIcon isOpen={isOpen()} size={16} />
-                    </div>
+                    <NavigationArrowIcon isOpen={isOpen()} size={16} />
                   </button>
                 </Show>
               </div>
 
               {/* Folder/Favicon + Title */}
-              <div class="flex items-center w-full">
+              <div class="flex flex-row items-center">
                 {/* Folder or Favicon */}
-                <div class="flex items-center justify-center w-[18px] h-[18px]">
+                <div style={{ width: BLOCK_SIZE, height: BLOCK_SIZE }}>
                   <Show when={isFolder()}>
-                    <FolderIcon isOpen={isOpen()} size={18} />
+                    <FolderIcon isOpen={isOpen()} size={16} />
                   </Show>
                   <Show when={isBookmark()}>
-                    <div class="w-[18px] h-[18px]">
-                      <Favicon url={`https://${props.bookmark.host}`} width="18" height="18" />
-                    </div>
+                    <Favicon url={`https://${props.bookmark.host}`} width="16" height="16" />
                   </Show>
                 </div>
 
@@ -176,11 +173,11 @@ const BookmarkNode: Component<Props> = (props) => {
             {/* After Indicator */}
             <Show
               when={shouldShowIndicator()}
-              fallback={<div style={{ width: INDICATOR.WIDTH, height: INDICATOR.HEIGHT }} />}
+              fallback={<div style={{ width: INDICATOR_WIDTH, height: INDICATOR_HEIGHT }} />}
             >
               <div
-                class="border-b-2 border-blue-300"
-                style={{ width: INDICATOR.WIDTH, height: INDICATOR.HEIGHT }}
+                class={cn("border-b-2", "bg-blue-300")}
+                style={{ width: INDICATOR_WIDTH, height: INDICATOR_HEIGHT }}
               />
             </Show>
           </div>
