@@ -9,6 +9,7 @@ import { usePageState } from "./stores/pages";
 import DeleteConfirmDialog from "./components/dialogs/DeleteConfirmDialog";
 
 import LoadingBar from "@repo/top-loading-bar/index";
+import { HEADER_HEIGHT } from "./constants";
 
 const BookmarksPage = lazy(() => import("./components/BookmarksPage"));
 const SettingsPage = lazy(() => import("./components/SettingsPage"));
@@ -20,7 +21,10 @@ const App: Component = () => {
 
   return (
     <div class="app w-full flex flex-col bg-sidebar">
-      <div class="sticky top-0 z-50 w-full h-[40px] border-b border-sidebar-border bg-sidebar text-sidebar-foreground">
+      <div
+        style={{ height: `${HEADER_HEIGHT}px` }}
+        class="sticky top-0 z-50 w-full border-b border-sidebar-border bg-sidebar text-sidebar-foreground"
+      >
         <LoadingBar
           color="#8ec5ff"
           progress={progress()}
