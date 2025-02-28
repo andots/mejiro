@@ -53,7 +53,7 @@ const App: Component = () => {
 
         <SidebarRisizer />
 
-        <div id="content" class="w-full overflow-y-auto">
+        <div id="content" class="flex-1 overflow-y-auto">
           <SettingsPage />
         </div>
       </div>
