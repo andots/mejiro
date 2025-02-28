@@ -5,7 +5,7 @@ import { RESIZE_HANDLE_WIDTH, SIDEBAR_MAX_WIDTH, SIDEBAR_MIN_WIDTH } from "../co
 import { useWindowState } from "../stores/window";
 import { observeMouseDrag } from "../libs/observe-mouse-drag";
 
-const Resizer: Component = () => {
+const SidebarRisizer: Component = () => {
   const setSidebarWidth = useWindowState((state) => state.setSidebarWidth);
 
   const [isResizing, setIsResizing] = createSignal(false);
@@ -51,4 +51,4 @@ const Resizer: Component = () => {
   );
 };
 
-export default Resizer;
+export default SidebarRisizer;
