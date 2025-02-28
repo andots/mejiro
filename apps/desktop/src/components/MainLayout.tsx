@@ -1,9 +1,5 @@
-import { createSignal, onMount, Show, type Component } from "solid-js";
+import { createSignal, type Component } from "solid-js";
 
-import { useWindowState } from "../stores/window";
-import { cn, isDev } from "../utils";
-import { useBookmarkState } from "../stores/bookmarks";
-import type { FolderData } from "../types";
 import {
   HEADER_HEIGHT,
   RESIZE_HANDLE_WIDTH,
@@ -11,37 +7,15 @@ import {
   SIDEBAR_MIN_WIDTH,
 } from "../constants";
 import { observeMouseDrag } from "../libs/observe-mouse-drag";
+import { useWindowState } from "../stores/window";
 
 import SettingsPage from "./pages/SettingsPage";
-import RootChildrenSelect from "./sidebar/RootChildrenSelect";
-import BookmarkTree from "./sidebar/BookmarkTree";
+import Sidebar from "./Sidebar";
 
 const MainLayout: Component = () => {
-  const bookmarks = useBookmarkState((state) => state.bookmarks);
-  const folders = useBookmarkState((state) => state.folders);
-
-  const externalState = useWindowState((state) => state.externalState);
-  const sidebarWidth = useWindowState((state) => state.sidebarWidth);
   const setSidebarWidth = useWindowState((state) => state.setSidebarWidth);
 
-  const [selectValue, setSelectValue] = createSignal<FolderData | null>(null);
   const [isResizing, setIsResizing] = createSignal(false);
-
-  onMount(async () => {
-    if (folders().length > 0) {
-      setSelectValue(folders()[0]);
-      await useBookmarkState.getState().getBookmarks(folders()[0].index);
-    }
-  });
-
-  const handleSelectChange = (val: FolderData | null) => {
-    if (val !== null && val.index >= 1) {
-      if (isDev()) console.log("handleSelectChange Folder: ", val);
-
-      setSelectValue(val);
-      useBookmarkState.getState().getBookmarks(val.index);
-    }
-  };
 
   const handleResizerMouseDown = (mouseDownEvent: MouseEvent) => {
     const initialX = mouseDownEvent.clientX;
@@ -73,27 +47,7 @@ const MainLayout: Component = () => {
 
   return (
     <div class="flex flex-row" style={{ height: `calc(100vh - ${HEADER_HEIGHT}px)` }}>
-      {/* Bookmark Sidebar */}
-      <div class={cn("flex flex-col h-full bg-sidebar text-sidebar-foreground")}>
-        <div class="flex-none h-[40px] my-2 pl-2">
-          <Show when={folders().length > 0 && selectValue() !== null}>
-            <RootChildrenSelect
-              folders={folders()}
-              value={selectValue()}
-              onChange={(val) => handleSelectChange(val)}
-            />
-          </Show>
-        </div>
-        <div
-          style={{ width: `${sidebarWidth() - RESIZE_HANDLE_WIDTH}px`, "padding-left": "2px" }}
-          class="overflow-x-hidden overflow-y-auto"
-        >
-          <Show when={bookmarks() !== null}>
-            {/* biome-ignore lint/style/noNonNullAssertion: <explanation> */}
-            <BookmarkTree bookmark={bookmarks()!} />
-          </Show>
-        </div>
-      </div>
+      <Sidebar />
 
       {/* Resizer */}
       <div
