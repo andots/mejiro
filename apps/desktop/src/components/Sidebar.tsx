@@ -34,8 +34,18 @@ const Sidebar: Component = () => {
     }
   };
 
+  const handleContextMenu = (e: MouseEvent) => {
+    // disable default browser right click context menu only inside main div
+    // Ctrl + Shift + I will still work for opening dev tools
+    e.preventDefault();
+  };
+
   return (
-    <div id="sidebar" class="flex flex-col h-full bg-sidebar text-sidebar-foreground">
+    <div
+      id="sidebar"
+      class="flex flex-col h-full bg-sidebar text-sidebar-foreground"
+      onContextMenu={handleContextMenu}
+    >
       <div class="flex-none h-[40px] my-2 pl-2">
         <Show when={folders().length > 0 && selectValue() !== null}>
           <RootChildrenSelect

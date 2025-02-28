@@ -18,12 +18,6 @@ const SettingsPage = lazy(() => import("./pages/SettingsPage"));
 const App: Component = () => {
   const page = usePageState((state) => state.page);
 
-  const handleContextMenu = (e: MouseEvent) => {
-    // disable default browser right click context menu only inside main div
-    // Ctrl + Shift + I will still work for opening dev tools
-    e.preventDefault();
-  };
-
   // createEffect(
   //   on(theme, (t) => {
   //     const root = document.documentElement;
