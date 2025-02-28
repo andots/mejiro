@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.21.1](https://github.com/andots/mejiro/compare/v0.21.0...v0.21.1) (2025-02-28)
+
+
+### Bug Fixes
+
+* **front:** fix text overflow issue in RootChildrenSelect with ellipsis and adjust SELECT_BOX_WIDTH ([41fa0a4](https://github.com/andots/mejiro/commit/41fa0a4e6829b32d106aee38927f30a4652dce50))
+
 # [0.21.0](https://github.com/andots/mejiro/compare/v0.20.0...v0.21.0) (2025-02-27)
 
 
