@@ -3,7 +3,7 @@ import { createSignal, onMount, Show, type Component } from "solid-js";
 import type { FolderData } from "../types";
 
 import { RESIZE_HANDLE_WIDTH } from "../constants";
-import { cn, isDev } from "../utils";
+import { isDev } from "../utils";
 
 import { useBookmarkState } from "../stores/bookmarks";
 import { useWindowState } from "../stores/window";
@@ -35,7 +35,7 @@ const Sidebar: Component = () => {
   };
 
   return (
-    <div class={cn("flex flex-col h-full bg-sidebar text-sidebar-foreground")}>
+    <div id="sidebar" class="flex flex-col h-full bg-sidebar text-sidebar-foreground">
       <div class="flex-none h-[40px] my-2 pl-2">
         <Show when={folders().length > 0 && selectValue() !== null}>
           <RootChildrenSelect

@@ -34,8 +34,9 @@ const App: Component = () => {
   // );
 
   return (
-    <div class="app w-full flex flex-col bg-sidebar text-sidebar-foreground">
+    <div id="app" class="app w-full flex flex-col bg-sidebar text-sidebar-foreground">
       <div
+        id="header"
         style={{ height: `${HEADER_HEIGHT}px` }}
         class="sticky top-0 z-50 w-full border-b border-sidebar-border bg-sidebar text-sidebar-foreground"
       >
@@ -43,12 +44,16 @@ const App: Component = () => {
         <ToolBar />
       </div>
 
-      <div class="flex flex-row" style={{ height: `calc(100vh - ${HEADER_HEIGHT}px)` }}>
+      <div
+        id="main-container"
+        class="flex flex-row"
+        style={{ height: `calc(100vh - ${HEADER_HEIGHT}px)` }}
+      >
         <Sidebar />
 
         <SidebarRisizer />
 
-        <div class="w-full overflow-y-auto">
+        <div id="content" class="w-full overflow-y-auto">
           <SettingsPage />
         </div>
       </div>

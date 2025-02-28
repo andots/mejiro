@@ -40,6 +40,7 @@ const SidebarRisizer: Component = () => {
 
   return (
     <div
+      id="sidebar-resizer"
       class="cursor-col-resize hover:bg-sidebar-ring transition-colors duration-150"
       style={{ width: `${RESIZE_HANDLE_WIDTH}px` }}
       onMouseDown={handleResizerMouseDown}

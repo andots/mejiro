@@ -69,7 +69,7 @@ const ToolBar: Component = () => {
   };
 
   return (
-    <div class="flex items-center w-full h-full px-2">
+    <div id="toolbar" class="flex items-center w-full h-full px-2">
       <div class="flex flex-row items-center">
         {/* Menu button */}
         <Button

@@ -161,14 +161,14 @@ img[draggable=true] {
 }
 
 /* Remove browser scrollbar */
-.app {
+#app {
   height: 100vh;
   overflow-y: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
 
-.app::-webkit-scrollbar{
+#app::-webkit-scrollbar {
   display:none;
 }
 
