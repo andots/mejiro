@@ -1,5 +1,19 @@
 # Changelog
 
+# [0.22.0](https://github.com/andots/mejiro/compare/v0.21.1...v0.22.0) (2025-02-28)
+
+
+### Bug Fixes
+
+* **app:** disable default right-click context menu only in main div ([eadc9c8](https://github.com/andots/mejiro/commit/eadc9c803cb13373b06fec2932d5577020916bab))
+* **front:** disable default context menu only in Sidebar component ([2ac6412](https://github.com/andots/mejiro/commit/2ac6412c2ebf90f2fa56001b80bac25d8eed75b6))
+* **front:** prepare dashboard page and update navigation logic ([a9a7529](https://github.com/andots/mejiro/commit/a9a7529c380077ec1d988e39f3a7477145cca797))
+
+
+### Features
+
+* **front:** layout with MainLayout ([45c7bcb](https://github.com/andots/mejiro/commit/45c7bcb07fee28e9f8a0dea64733d0f03d8198b7))
+
 ## [0.21.1](https://github.com/andots/mejiro/compare/v0.21.0...v0.21.1) (2025-02-28)
 
 
