@@ -21,11 +21,27 @@ const RootChildrenSelect: Component<Props> = (props) => {
       value={props.value}
       onChange={(val) => props.onChange(val)}
       itemComponent={(props) => (
-        <SelectItem item={props.item}>{props.item.rawValue.title}</SelectItem>
+        <SelectItem item={props.item}>
+          <div
+            style={{ width: `${SELECT_BOX_WIDTH - 50}px` }}
+            class="overflow-hidden whitespace-nowrap text-ellipsis"
+          >
+            {props.item.rawValue.title}
+          </div>
+        </SelectItem>
       )}
     >
-      <SelectTrigger aria-label="child" style={{ width: SELECT_BOX_WIDTH }}>
-        <SelectValue<FolderData>>{(state) => state.selectedOption().title}</SelectValue>
+      <SelectTrigger aria-label="child" style={{ width: `${SELECT_BOX_WIDTH}px` }}>
+        <SelectValue<FolderData>>
+          {(state) => (
+            <div
+              style={{ width: `${SELECT_BOX_WIDTH - 50}px` }}
+              class="text-left overflow-hidden whitespace-nowrap text-ellipsis"
+            >
+              {state.selectedOption().title}
+            </div>
+          )}
+        </SelectValue>
       </SelectTrigger>
       <SelectContent />
     </Select>

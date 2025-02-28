@@ -8,7 +8,7 @@ export const INDICATOR_HEIGHT = "4px";
 export const BLOCK_SIZE = 18;
 export const BLOCK_SIZE_PX = `${BLOCK_SIZE}px`;
 export const RESIZE_HANDLE_WIDTH = 4;
-export const SELECT_BOX_WIDTH = "180px";
+export const SELECT_BOX_WIDTH = 180;
 
 export const ROUTES = {
   HOME: "/",
