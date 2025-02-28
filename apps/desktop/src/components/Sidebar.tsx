@@ -1,11 +1,15 @@
 import { createSignal, onMount, Show, type Component } from "solid-js";
-import RootChildrenSelect from "./sidebar/RootChildrenSelect";
-import BookmarkTree from "./sidebar/BookmarkTree";
-import { cn, isDev } from "../utils";
+
+import type { FolderData } from "../types";
+
 import { RESIZE_HANDLE_WIDTH } from "../constants";
+import { cn, isDev } from "../utils";
+
 import { useBookmarkState } from "../stores/bookmarks";
 import { useWindowState } from "../stores/window";
-import type { FolderData } from "../types";
+
+import RootChildrenSelect from "./sidebar/RootChildrenSelect";
+import BookmarkTree from "./sidebar/BookmarkTree";
 
 const Sidebar: Component = () => {
   const bookmarks = useBookmarkState((state) => state.bookmarks);

@@ -1,11 +1,16 @@
 import type { Component } from "solid-js";
 
+import { HEADER_HEIGHT } from "../constants";
+
+import PageLoadingBar from "./PageLoadingBar";
+import ToolBar from "./ToolBar";
+import Sidebar from "./Sidebar";
+import SidebarRisizer from "./SidebarResizer";
+import SettingsPage from "./pages/SettingsPage";
+
 import AddFolderDialog from "./dialogs/AddFolderDialog";
 import BookmarkEditDialog from "./dialogs/BookmarkEditDialog";
 import DeleteConfirmDialog from "./dialogs/DeleteConfirmDialog";
-
-import MainLayout from "./MainLayout";
-import Header from "./Header";
 
 const App: Component = () => {
   const handleContextMenu = (e: MouseEvent) => {
@@ -30,8 +35,23 @@ const App: Component = () => {
 
   return (
     <div class="app w-full flex flex-col bg-sidebar text-sidebar-foreground">
-      <Header />
-      <MainLayout />
+      <div
+        style={{ height: `${HEADER_HEIGHT}px` }}
+        class="sticky top-0 z-50 w-full border-b border-sidebar-border bg-sidebar text-sidebar-foreground"
+      >
+        <PageLoadingBar />
+        <ToolBar />
+      </div>
+
+      <div class="flex flex-row" style={{ height: `calc(100vh - ${HEADER_HEIGHT}px)` }}>
+        <Sidebar />
+
+        <SidebarRisizer />
+
+        <div class="w-full overflow-y-auto">
+          <SettingsPage />
+        </div>
+      </div>
 
       {/* Dialogs */}
       <BookmarkEditDialog />
