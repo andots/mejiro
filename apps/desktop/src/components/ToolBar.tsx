@@ -31,7 +31,7 @@ const ToolBar: Component = () => {
   const page = usePageState((state) => state.page);
   const setPage = usePageState((state) => state.setPage);
 
-  const handleSidebar = () => {
+  const handleMenu = () => {
     setPage("home");
     if (externalState() === "right") {
       changeExternalState("full");
@@ -69,18 +69,19 @@ const ToolBar: Component = () => {
   };
 
   return (
-    <div class="flex items-center w-full h-[40px] px-2">
+    <div class="flex items-center w-full h-full px-2">
       <div class="flex flex-row items-center">
-        {/* menu button */}
+        {/* Menu button */}
         <Button
           class="w-9 h-9 [&_svg]:size-6 [&_svg]:shrink-0"
           variant="ghost"
           size="icon"
-          onClick={handleSidebar}
+          onClick={handleMenu}
         >
           <IcBaselineMenu />
         </Button>
 
+        {/* Home button */}
         <Button
           class="w-9 h-9 [&_svg]:size-6 [&_svg]:shrink-0"
           variant="ghost"
@@ -90,7 +91,7 @@ const ToolBar: Component = () => {
           <IcBaselineHome />
         </Button>
 
-        {/* pinned url favicons */}
+        {/* Pinned url favicons */}
         <div class="flex items-center ml-2">
           <For each={toolbarBookmarks()}>
             {(bookmark) => (
@@ -106,13 +107,13 @@ const ToolBar: Component = () => {
         </div>
       </div>
 
-      {/* address bar */}
+      {/* Address bar */}
       <div class="flex-1 mx-8">
         <AddressBar />
       </div>
 
       <div class="flex-none">
-        {/* settings button */}
+        {/* Settings button */}
         <Button
           class="w-9 h-9 [&_svg]:size-5 [&_svg]:shrink-0"
           variant="ghost"
