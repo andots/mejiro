@@ -2,9 +2,9 @@ import type { Component } from "solid-js";
 
 import LoadingBar from "@repo/top-loading-bar/index";
 
-import { HEADER_HEIGHT } from "../../constants";
-import { useUrlState } from "../../stores/url";
-import ToolBar from "./ToolBar";
+import { HEADER_HEIGHT } from "../constants";
+import { useUrlState } from "../stores/url";
+import ToolBar from "./header/ToolBar";
 
 const Header: Component = () => {
   const progress = useUrlState((state) => state.progress);

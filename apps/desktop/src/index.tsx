@@ -1,7 +1,7 @@
 /* @refresh reload */
 import { render } from "solid-js/web";
 
-import App from "./App";
+import App from "./components/App";
 import "./globals.css";
 
 import { listen } from "@tauri-apps/api/event";
