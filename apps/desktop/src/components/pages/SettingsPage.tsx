@@ -4,11 +4,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo
 import { Switch, SwitchControl, SwitchThumb } from "@repo/ui/switch";
 import { TextField, TextFieldInput } from "@repo/ui/text-field";
 import { Button } from "@repo/ui/button";
-import { useSettingsState } from "../stores/settings";
-import { validateUrl } from "../utils";
-import { RecommendedSites } from "../constants";
-import Favicon from "./icons/Favicon";
-import { useBookmarkState } from "../stores/bookmarks";
+import { useSettingsState } from "../../stores/settings";
+import { validateUrl } from "../../utils";
+import { RecommendedSites } from "../../constants";
+import Favicon from "../icons/Favicon";
+import { useBookmarkState } from "../../stores/bookmarks";
 
 // import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/ui/select";
 
@@ -48,7 +48,7 @@ const SettingsPage: Component = () => {
   };
 
   return (
-    <div class="max-w-2xl m-auto my-4">
+    <div class="max-w-2xl mx-auto my-4">
       <Card class="w-full">
         <CardHeader>
           <CardTitle class="text-2xl">Settings</CardTitle>

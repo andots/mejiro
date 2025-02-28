@@ -9,8 +9,9 @@ import { useBookmarkState } from "../stores/bookmarks";
 import type { FolderData } from "../types";
 import { RESIZE_HANDLE_WIDTH, SIDEBAR_MAX_WIDTH, SIDEBAR_MIN_WIDTH } from "../constants";
 import { observeMouseDrag } from "../libs/observe-mouse-drag";
+import SettingsPage from "./pages/SettingsPage";
 
-const BookmarksPage: Component = () => {
+const MainLayout: Component = () => {
   const bookmarks = useBookmarkState((state) => state.bookmarks);
   const folders = useBookmarkState((state) => state.folders);
 
@@ -80,7 +81,7 @@ const BookmarksPage: Component = () => {
         </div>
         <div
           style={{ width: `${sidebarWidth() - RESIZE_HANDLE_WIDTH}px`, "padding-left": "2px" }}
-          class="overflow-x-hidden"
+          class="overflow-x-hidden overflow-y-auto"
         >
           <Show when={bookmarks() !== null}>
             {/* biome-ignore lint/style/noNonNullAssertion: <explanation> */}
@@ -101,9 +102,11 @@ const BookmarksPage: Component = () => {
       />
 
       {/* Empty area */}
-      <div class="w-full bg-white" />
+      <div class="w-full overflow-y-auto">
+        <SettingsPage />
+      </div>
     </div>
   );
 };
 
-export default BookmarksPage;
+export default MainLayout;
