@@ -1,6 +1,6 @@
 import { createWithSignal } from "solid-zustand";
 
-type Page = "home" | "settings";
+type Page = "dashboard" | "settings";
 
 interface PageState {
   page: Page;
@@ -8,6 +8,6 @@ interface PageState {
 }
 
 export const usePageState = createWithSignal<PageState>((set) => ({
-  page: "home",
+  page: "dashboard",
   setPage: (page) => set({ page }),
 }));

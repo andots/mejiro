@@ -32,7 +32,7 @@ const ToolBar: Component = () => {
   const setPage = usePageState((state) => state.setPage);
 
   const handleMenu = () => {
-    setPage("home");
+    setPage("dashboard");
     if (externalState() === "right") {
       changeExternalState("full");
     } else if (externalState() === "full") {
@@ -43,7 +43,7 @@ const ToolBar: Component = () => {
   };
 
   const handleHome = () => {
-    setPage("home");
+    setPage("dashboard");
     navigateToUrl(settings().start_page_url);
     if (externalState() === "hidden") {
       changeExternalState("right");
@@ -51,7 +51,7 @@ const ToolBar: Component = () => {
   };
 
   const handlePinnedUrl = (url: string) => {
-    setPage("home");
+    setPage("dashboard");
     navigateToUrl(url);
     if (externalState() === "hidden") {
       changeExternalState("right");
@@ -61,7 +61,7 @@ const ToolBar: Component = () => {
   const handleSettings = () => {
     if (page() === "settings") {
       changeExternalState("right");
-      setPage("home");
+      setPage("dashboard");
     } else {
       changeExternalState("hidden");
       setPage("settings");

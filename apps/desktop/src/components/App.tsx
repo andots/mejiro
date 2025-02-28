@@ -1,4 +1,4 @@
-import type { Component } from "solid-js";
+import { lazy, Show, type Component } from "solid-js";
 
 import { HEADER_HEIGHT } from "../constants";
 
@@ -6,13 +6,18 @@ import PageLoadingBar from "./PageLoadingBar";
 import ToolBar from "./ToolBar";
 import Sidebar from "./Sidebar";
 import SidebarRisizer from "./SidebarResizer";
-import SettingsPage from "./pages/SettingsPage";
 
 import AddFolderDialog from "./dialogs/AddFolderDialog";
 import BookmarkEditDialog from "./dialogs/BookmarkEditDialog";
 import DeleteConfirmDialog from "./dialogs/DeleteConfirmDialog";
+import { usePageState } from "../stores/pages";
+
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const SettingsPage = lazy(() => import("./pages/SettingsPage"));
 
 const App: Component = () => {
+  const page = usePageState((state) => state.page);
+
   const handleContextMenu = (e: MouseEvent) => {
     // disable default browser right click context menu only inside main div
     // Ctrl + Shift + I will still work for opening dev tools
@@ -54,7 +59,12 @@ const App: Component = () => {
         <SidebarRisizer />
 
         <div id="content" class="flex-1 overflow-y-auto">
-          <SettingsPage />
+          <Show when={page() === "dashboard"}>
+            <Dashboard />
+          </Show>
+          <Show when={page() === "settings"}>
+            <SettingsPage />
+          </Show>
         </div>
       </div>
 
