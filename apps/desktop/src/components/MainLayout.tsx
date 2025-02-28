@@ -1,8 +1,5 @@
 import { createSignal, onMount, Show, type Component } from "solid-js";
 
-import RootChildrenSelect from "./controls/RootChildrenSelect";
-
-import BookmarkTree from "./controls/BookmarkTree";
 import { useWindowState } from "../stores/window";
 import { cn, isDev } from "../utils";
 import { useBookmarkState } from "../stores/bookmarks";
@@ -14,7 +11,10 @@ import {
   SIDEBAR_MIN_WIDTH,
 } from "../constants";
 import { observeMouseDrag } from "../libs/observe-mouse-drag";
+
 import SettingsPage from "./pages/SettingsPage";
+import RootChildrenSelect from "./sidebar/RootChildrenSelect";
+import BookmarkTree from "./sidebar/BookmarkTree";
 
 const MainLayout: Component = () => {
   const bookmarks = useBookmarkState((state) => state.bookmarks);
