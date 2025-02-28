@@ -7,7 +7,6 @@ type ExternalState = "full" | "hidden" | "right";
 
 interface WindowState {
   externalState: ExternalState;
-  headerHeight: number;
   sidebarWidth: number;
   setSidebarWidth: (newWidth: number) => Promise<void>;
   changeExternalState: (flag: ExternalState) => Promise<void>;
@@ -15,14 +14,13 @@ interface WindowState {
 
 export const useWindowState = createWithSignal<WindowState>((set, get) => ({
   externalState: "right",
-  headerHeight: HEADER_HEIGHT,
   sidebarWidth: SIDEBAR_MIN_WIDTH,
   setSidebarWidth: async (newWidth: number) => {
     const appBounds = await Invoke.GetAppWebviewBounds();
     const externalWidth = appBounds.size.Physical.width - newWidth;
-    const externalHeight = appBounds.size.Physical.height - get().headerHeight;
+    const externalHeight = appBounds.size.Physical.height - HEADER_HEIGHT;
     const x = newWidth;
-    const y = get().headerHeight;
+    const y = HEADER_HEIGHT;
     await Invoke.SetExternalWebviewBounds({
       size: { width: externalWidth, height: externalHeight },
       position: { x, y },
@@ -30,7 +28,6 @@ export const useWindowState = createWithSignal<WindowState>((set, get) => ({
     set(() => ({ sidebarWidth: newWidth }));
   },
   changeExternalState: async (flag: ExternalState) => {
-    const headerHeight = get().headerHeight;
     const sidebarWidth = get().sidebarWidth;
     const appBounds = await Invoke.GetAppWebviewBounds();
     if (flag === "right") {
@@ -38,9 +35,9 @@ export const useWindowState = createWithSignal<WindowState>((set, get) => ({
       await Invoke.SetExternalWebviewBounds({
         size: {
           width: appBounds.size.Physical.width - sidebarWidth,
-          height: appBounds.size.Physical.height - headerHeight,
+          height: appBounds.size.Physical.height - HEADER_HEIGHT,
         },
-        position: { x: sidebarWidth, y: headerHeight },
+        position: { x: sidebarWidth, y: HEADER_HEIGHT },
       });
       // Show the external webview if it is hidden
       if (get().externalState === "hidden") {
@@ -56,9 +53,9 @@ export const useWindowState = createWithSignal<WindowState>((set, get) => ({
       await Invoke.SetExternalWebviewBounds({
         size: {
           width: appBounds.size.Physical.width,
-          height: appBounds.size.Physical.height - headerHeight,
+          height: appBounds.size.Physical.height - HEADER_HEIGHT,
         },
-        position: { x: 0, y: headerHeight },
+        position: { x: 0, y: HEADER_HEIGHT },
       });
       // Show the external webview if it is hidden
       if (get().externalState === "hidden") {
