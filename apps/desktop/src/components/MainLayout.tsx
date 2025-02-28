@@ -7,7 +7,12 @@ import { useWindowState } from "../stores/window";
 import { cn, isDev } from "../utils";
 import { useBookmarkState } from "../stores/bookmarks";
 import type { FolderData } from "../types";
-import { RESIZE_HANDLE_WIDTH, SIDEBAR_MAX_WIDTH, SIDEBAR_MIN_WIDTH } from "../constants";
+import {
+  HEADER_HEIGHT,
+  RESIZE_HANDLE_WIDTH,
+  SIDEBAR_MAX_WIDTH,
+  SIDEBAR_MIN_WIDTH,
+} from "../constants";
 import { observeMouseDrag } from "../libs/observe-mouse-drag";
 import SettingsPage from "./pages/SettingsPage";
 
@@ -67,7 +72,7 @@ const MainLayout: Component = () => {
   };
 
   return (
-    <div class="flex flex-row h-[calc(100vh_-_40px)]">
+    <div class="flex flex-row" style={{ height: `calc(100vh - ${HEADER_HEIGHT}px)` }}>
       {/* Bookmark Sidebar */}
       <div class={cn("flex flex-col h-full bg-sidebar text-sidebar-foreground")}>
         <div class="flex-none h-[40px] my-2 pl-2">

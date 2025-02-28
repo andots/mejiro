@@ -2,13 +2,15 @@ import { Button } from "@repo/ui/button";
 import { type Component, createEffect, For, on } from "solid-js";
 
 import { IcBaselineHome, IcBaselineMenu, OcticonGear24 } from "@repo/ui/icons";
+
 import { useUrlState } from "../../stores/url";
 import { useWindowState } from "../../stores/window";
-import AddressBar from "./AddressBar";
-import Favicon from "../icons/Favicon";
 import { usePageState } from "../../stores/pages";
 import { useBookmarkState } from "../../stores/bookmarks";
 import { useSettingsState } from "../../stores/settings";
+
+import AddressBar from "./AddressBar";
+import Favicon from "../icons/Favicon";
 
 const ToolBar: Component = () => {
   const bookmarks = useBookmarkState((state) => state.bookmarks);
