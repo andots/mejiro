@@ -19,6 +19,12 @@ const App: Component = () => {
   const progress = useUrlState((state) => state.progress);
   const setProgress = useUrlState((state) => state.setProgress);
 
+  const handleContextMenu = (e: MouseEvent) => {
+    // disable default browser right click context menu only inside main div
+    // Ctrl + Shift + I will still work for opening dev tools
+    e.preventDefault();
+  };
+
   return (
     <div class="app w-full flex flex-col bg-sidebar">
       <div
@@ -35,7 +41,7 @@ const App: Component = () => {
         />
         <ToolBar />
       </div>
-      <main class="bg-sidebar text-sidebar-foreground">
+      <main class="bg-sidebar text-sidebar-foreground" onContextMenu={handleContextMenu}>
         <Show when={page() === "home"}>
           <BookmarksPage />
         </Show>
