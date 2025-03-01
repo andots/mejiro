@@ -20,6 +20,7 @@ const Sidebar: Component = () => {
   const [selectValue, setSelectValue] = createSignal<FolderData | null>(null);
 
   onMount(async () => {
+    await useBookmark().getFolders();
     if (folders().length > 0) {
       setSelectValue(folders()[0]);
       await useBookmark().getBookmarks(folders()[0].index);

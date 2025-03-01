@@ -1,6 +1,15 @@
-import { lazy, Show, type Component } from "solid-js";
+import { lazy, onCleanup, onMount, Show, type Component } from "solid-js";
+
+import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 
 import { HEADER_HEIGHT } from "../constants";
+
+import { AppEvent } from "../events";
+import { Invoke } from "../invokes";
+
+import { usePageState } from "../stores/pages";
+import { useSettingsState } from "../stores/settings";
+import { useUrlState } from "../stores/url";
 
 import PageLoadingBar from "./PageLoadingBar";
 import ToolBar from "./ToolBar";
@@ -10,13 +19,60 @@ import SidebarRisizer from "./SidebarResizer";
 import AddFolderDialog from "./dialogs/AddFolderDialog";
 import BookmarkEditDialog from "./dialogs/BookmarkEditDialog";
 import DeleteConfirmDialog from "./dialogs/DeleteConfirmDialog";
-import { usePageState } from "../stores/pages";
 
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const SettingsPage = lazy(() => import("./pages/SettingsPage"));
 
 const App: Component = () => {
   const page = usePageState((state) => state.page);
+  const useSettings = useSettingsState();
+  const useUrl = useUrlState();
+
+  let unlistenSettingsUpdated: UnlistenFn;
+  let unlistenExternalNavigation: UnlistenFn;
+  let unlistenExternalTitleChanged: UnlistenFn;
+  let unlistenExternalUrlChanged: UnlistenFn;
+
+  onMount(async () => {
+    // get data from rust side for zustand stores
+    await useSettings().getSettings();
+
+    // listen for settings updated events on rust side
+    unlistenSettingsUpdated = await listen<string>(AppEvent.SettingsUpdated, (event) => {
+      // debug(event.payload);
+    });
+
+    // listen for external navigation events on rust side
+    unlistenExternalNavigation = await listen<string>(AppEvent.ExternalNavigation, (event) => {
+      useUrl().setUrl(event.payload);
+    });
+
+    // listen for external title changed events on rust side
+    unlistenExternalTitleChanged = await listen<string>(AppEvent.ExternalTitleChanged, (event) => {
+      useUrl().setTitle(event.payload);
+    });
+
+    // listen for external url changed events on rust side
+    unlistenExternalUrlChanged = await listen<string>(AppEvent.ExternalUrlChanged, (event) => {
+      useUrl().setProgress(0);
+      useUrl().setUrl(event.payload);
+      useUrl().setProgress(100);
+    });
+
+    // Since the initial ExternalTitleChanged event for start_page_url emitted
+    // from the Rust side occurs before the frontend initialization,
+    // it is necessary to retrieve the external webview title here.
+    // GetExternalWebviewTitle() executes a script on the Rust side to fetch the title,
+    // which then emits the ExternalTitleChanged event that the above listener will handle.
+    await Invoke.GetExternalWebviewTitle();
+  });
+
+  onCleanup(() => {
+    unlistenSettingsUpdated();
+    unlistenExternalNavigation();
+    unlistenExternalTitleChanged();
+    unlistenExternalUrlChanged();
+  });
 
   // createEffect(
   //   on(theme, (t) => {
