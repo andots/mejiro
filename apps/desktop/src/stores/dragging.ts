@@ -16,7 +16,7 @@ type Dragging = {
 
 const MATCHER = /bookmark-(\d+)/;
 
-export const useDragging = createWithSignal<Dragging>((set) => ({
+export const useDraggingState = createWithSignal<Dragging>((set) => ({
   source: null,
   sourceIndex: -1,
   destination: null,

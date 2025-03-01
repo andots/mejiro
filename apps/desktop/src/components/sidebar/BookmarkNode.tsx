@@ -17,7 +17,7 @@ import { isDev } from "../../utils";
 import { useUrlState } from "../../stores/url";
 import { useWindowState } from "../../stores/window";
 import { useBookmarkState } from "../../stores/bookmarks";
-import { useDragging } from "../../stores/dragging";
+import { useDraggingState } from "../../stores/dragging";
 
 import NavigationArrowIcon from "../icons/NavigationArrowIcon";
 import FolderIcon from "../icons/FolderIcon";
@@ -31,9 +31,9 @@ type Props = {
 const BookmarkNode: Component<Props> = (props) => {
   const externalState = useWindowState((state) => state.externalState);
   const sidebarWidth = useWindowState((state) => state.sidebarWidth);
-  const navigateToUrl = useUrlState((state) => state.navigateToUrl);
-  const dragging = useDragging();
+  const useDragging = useDraggingState();
   const useBookmark = useBookmarkState();
+  const useUrl = useUrlState();
 
   // destructuring props as reactive
   const isOpen = () => props.bookmark.is_open;
@@ -55,23 +55,23 @@ const BookmarkNode: Component<Props> = (props) => {
   const isTopLevel = () => props.level === 0;
   const isDraggable = () => !isRoot() && !isTopLevel();
   const isDraggingInside = () =>
-    dragging().destinationIndex === props.bookmark.index && dragging().mode === "inside";
+    useDragging().destinationIndex === props.bookmark.index && useDragging().mode === "inside";
   const shouldShowIndicator = () =>
-    dragging().destinationIndex === props.bookmark.index && dragging().mode === "after";
+    useDragging().destinationIndex === props.bookmark.index && useDragging().mode === "after";
 
   const handleNodeClick = (e: MouseEvent) => {
     e.preventDefault();
     if (hasChildren() && isFolder()) {
       // If the node has children and is folder, toggle the open state
-      useBookmarkState.getState().toggleIsOpen(props.bookmark.index);
+      useBookmark().toggleIsOpen(props.bookmark.index);
     } else if (props.bookmark.url && isBookmark()) {
       if (externalState() === "right") {
         // navigate to the bookmark url
-        navigateToUrl(props.bookmark.url);
+        useUrl().navigateToUrl(props.bookmark.url);
       } else if (externalState() === "hidden") {
         // show the external webview and navigate to the url
         useWindowState.getState().changeExternalState("right");
-        navigateToUrl(props.bookmark.url);
+        useUrl().navigateToUrl(props.bookmark.url);
       }
     }
   };
@@ -80,7 +80,7 @@ const BookmarkNode: Component<Props> = (props) => {
     e.preventDefault();
     e.stopPropagation();
     if (hasChildren()) {
-      useBookmarkState.getState().toggleIsOpen(props.bookmark.index);
+      useBookmark().toggleIsOpen(props.bookmark.index);
     }
   };
 
@@ -95,7 +95,7 @@ const BookmarkNode: Component<Props> = (props) => {
       text: "Open Bookmark",
       action: () => {
         if (props.bookmark.url) {
-          navigateToUrl(props.bookmark.url);
+          useUrl().navigateToUrl(props.bookmark.url);
         }
       },
     });
@@ -143,13 +143,13 @@ const BookmarkNode: Component<Props> = (props) => {
 
   const handleDragStart = (e: DragEvent) => {
     if (isDraggable()) {
-      dragging().reset();
-      dragging().setSource(e.target as HTMLDivElement);
+      useDragging().reset();
+      useDragging().setSource(e.target as HTMLDivElement);
     }
   };
 
   const handleDragEnd = (e: DragEvent) => {
-    dragging().reset();
+    useDragging().reset();
   };
 
   return (

@@ -5,7 +5,7 @@ import { useBookmarkState } from "../../stores/bookmarks";
 import BookmarkNode from "./BookmarkNode";
 import type { Bookmark } from "../../types";
 import { isDev } from "../../utils";
-import { useDragging } from "../../stores/dragging";
+import { useDraggingState } from "../../stores/dragging";
 
 // Drag and drop events sequence:
 // dragstart(node) -> dragenter(droppable) -> dragover(droppable) -> drop(droppable) -> dragend(node)
@@ -16,11 +16,10 @@ type Props = {
 
 const BookmarkTree: Component<Props> = (props) => {
   let droppableRef!: HTMLUListElement;
-
-  const dragging = useDragging();
+  const useDragging = useDraggingState();
 
   const handleDragEnter = (ev: DragEvent) => {
-    const source = dragging().source;
+    const source = useDragging().source;
     const enterNode = ev.target as Node;
     if (source && enterNode) {
       if (!source.parentNode?.contains(enterNode)) {
@@ -33,7 +32,7 @@ const BookmarkTree: Component<Props> = (props) => {
   };
 
   const handleDragOver = (ev: DragEvent) => {
-    const source = dragging().source;
+    const source = useDragging().source;
     const destNode = ev.target as Node;
     if (source && destNode) {
       if (!source.parentNode?.contains(destNode)) {
@@ -53,15 +52,15 @@ const BookmarkTree: Component<Props> = (props) => {
             return ev.clientY < destRect.bottom;
           });
           if (closest) {
-            dragging().setDestination(closest);
+            useDragging().setDestination(closest);
             const rect = closest.getBoundingClientRect();
             const isInside = ev.clientY <= rect.top + rect.height / 2;
             if (isInside) {
               // inside the destination
-              dragging().setMode("inside");
+              useDragging().setMode("inside");
             } else {
               // after the destination
-              dragging().setMode("after");
+              useDragging().setMode("after");
             }
           }
         }
@@ -69,16 +68,16 @@ const BookmarkTree: Component<Props> = (props) => {
         // dest is a descendant of source, so cannot droppable.
         // prohibit drop icon will be shown
         // dragging mode should be null here
-        dragging().setMode(null);
+        useDragging().setMode(null);
       }
     }
   };
 
   const handleDrop = (ev: DragEvent) => {
     ev.preventDefault();
-    const mode = dragging().mode;
-    const sourceIndex = dragging().sourceIndex;
-    const destinationIndex = dragging().destinationIndex;
+    const mode = useDragging().mode;
+    const sourceIndex = useDragging().sourceIndex;
+    const destinationIndex = useDragging().destinationIndex;
 
     if (isDev()) console.log(`${mode}: ${sourceIndex} -> ${destinationIndex}`);
 
@@ -87,7 +86,7 @@ const BookmarkTree: Component<Props> = (props) => {
         // if mode is inside, append to the last child of destination
         useBookmarkState.getState().appendToChild(sourceIndex, destinationIndex);
       } else if (mode === "after") {
-        const destination = dragging().destination;
+        const destination = useDragging().destination;
         const hasChildren = destination?.classList.contains("hasChildren");
         const isOpen = destination?.classList.contains("isOpen");
         if (hasChildren) {
