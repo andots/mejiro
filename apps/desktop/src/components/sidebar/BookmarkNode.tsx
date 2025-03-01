@@ -1,6 +1,8 @@
-import { type Component, For, Show } from "solid-js";
+import { type Component, createSignal, For, Show } from "solid-js";
 
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
+
+import { autofocus } from "@solid-primitives/autofocus";
 
 import type { Bookmark } from "../../types";
 
@@ -59,8 +61,14 @@ const BookmarkNode: Component<Props> = (props) => {
   const shouldShowIndicator = () =>
     useDragging().destinationIndex === props.bookmark.index && useDragging().mode === "after";
 
+  // Edit
+  const [isEditing, setIsEditing] = createSignal(false);
+
   const handleNodeClick = (e: MouseEvent) => {
     e.preventDefault();
+    if (isEditing()) {
+      return;
+    }
     if (hasChildren() && isFolder()) {
       // If the node has children and is folder, toggle the open state
       useBookmark().toggleIsOpen(props.bookmark.index);
@@ -79,9 +87,22 @@ const BookmarkNode: Component<Props> = (props) => {
   const toggleIsOpen = (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (isEditing()) return;
     if (hasChildren()) {
       useBookmark().toggleIsOpen(props.bookmark.index);
     }
+  };
+
+  const handleDragStart = (e: DragEvent) => {
+    if (isEditing()) return;
+    if (isDraggable()) {
+      useDragging().reset();
+      useDragging().setSource(e.target as HTMLDivElement);
+    }
+  };
+
+  const handleDragEnd = (e: DragEvent) => {
+    useDragging().reset();
   };
 
   const handleKeydown = (e: KeyboardEvent) => {};
@@ -109,8 +130,7 @@ const BookmarkNode: Component<Props> = (props) => {
     const editItem = await MenuItem.new({
       text: "Edit",
       action: () => {
-        // TODO: rename by using dynamic input area
-        console.log("Rename clicked");
+        setIsEditing(true);
       },
     });
     const deleteItem = await MenuItem.new({
@@ -139,17 +159,6 @@ const BookmarkNode: Component<Props> = (props) => {
         await menu.popup();
       }
     }
-  };
-
-  const handleDragStart = (e: DragEvent) => {
-    if (isDraggable()) {
-      useDragging().reset();
-      useDragging().setSource(e.target as HTMLDivElement);
-    }
-  };
-
-  const handleDragEnd = (e: DragEvent) => {
-    useDragging().reset();
   };
 
   return (
@@ -205,18 +214,28 @@ const BookmarkNode: Component<Props> = (props) => {
               </div>
 
               {/* Title */}
-              <div
-                class="pl-1 overflow-hidden whitespace-nowrap text-ellipsis"
-                style={{
-                  "font-size": `${BOOKMARK_NODE_FONT_SIZE}px`,
-                  width: `${titleWidth()}px`,
-                }}
-                classList={{
-                  "bg-blue-300": isDraggingInside(),
-                }}
-              >
-                {title()}
-              </div>
+              <Show when={isEditing()}>
+                <EditBox
+                  index={props.bookmark.index}
+                  title={props.bookmark.title}
+                  width={titleWidth()}
+                  setIsEditing={setIsEditing}
+                />
+              </Show>
+              <Show when={!isEditing()}>
+                <div
+                  class="pl-1 overflow-hidden whitespace-nowrap text-ellipsis"
+                  style={{
+                    "font-size": `${BOOKMARK_NODE_FONT_SIZE}px`,
+                    width: `${titleWidth()}px`,
+                  }}
+                  classList={{
+                    "bg-blue-300": isDraggingInside(),
+                  }}
+                >
+                  {title()}
+                </div>
+              </Show>
             </div>
           </div>
 
@@ -239,6 +258,54 @@ const BookmarkNode: Component<Props> = (props) => {
         </ul>
       </Show>
     </li>
+  );
+};
+
+type EditBoxProps = {
+  index: number;
+  title: string;
+  width: number;
+  setIsEditing: (value: boolean) => void;
+};
+
+const EditBox: Component<EditBoxProps> = (props) => {
+  const [value, setValue] = createSignal<string>(props.title);
+  const useBookmark = useBookmarkState();
+
+  const handleFocus = (e: FocusEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const target = e.currentTarget as HTMLInputElement;
+    target.select();
+  };
+
+  const handleKeydown = (e: KeyboardEvent) => {
+    if (e.key === "Enter") {
+      props.setIsEditing(false);
+      useBookmark().updateBookmarkTitle(props.index, value());
+    }
+  };
+
+  const handleFocusOut = (e: FocusEvent) => {
+    props.setIsEditing(false);
+    useBookmark().updateBookmarkTitle(props.index, value());
+  };
+
+  return (
+    <input
+      autofocus
+      ref={autofocus}
+      value={value()}
+      onFocus={handleFocus}
+      onFocusOut={handleFocusOut}
+      onInput={(e) => setValue(e.currentTarget.value)}
+      onKeyDown={handleKeydown}
+      style={{
+        "font-size": `${BOOKMARK_NODE_FONT_SIZE}px`,
+        width: `${props.width}px`,
+      }}
+      class="flex border bg-background px-1 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
+    />
   );
 };
 

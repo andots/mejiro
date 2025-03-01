@@ -17,7 +17,6 @@ import Sidebar from "./Sidebar";
 import SidebarRisizer from "./SidebarResizer";
 
 import AddFolderDialog from "./dialogs/AddFolderDialog";
-import BookmarkEditDialog from "./dialogs/BookmarkEditDialog";
 import DeleteConfirmDialog from "./dialogs/DeleteConfirmDialog";
 
 const Dashboard = lazy(() => import("./pages/Dashboard"));
@@ -119,7 +118,6 @@ const App: Component = () => {
       </div>
 
       {/* Dialogs */}
-      <BookmarkEditDialog />
       <AddFolderDialog />
       <DeleteConfirmDialog />
     </div>

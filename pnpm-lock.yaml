@@ -47,6 +47,9 @@ importers:
       '@repo/ui':
         specifier: workspace:*
         version: link:../packages/ui
+      '@solid-primitives/autofocus':
+        specifier: ^0.1.0
+        version: 0.1.0(solid-js@1.9.4)
       '@solid-primitives/event-listener':
         specifier: ^2.4.0
         version: 2.4.0(solid-js@1.9.4)
@@ -870,6 +873,11 @@ packages:
   '@sindresorhus/merge-streams@4.0.0':
     resolution: {integrity: sha512-tlqY9xq5ukxTUZBmoOp+m61cqwQD5pHJtFY3Mn8CA8ps6yghLH/Hw8UPdqg4OLmFW3IFlcXnQNmo/dh8HzXYIQ==}
     engines: {node: '>=18'}
+
+  '@solid-primitives/autofocus@0.1.0':
+    resolution: {integrity: sha512-J1Y2agsJgTn/EdmVfvK3GpcG5jENCeL2vdPovGswCBOiQakVq7vpqDYRzhcQua70MRCdB0fFwQLu3qy7/IQJDw==}
+    peerDependencies:
+      solid-js: ^1.6.12
 
   '@solid-primitives/event-listener@2.4.0':
     resolution: {integrity: sha512-TSfR1PNTfojFEYGSxSMCnUhXsaYWBo4p+cm73QmWODa9YnaQAk6PB7VjzG2bOT2D817VlvuOqTj0Qdq+MZrdGg==}
@@ -3516,6 +3524,11 @@ snapshots:
   '@sindresorhus/merge-streams@2.3.0': {}
 
   '@sindresorhus/merge-streams@4.0.0': {}
+
+  '@solid-primitives/autofocus@0.1.0(solid-js@1.9.4)':
+    dependencies:
+      '@solid-primitives/utils': 6.3.0(solid-js@1.9.4)
+      solid-js: 1.9.4
 
   '@solid-primitives/event-listener@2.4.0(solid-js@1.9.4)':
     dependencies:
