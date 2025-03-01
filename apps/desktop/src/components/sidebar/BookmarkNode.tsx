@@ -53,7 +53,9 @@ const BookmarkNode: Component<Props> = (props) => {
   const isRoot = () => props.bookmark.node_type === "Root";
   const isTopLevel = () => props.level === 0;
   const isDraggable = () => !isRoot() && !isTopLevel();
-  const isDraggingInside = () =>
+
+  // Highlight and Indicator
+  const shouldHighLight = () =>
     useDragging().destinationIndex === props.bookmark.index && useDragging().mode === "inside";
   const shouldShowIndicator = () =>
     useDragging().destinationIndex === props.bookmark.index && useDragging().mode === "after";
@@ -214,7 +216,7 @@ const BookmarkNode: Component<Props> = (props) => {
                 width={titleWidth()}
                 isEditing={isEditing()}
                 setIsEditing={setIsEditing}
-                shouldHighLight={isDraggingInside()}
+                shouldHighLight={shouldHighLight()}
               />
             </div>
           </div>
