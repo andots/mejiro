@@ -1,5 +1,25 @@
 # Changelog
 
+# [0.23.0](https://github.com/andots/mejiro/compare/v0.22.0...v0.23.0) (2025-03-01)
+
+
+### Bug Fixes
+
+* **app:** remove unnecessary async in tauri::command ([8df9fef](https://github.com/andots/mejiro/commit/8df9fefbe68308c39ce17344fb7259be66e95626))
+* **front:** enhance progress handling for external page loading ([34cfdbd](https://github.com/andots/mejiro/commit/34cfdbd8ddaf09bdb5dbdf21eae7c3510291096d))
+* **front:** integrate Tauri event listeners and state management in App component ([aaf5597](https://github.com/andots/mejiro/commit/aaf559732bd167429eb369bfb0b6c4c4fcea7078))
+* **front:** reorder context menu items in BookmarkNode component ([cb52383](https://github.com/andots/mejiro/commit/cb523832374de4d6e94058779f2fd5c2ac1d0729))
+* **front:** update bookmark title only if it has changed in EditableTitle component ([8839435](https://github.com/andots/mejiro/commit/883943558da34fe71cdebee794bd4cc5ef3be19d))
+
+
+### Features
+
+* **front:** add folder from context menu ([a3a9a76](https://github.com/andots/mejiro/commit/a3a9a76639f8b667a751dc49e7b213f0032b8506))
+* **front:** edit title with editable input box with autofocus ([f9374ca](https://github.com/andots/mejiro/commit/f9374cad9ec859373efda7b048157c08a6cb6579))
+* **front:** implement EditableTitle component for inline editing of bookmarks ([78e01b9](https://github.com/andots/mejiro/commit/78e01b9abbe1580776c6ee2d10103a70db82806d))
+* **front:** lock tree while editing ([d3a9de8](https://github.com/andots/mejiro/commit/d3a9de8e4a4611e8c5a1b91025bb799cb3e8d4ca))
+* **front:** replace ContextMenu with Tauri Menu in BookmarkNode component ([ef792d5](https://github.com/andots/mejiro/commit/ef792d5a318467e45a5c84c4fc63fae9c62a0ed3))
+
 # [0.22.0](https://github.com/andots/mejiro/compare/v0.21.1...v0.22.0) (2025-02-28)
 
 
