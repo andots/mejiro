@@ -41,18 +41,19 @@ const App: Component = () => {
     // listen for external navigation events on rust side
     unlistenExternalNavigation = await listen<string>(AppEvent.ExternalNavigation, (event) => {
       useUrl().setUrl(event.payload);
+      useUrl().setProgress(30);
+    });
+
+    // listen for external url changed events on rust side
+    unlistenExternalUrlChanged = await listen<string>(AppEvent.ExternalUrlChanged, (event) => {
+      useUrl().setProgress(30);
+      useUrl().setUrl(event.payload);
+      useUrl().setProgress(100);
     });
 
     // listen for external title changed events on rust side
     unlistenExternalTitleChanged = await listen<string>(AppEvent.ExternalTitleChanged, (event) => {
       useUrl().setTitle(event.payload);
-    });
-
-    // listen for external url changed events on rust side
-    unlistenExternalUrlChanged = await listen<string>(AppEvent.ExternalUrlChanged, (event) => {
-      useUrl().setProgress(0);
-      useUrl().setUrl(event.payload);
-      useUrl().setProgress(100);
     });
 
     // Since the initial ExternalTitleChanged event for start_page_url emitted
