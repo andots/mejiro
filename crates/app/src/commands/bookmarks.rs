@@ -8,7 +8,7 @@ use mejiro_core::{
 use crate::error::AppError;
 
 #[tauri::command]
-pub async fn get_nested_json(
+pub fn get_nested_json(
     state: tauri::State<'_, Mutex<Bookmarks>>,
     index: usize,
 ) -> Result<String, AppError> {
@@ -42,7 +42,7 @@ pub fn get_toolbar_bookmarks(
 }
 
 #[tauri::command]
-pub async fn add_bookmark(
+pub fn add_bookmark(
     state: tauri::State<'_, Mutex<Bookmarks>>,
     url: String,
     title: Option<String>,

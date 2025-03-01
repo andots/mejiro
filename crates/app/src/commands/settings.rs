@@ -3,7 +3,7 @@ use std::sync::Mutex;
 use crate::{error::AppError, settings::UserSettings};
 
 #[tauri::command]
-pub async fn get_settings(
+pub fn get_settings(
     state: tauri::State<'_, Mutex<UserSettings>>,
 ) -> Result<UserSettings, AppError> {
     let settings = state
