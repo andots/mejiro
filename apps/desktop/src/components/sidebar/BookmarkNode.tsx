@@ -123,8 +123,8 @@ const BookmarkNode: Component<Props> = (props) => {
     const addFolderItem = await MenuItem.new({
       text: "Add Folder",
       action: () => {
-        // TODO: add folder by using dialog/sheet in sidebar
-        console.log("Add Folder clicked");
+        // TODO: find better way to add folder, now it's just added. Need to be editable and focus it after adding.
+        useBookmark().addFolder(props.bookmark.index, "New Folder");
       },
     });
     const editItem = await MenuItem.new({
