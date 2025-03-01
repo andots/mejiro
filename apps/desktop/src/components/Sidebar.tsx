@@ -12,6 +12,7 @@ import RootChildrenSelect from "./sidebar/RootChildrenSelect";
 import BookmarkTree from "./sidebar/BookmarkTree";
 
 const Sidebar: Component = () => {
+  const useBookmark = useBookmarkState();
   const bookmarks = useBookmarkState((state) => state.bookmarks);
   const folders = useBookmarkState((state) => state.folders);
   const sidebarWidth = useWindowState((state) => state.sidebarWidth);
@@ -21,7 +22,7 @@ const Sidebar: Component = () => {
   onMount(async () => {
     if (folders().length > 0) {
       setSelectValue(folders()[0]);
-      await useBookmarkState.getState().getBookmarks(folders()[0].index);
+      await useBookmark().getBookmarks(folders()[0].index);
     }
   });
 
@@ -30,7 +31,7 @@ const Sidebar: Component = () => {
       if (isDev()) console.log("handleSelectChange Folder: ", val);
 
       setSelectValue(val);
-      useBookmarkState.getState().getBookmarks(val.index);
+      useBookmark().getBookmarks(val.index);
     }
   };
 

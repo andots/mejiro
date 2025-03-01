@@ -13,6 +13,8 @@ import { useBookmarkState } from "../../stores/bookmarks";
 // import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/ui/select";
 
 const SettingsPage: Component = () => {
+  const useBookmark = useBookmarkState();
+
   const settings = useSettingsState((state) => state.settings);
   const updateSettings = useSettingsState((state) => state.updateSettings);
 
@@ -44,7 +46,7 @@ const SettingsPage: Component = () => {
   };
 
   const handleAppendBookmarkToToolbar = async (title: string, url: string) => {
-    useBookmarkState.getState().appendBookmarkToToolbar(title, url);
+    useBookmark().appendBookmarkToToolbar(title, url);
   };
 
   return (

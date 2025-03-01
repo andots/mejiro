@@ -16,6 +16,8 @@ type Props = {
 
 const BookmarkTree: Component<Props> = (props) => {
   let droppableRef!: HTMLUListElement;
+
+  const useBookmark = useBookmarkState();
   const useDragging = useDraggingState();
 
   const handleDragEnter = (ev: DragEvent) => {
@@ -84,7 +86,7 @@ const BookmarkTree: Component<Props> = (props) => {
     if (sourceIndex >= 2 && destinationIndex >= 1 && sourceIndex !== destinationIndex) {
       if (mode === "inside") {
         // if mode is inside, append to the last child of destination
-        useBookmarkState.getState().appendToChild(sourceIndex, destinationIndex);
+        useBookmark().appendToChild(sourceIndex, destinationIndex);
       } else if (mode === "after") {
         const destination = useDragging().destination;
         const hasChildren = destination?.classList.contains("hasChildren");
@@ -92,14 +94,14 @@ const BookmarkTree: Component<Props> = (props) => {
         if (hasChildren) {
           if (isOpen) {
             // if has children and is open, prepend to the first child
-            useBookmarkState.getState().prependToChild(sourceIndex, destinationIndex);
+            useBookmark().prependToChild(sourceIndex, destinationIndex);
           } else {
             // if has children and is closed, insert after the destination
-            useBookmarkState.getState().insertAfter(sourceIndex, destinationIndex);
+            useBookmark().insertAfter(sourceIndex, destinationIndex);
           }
         } else {
           // if not has children, insert after the destination
-          useBookmarkState.getState().insertAfter(sourceIndex, destinationIndex);
+          useBookmark().insertAfter(sourceIndex, destinationIndex);
         }
       }
     }
