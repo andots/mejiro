@@ -16,9 +16,6 @@ import ToolBar from "./ToolBar";
 import Sidebar from "./Sidebar";
 import SidebarRisizer from "./SidebarResizer";
 
-import AddFolderDialog from "./dialogs/AddFolderDialog";
-import DeleteConfirmDialog from "./dialogs/DeleteConfirmDialog";
-
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const SettingsPage = lazy(() => import("./pages/SettingsPage"));
 
@@ -116,10 +113,6 @@ const App: Component = () => {
           </Show>
         </div>
       </div>
-
-      {/* Dialogs */}
-      <AddFolderDialog />
-      <DeleteConfirmDialog />
     </div>
   );
 };
