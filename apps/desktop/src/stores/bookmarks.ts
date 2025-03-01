@@ -7,6 +7,8 @@ type BookmarkState = {
   folders: FolderData[];
   bookmarks: Bookmark | null;
   toolbarBookmarks: ToolbarBookmarkData[];
+  isTreeLocked: boolean;
+  setTreeLockState: (value: boolean) => void;
   getCurrentTopLevel: () => number;
   getFolders: () => Promise<void>;
   getBookmarks: (index: number) => Promise<void>;
@@ -27,6 +29,10 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
   folders: [],
   bookmarks: null,
   toolbarBookmarks: [],
+  isTreeLocked: false,
+  setTreeLockState: (value) => {
+    set(() => ({ isTreeLocked: value }));
+  },
   getCurrentTopLevel: () => {
     const bookmarks = get().bookmarks;
     if (bookmarks !== null) {

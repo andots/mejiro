@@ -12,12 +12,14 @@ type Props = {
   width: number;
   isEditing: boolean;
   shouldHighLight: boolean;
-  setIsEditing: (value: boolean) => void;
+  setEditingStatus: (value: boolean) => void;
 };
 
 const EditableTitle: Component<Props> = (props) => {
   const [value, setValue] = createSignal<string>(props.title);
-  const useBookmark = useBookmarkState();
+
+  const updateBookmarkTitle = useBookmarkState((state) => state.updateBookmarkTitle);
+  const setTreeLockState = useBookmarkState((state) => state.setTreeLockState);
 
   const title = () => (isDev() ? `${props.index} - ${props.title}` : props.title);
 
@@ -30,16 +32,21 @@ const EditableTitle: Component<Props> = (props) => {
 
   const handleKeydown = (e: KeyboardEvent) => {
     if (e.key === "Enter") {
-      props.setIsEditing(false);
-      useBookmark().updateBookmarkTitle(props.index, value());
+      props.setEditingStatus(false);
+      setTreeLockState(false);
+      // update title only if it has changed
+      if (value() !== props.title) {
+        updateBookmarkTitle(props.index, value());
+      }
     }
   };
 
   const handleFocusOut = (e: FocusEvent) => {
-    props.setIsEditing(false);
+    props.setEditingStatus(false);
+    setTreeLockState(false);
     // update title only if it has changed
     if (value() !== props.title) {
-      useBookmark().updateBookmarkTitle(props.index, value());
+      updateBookmarkTitle(props.index, value());
     }
   };
 

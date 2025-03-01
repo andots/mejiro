@@ -34,8 +34,12 @@ const BookmarkNode: Component<Props> = (props) => {
   const useBookmark = useBookmarkState();
   const useUrl = useUrlState();
 
+  // Tree locking status
+  const isTreeLocked = useBookmarkState((state) => state.isTreeLocked);
+  const setTreeLockState = useBookmarkState((state) => state.setTreeLockState);
+
   // Edit
-  const [isEditing, setIsEditing] = createSignal(false);
+  const [isEditing, setEditingStatus] = createSignal(false);
 
   // destructuring props as reactive
   const isOpen = () => props.bookmark.is_open;
@@ -52,7 +56,7 @@ const BookmarkNode: Component<Props> = (props) => {
   // for draggable
   const isRoot = () => props.bookmark.node_type === "Root";
   const isTopLevel = () => props.level === 0;
-  const isDraggable = () => !isRoot() && !isTopLevel();
+  const isDraggable = () => !isRoot() && !isTopLevel() && !isTreeLocked();
 
   // Highlight and Indicator
   const shouldHighLight = () =>
@@ -126,7 +130,8 @@ const BookmarkNode: Component<Props> = (props) => {
     const editItem = await MenuItem.new({
       text: "Edit",
       action: () => {
-        setIsEditing(true);
+        setEditingStatus(true);
+        setTreeLockState(true);
       },
     });
     const deleteItem = await MenuItem.new({
@@ -215,7 +220,7 @@ const BookmarkNode: Component<Props> = (props) => {
                 title={props.bookmark.title}
                 width={titleWidth()}
                 isEditing={isEditing()}
-                setIsEditing={setIsEditing}
+                setEditingStatus={setEditingStatus}
                 shouldHighLight={shouldHighLight()}
               />
             </div>
