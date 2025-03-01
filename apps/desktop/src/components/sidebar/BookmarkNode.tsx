@@ -2,8 +2,6 @@ import { type Component, createSignal, For, Show } from "solid-js";
 
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 
-import { autofocus } from "@solid-primitives/autofocus";
-
 import type { Bookmark } from "../../types";
 
 import {
@@ -12,9 +10,7 @@ import {
   INDICATOR_HEIGHT,
   RESIZE_HANDLE_WIDTH,
   BLOCK_SIZE,
-  BOOKMARK_NODE_FONT_SIZE,
 } from "../../constants";
-import { isDev } from "../../utils";
 
 import { useUrlState } from "../../stores/url";
 import { useWindowState } from "../../stores/window";
@@ -24,6 +20,7 @@ import { useDraggingState } from "../../stores/dragging";
 import NavigationArrowIcon from "../icons/NavigationArrowIcon";
 import FolderIcon from "../icons/FolderIcon";
 import Favicon from "../icons/Favicon";
+import EditableTitle from "./EditableTitle";
 
 type Props = {
   bookmark: Bookmark;
@@ -37,15 +34,15 @@ const BookmarkNode: Component<Props> = (props) => {
   const useBookmark = useBookmarkState();
   const useUrl = useUrlState();
 
+  // Edit
+  const [isEditing, setIsEditing] = createSignal(false);
+
   // destructuring props as reactive
   const isOpen = () => props.bookmark.is_open;
   const hasChildren = () => props.bookmark.children?.length > 0;
   const isFolder = () =>
     props.bookmark.node_type === "Folder" || props.bookmark.node_type === "Root";
   const isBookmark = () => props.bookmark.node_type === "Bookmark";
-  const title = () =>
-    isDev() ? `${props.bookmark.index} - ${props.bookmark.title}` : props.bookmark.title;
-  // const title = () => (isDev() ? `${props.bookmark.title}` : props.bookmark.title);
 
   // width
   const paddingLevel = () => props.level * 8;
@@ -60,9 +57,6 @@ const BookmarkNode: Component<Props> = (props) => {
     useDragging().destinationIndex === props.bookmark.index && useDragging().mode === "inside";
   const shouldShowIndicator = () =>
     useDragging().destinationIndex === props.bookmark.index && useDragging().mode === "after";
-
-  // Edit
-  const [isEditing, setIsEditing] = createSignal(false);
 
   const handleNodeClick = (e: MouseEvent) => {
     e.preventDefault();
@@ -214,28 +208,14 @@ const BookmarkNode: Component<Props> = (props) => {
               </div>
 
               {/* Title */}
-              <Show when={isEditing()}>
-                <EditBox
-                  index={props.bookmark.index}
-                  title={props.bookmark.title}
-                  width={titleWidth()}
-                  setIsEditing={setIsEditing}
-                />
-              </Show>
-              <Show when={!isEditing()}>
-                <div
-                  class="pl-1 overflow-hidden whitespace-nowrap text-ellipsis"
-                  style={{
-                    "font-size": `${BOOKMARK_NODE_FONT_SIZE}px`,
-                    width: `${titleWidth()}px`,
-                  }}
-                  classList={{
-                    "bg-blue-300": isDraggingInside(),
-                  }}
-                >
-                  {title()}
-                </div>
-              </Show>
+              <EditableTitle
+                index={props.bookmark.index}
+                title={props.bookmark.title}
+                width={titleWidth()}
+                isEditing={isEditing()}
+                setIsEditing={setIsEditing}
+                shouldHighLight={isDraggingInside()}
+              />
             </div>
           </div>
 
@@ -258,54 +238,6 @@ const BookmarkNode: Component<Props> = (props) => {
         </ul>
       </Show>
     </li>
-  );
-};
-
-type EditBoxProps = {
-  index: number;
-  title: string;
-  width: number;
-  setIsEditing: (value: boolean) => void;
-};
-
-const EditBox: Component<EditBoxProps> = (props) => {
-  const [value, setValue] = createSignal<string>(props.title);
-  const useBookmark = useBookmarkState();
-
-  const handleFocus = (e: FocusEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const target = e.currentTarget as HTMLInputElement;
-    target.select();
-  };
-
-  const handleKeydown = (e: KeyboardEvent) => {
-    if (e.key === "Enter") {
-      props.setIsEditing(false);
-      useBookmark().updateBookmarkTitle(props.index, value());
-    }
-  };
-
-  const handleFocusOut = (e: FocusEvent) => {
-    props.setIsEditing(false);
-    useBookmark().updateBookmarkTitle(props.index, value());
-  };
-
-  return (
-    <input
-      autofocus
-      ref={autofocus}
-      value={value()}
-      onFocus={handleFocus}
-      onFocusOut={handleFocusOut}
-      onInput={(e) => setValue(e.currentTarget.value)}
-      onKeyDown={handleKeydown}
-      style={{
-        "font-size": `${BOOKMARK_NODE_FONT_SIZE}px`,
-        width: `${props.width}px`,
-      }}
-      class="flex border bg-background px-1 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
-    />
   );
 };
 
