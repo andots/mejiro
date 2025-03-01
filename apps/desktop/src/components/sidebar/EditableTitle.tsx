@@ -37,7 +37,10 @@ const EditableTitle: Component<Props> = (props) => {
 
   const handleFocusOut = (e: FocusEvent) => {
     props.setIsEditing(false);
-    useBookmark().updateBookmarkTitle(props.index, value());
+    // update title only if it has changed
+    if (value() !== props.title) {
+      useBookmark().updateBookmarkTitle(props.index, value());
+    }
   };
 
   return (
