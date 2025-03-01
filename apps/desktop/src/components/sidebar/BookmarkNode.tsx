@@ -150,7 +150,7 @@ const BookmarkNode: Component<Props> = (props) => {
     } else {
       if (isBookmark()) {
         const menu = await Menu.new({
-          items: [openItem, separatorItem, editItem, addFolderItem, separatorItem, deleteItem],
+          items: [editItem, addFolderItem, separatorItem, openItem, separatorItem, deleteItem],
         });
         await menu.popup();
       } else if (isFolder()) {
