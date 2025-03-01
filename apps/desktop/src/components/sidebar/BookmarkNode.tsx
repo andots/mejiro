@@ -1,35 +1,9 @@
 import { type Component, For, Show } from "solid-js";
 
+import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
+
 import type { Bookmark } from "../../types";
 
-import {
-  ContextMenu,
-  ContextMenuCheckboxItem,
-  ContextMenuContent,
-  ContextMenuGroup,
-  ContextMenuGroupLabel,
-  ContextMenuItem,
-  ContextMenuPortal,
-  ContextMenuRadioGroup,
-  ContextMenuRadioItem,
-  ContextMenuSeparator,
-  ContextMenuShortcut,
-  ContextMenuSub,
-  ContextMenuSubContent,
-  ContextMenuSubTrigger,
-  ContextMenuTrigger,
-} from "@repo/ui/context-menu";
-
-import { useAddFolderDialog, useDeleteConfirmDialog, useEditDialog } from "../../stores/dialogs";
-import { useUrlState } from "../../stores/url";
-import { useWindowState } from "../../stores/window";
-
-import NavigationArrowIcon from "../icons/NavigationArrowIcon";
-import FolderIcon from "../icons/FolderIcon";
-import Favicon from "../icons/Favicon";
-import { useBookmarkState } from "../../stores/bookmarks";
-import { cn, isDev } from "../../utils";
-import { useDragging } from "../../stores/dragging";
 import {
   BLOCK_SIZE_PX,
   INDICATOR_WIDTH,
@@ -38,6 +12,16 @@ import {
   BLOCK_SIZE,
   BOOKMARK_NODE_FONT_SIZE,
 } from "../../constants";
+import { isDev } from "../../utils";
+
+import { useUrlState } from "../../stores/url";
+import { useWindowState } from "../../stores/window";
+import { useBookmarkState } from "../../stores/bookmarks";
+import { useDragging } from "../../stores/dragging";
+
+import NavigationArrowIcon from "../icons/NavigationArrowIcon";
+import FolderIcon from "../icons/FolderIcon";
+import Favicon from "../icons/Favicon";
 
 type Props = {
   bookmark: Bookmark;
@@ -49,6 +33,7 @@ const BookmarkNode: Component<Props> = (props) => {
   const sidebarWidth = useWindowState((state) => state.sidebarWidth);
   const navigateToUrl = useUrlState((state) => state.navigateToUrl);
   const dragging = useDragging();
+  const useBookmark = useBookmarkState();
 
   // destructuring props as reactive
   const isOpen = () => props.bookmark.is_open;
@@ -101,9 +86,58 @@ const BookmarkNode: Component<Props> = (props) => {
 
   const handleKeydown = (e: KeyboardEvent) => {};
 
-  const handleContextMenu = (isOpen: boolean) => {
-    if (externalState() === "right" && isOpen) {
-      useWindowState.getState().changeExternalState("hidden");
+  const handleContextMenu = async (e: MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const separatorItem = await PredefinedMenuItem.new({ item: "Separator" });
+    const openItem = await MenuItem.new({
+      text: "Open Bookmark",
+      action: () => {
+        if (props.bookmark.url) {
+          navigateToUrl(props.bookmark.url);
+        }
+      },
+    });
+    const addFolderItem = await MenuItem.new({
+      text: "Add Folder",
+      action: () => {
+        // TODO: add folder by using dialog/sheet in sidebar
+        console.log("Add Folder clicked");
+      },
+    });
+    const editItem = await MenuItem.new({
+      text: "Edit",
+      action: () => {
+        // TODO: rename by using dynamic input area
+        console.log("Rename clicked");
+      },
+    });
+    const deleteItem = await MenuItem.new({
+      text: "Delete",
+      action: () => {
+        // TODO: need confirmation??
+        useBookmark().removeBookmark(props.bookmark.index);
+      },
+    });
+
+    if (isRoot() || isTopLevel()) {
+      const menu = await Menu.new({
+        items: [editItem, addFolderItem],
+      });
+      await menu.popup();
+    } else {
+      if (isBookmark()) {
+        const menu = await Menu.new({
+          items: [openItem, separatorItem, editItem, addFolderItem, separatorItem, deleteItem],
+        });
+        await menu.popup();
+      } else if (isFolder()) {
+        const menu = await Menu.new({
+          items: [editItem, addFolderItem, separatorItem, deleteItem],
+        });
+        await menu.popup();
+      }
     }
   };
 
@@ -120,85 +154,82 @@ const BookmarkNode: Component<Props> = (props) => {
 
   return (
     <li>
-      <ContextMenu onOpenChange={(isOpen) => handleContextMenu(isOpen)}>
-        <ContextMenuTrigger
-          draggable={isDraggable()}
-          id={`bookmark-${props.bookmark.index}`}
-          class="dropzone"
-          classList={{
-            hasChildren: hasChildren(),
-            isOpen: isOpen(),
-          }}
-          onClick={handleNodeClick}
-          onKeyDown={handleKeydown}
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
+      <div
+        id={`bookmark-${props.bookmark.index}`}
+        draggable={isDraggable()}
+        class="dropzone"
+        classList={{
+          hasChildren: hasChildren(),
+          isOpen: isOpen(),
+        }}
+        onClick={handleNodeClick}
+        onKeyDown={handleKeydown}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        onContextMenu={handleContextMenu}
+      >
+        <div
+          class="flex flex-col hover:bg-sidebar-accent transition-colors duration-150 cursor-pointer"
+          style={{ "padding-left": `${paddingLevel()}px` }}
         >
-          <div
-            class="flex flex-col hover:bg-sidebar-accent transition-colors duration-150 cursor-pointer"
-            style={{ "padding-left": `${paddingLevel()}px` }}
-          >
-            {/* Empty fixed space for Indicator */}
-            <div style={{ width: INDICATOR_WIDTH, height: INDICATOR_HEIGHT }} />
+          {/* Empty fixed space for Indicator */}
+          <div style={{ width: INDICATOR_WIDTH, height: INDICATOR_HEIGHT }} />
 
-            <div class="flex flex-row">
-              {/* Navigation Arrow */}
-              <div style={{ width: BLOCK_SIZE_PX, height: BLOCK_SIZE_PX }}>
-                <Show when={hasChildren()}>
-                  <button
-                    style={{ width: BLOCK_SIZE_PX, height: BLOCK_SIZE_PX }}
-                    class="flex items-center justify-center hover:bg-stone-300 rounded"
-                    onClick={toggleIsOpen}
-                    type="button"
-                  >
-                    <NavigationArrowIcon isOpen={isOpen()} size={16} />
-                  </button>
-                </Show>
-              </div>
-
-              {/* Folder/Favicon + Title */}
-              <div class="flex flex-row items-center">
-                {/* Folder or Favicon */}
-                <div style={{ width: BLOCK_SIZE_PX, height: BLOCK_SIZE_PX }}>
-                  <div class="flex items-center justify-center">
-                    <Show when={isFolder()}>
-                      <FolderIcon isOpen={isOpen()} size={16} />
-                    </Show>
-                    <Show when={isBookmark()}>
-                      <Favicon url={`https://${props.bookmark.host}`} width="16" height="16" />
-                    </Show>
-                  </div>
-                </div>
-
-                {/* Title */}
-                <div
-                  class="pl-1 overflow-hidden whitespace-nowrap text-ellipsis"
-                  style={{
-                    "font-size": `${BOOKMARK_NODE_FONT_SIZE}px`,
-                    width: `${titleWidth()}px`,
-                  }}
-                  classList={{
-                    "bg-blue-300": isDraggingInside(),
-                  }}
+          <div class="flex flex-row">
+            {/* Navigation Arrow */}
+            <div style={{ width: BLOCK_SIZE_PX, height: BLOCK_SIZE_PX }}>
+              <Show when={hasChildren()}>
+                <button
+                  style={{ width: BLOCK_SIZE_PX, height: BLOCK_SIZE_PX }}
+                  class="flex items-center justify-center hover:bg-stone-300 rounded"
+                  onClick={toggleIsOpen}
+                  type="button"
                 >
-                  {title()}
-                </div>
-              </div>
+                  <NavigationArrowIcon isOpen={isOpen()} size={16} />
+                </button>
+              </Show>
             </div>
 
-            {/* After Indicator */}
-            <div
-              style={{ width: INDICATOR_WIDTH, height: INDICATOR_HEIGHT }}
-              classList={{
-                "border-b-2": shouldShowIndicator(),
-                "bg-blue-300": shouldShowIndicator(),
-              }}
-            />
-          </div>
-        </ContextMenuTrigger>
+            {/* Folder/Favicon + Title */}
+            <div class="flex flex-row items-center">
+              {/* Folder or Favicon */}
+              <div style={{ width: BLOCK_SIZE_PX, height: BLOCK_SIZE_PX }}>
+                <div class="flex items-center justify-center">
+                  <Show when={isFolder()}>
+                    <FolderIcon isOpen={isOpen()} size={16} />
+                  </Show>
+                  <Show when={isBookmark()}>
+                    <Favicon url={`https://${props.bookmark.host}`} width="16" height="16" />
+                  </Show>
+                </div>
+              </div>
 
-        <BookmarkContextMenuPortal bookmark={props.bookmark} />
-      </ContextMenu>
+              {/* Title */}
+              <div
+                class="pl-1 overflow-hidden whitespace-nowrap text-ellipsis"
+                style={{
+                  "font-size": `${BOOKMARK_NODE_FONT_SIZE}px`,
+                  width: `${titleWidth()}px`,
+                }}
+                classList={{
+                  "bg-blue-300": isDraggingInside(),
+                }}
+              >
+                {title()}
+              </div>
+            </div>
+          </div>
+
+          {/* After Indicator */}
+          <div
+            style={{ width: INDICATOR_WIDTH, height: INDICATOR_HEIGHT }}
+            classList={{
+              "border-b-2": shouldShowIndicator(),
+              "bg-blue-300": shouldShowIndicator(),
+            }}
+          />
+        </div>
+      </div>
 
       <Show when={hasChildren() && isOpen()}>
         <ul>
@@ -208,70 +239,6 @@ const BookmarkNode: Component<Props> = (props) => {
         </ul>
       </Show>
     </li>
-  );
-};
-
-const BookmarkContextMenuPortal = (props: { bookmark: Bookmark }) => {
-  const currentTopLevel = useBookmarkState((state) => state.getCurrentTopLevel());
-
-  const isRoot = () => props.bookmark.node_type === "Root";
-  const isRemovable = () =>
-    !isRoot() && currentTopLevel() !== -1 && currentTopLevel() !== props.bookmark.index;
-
-  // const handleAddBookmark = (index: number) => {};
-
-  const handleAddFolder = (index: number) => {
-    useAddFolderDialog.getState().setParentIndex(index);
-    useAddFolderDialog.getState().setOpen(true);
-  };
-
-  const handleEdit = (index: number) => {
-    useEditDialog.getState().setTarget({ index, title: props.bookmark.title });
-    useEditDialog.getState().setOpen(true);
-  };
-
-  const handleRemove = (index: number) => {
-    if (isRemovable()) {
-      useDeleteConfirmDialog.getState().setTarget({ index, title: props.bookmark.title });
-      useDeleteConfirmDialog.getState().setOpen(true);
-    }
-  };
-
-  const handlePinToToolbar = (url: string | null) => {
-    //
-  };
-
-  return (
-    <ContextMenuPortal>
-      <ContextMenuContent class="w-48">
-        <ContextMenuItem onClick={() => handleAddFolder(props.bookmark.index)}>
-          <span>Add Folder</span>
-        </ContextMenuItem>
-
-        {/* <ContextMenuItem onClick={() => handleAddBookmark(props.bookmark.index)} disabled>
-          <span>Add Bookmark (WIP)</span>
-        </ContextMenuItem> */}
-
-        <ContextMenuSeparator />
-
-        <ContextMenuItem onClick={() => handleEdit(props.bookmark.index)}>
-          <span>Edit</span>
-        </ContextMenuItem>
-
-        <Show when={props.bookmark.node_type === "Bookmark"}>
-          <ContextMenuItem onClick={() => handlePinToToolbar(props.bookmark.url)} disabled>
-            <span>Pin to Toolbar (WIP)</span>
-          </ContextMenuItem>
-        </Show>
-
-        <Show when={isRemovable()}>
-          <ContextMenuSeparator />
-          <ContextMenuItem onClick={() => handleRemove(props.bookmark.index)}>
-            <span class="text-destructive">Delete</span>
-          </ContextMenuItem>
-        </Show>
-      </ContextMenuContent>
-    </ContextMenuPortal>
   );
 };
 
