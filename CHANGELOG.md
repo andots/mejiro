@@ -1,5 +1,22 @@
 # Changelog
 
+# [0.24.0](https://github.com/andots/mejiro/compare/v0.23.0...v0.24.0) (2025-03-02)
+
+
+### Bug Fixes
+
+* **front:** set external position x based on external state (full or others) for resize event ([a776c1b](https://github.com/andots/mejiro/commit/a776c1b7ffd2e0b10d09e94bf0c08204fdc81751))
+
+
+### Features
+
+* **app:** add default window dimensions and minimum size constants ([17c9883](https://github.com/andots/mejiro/commit/17c988321138a9f996a5d42f1498aa5b9f904e79))
+* **app:** commands return NestedBookmarks, JSON.parse() now can be removed ([29f8dfc](https://github.com/andots/mejiro/commit/29f8dfcafa06cd5dfded073f899772fa8291ab6b))
+* **app:** disabled auto_resize on external webview and control its size by listening resize event ([f0688d8](https://github.com/andots/mejiro/commit/f0688d813e72d20716df90dafddd1a66b45a6f00))
+* **core, app, front:** skip toolbar folder when adding bookmark, swap parameter for consistency ([4f46d92](https://github.com/andots/mejiro/commit/4f46d925b7fb4e821824abea3f7086e20831152c))
+* **core:** bookmark retrieval to use NestedBookmarks structure ([9d81fad](https://github.com/andots/mejiro/commit/9d81fad794402b12ecabf7ae46f543372db39ca2))
+* **front:** force to open folder when selected from RootChildrenSelect ([df5ab8f](https://github.com/andots/mejiro/commit/df5ab8f8b0ac8e49f4c76bca33557edd9bfb22ca))
+
 # [0.23.0](https://github.com/andots/mejiro/compare/v0.22.0...v0.23.0) (2025-03-01)
 
 
