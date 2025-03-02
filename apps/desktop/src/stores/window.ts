@@ -2,6 +2,7 @@ import { createWithSignal } from "solid-zustand";
 
 import { Invoke } from "../invokes";
 import { SIDEBAR_MIN_WIDTH, HEADER_HEIGHT } from "../constants";
+import type { PhysicalSize } from "@tauri-apps/api/dpi";
 
 type ExternalState = "full" | "hidden" | "right";
 
@@ -9,6 +10,7 @@ interface WindowState {
   externalState: ExternalState;
   sidebarWidth: number;
   setSidebarWidth: (newWidth: number) => Promise<void>;
+  setExternalSize: (size: PhysicalSize) => Promise<void>;
   changeExternalState: (flag: ExternalState) => Promise<void>;
 }
 
@@ -26,6 +28,14 @@ export const useWindowState = createWithSignal<WindowState>((set, get) => ({
       position: { x, y },
     });
     set(() => ({ sidebarWidth: newWidth }));
+  },
+  setExternalSize: async (size: PhysicalSize) => {
+    const x = get().sidebarWidth;
+    const y = HEADER_HEIGHT;
+    await Invoke.SetExternalWebviewBounds({
+      size: { width: size.width - x, height: size.height - y },
+      position: { x, y },
+    });
   },
   changeExternalState: async (flag: ExternalState) => {
     const sidebarWidth = get().sidebarWidth;

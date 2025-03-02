@@ -101,12 +101,10 @@ fn create_external_webview(
 
     let handle = app_handle.clone();
 
-    // auto resize is enabled
     // data directory is set to the app directory
     // disable tauri's drag and drop handler
     // incognito mode is enabled if the user settings is set to incognito
     let mut builder = WebviewBuilder::new(EXTERNAL_WEBVIEW_LABEL, WebviewUrl::External(url))
-        .auto_resize()
         .data_directory(app_handle.get_app_dir())
         .disable_drag_drop_handler()
         .incognito(settings.incognito)

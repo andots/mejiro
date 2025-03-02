@@ -1,6 +1,7 @@
 import { lazy, onCleanup, onMount, Show, type Component } from "solid-js";
 
 import { listen, type UnlistenFn } from "@tauri-apps/api/event";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 
 import { HEADER_HEIGHT } from "../constants";
 
@@ -10,6 +11,7 @@ import { Invoke } from "../invokes";
 import { usePageState } from "../stores/pages";
 import { useSettingsState } from "../stores/settings";
 import { useUrlState } from "../stores/url";
+import { useWindowState } from "../stores/window";
 
 import PageLoadingBar from "./PageLoadingBar";
 import ToolBar from "./ToolBar";
@@ -23,11 +25,13 @@ const App: Component = () => {
   const page = usePageState((state) => state.page);
   const useSettings = useSettingsState();
   const useUrl = useUrlState();
+  const useWindow = useWindowState();
 
   let unlistenSettingsUpdated: UnlistenFn;
   let unlistenExternalNavigation: UnlistenFn;
   let unlistenExternalTitleChanged: UnlistenFn;
   let unlistenExternalUrlChanged: UnlistenFn;
+  let unlistenResized: UnlistenFn;
 
   onMount(async () => {
     // get data from rust side for zustand stores
@@ -56,6 +60,11 @@ const App: Component = () => {
       useUrl().setTitle(event.payload);
     });
 
+    // listen for window resized events and update the external webview size
+    unlistenResized = await getCurrentWindow().onResized(({ payload }) => {
+      useWindow().setExternalSize(payload);
+    });
+
     // Since the initial ExternalTitleChanged event for start_page_url emitted
     // from the Rust side occurs before the frontend initialization,
     // it is necessary to retrieve the external webview title here.
@@ -69,6 +78,7 @@ const App: Component = () => {
     unlistenExternalNavigation();
     unlistenExternalTitleChanged();
     unlistenExternalUrlChanged();
+    unlistenResized();
   });
 
   // createEffect(
