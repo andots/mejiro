@@ -2,11 +2,13 @@ pub mod collection;
 pub mod io;
 pub mod json;
 pub mod manipulation;
+pub mod nested;
 pub mod tree;
 
-use indextree::{macros::tree, Arena};
+pub use nested::NestedBookmarks;
 
 use crate::data::BookmarkData;
+use indextree::{macros::tree, Arena};
 
 pub struct Bookmarks {
     arena: Arena<BookmarkData>,

@@ -51,8 +51,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
   getBookmarks: async (index) => {
     // can't accept index 0 because indextree starts from 1
     if (index >= 1) {
-      const data = await Invoke.GetNestedJson(index);
-      const bookmarks = JSON.parse(data) as Bookmark;
+      const bookmarks = await Invoke.GetNestedJson(index);
       set(() => ({ bookmarks }));
     }
   },

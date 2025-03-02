@@ -1,7 +1,7 @@
 use std::sync::Mutex;
 
 use mejiro_core::{
-    bookmarks::Bookmarks,
+    bookmarks::{Bookmarks, NestedBookmarks},
     data::{FolderData, ToolbarBookmarkData},
 };
 
@@ -11,14 +11,14 @@ use crate::error::AppError;
 pub fn get_nested_json(
     state: tauri::State<'_, Mutex<Bookmarks>>,
     index: usize,
-) -> Result<String, AppError> {
+) -> Result<NestedBookmarks, AppError> {
     if index == 0 {
         return Err(AppError::Other("index should not be 0".to_string()));
     }
     let bookmarks = state
         .lock()
         .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
-    Ok(bookmarks.to_nested_json(index)?)
+    Ok(bookmarks.to_nested(index)?)
 }
 
 #[tauri::command]
