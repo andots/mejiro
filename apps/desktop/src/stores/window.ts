@@ -30,7 +30,13 @@ export const useWindowState = createWithSignal<WindowState>((set, get) => ({
     set(() => ({ sidebarWidth: newWidth }));
   },
   setExternalSize: async (size: PhysicalSize) => {
-    const x = get().sidebarWidth;
+    // Set x position based on external state
+    let x: number;
+    if (get().externalState === "full") {
+      x = 0;
+    } else {
+      x = get().sidebarWidth;
+    }
     const y = HEADER_HEIGHT;
     await Invoke.SetExternalWebviewBounds({
       size: { width: size.width - x, height: size.height - y },

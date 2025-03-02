@@ -13,9 +13,13 @@ import AddressBar from "./toolbar/AddressBar";
 import Favicon from "./icons/Favicon";
 
 const ToolBar: Component = () => {
+  const useUrl = useUrlState();
+  const useWindow = useWindowState();
+
   const bookmarks = useBookmarkState((state) => state.bookmarks);
   const toolbarBookmarks = useBookmarkState((state) => state.toolbarBookmarks);
   const settings = useSettingsState((state) => state.settings);
+  const externalState = useWindowState((state) => state.externalState);
 
   createEffect(
     on(bookmarks, () => {
@@ -23,47 +27,42 @@ const ToolBar: Component = () => {
     }),
   );
 
-  const navigateToUrl = useUrlState((state) => state.navigateToUrl);
-
-  const externalState = useWindowState((state) => state.externalState);
-  const changeExternalState = useWindowState((state) => state.changeExternalState);
-
   const page = usePageState((state) => state.page);
   const setPage = usePageState((state) => state.setPage);
 
   const handleMenu = () => {
     setPage("dashboard");
     if (externalState() === "right") {
-      changeExternalState("full");
+      useWindow().changeExternalState("full");
     } else if (externalState() === "full") {
-      changeExternalState("right");
+      useWindow().changeExternalState("right");
     } else if (externalState() === "hidden") {
-      changeExternalState("right");
+      useWindow().changeExternalState("right");
     }
   };
 
   const handleHome = () => {
     setPage("dashboard");
-    navigateToUrl(settings().start_page_url);
+    useUrl().navigateToUrl(settings().start_page_url);
     if (externalState() === "hidden") {
-      changeExternalState("right");
+      useWindow().changeExternalState("right");
     }
   };
 
   const handlePinnedUrl = (url: string) => {
     setPage("dashboard");
-    navigateToUrl(url);
+    useUrl().navigateToUrl(url);
     if (externalState() === "hidden") {
-      changeExternalState("right");
+      useWindow().changeExternalState("right");
     }
   };
 
   const handleSettings = () => {
     if (page() === "settings") {
-      changeExternalState("right");
+      useWindow().changeExternalState("right");
       setPage("dashboard");
     } else {
-      changeExternalState("hidden");
+      useWindow().changeExternalState("hidden");
       setPage("settings");
     }
   };
