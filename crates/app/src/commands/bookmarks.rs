@@ -18,7 +18,7 @@ pub fn get_nested_json(
     let bookmarks = state
         .lock()
         .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
-    Ok(bookmarks.to_nested(index)?)
+    Ok(bookmarks.to_nested_bookmarks(index)?)
 }
 
 #[tauri::command]
@@ -47,13 +47,13 @@ pub fn add_bookmark(
     url: String,
     title: Option<String>,
     top_level_index: usize,
-) -> Result<String, AppError> {
+) -> Result<NestedBookmarks, AppError> {
     let mut bookmarks = state
         .lock()
         .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
     bookmarks.add_bookmark(url, title, top_level_index)?;
 
-    Ok(bookmarks.to_nested_json(top_level_index)?)
+    Ok(bookmarks.to_nested_bookmarks(top_level_index)?)
 }
 
 #[tauri::command]
@@ -62,13 +62,13 @@ pub fn append_bookmark_to_toolbar(
     title: String,
     url: String,
     top_level_index: usize,
-) -> Result<String, AppError> {
+) -> Result<NestedBookmarks, AppError> {
     let mut bookmarks = state
         .lock()
         .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
     bookmarks.append_bookmark_to_toolbar(&title, &url)?;
 
-    Ok(bookmarks.to_nested_json(top_level_index)?)
+    Ok(bookmarks.to_nested_bookmarks(top_level_index)?)
 }
 
 #[tauri::command]
@@ -76,13 +76,13 @@ pub fn remove_bookmark(
     state: tauri::State<'_, Mutex<Bookmarks>>,
     index: usize,
     top_level_index: usize,
-) -> Result<String, AppError> {
+) -> Result<NestedBookmarks, AppError> {
     let mut bookmarks = state
         .lock()
         .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
     bookmarks.remove_subtree(index)?;
 
-    Ok(bookmarks.to_nested_json(top_level_index)?)
+    Ok(bookmarks.to_nested_bookmarks(top_level_index)?)
 }
 
 #[tauri::command]
@@ -91,13 +91,13 @@ pub fn update_bookmark_title(
     index: usize,
     title: String,
     top_level_index: usize,
-) -> Result<String, AppError> {
+) -> Result<NestedBookmarks, AppError> {
     let mut bookmarks = state
         .lock()
         .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
     bookmarks.update_title(index, title)?;
 
-    Ok(bookmarks.to_nested_json(top_level_index)?)
+    Ok(bookmarks.to_nested_bookmarks(top_level_index)?)
 }
 
 #[tauri::command]
@@ -106,13 +106,13 @@ pub fn add_folder(
     parent_index: usize,
     title: String,
     top_level_index: usize,
-) -> Result<String, AppError> {
+) -> Result<NestedBookmarks, AppError> {
     let mut bookmarks = state
         .lock()
         .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
     bookmarks.add_folder(parent_index, &title)?;
 
-    Ok(bookmarks.to_nested_json(top_level_index)?)
+    Ok(bookmarks.to_nested_bookmarks(top_level_index)?)
 }
 
 #[tauri::command]
@@ -121,13 +121,13 @@ pub fn insert_after(
     source_index: usize,
     destination_index: usize,
     top_level_index: usize,
-) -> Result<String, AppError> {
+) -> Result<NestedBookmarks, AppError> {
     let mut bookmarks = state
         .lock()
         .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
     bookmarks.insert_after(source_index, destination_index)?;
 
-    Ok(bookmarks.to_nested_json(top_level_index)?)
+    Ok(bookmarks.to_nested_bookmarks(top_level_index)?)
 }
 
 #[tauri::command]
@@ -136,13 +136,13 @@ pub fn insert_before(
     source_index: usize,
     destination_index: usize,
     top_level_index: usize,
-) -> Result<String, AppError> {
+) -> Result<NestedBookmarks, AppError> {
     let mut bookmarks = state
         .lock()
         .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
     bookmarks.insert_before(source_index, destination_index)?;
 
-    Ok(bookmarks.to_nested_json(top_level_index)?)
+    Ok(bookmarks.to_nested_bookmarks(top_level_index)?)
 }
 
 #[tauri::command]
@@ -151,13 +151,13 @@ pub fn append_to_child(
     source_index: usize,
     destination_index: usize,
     top_level_index: usize,
-) -> Result<String, AppError> {
+) -> Result<NestedBookmarks, AppError> {
     let mut bookmarks = state
         .lock()
         .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
     bookmarks.append_to_child(source_index, destination_index)?;
 
-    Ok(bookmarks.to_nested_json(top_level_index)?)
+    Ok(bookmarks.to_nested_bookmarks(top_level_index)?)
 }
 
 #[tauri::command]
@@ -166,13 +166,13 @@ pub fn prepend_to_child(
     source_index: usize,
     destination_index: usize,
     top_level_index: usize,
-) -> Result<String, AppError> {
+) -> Result<NestedBookmarks, AppError> {
     let mut bookmarks = state
         .lock()
         .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
     bookmarks.prepend_to_child(source_index, destination_index)?;
 
-    Ok(bookmarks.to_nested_json(top_level_index)?)
+    Ok(bookmarks.to_nested_bookmarks(top_level_index)?)
 }
 
 #[tauri::command]
@@ -181,13 +181,13 @@ pub fn set_is_open(
     index: usize,
     is_open: bool,
     top_level_index: usize,
-) -> Result<String, AppError> {
+) -> Result<NestedBookmarks, AppError> {
     let mut bookmarks = state
         .lock()
         .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
     bookmarks.set_is_open(index, is_open)?;
 
-    Ok(bookmarks.to_nested_json(top_level_index)?)
+    Ok(bookmarks.to_nested_bookmarks(top_level_index)?)
 }
 
 #[tauri::command]
@@ -195,11 +195,11 @@ pub fn toggle_is_open(
     state: tauri::State<'_, Mutex<Bookmarks>>,
     index: usize,
     top_level_index: usize,
-) -> Result<String, AppError> {
+) -> Result<NestedBookmarks, AppError> {
     let mut bookmarks = state
         .lock()
         .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
     bookmarks.toggle_is_open(index)?;
 
-    Ok(bookmarks.to_nested_json(top_level_index)?)
+    Ok(bookmarks.to_nested_bookmarks(top_level_index)?)
 }

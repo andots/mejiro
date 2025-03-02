@@ -10,66 +10,55 @@ import type {
 
 export const Invoke = {
   // Bookmarks commands
-  GetNestedJson: async (index: number) => {
-    return invoke<Bookmark>("get_nested_json", { index });
-  },
   GetRootAndChildrenFolders: async () => {
     return invoke<FolderData[]>("get_root_and_children_folders", {});
   },
   GetToolbarBookmarks: async () => {
     return invoke<ToolbarBookmarkData[]>("get_toolbar_bookmarks", {});
   },
+  GetNestedJson: async (index: number) => {
+    return invoke<Bookmark>("get_nested_json", { index });
+  },
   AddBookmark: async (url: string, title: string | null | undefined, topLevelIndex: number) => {
-    // returned json string is a nested tree of bookmarks
-    return invoke<string>("add_bookmark", { url, title, topLevelIndex });
+    return invoke<Bookmark>("add_bookmark", { url, title, topLevelIndex });
   },
   AppendBookmarkToToolbar: async (title: string, url: string, topLevelIndex: number) => {
-    // returned json string is a nested tree of bookmarks
-    return invoke<string>("append_bookmark_to_toolbar", { title, url, topLevelIndex });
+    return invoke<Bookmark>("append_bookmark_to_toolbar", { title, url, topLevelIndex });
   },
   RemoveBookmark: async (index: number, topLevelIndex: number) => {
-    // returned json string is a nested tree of bookmarks
-    return invoke<string>("remove_bookmark", { index, topLevelIndex });
+    return invoke<Bookmark>("remove_bookmark", { index, topLevelIndex });
   },
   UpdateBookmarkTitle: async (index: number, title: string, topLevelIndex: number) => {
-    // returned json string is a nested tree of bookmarks
-    return invoke<string>("update_bookmark_title", { index, title, topLevelIndex });
+    return invoke<Bookmark>("update_bookmark_title", { index, title, topLevelIndex });
   },
   AddFolder: async (parentIndex: number, title: string, topLevelIndex: number) => {
-    // returned json string is a nested tree of bookmarks
-    return invoke<string>("add_folder", { parentIndex, title, topLevelIndex });
+    return invoke<Bookmark>("add_folder", { parentIndex, title, topLevelIndex });
   },
   InsertAfter: async (sourceIndex: number, destinationIndex: number, topLevelIndex: number) => {
-    // returned json string is a nested tree of bookmarks
-    return invoke<string>("insert_after", {
+    return invoke<Bookmark>("insert_after", {
       sourceIndex,
       destinationIndex,
       topLevelIndex,
     });
   },
   InsertBefore: async (sourceIndex: number, destinationIndex: number, topLevelIndex: number) => {
-    // returned json string is a nested tree of bookmarks
-    return invoke<string>("insert_before", {
+    return invoke<Bookmark>("insert_before", {
       sourceIndex,
       destinationIndex,
       topLevelIndex,
     });
   },
   AppendToChild: async (sourceIndex: number, destinationIndex: number, topLevelIndex: number) => {
-    // returned json string is a nested tree of bookmarks
-    return invoke<string>("append_to_child", { sourceIndex, destinationIndex, topLevelIndex });
+    return invoke<Bookmark>("append_to_child", { sourceIndex, destinationIndex, topLevelIndex });
   },
   PrependToChild: async (sourceIndex: number, destinationIndex: number, topLevelIndex: number) => {
-    // returned json string is a nested tree of bookmarks
-    return invoke<string>("prepend_to_child", { sourceIndex, destinationIndex, topLevelIndex });
+    return invoke<Bookmark>("prepend_to_child", { sourceIndex, destinationIndex, topLevelIndex });
   },
   SetIsOpen: async (index: number, isOpen: boolean, topLevelIndex: number) => {
-    // returned json string is a nested tree of Bookmarks
-    return invoke<string>("set_is_open", { index, isOpen, topLevelIndex });
+    return invoke<Bookmark>("set_is_open", { index, isOpen, topLevelIndex });
   },
   ToggleIsOpen: async (index: number, topLevelIndex: number) => {
-    // returned json string is a nested tree of Bookmarks
-    return invoke<string>("toggle_is_open", { index, topLevelIndex });
+    return invoke<Bookmark>("toggle_is_open", { index, topLevelIndex });
   },
 
   // App Webview commands

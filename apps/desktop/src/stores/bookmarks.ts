@@ -58,74 +58,64 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
   addBookmark: async (url, title) => {
     // get current top of bookmark index that shown in the UI as a starting point
     const topLevelIndex = get().getCurrentTopLevel();
-    const data = await Invoke.AddBookmark(url, title, topLevelIndex);
-    const bookmarks = JSON.parse(data) as Bookmark;
+    const bookmarks = await Invoke.AddBookmark(url, title, topLevelIndex);
     set(() => ({ bookmarks }));
   },
   appendBookmarkToToolbar: async (title, url) => {
     const topLevelIndex = get().getCurrentTopLevel();
-    const data = await Invoke.AppendBookmarkToToolbar(title, url, topLevelIndex);
-    const bookmarks = JSON.parse(data) as Bookmark;
+    const bookmarks = await Invoke.AppendBookmarkToToolbar(title, url, topLevelIndex);
     set(() => ({ bookmarks }));
   },
   removeBookmark: async (index) => {
     const topLevelIndex = get().getCurrentTopLevel();
-    const data = await Invoke.RemoveBookmark(index, topLevelIndex);
-    const bookmarks = JSON.parse(data) as Bookmark;
+    const bookmarks = await Invoke.RemoveBookmark(index, topLevelIndex);
     set(() => ({ bookmarks }));
   },
   updateBookmarkTitle: async (index, title) => {
     const topLevelIndex = get().getCurrentTopLevel();
-    const data = await Invoke.UpdateBookmarkTitle(index, title, topLevelIndex);
-    const bookmarks = JSON.parse(data) as Bookmark;
+    const bookmarks = await Invoke.UpdateBookmarkTitle(index, title, topLevelIndex);
     set(() => ({ bookmarks }));
     // update the folders list
     get().getFolders();
   },
   addFolder: async (parentIndex, title) => {
     const topLevelIndex = get().getCurrentTopLevel();
-    const data = await Invoke.AddFolder(parentIndex, title, topLevelIndex);
-    const bookmarks = JSON.parse(data) as Bookmark;
+    const bookmarks = await Invoke.AddFolder(parentIndex, title, topLevelIndex);
     set(() => ({ bookmarks }));
     // update the folders list
     get().getFolders();
   },
   insertAfter: async (sourceIndex, destinationIndex) => {
     const topLevelIndex = get().getCurrentTopLevel();
-    const data = await Invoke.InsertAfter(sourceIndex, destinationIndex, topLevelIndex);
-    const bookmarks = JSON.parse(data) as Bookmark;
+    const bookmarks = await Invoke.InsertAfter(sourceIndex, destinationIndex, topLevelIndex);
     set(() => ({ bookmarks }));
     // update the folders list
     get().getFolders();
   },
   insertBefore: async (sourceIndex, destinationIndex) => {
     const topLevelIndex = get().getCurrentTopLevel();
-    const data = await Invoke.InsertBefore(sourceIndex, destinationIndex, topLevelIndex);
-    const bookmarks = JSON.parse(data) as Bookmark;
+    const bookmarks = await Invoke.InsertBefore(sourceIndex, destinationIndex, topLevelIndex);
     set(() => ({ bookmarks }));
     // update the folders list
     get().getFolders();
   },
   appendToChild: async (sourceIndex, destinationIndex) => {
     const topLevelIndex = get().getCurrentTopLevel();
-    const data = await Invoke.AppendToChild(sourceIndex, destinationIndex, topLevelIndex);
-    const bookmarks = JSON.parse(data) as Bookmark;
+    const bookmarks = await Invoke.AppendToChild(sourceIndex, destinationIndex, topLevelIndex);
     set(() => ({ bookmarks }));
     // update the folders list
     get().getFolders();
   },
   prependToChild: async (sourceIndex, destinationIndex) => {
     const topLevelIndex = get().getCurrentTopLevel();
-    const data = await Invoke.PrependToChild(sourceIndex, destinationIndex, topLevelIndex);
-    const bookmarks = JSON.parse(data) as Bookmark;
+    const bookmarks = await Invoke.PrependToChild(sourceIndex, destinationIndex, topLevelIndex);
     set(() => ({ bookmarks }));
     // update the folders list
     get().getFolders();
   },
   toggleIsOpen: async (index) => {
     const topLevelIndex = get().getCurrentTopLevel();
-    const data = await Invoke.ToggleIsOpen(index, topLevelIndex);
-    const bookmarks = JSON.parse(data) as Bookmark;
+    const bookmarks = await Invoke.ToggleIsOpen(index, topLevelIndex);
     set(() => ({ bookmarks }));
   },
 }));
