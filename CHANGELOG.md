@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.24.1](https://github.com/andots/mejiro/compare/v0.24.0...v0.24.1) (2025-03-02)
+
+
+### Bug Fixes
+
+* **front:** add context menu for copy, paste, and cut actions, update title handling to be async ([73284de](https://github.com/andots/mejiro/commit/73284dee2e9bd36dba7df1a6c79b1291248ceb2b))
+* **front:** prevent update title twice using ref().blur() on KeyDown ([bf35ddd](https://github.com/andots/mejiro/commit/bf35ddd63d60e03d109457efd6e32bdb19b24e5a))
+
 # [0.24.0](https://github.com/andots/mejiro/compare/v0.23.0...v0.24.0) (2025-03-02)
 
 
