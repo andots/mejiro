@@ -3,7 +3,7 @@ import type { Component } from "solid-js";
 import { useBookmarkState } from "../../stores/bookmarks";
 
 import BookmarkNode from "./BookmarkNode";
-import type { Bookmark } from "../../types";
+import type { NestedBookmark } from "../../types";
 import { isDev } from "../../utils";
 import { useDraggingState } from "../../stores/dragging";
 
@@ -11,7 +11,7 @@ import { useDraggingState } from "../../stores/dragging";
 // dragstart(node) -> dragenter(droppable) -> dragover(droppable) -> drop(droppable) -> dragend(node)
 
 type Props = {
-  bookmark: Bookmark;
+  bookmark: NestedBookmark;
 };
 
 const BookmarkTree: Component<Props> = (props) => {

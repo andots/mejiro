@@ -1,11 +1,11 @@
 import { createWithSignal } from "solid-zustand";
 
 import { Invoke } from "../invokes";
-import type { Bookmark, FolderData, ToolbarBookmarkData } from "../types";
+import type { NestedBookmark, FolderData, ToolbarBookmarkData } from "../types";
 
 type BookmarkState = {
   folders: FolderData[];
-  bookmarks: Bookmark | null;
+  bookmarks: NestedBookmark | null;
   toolbarBookmarks: ToolbarBookmarkData[];
   isTreeLocked: boolean;
   setTreeLockState: (value: boolean) => void;

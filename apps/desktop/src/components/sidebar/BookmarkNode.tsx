@@ -2,7 +2,7 @@ import { type Component, createSignal, For, Show } from "solid-js";
 
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 
-import type { Bookmark } from "../../types";
+import type { NestedBookmark } from "../../types";
 
 import {
   BLOCK_SIZE_PX,
@@ -23,7 +23,7 @@ import Favicon from "../icons/Favicon";
 import EditableTitle from "./EditableTitle";
 
 type Props = {
-  bookmark: Bookmark;
+  bookmark: NestedBookmark;
   level: number;
 };
 

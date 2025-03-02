@@ -1,5 +1,5 @@
 //! Must sync with core/src/nested.rs
-export type Bookmark = {
+export type NestedBookmark = {
   index: number;
   title: string;
   url: string | null;
@@ -7,7 +7,7 @@ export type Bookmark = {
   node_type: "Root" | "Folder" | "Bookmark" | "Separator";
   date_added: number;
   is_open: boolean;
-  children: Bookmark[];
+  children: NestedBookmark[];
 };
 
 //! Must sync with core/src/data.rs

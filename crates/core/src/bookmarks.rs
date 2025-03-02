@@ -5,7 +5,7 @@ pub mod manipulation;
 pub mod nested;
 pub mod tree;
 
-pub use nested::NestedBookmarks;
+pub use nested::NestedBookmark;
 
 use crate::data::BookmarkData;
 use indextree::{macros::tree, Arena};

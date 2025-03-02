@@ -1,7 +1,7 @@
 use crate::error::CoreError;
 
 use super::Bookmarks;
-use super::NestedBookmarks;
+use super::NestedBookmark;
 
 /// Converting to JSON
 impl Bookmarks {
@@ -11,20 +11,20 @@ impl Bookmarks {
     }
 
     /// Arena to NestedBookmarks
-    pub fn to_nested_bookmarks(&self, index: usize) -> Result<NestedBookmarks, CoreError> {
+    pub fn to_nested_bookmark(&self, index: usize) -> Result<NestedBookmark, CoreError> {
         let node_id = self.find_node_id_by_index(index)?;
-        NestedBookmarks::try_new(&self.arena, node_id)
+        NestedBookmark::try_new(&self.arena, node_id)
     }
 
     /// Arena to nested JSON string (frontend friendly)
     pub fn to_nested_json(&self, index: usize) -> Result<String, CoreError> {
-        let value = self.to_nested_bookmarks(index)?;
+        let value = self.to_nested_bookmark(index)?;
         Ok(serde_json::to_string(&value)?)
     }
 
     /// Arena to nested JSON string (frontend friendly) with pretty format
     pub fn to_nested_json_pretty(&self, index: usize) -> Result<String, CoreError> {
-        let value = self.to_nested_bookmarks(index)?;
+        let value = self.to_nested_bookmark(index)?;
         Ok(serde_json::to_string_pretty(&value)?)
     }
 }
@@ -66,7 +66,7 @@ mod tests {
     fn test_serialize() {
         let bookmarks = create_simple_bookmarks();
         let node_id = bookmarks.find_node_id_by_index(1).unwrap();
-        let nested = NestedBookmarks::try_new(&bookmarks.arena, node_id).unwrap();
+        let nested = NestedBookmark::try_new(&bookmarks.arena, node_id).unwrap();
         let json = serde_json::to_string_pretty(&nested).unwrap();
         println!("{}", json);
     }
@@ -76,13 +76,13 @@ mod tests {
         let bookmarks = create_simple_bookmarks();
 
         let index = 1;
-        let nested = bookmarks.to_nested_bookmarks(index).unwrap();
+        let nested = bookmarks.to_nested_bookmark(index).unwrap();
         let a = serde_json::to_string(&nested).unwrap();
         let b = bookmarks.to_nested_json(index).unwrap();
         assert_eq!(a, b);
 
         let index = 5;
-        let nested = bookmarks.to_nested_bookmarks(index).unwrap();
+        let nested = bookmarks.to_nested_bookmark(index).unwrap();
         let a = serde_json::to_string(&nested).unwrap();
         let b = bookmarks.to_nested_json(index).unwrap();
         assert_eq!(a, b);

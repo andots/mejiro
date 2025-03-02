@@ -5,7 +5,7 @@ import type {
   FolderData,
   Rect,
   UserSettings,
-  Bookmark,
+  NestedBookmark,
 } from "./types";
 
 export const Invoke = {
@@ -17,48 +17,56 @@ export const Invoke = {
     return invoke<ToolbarBookmarkData[]>("get_toolbar_bookmarks", {});
   },
   GetNestedJson: async (index: number) => {
-    return invoke<Bookmark>("get_nested_json", { index });
+    return invoke<NestedBookmark>("get_nested_json", { index });
   },
   AddBookmark: async (url: string, title: string | null | undefined, topLevelIndex: number) => {
-    return invoke<Bookmark>("add_bookmark", { url, title, topLevelIndex });
+    return invoke<NestedBookmark>("add_bookmark", { url, title, topLevelIndex });
   },
   AppendBookmarkToToolbar: async (title: string, url: string, topLevelIndex: number) => {
-    return invoke<Bookmark>("append_bookmark_to_toolbar", { title, url, topLevelIndex });
+    return invoke<NestedBookmark>("append_bookmark_to_toolbar", { title, url, topLevelIndex });
   },
   RemoveBookmark: async (index: number, topLevelIndex: number) => {
-    return invoke<Bookmark>("remove_bookmark", { index, topLevelIndex });
+    return invoke<NestedBookmark>("remove_bookmark", { index, topLevelIndex });
   },
   UpdateBookmarkTitle: async (index: number, title: string, topLevelIndex: number) => {
-    return invoke<Bookmark>("update_bookmark_title", { index, title, topLevelIndex });
+    return invoke<NestedBookmark>("update_bookmark_title", { index, title, topLevelIndex });
   },
   AddFolder: async (parentIndex: number, title: string, topLevelIndex: number) => {
-    return invoke<Bookmark>("add_folder", { parentIndex, title, topLevelIndex });
+    return invoke<NestedBookmark>("add_folder", { parentIndex, title, topLevelIndex });
   },
   InsertAfter: async (sourceIndex: number, destinationIndex: number, topLevelIndex: number) => {
-    return invoke<Bookmark>("insert_after", {
+    return invoke<NestedBookmark>("insert_after", {
       sourceIndex,
       destinationIndex,
       topLevelIndex,
     });
   },
   InsertBefore: async (sourceIndex: number, destinationIndex: number, topLevelIndex: number) => {
-    return invoke<Bookmark>("insert_before", {
+    return invoke<NestedBookmark>("insert_before", {
       sourceIndex,
       destinationIndex,
       topLevelIndex,
     });
   },
   AppendToChild: async (sourceIndex: number, destinationIndex: number, topLevelIndex: number) => {
-    return invoke<Bookmark>("append_to_child", { sourceIndex, destinationIndex, topLevelIndex });
+    return invoke<NestedBookmark>("append_to_child", {
+      sourceIndex,
+      destinationIndex,
+      topLevelIndex,
+    });
   },
   PrependToChild: async (sourceIndex: number, destinationIndex: number, topLevelIndex: number) => {
-    return invoke<Bookmark>("prepend_to_child", { sourceIndex, destinationIndex, topLevelIndex });
+    return invoke<NestedBookmark>("prepend_to_child", {
+      sourceIndex,
+      destinationIndex,
+      topLevelIndex,
+    });
   },
   SetIsOpen: async (index: number, isOpen: boolean, topLevelIndex: number) => {
-    return invoke<Bookmark>("set_is_open", { index, isOpen, topLevelIndex });
+    return invoke<NestedBookmark>("set_is_open", { index, isOpen, topLevelIndex });
   },
   ToggleIsOpen: async (index: number, topLevelIndex: number) => {
-    return invoke<Bookmark>("toggle_is_open", { index, topLevelIndex });
+    return invoke<NestedBookmark>("toggle_is_open", { index, topLevelIndex });
   },
 
   // App Webview commands
