@@ -7,7 +7,9 @@ use tauri::{
 
 use crate::app_handle_ext::AppHandleExt;
 use crate::constants::{
-    APP_WEBVIEW_LABEL, APP_WEBVIEW_URL, EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL,
+    APP_WEBVIEW_LABEL, APP_WEBVIEW_URL, DEFAUTL_HEADER_HEIGHT, DEFAUTL_SIDEBAR_WIDTH,
+    DEFAUTL_WINDOW_HEIGHT, DEFAUTL_WINDOW_WIDTH, DEFAUTL_WINDOW_X, DEFAUTL_WINDOW_Y,
+    EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL, MIN_WINDOW_HEIGHT, MIN_WINDOW_WIDTH,
 };
 use crate::events::AppEvent;
 use crate::settings::{default_start_page_url, UserSettings};
@@ -25,12 +27,12 @@ pub struct WindowGeometry {
 impl Default for WindowGeometry {
     fn default() -> Self {
         Self {
-            width: 1000.0,
-            height: 1000.0,
-            x: 50.0,
-            y: 50.0,
-            sidebar_width: 200.0,
-            header_height: 40.0,
+            width: DEFAUTL_WINDOW_WIDTH,
+            height: DEFAUTL_WINDOW_HEIGHT,
+            x: DEFAUTL_WINDOW_X,
+            y: DEFAUTL_WINDOW_Y,
+            sidebar_width: DEFAUTL_SIDEBAR_WIDTH,
+            header_height: DEFAUTL_HEADER_HEIGHT,
         }
     }
 }
@@ -60,6 +62,7 @@ fn create_main_window(
         .title(app_handle.get_default_app_title())
         .position(geometry.x, geometry.y)
         .inner_size(geometry.width, geometry.height)
+        .min_inner_size(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
         .build()
 }
 
