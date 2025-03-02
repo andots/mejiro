@@ -1,5 +1,7 @@
 import { createSignal, Show, type Component } from "solid-js";
 
+import { Menu, PredefinedMenuItem } from "@tauri-apps/api/menu";
+
 import { autofocus } from "@solid-primitives/autofocus";
 
 import { BOOKMARK_NODE_FONT_SIZE } from "../../constants";
@@ -30,24 +32,36 @@ const EditableTitle: Component<Props> = (props) => {
     target.select();
   };
 
-  const handleKeydown = (e: KeyboardEvent) => {
+  const handleKeydown = async (e: KeyboardEvent) => {
     if (e.key === "Enter") {
-      props.setEditingStatus(false);
-      setTreeLockState(false);
       // update title only if it has changed
       if (value() !== props.title) {
-        updateBookmarkTitle(props.index, value());
+        await updateBookmarkTitle(props.index, value());
       }
+      props.setEditingStatus(false);
+      setTreeLockState(false);
     }
   };
 
-  const handleFocusOut = (e: FocusEvent) => {
-    props.setEditingStatus(false);
-    setTreeLockState(false);
+  const handleFocusOut = async (e: FocusEvent) => {
     // update title only if it has changed
     if (value() !== props.title) {
-      updateBookmarkTitle(props.index, value());
+      await updateBookmarkTitle(props.index, value());
     }
+    props.setEditingStatus(false);
+    setTreeLockState(false);
+  };
+
+  const handleContextMenu = async (e: MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const copy = await PredefinedMenuItem.new({ item: "Copy" });
+    const paste = await PredefinedMenuItem.new({ item: "Paste" });
+    const cut = await PredefinedMenuItem.new({ item: "Cut" });
+    const menu = await Menu.new({
+      items: [copy, paste, cut],
+    });
+    await menu.popup();
   };
 
   return (
@@ -61,6 +75,7 @@ const EditableTitle: Component<Props> = (props) => {
           onFocusOut={handleFocusOut}
           onInput={(e) => setValue(e.currentTarget.value)}
           onKeyDown={handleKeydown}
+          onContextMenu={handleContextMenu}
           style={{
             "font-size": `${BOOKMARK_NODE_FONT_SIZE}px`,
             width: `${props.width}px`,
