@@ -19,8 +19,8 @@ export const Invoke = {
   GetNestedJson: async (index: number) => {
     return invoke<NestedBookmark>("get_nested_json", { index });
   },
-  AddBookmark: async (url: string, title: string | null | undefined, topLevelIndex: number) => {
-    return invoke<NestedBookmark>("add_bookmark", { url, title, topLevelIndex });
+  AddBookmark: async (title: string, url: string, topLevelIndex: number) => {
+    return invoke<NestedBookmark>("add_bookmark", { title, url, topLevelIndex });
   },
   AppendBookmarkToToolbar: async (title: string, url: string, topLevelIndex: number) => {
     return invoke<NestedBookmark>("append_bookmark_to_toolbar", { title, url, topLevelIndex });

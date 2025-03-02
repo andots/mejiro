@@ -62,6 +62,22 @@ impl BookmarkData {
             Err(CoreError::NotWebUrl(parsed_url.to_string()))
         }
     }
+
+    pub fn is_root(&self) -> bool {
+        self.node_type == NodeType::Root
+    }
+
+    pub fn is_bookmark(&self) -> bool {
+        self.node_type == NodeType::Bookmark
+    }
+
+    pub fn is_folder(&self) -> bool {
+        self.node_type == NodeType::Folder
+    }
+
+    pub fn is_toolbar_folder(&self) -> bool {
+        self.is_folder() && self.title == "Toolbar"
+    }
 }
 
 #[derive(Debug, Serialize)]

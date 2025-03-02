@@ -324,32 +324,65 @@ mod tests {
     }
 
     #[test]
-    fn test_add_bookmark() -> anyhow::Result<()> {
+    fn test_add_bookmark_without_toolbar() -> anyhow::Result<()> {
         let mut arena = Arena::new();
         let root = BookmarkData::new_root();
         tree!(&mut arena,
             root => {
-                BookmarkData::try_new_bookmark("a", "https://docs.rs/abc").unwrap(),
+                BookmarkData::try_new_bookmark("abc", "https://docs.rs/abc").unwrap(),
             }
         );
         let mut bookmarks = Bookmarks::new(arena);
 
+        let top_level_index = 1;
+        bookmarks.add_bookmark("abc/cdf", "https://docs.rs/abc/cdf", top_level_index)?;
         bookmarks.add_bookmark(
-            "https://docs.rs/abc/cdf".to_string(),
-            Some("title".to_string()),
-            1,
+            "abc/cdf/efg",
+            "https://docs.rs/abc/cdf/efg",
+            top_level_index,
         )?;
         bookmarks.add_bookmark(
-            "https://docs.rs/abc/cdf/efg".to_string(),
-            Some("title".to_string()),
-            1,
+            "abc/cdf/aaaa",
+            "https://docs.rs/abc/cdf/aaaa",
+            top_level_index,
         )?;
         bookmarks.add_bookmark(
-            "https://docs.rs/abc/cdf/aaaa".to_string(),
-            Some("title".to_string()),
-            1,
+            "abc/cdf/bbb#hash",
+            "https://docs.rs/abc/cdf/bbbb#hash",
+            top_level_index,
         )?;
-        bookmarks.add_bookmark("https://docs.rs/".to_string(), Some("title".to_string()), 1)?;
+
+        println!("{}", bookmarks.to_nested_json_pretty(1)?);
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_add_bookmark_with_toolbar() -> anyhow::Result<()> {
+        let mut bookmarks = Bookmarks::default();
+        bookmarks.append_bookmark_to_toolbar("tauri", "https://docs.rs/tauri/latest/tauri/")?;
+
+        let top_level_index = 1;
+        bookmarks.add_bookmark(
+            "webview",
+            "https://docs.rs/tauri/latest/tauri/webview/index.html",
+            top_level_index,
+        )?;
+        bookmarks.add_bookmark(
+            "WebviewBuilder",
+            "https://docs.rs/tauri/latest/tauri/webview/struct.WebviewBuilder.html",
+            top_level_index,
+        )?;
+        bookmarks.add_bookmark(
+            "Color",
+            "https://docs.rs/tauri/latest/tauri/webview/struct.Color.html",
+            top_level_index,
+        )?;
+        bookmarks.add_bookmark(
+            "Monitor",
+            "https://docs.rs/tauri/latest/tauri/window/struct.Monitor.html",
+            top_level_index,
+        )?;
 
         println!("{}", bookmarks.to_nested_json_pretty(1)?);
 

@@ -40,7 +40,7 @@ const AddressBar: Component = () => {
 
   const handleClickStar = async () => {
     setIsStar(true);
-    await addBookmark(url(), title());
+    await addBookmark(title(), url());
     setTimeout(() => {
       setIsStar(false);
     }, 2000);

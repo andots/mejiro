@@ -44,14 +44,14 @@ pub fn get_toolbar_bookmarks(
 #[tauri::command]
 pub fn add_bookmark(
     state: tauri::State<'_, Mutex<Bookmarks>>,
+    title: String,
     url: String,
-    title: Option<String>,
     top_level_index: usize,
 ) -> Result<NestedBookmark, AppError> {
     let mut bookmarks = state
         .lock()
         .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
-    bookmarks.add_bookmark(url, title, top_level_index)?;
+    bookmarks.add_bookmark(&title, &url, top_level_index)?;
 
     Ok(bookmarks.to_nested_bookmark(top_level_index)?)
 }

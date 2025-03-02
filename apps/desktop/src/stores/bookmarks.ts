@@ -13,7 +13,7 @@ type BookmarkState = {
   getFolders: () => Promise<void>;
   getBookmarks: (index: number) => Promise<void>;
   getToolbarBookmarks: () => Promise<void>;
-  addBookmark: (url: string, title: string) => Promise<void>;
+  addBookmark: (title: string, url: string) => Promise<void>;
   appendBookmarkToToolbar: (title: string, url: string) => Promise<void>;
   removeBookmark: (index: number) => Promise<void>;
   updateBookmarkTitle: (index: number, title: string) => Promise<void>;
@@ -58,10 +58,10 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
       set(() => ({ bookmarks }));
     }
   },
-  addBookmark: async (url, title) => {
+  addBookmark: async (title, url) => {
     // get current top of bookmark index that shown in the UI as a starting point
     const topLevelIndex = get().getCurrentTopLevel();
-    const bookmarks = await Invoke.AddBookmark(url, title, topLevelIndex);
+    const bookmarks = await Invoke.AddBookmark(title, url, topLevelIndex);
     set(() => ({ bookmarks }));
   },
   appendBookmarkToToolbar: async (title, url) => {

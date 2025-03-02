@@ -47,17 +47,16 @@ impl Bookmarks {
     /// If no matching URL is found, adds a new node to the top node
     pub fn add_bookmark(
         &mut self,
-        url: String,
-        title: Option<String>,
+        title: &str,
+        url: &str,
         top_level_index: usize,
     ) -> Result<(), CoreError> {
-        // if title is None, use url as title
-        let title = title.unwrap_or(url.clone());
+        let bookmark = BookmarkData::try_new_bookmark(title, url)?;
 
         // get the URL of one level above the given URL as base_url_str
         // https://docs.rs/tauri/latest/tauri/webview/struct.Color.html
         // -> https://docs.rs/tauri/latest/tauri/webview/
-        let parsed_url = Url::parse(&url)?;
+        let parsed_url = Url::parse(url)?;
         let mut base_url = parsed_url.clone();
         base_url
             .path_segments_mut()
@@ -67,25 +66,46 @@ impl Bookmarks {
         let base_url_str = base_url.as_str();
 
         let top_node_id = self.find_node_id_by_index(top_level_index)?;
-        let target = top_node_id.descendants(&self.arena).find(|node_id| {
-            if let Ok(node) = self.find_node_by_node_id(*node_id) {
-                if let Some(node_url) = &node.get().url {
-                    if node_url.as_str().starts_with(base_url_str) {
-                        return true;
+        let mut target: Option<NodeId> = None;
+        if let Ok(toolbar_node_id) = self.get_toolbar_node_id() {
+            // if toolbar node is found, find target node from descendants except toolbar node
+            for descendant in top_node_id.descendants(&self.arena) {
+                if toolbar_node_id
+                    .descendants(&self.arena)
+                    .any(|node_id| node_id == descendant)
+                {
+                    continue;
+                }
+
+                if let Ok(node) = self.find_node_by_node_id(descendant) {
+                    if let Some(node_url) = &node.get().url {
+                        if node_url.as_str().starts_with(base_url_str) {
+                            target = Some(descendant);
+                            break;
+                        }
                     }
                 }
             }
-            false
-        });
+        } else {
+            // if toolbar node is not found, find target node from all descendants
+            target = top_node_id.descendants(&self.arena).find(|node_id| {
+                if let Ok(node) = self.find_node_by_node_id(*node_id) {
+                    if let Some(node_url) = &node.get().url {
+                        if node_url.as_str().starts_with(base_url_str) {
+                            return true;
+                        }
+                    }
+                }
+                false
+            });
+        }
 
-        let bookmark = BookmarkData::try_new_bookmark(&title, &url)?;
+        let new_node = self.arena.new_node(bookmark);
         if let Some(target) = target {
             // if found target, append new node to the target node
-            let new_node = self.arena.new_node(bookmark);
             target.checked_append(new_node, &mut self.arena)?;
         } else {
             // if not found target, append new node to the top node
-            let new_node = self.arena.new_node(bookmark);
             top_node_id.checked_append(new_node, &mut self.arena)?;
         }
 
