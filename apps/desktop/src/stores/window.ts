@@ -44,10 +44,10 @@ export const useWindowState = createWithSignal<WindowState>((set, get) => ({
     });
   },
   changeExternalState: async (flag: ExternalState) => {
-    const sidebarWidth = get().sidebarWidth;
-    const appBounds = await Invoke.GetAppWebviewBounds();
     if (flag === "right") {
       // Set the bounds of the external webview to the right side of the app
+      const appBounds = await Invoke.GetAppWebviewBounds();
+      const sidebarWidth = get().sidebarWidth;
       await Invoke.SetExternalWebviewBounds({
         size: {
           width: appBounds.size.Physical.width - sidebarWidth,
@@ -59,13 +59,10 @@ export const useWindowState = createWithSignal<WindowState>((set, get) => ({
       if (get().externalState === "hidden") {
         await Invoke.ShowExternalWebview();
       }
-      set(() => ({ externalState: "right" }));
-    } else if (flag === "hidden") {
-      // Hide the external webview
-      await Invoke.HideExternalWebview();
-      set(() => ({ externalState: "hidden" }));
+      set(() => ({ externalState: flag }));
     } else if (flag === "full") {
       // Set the bounds of the external webview to the full size of the app
+      const appBounds = await Invoke.GetAppWebviewBounds();
       await Invoke.SetExternalWebviewBounds({
         size: {
           width: appBounds.size.Physical.width,
@@ -77,7 +74,11 @@ export const useWindowState = createWithSignal<WindowState>((set, get) => ({
       if (get().externalState === "hidden") {
         await Invoke.ShowExternalWebview();
       }
-      set(() => ({ externalState: "full" }));
+      set(() => ({ externalState: flag }));
+    } else if (flag === "hidden") {
+      // Hide the external webview
+      await Invoke.HideExternalWebview();
+      set(() => ({ externalState: flag }));
     }
   },
 }));
