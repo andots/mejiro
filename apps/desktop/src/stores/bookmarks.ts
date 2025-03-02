@@ -22,6 +22,7 @@ type BookmarkState = {
   insertBefore: (sourceIndex: number, destinationIndex: number) => Promise<void>;
   appendToChild: (sourceIndex: number, destinationIndex: number) => Promise<void>;
   prependToChild: (sourceIndex: number, destinationIndex: number) => Promise<void>;
+  setIsOpen(index: number, isOpen: boolean): void;
   toggleIsOpen: (index: number) => Promise<void>;
 };
 
@@ -51,7 +52,9 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
   getBookmarks: async (index) => {
     // can't accept index 0 because indextree starts from 1
     if (index >= 1) {
-      const bookmarks = await Invoke.GetNestedJson(index);
+      // SetIsOpen returns the updated bookmarks that open top level folder
+      const topLevelIndex = index;
+      const bookmarks = await Invoke.SetIsOpen(index, true, topLevelIndex);
       set(() => ({ bookmarks }));
     }
   },
@@ -112,6 +115,11 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
     set(() => ({ bookmarks }));
     // update the folders list
     get().getFolders();
+  },
+  setIsOpen: async (index, isOpen) => {
+    const topLevelIndex = get().getCurrentTopLevel();
+    const bookmarks = await Invoke.SetIsOpen(index, isOpen, topLevelIndex);
+    set(() => ({ bookmarks }));
   },
   toggleIsOpen: async (index) => {
     const topLevelIndex = get().getCurrentTopLevel();
