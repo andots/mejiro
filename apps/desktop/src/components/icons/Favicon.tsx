@@ -5,8 +5,8 @@ const GSTATIC_URL =
 
 type Props = {
   url: string;
-  width: string;
-  height: string;
+  width: string | number;
+  height: string | number;
 };
 
 const Favicon: Component<Props> = (props) => {

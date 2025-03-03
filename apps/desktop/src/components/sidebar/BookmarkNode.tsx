@@ -1,4 +1,4 @@
-import { type Component, createSignal, For, Show } from "solid-js";
+import { type Component, createSignal, For, Match, Show, Switch } from "solid-js";
 
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 
@@ -195,33 +195,21 @@ const BookmarkNode: Component<Props> = (props) => {
           <div style={{ width: INDICATOR_WIDTH, height: INDICATOR_HEIGHT }} />
 
           <div class="flex flex-row">
-            {/* Navigation Arrow */}
-            <div style={{ width: BLOCK_SIZE_PX, height: BLOCK_SIZE_PX }}>
-              <Show when={hasChildren()}>
-                <button
-                  style={{ width: BLOCK_SIZE_PX, height: BLOCK_SIZE_PX }}
-                  class="flex items-center justify-center hover:bg-stone-300 rounded"
-                  onClick={toggleIsOpen}
-                  type="button"
-                >
-                  <NavigationArrowIcon isOpen={isOpen()} size={16} />
-                </button>
-              </Show>
-            </div>
+            <NavigationArrow
+              isOpen={isOpen()}
+              hasChildren={hasChildren()}
+              size={16}
+              onClick={toggleIsOpen}
+            />
 
-            {/* Folder/Favicon + Title */}
             <div class="flex flex-row items-center">
-              {/* Folder or Favicon */}
-              <div style={{ width: BLOCK_SIZE_PX, height: BLOCK_SIZE_PX }}>
-                <div class="flex items-center justify-center">
-                  <Show when={isFolder()}>
-                    <FolderIcon isOpen={isOpen()} size={16} />
-                  </Show>
-                  <Show when={isBookmark()}>
-                    <Favicon url={`https://${props.bookmark.host}`} width="16" height="16" />
-                  </Show>
-                </div>
-              </div>
+              <NodeIcon
+                isOpen={isOpen()}
+                isFolder={isFolder()}
+                isBookmark={isBookmark()}
+                host={props.bookmark.host}
+                size={16}
+              />
 
               {/* Title */}
               <EditableTitle
@@ -254,6 +242,55 @@ const BookmarkNode: Component<Props> = (props) => {
         </ul>
       </Show>
     </li>
+  );
+};
+
+type NavigationArrowProps = {
+  isOpen: boolean;
+  hasChildren: boolean;
+  size: number;
+  onClick: (e: MouseEvent) => void;
+};
+
+const NavigationArrow: Component<NavigationArrowProps> = (props) => {
+  return (
+    <div style={{ width: BLOCK_SIZE_PX, height: BLOCK_SIZE_PX }}>
+      <Show when={props.hasChildren}>
+        <button
+          style={{ width: BLOCK_SIZE_PX, height: BLOCK_SIZE_PX }}
+          class="flex items-center justify-center hover:bg-stone-300 rounded"
+          onClick={props.onClick}
+          type="button"
+        >
+          <NavigationArrowIcon isOpen={props.isOpen} size={props.size} />
+        </button>
+      </Show>
+    </div>
+  );
+};
+
+type NodeIconProps = {
+  isOpen: boolean;
+  isFolder: boolean;
+  isBookmark: boolean;
+  host: string | null;
+  size: number;
+};
+
+const NodeIcon: Component<NodeIconProps> = (props) => {
+  return (
+    <div style={{ width: BLOCK_SIZE_PX, height: BLOCK_SIZE_PX }}>
+      <div class="flex items-center justify-center">
+        <Switch>
+          <Match when={props.isFolder}>
+            <FolderIcon isOpen={props.isOpen} size={props.size} />
+          </Match>
+          <Match when={props.isBookmark && props.host}>
+            <Favicon url={`https://${props.host}`} width={props.size} height={props.size} />
+          </Match>
+        </Switch>
+      </div>
+    </div>
   );
 };
 
