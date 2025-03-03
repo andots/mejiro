@@ -41,6 +41,8 @@ const BookmarkNode: Component<Props> = (props) => {
   // Edit
   const [isEditing, setEditingStatus] = createSignal(false);
 
+  const isActive = () => useBookmark().activeIndex === props.bookmark.index;
+
   // destructuring props as reactive
   const isOpen = () => props.bookmark.is_open;
   const hasChildren = () => props.bookmark.children?.length > 0;
@@ -72,6 +74,7 @@ const BookmarkNode: Component<Props> = (props) => {
     if (hasChildren() && isFolder()) {
       // If the node has children and is folder, toggle the open state
       useBookmark().toggleIsOpen(props.bookmark.index);
+      useBookmark().setActiveIndex(props.bookmark.index);
     } else if (props.bookmark.url && isBookmark()) {
       if (externalState() === "right") {
         // navigate to the bookmark url
@@ -81,6 +84,7 @@ const BookmarkNode: Component<Props> = (props) => {
         useWindowState.getState().changeExternalState("right");
         useUrl().navigateToUrl(props.bookmark.url);
       }
+      useBookmark().setActiveIndex(props.bookmark.index);
     }
   };
 
@@ -110,6 +114,8 @@ const BookmarkNode: Component<Props> = (props) => {
   const handleContextMenu = async (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+
+    useBookmark().setActiveIndex(props.bookmark.index);
 
     const separatorItem = await PredefinedMenuItem.new({ item: "Separator" });
     const openItem = await MenuItem.new({
@@ -181,6 +187,9 @@ const BookmarkNode: Component<Props> = (props) => {
         <div
           class="flex flex-col hover:bg-sidebar-accent transition-colors duration-150 cursor-pointer"
           style={{ "padding-left": `${paddingLevel()}px` }}
+          classList={{
+            "bg-sidebar-accent": isActive(),
+          }}
         >
           {/* Empty fixed space for Indicator */}
           <div style={{ width: INDICATOR_WIDTH, height: INDICATOR_HEIGHT }} />
