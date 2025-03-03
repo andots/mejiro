@@ -17,8 +17,14 @@ type Props = {
 
 const EditableTitle: Component<Props> = (props) => {
   const [ref, setRef] = createSignal<HTMLInputElement | null>(null);
-  const [value, setValue] = createSignal<string>(props.title);
+  const [value, setValue] = createSignal<string>("");
 
+  // set the value to the title when editing starts
+  createEffect(() => {
+    setValue(props.title);
+  });
+
+  // focus the input element when editing starts
   createEffect(() => {
     if (ref()) ref()?.focus();
   });
