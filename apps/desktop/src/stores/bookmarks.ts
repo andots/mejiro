@@ -3,6 +3,11 @@ import { createWithSignal } from "solid-zustand";
 import { Invoke } from "../invokes";
 import type { NestedBookmark, FolderData, ToolbarBookmarkData } from "../types";
 
+export const getFolders = async () => {
+  const folders = await Invoke.GetRootAndChildrenFolders();
+  return folders;
+};
+
 type BookmarkState = {
   bookmarks: NestedBookmark | null;
   toolbarBookmarks: ToolbarBookmarkData[];
@@ -13,7 +18,6 @@ type BookmarkState = {
   setActiveIndex: (index: number | null) => void;
   setEditingIndex: (index: number | null) => void;
   getCurrentTopLevel: () => number;
-  getFolders: () => Promise<FolderData[]>;
   getBookmarks: (index: number) => Promise<void>;
   getToolbarBookmarks: () => Promise<void>;
   addBookmark: (title: string, url: string) => Promise<void>;
@@ -50,10 +54,6 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
       return bookmarks.index;
     }
     return 1;
-  },
-  getFolders: async () => {
-    const folders = await Invoke.GetRootAndChildrenFolders();
-    return folders;
   },
   getToolbarBookmarks: async () => {
     const toolbarBookmarks = await Invoke.GetToolbarBookmarks();
