@@ -35,12 +35,12 @@ impl Bookmarks {
 /// Adding
 impl Bookmarks {
     /// Add folder
-    pub fn add_folder(&mut self, parent_index: usize, title: &str) -> Result<(), CoreError> {
+    pub fn add_folder(&mut self, parent_index: usize, title: &str) -> Result<usize, CoreError> {
         let parent_node_id = self.find_node_id_by_index(parent_index)?;
         let new_folder = BookmarkData::new_folder(title);
         let new_node = self.arena.new_node(new_folder);
         parent_node_id.checked_append(new_node, &mut self.arena)?;
-        Ok(())
+        Ok(new_node.into())
     }
 
     /// Adds a new bookmark by comparing paths between the given URL and existing URLs

@@ -12,10 +12,13 @@ type Props = {
   width: number;
   isEditing: boolean;
   shouldHighLight: boolean;
-  setEditingStatus: (value: boolean) => void;
 };
 
 const EditableTitle: Component<Props> = (props) => {
+  const updateBookmarkTitle = useBookmarkState((state) => state.updateBookmarkTitle);
+  const setTreeLockState = useBookmarkState((state) => state.setTreeLockState);
+  const setEditingIndex = useBookmarkState((state) => state.setEditingIndex);
+
   const [ref, setRef] = createSignal<HTMLInputElement | null>(null);
   const [value, setValue] = createSignal<string>("");
 
@@ -28,9 +31,6 @@ const EditableTitle: Component<Props> = (props) => {
   createEffect(() => {
     if (ref()) ref()?.focus();
   });
-
-  const updateBookmarkTitle = useBookmarkState((state) => state.updateBookmarkTitle);
-  const setTreeLockState = useBookmarkState((state) => state.setTreeLockState);
 
   const title = () => (isDev() ? `${props.index} - ${props.title}` : props.title);
 
@@ -54,8 +54,8 @@ const EditableTitle: Component<Props> = (props) => {
     if (value() !== props.title) {
       await updateBookmarkTitle(props.index, value());
     }
-    props.setEditingStatus(false);
     setTreeLockState(false);
+    setEditingIndex(null);
   };
 
   const handleContextMenu = async (e: MouseEvent) => {

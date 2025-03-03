@@ -4,6 +4,7 @@ use mejiro_core::{
     bookmarks::{Bookmarks, NestedBookmark},
     data::{FolderData, ToolbarBookmarkData},
 };
+use serde::Serialize;
 
 use crate::error::AppError;
 
@@ -100,19 +101,30 @@ pub fn update_bookmark_title(
     Ok(bookmarks.to_nested_bookmark(top_level_index)?)
 }
 
+#[derive(Serialize)]
+pub struct AddFolderResponse {
+    index: usize,
+    bookmarks: NestedBookmark,
+}
+
 #[tauri::command]
 pub fn add_folder(
     state: tauri::State<'_, Mutex<Bookmarks>>,
     parent_index: usize,
     title: String,
     top_level_index: usize,
-) -> Result<NestedBookmark, AppError> {
+) -> Result<AddFolderResponse, AppError> {
     let mut bookmarks = state
         .lock()
         .map_err(|_| AppError::Mutex("can't get bookmarks".to_string()))?;
-    bookmarks.add_folder(parent_index, &title)?;
 
-    Ok(bookmarks.to_nested_bookmark(top_level_index)?)
+    let index = bookmarks.add_folder(parent_index, &title)?;
+    let nested = bookmarks.to_nested_bookmark(top_level_index)?;
+
+    Ok(AddFolderResponse {
+        index,
+        bookmarks: nested,
+    })
 }
 
 #[tauri::command]

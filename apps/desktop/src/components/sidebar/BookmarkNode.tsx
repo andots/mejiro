@@ -1,4 +1,4 @@
-import { type Component, createSignal, For, Match, Show, Switch } from "solid-js";
+import { type Component, For, Match, Show, Switch } from "solid-js";
 
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 
@@ -39,9 +39,8 @@ const BookmarkNode: Component<Props> = (props) => {
   const setTreeLockState = useBookmarkState((state) => state.setTreeLockState);
 
   // Edit
-  const [isEditing, setEditingStatus] = createSignal(false);
-
   const isActive = () => useBookmark().activeIndex === props.bookmark.index;
+  const isEditing = () => useBookmark().editingIndex === props.bookmark.index;
 
   // destructuring props as reactive
   const isOpen = () => props.bookmark.is_open;
@@ -128,15 +127,14 @@ const BookmarkNode: Component<Props> = (props) => {
     });
     const addFolderItem = await MenuItem.new({
       text: "Add Folder",
-      action: () => {
-        // TODO: find better way to add folder, now it's just added. Need to be editable and focus it after adding.
-        useBookmark().addFolder(props.bookmark.index, "New Folder");
+      action: async () => {
+        await useBookmark().addFolder(props.bookmark.index, "New Folder");
       },
     });
     const editItem = await MenuItem.new({
       text: "Edit",
       action: () => {
-        setEditingStatus(true);
+        useBookmark().setEditingIndex(props.bookmark.index);
         setTreeLockState(true);
       },
     });
@@ -217,7 +215,6 @@ const BookmarkNode: Component<Props> = (props) => {
                 title={props.bookmark.title}
                 width={titleWidth()}
                 isEditing={isEditing()}
-                setEditingStatus={setEditingStatus}
                 shouldHighLight={shouldHighLight()}
               />
             </div>

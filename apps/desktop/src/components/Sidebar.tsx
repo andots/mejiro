@@ -28,12 +28,12 @@ const Sidebar: Component = () => {
   });
 
   const handleSelectChange = (val: FolderData | null) => {
-    if (val !== null && val.index >= 1) {
-      if (isDev()) console.log("handleSelectChange Folder: ", val);
-
-      setSelectValue(val);
-      useBookmark().getBookmarks(val.index);
-    }
+    // TODO: control handle on change only it's required for rendering
+    // if (val !== null && val.index >= 1) {
+    //   if (isDev()) console.log("handleSelectChange Folder: ", val);
+    //   setSelectValue(val);
+    //   useBookmark().getBookmarks(val.index);
+    // }
   };
 
   const handleContextMenu = (e: MouseEvent) => {

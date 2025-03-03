@@ -6,6 +6,7 @@ import type {
   Rect,
   UserSettings,
   NestedBookmark,
+  AddFolderResponse,
 } from "./types";
 
 export const Invoke = {
@@ -32,7 +33,7 @@ export const Invoke = {
     return invoke<NestedBookmark>("update_bookmark_title", { index, title, topLevelIndex });
   },
   AddFolder: async (parentIndex: number, title: string, topLevelIndex: number) => {
-    return invoke<NestedBookmark>("add_folder", { parentIndex, title, topLevelIndex });
+    return invoke<AddFolderResponse>("add_folder", { parentIndex, title, topLevelIndex });
   },
   InsertAfter: async (sourceIndex: number, destinationIndex: number, topLevelIndex: number) => {
     return invoke<NestedBookmark>("insert_after", {

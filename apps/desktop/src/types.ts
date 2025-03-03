@@ -10,6 +10,11 @@ export type NestedBookmark = {
   children: NestedBookmark[];
 };
 
+export type AddFolderResponse = {
+  index: number;
+  bookmarks: NestedBookmark;
+};
+
 //! Must sync with core/src/data.rs
 export type FolderData = {
   index: number;

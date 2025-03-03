@@ -9,8 +9,10 @@ type BookmarkState = {
   toolbarBookmarks: ToolbarBookmarkData[];
   isTreeLocked: boolean;
   activeIndex: number | null;
+  editingIndex: number | null;
   setTreeLockState: (value: boolean) => void;
   setActiveIndex: (index: number | null) => void;
+  setEditingIndex: (index: number | null) => void;
   getCurrentTopLevel: () => number;
   getFolders: () => Promise<void>;
   getBookmarks: (index: number) => Promise<void>;
@@ -34,11 +36,15 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
   toolbarBookmarks: [],
   isTreeLocked: false,
   activeIndex: null,
+  editingIndex: null,
   setTreeLockState: (value) => {
     set(() => ({ isTreeLocked: value }));
   },
   setActiveIndex: (index) => {
     set(() => ({ activeIndex: index }));
+  },
+  setEditingIndex: (index) => {
+    set(() => ({ editingIndex: index }));
   },
   getCurrentTopLevel: () => {
     const bookmarks = get().bookmarks;
@@ -89,8 +95,8 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
   },
   addFolder: async (parentIndex, title) => {
     const topLevelIndex = get().getCurrentTopLevel();
-    const bookmarks = await Invoke.AddFolder(parentIndex, title, topLevelIndex);
-    set(() => ({ bookmarks }));
+    const res = await Invoke.AddFolder(parentIndex, title, topLevelIndex);
+    set(() => ({ bookmarks: res.bookmarks, editingIndex: res.index }));
     // update the folders list
     get().getFolders();
   },
