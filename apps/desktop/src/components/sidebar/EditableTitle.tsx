@@ -85,7 +85,7 @@ const EditableTitle: Component<Props> = (props) => {
             "font-size": `${BOOKMARK_NODE_FONT_SIZE}px`,
             width: `${props.width}px`,
           }}
-          class="flex border bg-background px-1 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
+          class="flex border bg-background mx-1 px-1 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-0"
         />
       </Match>
       <Match when={!props.isEditing}>

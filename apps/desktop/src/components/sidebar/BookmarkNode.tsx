@@ -194,7 +194,7 @@ const BookmarkNode: Component<Props> = (props) => {
           {/* Empty fixed space for Indicator */}
           <div style={{ width: INDICATOR_WIDTH, height: INDICATOR_HEIGHT }} />
 
-          <div class="flex flex-row">
+          <div class="flex flex-row items-center">
             <NavigationArrow
               isOpen={isOpen()}
               hasChildren={hasChildren()}
@@ -254,7 +254,10 @@ type NavigationArrowProps = {
 
 const NavigationArrow: Component<NavigationArrowProps> = (props) => {
   return (
-    <div style={{ width: BLOCK_SIZE_PX, height: BLOCK_SIZE_PX }}>
+    <div
+      style={{ width: BLOCK_SIZE_PX, height: BLOCK_SIZE_PX }}
+      class="flex items-center justify-center"
+    >
       <Show when={props.hasChildren}>
         <button
           style={{ width: BLOCK_SIZE_PX, height: BLOCK_SIZE_PX }}
@@ -279,17 +282,18 @@ type NodeIconProps = {
 
 const NodeIcon: Component<NodeIconProps> = (props) => {
   return (
-    <div style={{ width: BLOCK_SIZE_PX, height: BLOCK_SIZE_PX }}>
-      <div class="flex items-center justify-center">
-        <Switch>
-          <Match when={props.isFolder}>
-            <FolderIcon isOpen={props.isOpen} size={props.size} />
-          </Match>
-          <Match when={props.isBookmark && props.host}>
-            <Favicon url={`https://${props.host}`} width={props.size} height={props.size} />
-          </Match>
-        </Switch>
-      </div>
+    <div
+      style={{ width: BLOCK_SIZE_PX, height: BLOCK_SIZE_PX }}
+      class="flex items-center justify-center"
+    >
+      <Switch>
+        <Match when={props.isFolder}>
+          <FolderIcon isOpen={props.isOpen} size={props.size} />
+        </Match>
+        <Match when={props.isBookmark && props.host}>
+          <Favicon url={`https://${props.host}`} width={props.size} height={props.size} />
+        </Match>
+      </Switch>
     </div>
   );
 };
