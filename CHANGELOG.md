@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.25.1](https://github.com/andots/mejiro/compare/v0.25.0...v0.25.1) (2025-03-03)
+
+
+### Bug Fixes
+
+* **front:** fixed node container height, update EditableTitle to use dynamic font size from props ([de3a6b4](https://github.com/andots/mejiro/commit/de3a6b46e7ebd392d771ffdaa54ee7588878b963))
+* **front:** highlight NodeIcon and Title while dragging inside ([c768302](https://github.com/andots/mejiro/commit/c768302e51a4423b6d42766d3d6e591ca0f9ca81))
+* **front:** remove unnecessary div in BookmarkNode component for improved structure ([83467ea](https://github.com/andots/mejiro/commit/83467eadc986697865a7f6eb57a4f266b2052428))
+* **front:** reset active index on drag start in BookmarkNode component ([034ae91](https://github.com/andots/mejiro/commit/034ae9111305b0bb4678ca922ee89f59f4b42c47))
+* **front:** update BookmarkNode component to use consistent sizing for icons and font ([08daba8](https://github.com/andots/mejiro/commit/08daba8d137e8d9be1051d41a450b27c2e3acaa7))
+* **front:** update BookmarkNode component to use dynamic sizing for icons and navigation arrows ([49ff5e1](https://github.com/andots/mejiro/commit/49ff5e136f6fb9a9a4cbf9f7d469a89c2a7f36ed))
+
 # [0.25.0](https://github.com/andots/mejiro/compare/v0.24.1...v0.25.0) (2025-03-03)
 
 
