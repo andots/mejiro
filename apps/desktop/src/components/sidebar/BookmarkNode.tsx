@@ -191,7 +191,9 @@ const BookmarkNode: Component<Props> = (props) => {
           <NavigationArrow
             isOpen={isOpen()}
             hasChildren={hasChildren()}
-            size={16}
+            width={BLOCK_SIZE_PX}
+            height={BLOCK_SIZE_PX}
+            iconSize={16}
             onClick={toggleIsOpen}
           />
 
@@ -201,7 +203,9 @@ const BookmarkNode: Component<Props> = (props) => {
               isFolder={isFolder()}
               isBookmark={isBookmark()}
               host={props.bookmark.host}
-              size={16}
+              width={BLOCK_SIZE_PX}
+              height={BLOCK_SIZE_PX}
+              iconSize={16}
             />
 
             {/* Title */}
@@ -239,24 +243,26 @@ const BookmarkNode: Component<Props> = (props) => {
 type NavigationArrowProps = {
   isOpen: boolean;
   hasChildren: boolean;
-  size: number;
+  width: string;
+  height: string;
+  iconSize: number;
   onClick: (e: MouseEvent) => void;
 };
 
 const NavigationArrow: Component<NavigationArrowProps> = (props) => {
   return (
     <div
-      style={{ width: BLOCK_SIZE_PX, height: BLOCK_SIZE_PX }}
+      style={{ width: props.width, height: props.height }}
       class="flex items-center justify-center"
     >
       <Show when={props.hasChildren}>
         <button
-          style={{ width: BLOCK_SIZE_PX, height: BLOCK_SIZE_PX }}
+          style={{ width: props.width, height: props.height }}
           class="flex items-center justify-center hover:bg-stone-300 rounded"
           onClick={props.onClick}
           type="button"
         >
-          <NavigationArrowIcon isOpen={props.isOpen} size={props.size} />
+          <NavigationArrowIcon isOpen={props.isOpen} size={props.iconSize} />
         </button>
       </Show>
     </div>
@@ -268,21 +274,23 @@ type NodeIconProps = {
   isFolder: boolean;
   isBookmark: boolean;
   host: string | null;
-  size: number;
+  width: string;
+  height: string;
+  iconSize: number;
 };
 
 const NodeIcon: Component<NodeIconProps> = (props) => {
   return (
     <div
-      style={{ width: BLOCK_SIZE_PX, height: BLOCK_SIZE_PX }}
+      style={{ width: props.width, height: props.height }}
       class="flex items-center justify-center"
     >
       <Switch>
         <Match when={props.isFolder}>
-          <FolderIcon isOpen={props.isOpen} size={props.size} />
+          <FolderIcon isOpen={props.isOpen} size={props.iconSize} />
         </Match>
         <Match when={props.isBookmark && props.host}>
-          <Favicon url={`https://${props.host}`} width={props.size} height={props.size} />
+          <Favicon url={`https://${props.host}`} width={props.iconSize} height={props.iconSize} />
         </Match>
       </Switch>
     </div>
