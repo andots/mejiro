@@ -10,6 +10,7 @@ import {
   INDICATOR_HEIGHT,
   RESIZE_HANDLE_WIDTH,
   BLOCK_SIZE,
+  BOOKMARK_NODE_FONT_SIZE,
 } from "../../constants";
 
 import { useUrlState } from "../../stores/url";
@@ -187,7 +188,7 @@ const BookmarkNode: Component<Props> = (props) => {
         {/* Empty fixed space for Indicator */}
         <div style={{ width: INDICATOR_WIDTH, height: INDICATOR_HEIGHT }} />
 
-        <div class="flex flex-row items-center">
+        <div class="flex flex-row items-center" style={{ height: BLOCK_SIZE_PX }}>
           <NavigationArrow
             isOpen={isOpen()}
             hasChildren={hasChildren()}
@@ -213,6 +214,7 @@ const BookmarkNode: Component<Props> = (props) => {
               index={props.bookmark.index}
               title={props.bookmark.title}
               width={titleWidth()}
+              fontSize={BOOKMARK_NODE_FONT_SIZE}
               isEditing={isEditing()}
               shouldHighLight={shouldHighLight()}
             />

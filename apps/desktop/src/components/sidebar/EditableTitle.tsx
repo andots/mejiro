@@ -2,7 +2,6 @@ import { createEffect, createSignal, Match, Switch, type Component } from "solid
 
 import { Menu, PredefinedMenuItem } from "@tauri-apps/api/menu";
 
-import { BOOKMARK_NODE_FONT_SIZE } from "../../constants";
 import { useBookmarkState } from "../../stores/bookmarks";
 import { isDev } from "../../utils";
 
@@ -10,6 +9,7 @@ type Props = {
   index: number;
   title: string;
   width: number;
+  fontSize: number;
   isEditing: boolean;
   shouldHighLight: boolean;
 };
@@ -21,6 +21,8 @@ const EditableTitle: Component<Props> = (props) => {
 
   const [ref, setRef] = createSignal<HTMLInputElement | null>(null);
   const [value, setValue] = createSignal<string>("");
+
+  const title = () => (isDev() ? `${props.index} - ${props.title}` : props.title);
 
   // set the value to the title when editing starts
   createEffect(() => {
@@ -34,8 +36,6 @@ const EditableTitle: Component<Props> = (props) => {
       ref()?.select();
     }
   });
-
-  const title = () => (isDev() ? `${props.index} - ${props.title}` : props.title);
 
   const handleKeydown = async (e: KeyboardEvent) => {
     if (e.key === "Enter") {
@@ -78,7 +78,7 @@ const EditableTitle: Component<Props> = (props) => {
           onKeyDown={handleKeydown}
           onContextMenu={handleContextMenu}
           style={{
-            "font-size": `${BOOKMARK_NODE_FONT_SIZE}px`,
+            "font-size": `${props.fontSize}px`,
             width: `${props.width}px`,
           }}
           class="flex border bg-background mx-1 px-1 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-0"
@@ -88,7 +88,7 @@ const EditableTitle: Component<Props> = (props) => {
         <div
           class="pl-1 overflow-hidden whitespace-nowrap text-ellipsis"
           style={{
-            "font-size": `${BOOKMARK_NODE_FONT_SIZE}px`,
+            "font-size": `${props.fontSize}px`,
             width: `${props.width}px`,
           }}
           classList={{
