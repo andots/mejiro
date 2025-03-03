@@ -5,12 +5,14 @@ import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 import type { NestedBookmark } from "../../types";
 
 import {
-  BLOCK_SIZE_PX,
+  NODE_ICON_BLOCK_SIZE_PX,
   INDICATOR_WIDTH,
   INDICATOR_HEIGHT,
   RESIZE_HANDLE_WIDTH,
-  BLOCK_SIZE,
-  BOOKMARK_NODE_FONT_SIZE,
+  NODE_ICON_BLOCK_SIZE,
+  NODE_FONT_SIZE,
+  NODE_ICON_SIZE,
+  NODE_HEIGHT_PX,
 } from "../../constants";
 
 import { useUrlState } from "../../stores/url";
@@ -53,7 +55,7 @@ const BookmarkNode: Component<Props> = (props) => {
   // width
   const paddingLevel = () => props.level * 8;
   const titleWidth = () =>
-    sidebarWidth() - paddingLevel() - RESIZE_HANDLE_WIDTH - BLOCK_SIZE * 2 - 20;
+    sidebarWidth() - paddingLevel() - RESIZE_HANDLE_WIDTH - NODE_ICON_BLOCK_SIZE * 2 - 20;
 
   // for draggable
   const isRoot = () => props.bookmark.node_type === "Root";
@@ -188,13 +190,13 @@ const BookmarkNode: Component<Props> = (props) => {
         {/* Empty fixed space for Indicator */}
         <div style={{ width: INDICATOR_WIDTH, height: INDICATOR_HEIGHT }} />
 
-        <div class="flex flex-row items-center" style={{ height: BLOCK_SIZE_PX }}>
+        <div class="flex flex-row items-center" style={{ height: NODE_HEIGHT_PX }}>
           <NavigationArrow
             isOpen={isOpen()}
             hasChildren={hasChildren()}
-            width={BLOCK_SIZE_PX}
-            height={BLOCK_SIZE_PX}
-            iconSize={16}
+            width={NODE_ICON_BLOCK_SIZE_PX}
+            height={NODE_ICON_BLOCK_SIZE_PX}
+            iconSize={NODE_ICON_SIZE}
             onClick={toggleIsOpen}
           />
 
@@ -204,9 +206,9 @@ const BookmarkNode: Component<Props> = (props) => {
               isFolder={isFolder()}
               isBookmark={isBookmark()}
               host={props.bookmark.host}
-              width={BLOCK_SIZE_PX}
-              height={BLOCK_SIZE_PX}
-              iconSize={16}
+              width={NODE_ICON_BLOCK_SIZE_PX}
+              height={NODE_ICON_BLOCK_SIZE_PX}
+              iconSize={NODE_ICON_SIZE}
             />
 
             {/* Title */}
@@ -214,7 +216,7 @@ const BookmarkNode: Component<Props> = (props) => {
               index={props.bookmark.index}
               title={props.bookmark.title}
               width={titleWidth()}
-              fontSize={BOOKMARK_NODE_FONT_SIZE}
+              fontSize={NODE_FONT_SIZE}
               isEditing={isEditing()}
               shouldHighLight={shouldHighLight()}
             />
@@ -225,7 +227,6 @@ const BookmarkNode: Component<Props> = (props) => {
         <div
           style={{ width: INDICATOR_WIDTH, height: INDICATOR_HEIGHT }}
           classList={{
-            "border-b-2": shouldShowIndicator(),
             "bg-blue-300": shouldShowIndicator(),
           }}
         />

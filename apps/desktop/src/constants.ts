@@ -2,11 +2,13 @@ export const HEADER_HEIGHT = 40;
 export const SIDEBAR_MIN_WIDTH = 200;
 export const SIDEBAR_MAX_WIDTH = 600;
 
-export const BOOKMARK_NODE_FONT_SIZE = 13;
 export const INDICATOR_WIDTH = "100px";
-export const INDICATOR_HEIGHT = "4px";
-export const BLOCK_SIZE = 18;
-export const BLOCK_SIZE_PX = `${BLOCK_SIZE}px`;
+export const INDICATOR_HEIGHT = "2px";
+export const NODE_FONT_SIZE = 13;
+export const NODE_HEIGHT_PX = `${NODE_FONT_SIZE + 10}px`;
+export const NODE_ICON_BLOCK_SIZE = NODE_FONT_SIZE + 5;
+export const NODE_ICON_BLOCK_SIZE_PX = `${NODE_ICON_BLOCK_SIZE}px`;
+export const NODE_ICON_SIZE = NODE_FONT_SIZE + 3;
 export const RESIZE_HANDLE_WIDTH = 4;
 export const SELECT_BOX_WIDTH = 180;
 
