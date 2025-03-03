@@ -8,7 +8,6 @@ import { useWindowState } from "../stores/window";
 import FolderSelect from "./sidebar/FolderSelect";
 import BookmarkTree from "./sidebar/BookmarkTree";
 import type { FolderData } from "../types";
-import { isDev } from "../utils";
 
 const Sidebar: Component = () => {
   const bookmarks = useBookmarkState((state) => state.bookmarks);
@@ -23,7 +22,7 @@ const Sidebar: Component = () => {
       // TODO: stop calling getFolders() every time bookmarks state change
       const folders = await getFolders();
       setFolders(folders);
-      if (isDev()) console.log("createEffect on Sidebar to getFolders", folders);
+      // if (isDev()) console.log("createEffect on Sidebar to getFolders", folders);
     }),
   );
 
