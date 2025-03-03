@@ -17,6 +17,7 @@ import PageLoadingBar from "./PageLoadingBar";
 import ToolBar from "./ToolBar";
 import Sidebar from "./Sidebar";
 import SidebarRisizer from "./SidebarResizer";
+import { useBookmarkState } from "../stores/bookmarks";
 
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const SettingsPage = lazy(() => import("./pages/SettingsPage"));
@@ -26,6 +27,7 @@ const App: Component = () => {
   const useSettings = useSettingsState();
   const useUrl = useUrlState();
   const useWindow = useWindowState();
+  const useBookmark = useBookmarkState();
 
   let unlistenSettingsUpdated: UnlistenFn;
   let unlistenExternalNavigation: UnlistenFn;
@@ -36,6 +38,7 @@ const App: Component = () => {
   onMount(async () => {
     // get data from rust side for zustand stores
     await useSettings().getSettings();
+    await useBookmark().getBookmarks(1);
 
     // listen for settings updated events on rust side
     unlistenSettingsUpdated = await listen<string>(AppEvent.SettingsUpdated, (event) => {

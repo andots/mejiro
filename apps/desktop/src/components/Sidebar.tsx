@@ -1,44 +1,32 @@
-import { createSignal, onMount, Show, type Component } from "solid-js";
-
-import type { FolderData } from "../types";
+import { createEffect, createSignal, on, Show, type Component } from "solid-js";
 
 import { RESIZE_HANDLE_WIDTH } from "../constants";
-import { isDev } from "../utils";
 
 import { useBookmarkState } from "../stores/bookmarks";
 import { useWindowState } from "../stores/window";
 
-import RootChildrenSelect from "./sidebar/RootChildrenSelect";
+import FolderSelect from "./sidebar/FolderSelect";
 import BookmarkTree from "./sidebar/BookmarkTree";
+import type { FolderData } from "../types";
 
 const Sidebar: Component = () => {
-  const useBookmark = useBookmarkState();
   const bookmarks = useBookmarkState((state) => state.bookmarks);
-  const folders = useBookmarkState((state) => state.folders);
   const sidebarWidth = useWindowState((state) => state.sidebarWidth);
+  const [folders, setFolders] = createSignal<FolderData[]>([]);
 
-  const [selectValue, setSelectValue] = createSignal<FolderData | null>(null);
+  createEffect(
+    on(bookmarks, async () => {
+      if (bookmarks() === null) {
+        return;
+      }
+      const folders = await useBookmarkState.getState().getFolders();
+      setFolders(folders);
+    }),
+  );
 
-  onMount(async () => {
-    await useBookmark().getFolders();
-    if (folders().length > 0) {
-      setSelectValue(folders()[0]);
-      await useBookmark().getBookmarks(folders()[0].index);
-    }
-  });
-
-  const handleSelectChange = (val: FolderData | null) => {
-    // TODO: control handle on change only it's required for rendering
-    // if (val !== null && val.index >= 1) {
-    //   if (isDev()) console.log("handleSelectChange Folder: ", val);
-    //   setSelectValue(val);
-    //   useBookmark().getBookmarks(val.index);
-    // }
-  };
-
+  // disable default browser right click context menu only inside main div
+  // Ctrl + Shift + I will still work for opening dev tools
   const handleContextMenu = (e: MouseEvent) => {
-    // disable default browser right click context menu only inside main div
-    // Ctrl + Shift + I will still work for opening dev tools
     e.preventDefault();
   };
 
@@ -49,12 +37,8 @@ const Sidebar: Component = () => {
       onContextMenu={handleContextMenu}
     >
       <div class="flex-none h-[40px] my-2 pl-2">
-        <Show when={folders().length > 0 && selectValue() !== null}>
-          <RootChildrenSelect
-            folders={folders()}
-            value={selectValue()}
-            onChange={(val) => handleSelectChange(val)}
-          />
+        <Show when={folders().length > 0}>
+          <FolderSelect folders={folders()} />
         </Show>
       </div>
       <div

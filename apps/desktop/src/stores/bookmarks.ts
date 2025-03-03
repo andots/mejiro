@@ -4,7 +4,6 @@ import { Invoke } from "../invokes";
 import type { NestedBookmark, FolderData, ToolbarBookmarkData } from "../types";
 
 type BookmarkState = {
-  folders: FolderData[];
   bookmarks: NestedBookmark | null;
   toolbarBookmarks: ToolbarBookmarkData[];
   isTreeLocked: boolean;
@@ -14,7 +13,7 @@ type BookmarkState = {
   setActiveIndex: (index: number | null) => void;
   setEditingIndex: (index: number | null) => void;
   getCurrentTopLevel: () => number;
-  getFolders: () => Promise<void>;
+  getFolders: () => Promise<FolderData[]>;
   getBookmarks: (index: number) => Promise<void>;
   getToolbarBookmarks: () => Promise<void>;
   addBookmark: (title: string, url: string) => Promise<void>;
@@ -31,7 +30,6 @@ type BookmarkState = {
 };
 
 export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
-  folders: [],
   bookmarks: null,
   toolbarBookmarks: [],
   isTreeLocked: false,
@@ -55,7 +53,7 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
   },
   getFolders: async () => {
     const folders = await Invoke.GetRootAndChildrenFolders();
-    set(() => ({ folders }));
+    return folders;
   },
   getToolbarBookmarks: async () => {
     const toolbarBookmarks = await Invoke.GetToolbarBookmarks();
@@ -90,43 +88,31 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
     const topLevelIndex = get().getCurrentTopLevel();
     const bookmarks = await Invoke.UpdateBookmarkTitle(index, title, topLevelIndex);
     set(() => ({ bookmarks }));
-    // update the folders list
-    get().getFolders();
   },
   addFolder: async (parentIndex, title) => {
     const topLevelIndex = get().getCurrentTopLevel();
     const res = await Invoke.AddFolder(parentIndex, title, topLevelIndex);
     set(() => ({ bookmarks: res.bookmarks, editingIndex: res.index }));
-    // update the folders list
-    get().getFolders();
   },
   insertAfter: async (sourceIndex, destinationIndex) => {
     const topLevelIndex = get().getCurrentTopLevel();
     const bookmarks = await Invoke.InsertAfter(sourceIndex, destinationIndex, topLevelIndex);
     set(() => ({ bookmarks }));
-    // update the folders list
-    get().getFolders();
   },
   insertBefore: async (sourceIndex, destinationIndex) => {
     const topLevelIndex = get().getCurrentTopLevel();
     const bookmarks = await Invoke.InsertBefore(sourceIndex, destinationIndex, topLevelIndex);
     set(() => ({ bookmarks }));
-    // update the folders list
-    get().getFolders();
   },
   appendToChild: async (sourceIndex, destinationIndex) => {
     const topLevelIndex = get().getCurrentTopLevel();
     const bookmarks = await Invoke.AppendToChild(sourceIndex, destinationIndex, topLevelIndex);
     set(() => ({ bookmarks }));
-    // update the folders list
-    get().getFolders();
   },
   prependToChild: async (sourceIndex, destinationIndex) => {
     const topLevelIndex = get().getCurrentTopLevel();
     const bookmarks = await Invoke.PrependToChild(sourceIndex, destinationIndex, topLevelIndex);
     set(() => ({ bookmarks }));
-    // update the folders list
-    get().getFolders();
   },
   setIsOpen: async (index, isOpen) => {
     const topLevelIndex = get().getCurrentTopLevel();
