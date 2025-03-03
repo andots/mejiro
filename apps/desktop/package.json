@@ -13,7 +13,6 @@
     "@fontsource/inter": "^5.1.1",
     "@repo/top-loading-bar": "workspace:*",
     "@repo/ui": "workspace:*",
-    "@solid-primitives/autofocus": "^0.1.0",
     "@solid-primitives/event-listener": "^2.4.0",
     "@solidjs/router": "^0.15.3",
     "@tauri-apps/api": "^2.2.0",

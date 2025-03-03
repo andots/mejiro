@@ -1,8 +1,6 @@
-import { createSignal, Show, type Component } from "solid-js";
+import { createEffect, createSignal, Show, type Component } from "solid-js";
 
 import { Menu, PredefinedMenuItem } from "@tauri-apps/api/menu";
-
-import { createAutofocus } from "@solid-primitives/autofocus";
 
 import { BOOKMARK_NODE_FONT_SIZE } from "../../constants";
 import { useBookmarkState } from "../../stores/bookmarks";
@@ -21,7 +19,9 @@ const EditableTitle: Component<Props> = (props) => {
   const [ref, setRef] = createSignal<HTMLInputElement | null>(null);
   const [value, setValue] = createSignal<string>(props.title);
 
-  createAutofocus(ref);
+  createEffect(() => {
+    if (ref()) ref()?.focus();
+  });
 
   const updateBookmarkTitle = useBookmarkState((state) => state.updateBookmarkTitle);
   const setTreeLockState = useBookmarkState((state) => state.setTreeLockState);
@@ -37,9 +37,9 @@ const EditableTitle: Component<Props> = (props) => {
 
   const handleKeydown = async (e: KeyboardEvent) => {
     if (e.key === "Enter") {
-      // To prevent updating twice, just focus out here.
-      // The title will be updated on handleFocusOut()
-      ref()?.blur();
+      // To prevent updating twice, just focus out(blur) here.
+      // The title will be updated on handleFocusOut
+      if (ref()) ref()?.blur();
     }
   };
 
@@ -68,7 +68,6 @@ const EditableTitle: Component<Props> = (props) => {
     <>
       <Show when={props.isEditing}>
         <input
-          autofocus
           ref={setRef}
           value={value()}
           onFocus={handleFocus}
