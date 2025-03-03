@@ -1,5 +1,24 @@
 # Changelog
 
+# [0.25.0](https://github.com/andots/mejiro/compare/v0.24.1...v0.25.0) (2025-03-03)
+
+
+### Bug Fixes
+
+* **front:** enhance focus behavior in EditableTitle and clean up bookmarks store imports ([17dc963](https://github.com/andots/mejiro/commit/17dc9635d3ee1ae745d71839cffb01f06c97dff3))
+* **front:** enhance layout and styling in BookmarkNode and EditableTitle components ([0535e47](https://github.com/andots/mejiro/commit/0535e474183df05175038e0ca84c55eebb99c2d7))
+* **front:** fix unnecessary data retrieval and rendering by getFolders and FolderSelect ([97eb2b4](https://github.com/andots/mejiro/commit/97eb2b48376ffcfc50a4d742324b5691e0988f9b))
+* **front:** getFolders should be outside of state management ([0bdeaa7](https://github.com/andots/mejiro/commit/0bdeaa7b574f0f441d760a49542689705ba46be0))
+* **front:** initialize EditableTitle value on edit start ([8747875](https://github.com/andots/mejiro/commit/87478757c25a47c32ee2265a400973430785d754))
+* **front:** remove development logging from Sidebar component ([d5a0f76](https://github.com/andots/mejiro/commit/d5a0f762c776633e681764aaeee148a2748340b9))
+* **front:** remove unused autofocus dependency and update focus handling in EditableTitle component ([111aceb](https://github.com/andots/mejiro/commit/111aceb2778ee07648789e37678910428416425e))
+
+
+### Features
+
+* **app,front:** return AddFolderResponse with new folder's index and it can be auto editable ([5b24ad0](https://github.com/andots/mejiro/commit/5b24ad0f2ca5a75a391c0b9e486874a3a262aadd))
+* **front:** add active index state for selecting highlight ([c2e1db2](https://github.com/andots/mejiro/commit/c2e1db200755a48bd5b3786d627c422d2f83bede))
+
 ## [0.24.1](https://github.com/andots/mejiro/compare/v0.24.0...v0.24.1) (2025-03-02)
 
 
