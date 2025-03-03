@@ -102,6 +102,7 @@ const BookmarkNode: Component<Props> = (props) => {
   const handleDragStart = (e: DragEvent) => {
     if (isEditing()) return;
     if (isDraggable()) {
+      useBookmark().setActiveIndex(null);
       useDragging().reset();
       useDragging().setSource(e.target as HTMLDivElement);
     }
