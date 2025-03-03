@@ -171,64 +171,58 @@ const BookmarkNode: Component<Props> = (props) => {
       <div
         id={`bookmark-${props.bookmark.index}`}
         draggable={isDraggable()}
-        class="dropzone"
+        class="dropzone flex flex-col hover:bg-sidebar-accent transition-colors duration-150 cursor-pointer"
         classList={{
           hasChildren: hasChildren(),
           isOpen: isOpen(),
+          "bg-sidebar-accent": isActive(),
         }}
+        style={{ "padding-left": `${paddingLevel()}px` }}
         onClick={handleNodeClick}
         onKeyDown={handleKeydown}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
         onContextMenu={handleContextMenu}
       >
-        <div
-          class="flex flex-col hover:bg-sidebar-accent transition-colors duration-150 cursor-pointer"
-          style={{ "padding-left": `${paddingLevel()}px` }}
-          classList={{
-            "bg-sidebar-accent": isActive(),
-          }}
-        >
-          {/* Empty fixed space for Indicator */}
-          <div style={{ width: INDICATOR_WIDTH, height: INDICATOR_HEIGHT }} />
+        {/* Empty fixed space for Indicator */}
+        <div style={{ width: INDICATOR_WIDTH, height: INDICATOR_HEIGHT }} />
+
+        <div class="flex flex-row items-center">
+          <NavigationArrow
+            isOpen={isOpen()}
+            hasChildren={hasChildren()}
+            size={16}
+            onClick={toggleIsOpen}
+          />
 
           <div class="flex flex-row items-center">
-            <NavigationArrow
+            <NodeIcon
               isOpen={isOpen()}
-              hasChildren={hasChildren()}
+              isFolder={isFolder()}
+              isBookmark={isBookmark()}
+              host={props.bookmark.host}
               size={16}
-              onClick={toggleIsOpen}
             />
 
-            <div class="flex flex-row items-center">
-              <NodeIcon
-                isOpen={isOpen()}
-                isFolder={isFolder()}
-                isBookmark={isBookmark()}
-                host={props.bookmark.host}
-                size={16}
-              />
-
-              {/* Title */}
-              <EditableTitle
-                index={props.bookmark.index}
-                title={props.bookmark.title}
-                width={titleWidth()}
-                isEditing={isEditing()}
-                shouldHighLight={shouldHighLight()}
-              />
-            </div>
+            {/* Title */}
+            <EditableTitle
+              index={props.bookmark.index}
+              title={props.bookmark.title}
+              width={titleWidth()}
+              isEditing={isEditing()}
+              shouldHighLight={shouldHighLight()}
+            />
           </div>
-
-          {/* After Indicator */}
-          <div
-            style={{ width: INDICATOR_WIDTH, height: INDICATOR_HEIGHT }}
-            classList={{
-              "border-b-2": shouldShowIndicator(),
-              "bg-blue-300": shouldShowIndicator(),
-            }}
-          />
         </div>
+
+        {/* After Indicator */}
+        <div
+          style={{ width: INDICATOR_WIDTH, height: INDICATOR_HEIGHT }}
+          classList={{
+            "border-b-2": shouldShowIndicator(),
+            "bg-blue-300": shouldShowIndicator(),
+          }}
+        />
       </div>
 
       <Show when={hasChildren() && isOpen()}>
