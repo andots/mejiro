@@ -11,7 +11,6 @@ type Props = {
   width: number;
   fontSize: number;
   isEditing: boolean;
-  shouldHighLight: boolean;
 };
 
 const EditableTitle: Component<Props> = (props) => {
@@ -90,9 +89,6 @@ const EditableTitle: Component<Props> = (props) => {
           style={{
             "font-size": `${props.fontSize}px`,
             width: `${props.width}px`,
-          }}
-          classList={{
-            "bg-blue-300": props.shouldHighLight,
           }}
         >
           {title()}

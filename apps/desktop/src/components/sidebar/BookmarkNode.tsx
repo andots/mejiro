@@ -200,7 +200,7 @@ const BookmarkNode: Component<Props> = (props) => {
             onClick={toggleIsOpen}
           />
 
-          <div class="flex flex-row items-center">
+          <div class="flex flex-row items-center" classList={{ "bg-blue-300": shouldHighLight() }}>
             <NodeIcon
               isOpen={isOpen()}
               isFolder={isFolder()}
@@ -218,7 +218,6 @@ const BookmarkNode: Component<Props> = (props) => {
               width={titleWidth()}
               fontSize={NODE_FONT_SIZE}
               isEditing={isEditing()}
-              shouldHighLight={shouldHighLight()}
             />
           </div>
         </div>
