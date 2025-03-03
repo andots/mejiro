@@ -1,4 +1,4 @@
-import { createEffect, createSignal, Show, type Component } from "solid-js";
+import { createEffect, createSignal, Match, Switch, type Component } from "solid-js";
 
 import { Menu, PredefinedMenuItem } from "@tauri-apps/api/menu";
 
@@ -71,8 +71,8 @@ const EditableTitle: Component<Props> = (props) => {
   };
 
   return (
-    <>
-      <Show when={props.isEditing}>
+    <Switch>
+      <Match when={props.isEditing}>
         <input
           ref={setRef}
           value={value()}
@@ -87,8 +87,8 @@ const EditableTitle: Component<Props> = (props) => {
           }}
           class="flex border bg-background px-1 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
         />
-      </Show>
-      <Show when={!props.isEditing}>
+      </Match>
+      <Match when={!props.isEditing}>
         <div
           class="pl-1 overflow-hidden whitespace-nowrap text-ellipsis"
           style={{
@@ -101,8 +101,8 @@ const EditableTitle: Component<Props> = (props) => {
         >
           {title()}
         </div>
-      </Show>
-    </>
+      </Match>
+    </Switch>
   );
 };
 
