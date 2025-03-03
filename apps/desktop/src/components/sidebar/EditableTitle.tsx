@@ -29,17 +29,13 @@ const EditableTitle: Component<Props> = (props) => {
 
   // focus the input element when editing starts
   createEffect(() => {
-    if (ref()) ref()?.focus();
+    if (ref()) {
+      ref()?.focus();
+      ref()?.select();
+    }
   });
 
   const title = () => (isDev() ? `${props.index} - ${props.title}` : props.title);
-
-  const handleFocus = (e: FocusEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const target = e.currentTarget as HTMLInputElement;
-    target.select();
-  };
 
   const handleKeydown = async (e: KeyboardEvent) => {
     if (e.key === "Enter") {
@@ -74,9 +70,9 @@ const EditableTitle: Component<Props> = (props) => {
     <Switch>
       <Match when={props.isEditing}>
         <input
+          type="text"
           ref={setRef}
           value={value()}
-          onFocus={handleFocus}
           onFocusOut={handleFocusOut}
           onInput={(e) => setValue(e.currentTarget.value)}
           onKeyDown={handleKeydown}

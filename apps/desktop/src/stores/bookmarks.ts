@@ -1,7 +1,7 @@
 import { createWithSignal } from "solid-zustand";
 
 import { Invoke } from "../invokes";
-import type { NestedBookmark, FolderData, ToolbarBookmarkData } from "../types";
+import type { NestedBookmark, ToolbarBookmarkData } from "../types";
 
 export const getFolders = async () => {
   const folders = await Invoke.GetRootAndChildrenFolders();
