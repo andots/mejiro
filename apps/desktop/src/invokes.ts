@@ -7,6 +7,7 @@ import type {
   UserSettings,
   NestedBookmark,
   AddFolderResponse,
+  AppSettings,
 } from "./types";
 
 export const Invoke = {
@@ -97,5 +98,11 @@ export const Invoke = {
   },
   UpdateSettings: async (settings: UserSettings) => {
     return invoke<UserSettings>("update_settings", { settings });
+  },
+  GetAppSettings: async () => {
+    return invoke<AppSettings>("get_app_settings", {});
+  },
+  UpdateAppSettings: async (settings: AppSettings) => {
+    return invoke<AppSettings>("update_app_settings", { settings });
   },
 } as const;

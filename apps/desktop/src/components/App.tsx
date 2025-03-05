@@ -9,7 +9,7 @@ import { AppEvent } from "../events";
 import { Invoke } from "../invokes";
 
 import { usePageState } from "../stores/pages";
-import { useSettingsState } from "../stores/settings";
+import { useAppSettingsState, useUserSettingsState } from "../stores/settings";
 import { useUrlState } from "../stores/url";
 import { useWindowState } from "../stores/window";
 
@@ -24,7 +24,8 @@ const SettingsPage = lazy(() => import("./pages/SettingsPage"));
 
 const App: Component = () => {
   const page = usePageState((state) => state.page);
-  const useSettings = useSettingsState();
+  const useUserSettings = useUserSettingsState();
+  const useAppSettings = useAppSettingsState();
   const useUrl = useUrlState();
   const useWindow = useWindowState();
   const useBookmark = useBookmarkState();
@@ -37,7 +38,8 @@ const App: Component = () => {
 
   onMount(async () => {
     // get data from rust side for zustand stores
-    await useSettings().getSettings();
+    await useUserSettings().getSettings();
+    await useAppSettings().getSettings();
     await useBookmark().getBookmarks(1);
 
     // listen for settings updated events on rust side

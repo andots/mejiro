@@ -32,6 +32,9 @@ export type ToolbarBookmarkData = {
 export type UserSettings = {
   language: string;
   theme: string;
+};
+
+export type AppSettings = {
   gpu_acceleration_enabled: boolean;
   incognito: boolean;
   start_page_url: string;

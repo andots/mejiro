@@ -190,9 +190,6 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
         let settings = UserSettings {
             language: value.language.clone(),
             theme: value.theme.clone(),
-            gpu_acceleration_enabled: value.gpu_acceleration_enabled,
-            incognito: value.incognito,
-            start_page_url: value.start_page_url.clone(),
         };
         let path = self.get_user_settings_file_path();
         let file = fs::File::create(path)?;

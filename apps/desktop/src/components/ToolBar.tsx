@@ -7,10 +7,10 @@ import { useUrlState } from "../stores/url";
 import { useWindowState } from "../stores/window";
 import { usePageState } from "../stores/pages";
 import { useBookmarkState } from "../stores/bookmarks";
-import { useSettingsState } from "../stores/settings";
 
 import AddressBar from "./toolbar/AddressBar";
 import Favicon from "./icons/Favicon";
+import { useAppSettingsState } from "../stores/settings";
 
 const ToolBar: Component = () => {
   const useUrl = useUrlState();
@@ -18,7 +18,6 @@ const ToolBar: Component = () => {
 
   const bookmarks = useBookmarkState((state) => state.bookmarks);
   const toolbarBookmarks = useBookmarkState((state) => state.toolbarBookmarks);
-  const settings = useSettingsState((state) => state.settings);
   const externalState = useWindowState((state) => state.externalState);
 
   createEffect(
@@ -43,7 +42,8 @@ const ToolBar: Component = () => {
 
   const handleHome = () => {
     setPage("dashboard");
-    useUrl().navigateToUrl(settings().start_page_url);
+    const url = useAppSettingsState.getState().settings.start_page_url;
+    useUrl().navigateToUrl(url);
     if (externalState() === "hidden") {
       useWindow().changeExternalState("right");
     }

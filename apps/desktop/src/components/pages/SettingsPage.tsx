@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo
 import { Switch, SwitchControl, SwitchThumb } from "@repo/ui/switch";
 import { TextField, TextFieldInput } from "@repo/ui/text-field";
 import { Button } from "@repo/ui/button";
-import { useSettingsState } from "../../stores/settings";
+import { useAppSettingsState, useUserSettingsState } from "../../stores/settings";
 import { validateUrl } from "../../utils";
 import { RecommendedSites } from "../../constants";
 import Favicon from "../icons/Favicon";
@@ -15,31 +15,36 @@ import { useBookmarkState } from "../../stores/bookmarks";
 const SettingsPage: Component = () => {
   const useBookmark = useBookmarkState();
 
-  const settings = useSettingsState((state) => state.settings);
-  const updateSettings = useSettingsState((state) => state.updateSettings);
+  const userSettings = useUserSettingsState((state) => state.settings);
+  const updateUserSettings = useUserSettingsState((state) => state.updateSettings);
+
+  const appSettings = useAppSettingsState((state) => state.settings);
+  const updateAppSettings = useAppSettingsState((state) => state.updateSettings);
 
   // const [language, setLanguage] = createSignal(settings().language);
   // const [theme, setTheme] = createSignal(settings().theme);
-  const [gpuAcceleration, setGpuAcceleration] = createSignal(settings().gpu_acceleration_enabled);
-  const [incognito, setIncognito] = createSignal(settings().incognito);
-  const [startPageUrl, setStartPageUrl] = createSignal(settings().start_page_url);
+  const [gpuAcceleration, setGpuAcceleration] = createSignal(
+    appSettings().gpu_acceleration_enabled,
+  );
+  const [incognito, setIncognito] = createSignal(appSettings().incognito);
+  const [startPageUrl, setStartPageUrl] = createSignal(appSettings().start_page_url);
 
   const [isUpdating, setIsUpdating] = createSignal(false);
 
   const handleGpuAccelerationChange = (value: boolean) => {
     setGpuAcceleration(value);
-    updateSettings({ ...settings(), gpu_acceleration_enabled: value });
+    updateAppSettings({ ...appSettings(), gpu_acceleration_enabled: value });
   };
 
   const handleIncognitoChange = (value: boolean) => {
     setIncognito(value);
-    updateSettings({ ...settings(), incognito: value });
+    updateAppSettings({ ...appSettings(), incognito: value });
   };
 
   const handleStartPageUrlUpdate = async () => {
     if (validateUrl(startPageUrl())) {
       setIsUpdating(true);
-      await updateSettings({ ...settings(), start_page_url: startPageUrl() });
+      await updateAppSettings({ ...appSettings(), start_page_url: startPageUrl() });
       // wait for 500ms before setting isUpdating to false
       setTimeout(() => setIsUpdating(false), 500);
     }

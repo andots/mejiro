@@ -102,6 +102,8 @@ pub fn run() {
             commands::bookmarks::toggle_is_open,
             commands::settings::get_settings,
             commands::settings::update_settings,
+            commands::settings::get_app_settings,
+            commands::settings::update_app_settings,
             commands::external::send_page_title,
             commands::external::send_page_url,
         ])
