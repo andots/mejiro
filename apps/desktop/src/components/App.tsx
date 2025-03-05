@@ -40,8 +40,8 @@ const App: Component = () => {
   onMount(async () => {
     // get data from rust side for zustand stores
     await useWindow().setupWindowGeometry();
-    await useUserSettings().getSettings();
-    await useAppSettings().getSettings();
+    await useUserSettings().get();
+    await useAppSettings().get();
     await useBookmark().getBookmarks(1);
 
     // listen for settings updated events on rust side
@@ -76,7 +76,7 @@ const App: Component = () => {
     unlistenCloseRequested = await getCurrentWindow().onCloseRequested(async (event) => {
       const url = useUrl().url;
       if (url !== "") {
-        await useAppSettings().updateSettings({
+        await useAppSettings().update({
           ...useAppSettings().settings,
           start_page_url: url,
         });

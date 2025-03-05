@@ -1,12 +1,14 @@
 import { createWithSignal } from "solid-zustand";
-import { Invoke } from "../invokes";
+
 import type { AppSettings, UserSettings } from "../types";
+
+import { Invoke } from "../invokes";
 import { useUrlState } from "./url";
 
 interface UserSettingsState {
   settings: UserSettings;
-  getSettings: () => Promise<void>;
-  updateSettings: (values: UserSettings) => Promise<void>;
+  get: () => Promise<void>;
+  update: (values: UserSettings) => Promise<void>;
 }
 
 export const useUserSettingsState = createWithSignal<UserSettingsState>((set) => ({
@@ -15,11 +17,11 @@ export const useUserSettingsState = createWithSignal<UserSettingsState>((set) =>
     theme: "light",
     home_page_url: "https://search.brave.com/",
   },
-  getSettings: async () => {
+  get: async () => {
     const settings = await Invoke.GetUserSettings();
     set({ settings });
   },
-  updateSettings: async (values) => {
+  update: async (values) => {
     const settings = await Invoke.UpdateUserSettings(values);
     set({ settings });
   },
@@ -27,8 +29,8 @@ export const useUserSettingsState = createWithSignal<UserSettingsState>((set) =>
 
 interface AppSettingsState {
   settings: AppSettings;
-  getSettings: () => Promise<void>;
-  updateSettings: (values: AppSettings) => Promise<void>;
+  get: () => Promise<void>;
+  update: (values: AppSettings) => Promise<void>;
 }
 
 export const useAppSettingsState = createWithSignal<AppSettingsState>((set) => ({
@@ -37,12 +39,12 @@ export const useAppSettingsState = createWithSignal<AppSettingsState>((set) => (
     incognito: true,
     start_page_url: "https://search.brave.com/",
   },
-  getSettings: async () => {
+  get: async () => {
     const settings = await Invoke.GetAppSettings();
     useUrlState.getState().setUrl(settings.start_page_url);
     set({ settings });
   },
-  updateSettings: async (values) => {
+  update: async (values) => {
     const settings = await Invoke.UpdateAppSettings(values);
     set({ settings });
   },

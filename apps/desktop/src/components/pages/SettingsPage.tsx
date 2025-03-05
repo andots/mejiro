@@ -14,9 +14,10 @@ import { useBookmarkState } from "../../stores/bookmarks";
 
 const SettingsPage: Component = () => {
   const useBookmark = useBookmarkState();
+  const useAppSettings = useAppSettingsState();
+  const useUserSettings = useUserSettingsState();
 
   // App Settings
-  const useAppSettings = useAppSettingsState();
   const appSettings = useAppSettingsState((state) => state.settings);
   const [gpuAcceleration, setGpuAcceleration] = createSignal(
     appSettings().gpu_acceleration_enabled,
@@ -24,7 +25,6 @@ const SettingsPage: Component = () => {
   const [incognito, setIncognito] = createSignal(appSettings().incognito);
 
   // User Settings
-  const useUserSettings = useUserSettingsState();
   const userSettings = useUserSettingsState((state) => state.settings);
   const [homePageUrl, setHomePageUrl] = createSignal(userSettings().home_page_url);
   // const [language, setLanguage] = createSignal(settings().language);
@@ -34,18 +34,18 @@ const SettingsPage: Component = () => {
 
   const handleGpuAccelerationChange = (value: boolean) => {
     setGpuAcceleration(value);
-    useAppSettings().updateSettings({ ...appSettings(), gpu_acceleration_enabled: value });
+    useAppSettings().update({ ...appSettings(), gpu_acceleration_enabled: value });
   };
 
   const handleIncognitoChange = (value: boolean) => {
     setIncognito(value);
-    useAppSettings().updateSettings({ ...appSettings(), incognito: value });
+    useAppSettings().update({ ...appSettings(), incognito: value });
   };
 
   const handleHomePageUrlUpdate = async () => {
     if (validateUrl(homePageUrl())) {
       setIsUpdating(true);
-      await useUserSettings().updateSettings({ ...userSettings(), home_page_url: homePageUrl() });
+      await useUserSettings().update({ ...userSettings(), home_page_url: homePageUrl() });
       // wait for 500ms before setting isUpdating to false
       setTimeout(() => setIsUpdating(false), 500);
     }
