@@ -8,6 +8,7 @@ import type {
   NestedBookmark,
   AddFolderResponse,
   AppSettings,
+  WindowGeometry,
 } from "./types";
 
 export const Invoke = {
@@ -104,5 +105,8 @@ export const Invoke = {
   },
   UpdateAppSettings: async (settings: AppSettings) => {
     return invoke<AppSettings>("update_app_settings", { settings });
+  },
+  GetWindowGeometry: async () => {
+    return invoke<WindowGeometry>("get_window_geometry", {});
   },
 } as const;

@@ -107,6 +107,7 @@ pub fn run() {
             commands::settings::update_user_settings,
             commands::settings::get_app_settings,
             commands::settings::update_app_settings,
+            commands::settings::get_window_geometry,
             commands::external::send_page_title,
             commands::external::send_page_url,
         ])

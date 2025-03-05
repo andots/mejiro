@@ -40,6 +40,15 @@ export type AppSettings = {
   start_page_url: string;
 };
 
+export type WindowGeometry = {
+  width: number;
+  height: number;
+  x: number;
+  y: number;
+  sidebar_width: number;
+  header_height: number;
+};
+
 export type Rect = {
   size: { width: number; height: number };
   position: { x: number; y: number };

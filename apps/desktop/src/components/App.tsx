@@ -39,6 +39,7 @@ const App: Component = () => {
 
   onMount(async () => {
     // get data from rust side for zustand stores
+    await useWindow().getWindowGeometry();
     await useUserSettings().getSettings();
     await useAppSettings().getSettings();
     await useBookmark().getBookmarks(1);

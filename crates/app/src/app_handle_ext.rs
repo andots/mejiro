@@ -10,7 +10,7 @@ use strum::AsRefStr;
 use tauri::{Manager, Runtime};
 
 use crate::{
-    constants::MAINWINDOW_LABEL,
+    constants::{DEFAUTL_HEADER_HEIGHT, EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL},
     error::AppError,
     settings::{AppSettings, UserSettings, WindowGeometry},
 };
@@ -166,23 +166,27 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
     }
 
     fn save_window_geometry(&self) -> Result<(), AppError> {
-        if let Some(window) = self.get_window(MAINWINDOW_LABEL) {
-            let size = window.inner_size()?;
-            let position = window.outer_position()?;
-            let sidebar_width = 200.0;
-            let header_height = 40.0;
-            let geometry = WindowGeometry {
-                width: size.width as f64,
-                height: size.height as f64,
-                x: position.x as f64,
-                y: position.y as f64,
-                sidebar_width,
-                header_height,
-            };
-            let path = self.get_window_geometry_file_path();
-            let file = fs::File::create(path)?;
-            serde_json::to_writer(file, &geometry)?;
-        }
+        let (main_window, external) = match (
+            self.get_window(MAINWINDOW_LABEL),
+            self.get_webview(EXTERNAL_WEBVIEW_LABEL),
+        ) {
+            (Some(main_window), Some(external)) => (main_window, external),
+            _ => return Err(AppError::WebviewNotFound),
+        };
+        let main_size = main_window.inner_size()?;
+        let main_position = main_window.outer_position()?;
+        let external_size = external.size()?;
+        let geometry = WindowGeometry {
+            width: main_size.width as f64,
+            height: main_size.height as f64,
+            x: main_position.x as f64,
+            y: main_position.y as f64,
+            sidebar_width: (main_size.width - external_size.width) as f64,
+            header_height: DEFAUTL_HEADER_HEIGHT,
+        };
+        let path = self.get_window_geometry_file_path();
+        let file = fs::File::create(path)?;
+        serde_json::to_writer(file, &geometry)?;
         Ok(())
     }
 

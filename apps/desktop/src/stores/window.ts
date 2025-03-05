@@ -9,6 +9,7 @@ type ExternalState = "full" | "hidden" | "right";
 interface WindowState {
   externalState: ExternalState;
   sidebarWidth: number;
+  getWindowGeometry: () => Promise<void>;
   setSidebarWidth: (newWidth: number) => Promise<void>;
   setExternalSize: (size: PhysicalSize) => Promise<void>;
   changeExternalState: (flag: ExternalState) => Promise<void>;
@@ -17,6 +18,10 @@ interface WindowState {
 export const useWindowState = createWithSignal<WindowState>((set, get) => ({
   externalState: "right",
   sidebarWidth: SIDEBAR_MIN_WIDTH,
+  getWindowGeometry: async () => {
+    const geometry = await Invoke.GetWindowGeometry();
+    set(() => ({ sidebarWidth: geometry.sidebar_width }));
+  },
   setSidebarWidth: async (newWidth: number) => {
     const appBounds = await Invoke.GetAppWebviewBounds();
     const externalWidth = appBounds.size.Physical.width - newWidth;
