@@ -1,13 +1,19 @@
-#![allow(dead_code)]
-
-use std::{fs, path::PathBuf, sync::Mutex};
+use std::{
+    fs::{self},
+    path::{Path, PathBuf},
+    sync::Mutex,
+};
 
 use mejiro_core::bookmarks::Bookmarks;
+use serde::Deserialize;
 use strum::AsRefStr;
 use tauri::{Manager, Runtime};
 
 use crate::{
-    constants::MAINWINDOW_LABEL, error::AppError, settings::UserSettings, window::WindowGeometry,
+    constants::MAINWINDOW_LABEL,
+    error::AppError,
+    settings::{AppSettings, UserSettings},
+    window::WindowGeometry,
 };
 
 /// The file names are defined as an enum to prevent typos and to provide a centralized list of all data files.
@@ -21,6 +27,8 @@ pub enum FileName {
     WindowGeometry,
     #[strum(serialize = "dev-settings.json")]
     Settings,
+    #[strum(serialize = "dev-app-settings.json")]
+    AppSettings,
 }
 
 /// File names for release builds.
@@ -35,6 +43,31 @@ pub enum FileName {
     WindowGeometry,
     #[strum(serialize = "settings.json")]
     Settings,
+    #[strum(serialize = ".app-settings")]
+    AppSettings,
+}
+
+fn deserialize_from_file<T, P>(path: P) -> T
+where
+    T: for<'de> Deserialize<'de> + Default,
+    P: AsRef<Path>,
+{
+    match fs::File::open(path) {
+        Ok(file) => {
+            let reader = std::io::BufReader::new(file);
+            match serde_json::from_reader(reader) {
+                Ok(data) => data,
+                Err(e) => {
+                    log::warn!("Failed to deserialize, return Default: {:?}", e);
+                    T::default()
+                }
+            }
+        }
+        Err(e) => {
+            log::warn!("Failed to open file, return Default: {:?}", e);
+            T::default()
+        }
+    }
 }
 
 pub trait AppHandleExt {
@@ -44,6 +77,7 @@ pub trait AppHandleExt {
     fn get_bookmarks_file_path(&self) -> PathBuf;
     fn get_settings_file_path(&self) -> PathBuf;
     fn get_window_geometry_file_path(&self) -> PathBuf;
+    fn load_app_settings(&self) -> AppSettings;
     fn load_user_settings(&self) -> UserSettings;
     fn save_user_settings(&self) -> Result<(), AppError>;
     fn load_window_geometry(&self) -> WindowGeometry;
@@ -105,6 +139,11 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
 
     fn get_window_geometry_file_path(&self) -> PathBuf {
         self.get_file_path_from_app_dir(FileName::WindowGeometry)
+    }
+
+    fn load_app_settings(&self) -> AppSettings {
+        let path = self.get_file_path_from_app_dir(FileName::AppSettings);
+        deserialize_from_file(path)
     }
 
     fn load_user_settings(&self) -> UserSettings {

@@ -1,9 +1,11 @@
+use std::sync::Mutex;
+
 use serde::{Deserialize, Serialize};
-use tauri::EventTarget;
 use tauri::{
     webview::PageLoadEvent, Emitter, LogicalPosition, LogicalSize, Url, WebviewBuilder, WebviewUrl,
     WindowBuilder,
 };
+use tauri::{EventTarget, Manager};
 
 use crate::app_handle_ext::AppHandleExt;
 use crate::constants::{
@@ -12,7 +14,7 @@ use crate::constants::{
     EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL, MIN_WINDOW_HEIGHT, MIN_WINDOW_WIDTH,
 };
 use crate::events::AppEvent;
-use crate::settings::{default_start_page_url, UserSettings};
+use crate::settings::{default_start_page_url, AppSettings};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct WindowGeometry {
@@ -40,12 +42,15 @@ impl Default for WindowGeometry {
 /// Create the main window with the app and external webviews.
 /// The app webview is the main webview that loads the app.
 /// The external webview is a webview that loads external URLs and placed on the right side of the app webview (overlayed).
-pub fn create_window(app_handle: &tauri::AppHandle, settings: &UserSettings) -> tauri::Result<()> {
+pub fn create_window(app_handle: &tauri::AppHandle) -> tauri::Result<()> {
+    let state = app_handle.state::<Mutex<AppSettings>>();
+    let settings = state.lock().map_err(|e| anyhow::anyhow!("{:?}", e))?;
+
     let geometry = app_handle.load_window_geometry();
     let window = create_main_window(app_handle, &geometry)?;
 
-    let app_webview = create_app_webview(app_handle, settings)?;
-    let external_webview = create_external_webview(app_handle, settings)?;
+    let app_webview = create_app_webview(app_handle, &settings)?;
+    let external_webview = create_external_webview(app_handle, &settings)?;
 
     add_webviews_to_window(&window, app_webview, external_webview, &geometry)?;
 
@@ -68,7 +73,7 @@ fn create_main_window(
 
 fn create_app_webview(
     app_handle: &tauri::AppHandle,
-    settings: &UserSettings,
+    settings: &AppSettings,
 ) -> tauri::Result<WebviewBuilder<tauri::Wry>> {
     // auto resize is enabled
     // data directory is set to the app directory
@@ -97,7 +102,7 @@ fn create_app_webview(
 
 fn create_external_webview(
     app_handle: &tauri::AppHandle,
-    settings: &UserSettings,
+    settings: &AppSettings,
 ) -> tauri::Result<WebviewBuilder<tauri::Wry>> {
     let url = Url::parse(&settings.start_page_url)
         .unwrap_or_else(|_| Url::parse(default_start_page_url().as_str()).unwrap());
