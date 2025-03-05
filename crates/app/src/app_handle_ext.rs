@@ -22,12 +22,12 @@ use crate::{
 pub enum FileName {
     #[strum(serialize = "dev-bookmarks.json")]
     Bookmarks,
+    #[strum(serialize = "dev-app_settings.json")]
+    AppSettings,
     #[strum(serialize = "dev-window_geometry.json")]
     WindowGeometry,
     #[strum(serialize = "dev-settings.json")]
     UserSettings,
-    #[strum(serialize = "dev-app-settings.json")]
-    AppSettings,
 }
 
 /// File names for release builds.
@@ -38,12 +38,12 @@ pub enum FileName {
 pub enum FileName {
     #[strum(serialize = ".bookmarks")]
     Bookmarks,
+    #[strum(serialize = ".app_settings")]
+    AppSettings,
     #[strum(serialize = ".window_geometry")]
     WindowGeometry,
     #[strum(serialize = "settings.json")]
     UserSettings,
-    #[strum(serialize = ".app-settings")]
-    AppSettings,
 }
 
 fn deserialize_from_file<T, P>(path: P) -> T

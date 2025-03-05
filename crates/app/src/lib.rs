@@ -58,8 +58,8 @@ pub fn run() {
             let bookmarks = app.handle().load_bookmarks();
             app.manage(Mutex::new(bookmarks));
 
-            let settings = app.handle().load_user_settings();
-            app.manage(Mutex::new(settings));
+            let user_settings = app.handle().load_user_settings();
+            app.manage(Mutex::new(user_settings));
 
             let app_settings = app.handle().load_app_settings();
             app.manage(Mutex::new(app_settings));
