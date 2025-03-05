@@ -6,7 +6,7 @@ use crate::{
 };
 
 #[tauri::command]
-pub fn get_settings(
+pub fn get_user_settings(
     state: tauri::State<'_, Mutex<UserSettings>>,
 ) -> Result<UserSettings, AppError> {
     let settings = state
@@ -16,7 +16,7 @@ pub fn get_settings(
 }
 
 #[tauri::command]
-pub fn update_settings(
+pub fn update_user_settings(
     state: tauri::State<'_, Mutex<UserSettings>>,
     settings: UserSettings,
 ) -> Result<UserSettings, AppError> {

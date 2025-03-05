@@ -93,11 +93,11 @@ export const Invoke = {
   },
 
   // Settings commands
-  GetSettings: async () => {
-    return invoke<UserSettings>("get_settings", {});
+  GetUserSettings: async () => {
+    return invoke<UserSettings>("get_user_settings", {});
   },
-  UpdateSettings: async (settings: UserSettings) => {
-    return invoke<UserSettings>("update_settings", { settings });
+  UpdateUserSettings: async (settings: UserSettings) => {
+    return invoke<UserSettings>("update_user_settings", { settings });
   },
   GetAppSettings: async () => {
     return invoke<AppSettings>("get_app_settings", {});
