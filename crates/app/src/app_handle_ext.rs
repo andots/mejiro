@@ -183,17 +183,14 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
     }
 
     fn save_user_settings(&self) -> Result<(), AppError> {
-        let state = self.state::<Mutex<UserSettings>>();
-        let value = state
-            .lock()
-            .map_err(|_| AppError::Mutex("can't get settings".to_string()))?;
-        let settings = UserSettings {
-            language: value.language.clone(),
-            theme: value.theme.clone(),
-        };
         let path = self.get_user_settings_file_path();
         let file = fs::File::create(path)?;
-        serde_json::to_writer_pretty(file, &settings)?;
+        if let Some(state) = self.try_state::<Mutex<UserSettings>>() {
+            let settings = state
+                .lock()
+                .map_err(|_| AppError::Mutex("can't get settings".to_string()))?;
+            serde_json::to_writer_pretty(file, &settings.clone())?;
+        }
         Ok(())
     }
 
