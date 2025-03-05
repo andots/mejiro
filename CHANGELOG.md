@@ -1,5 +1,24 @@
 # Changelog
 
+# [0.26.0](https://github.com/andots/mejiro/compare/v0.25.1...v0.26.0) (2025-03-05)
+
+
+### Bug Fixes
+
+* **front:** handle sidebar width correctly when user closed window without sidebar ([fd668f6](https://github.com/andots/mejiro/commit/fd668f6d97e583db533a512677e00021ff9c8a34))
+
+
+### Features
+
+* **app,front:** add home page URL setting and update related components ([79c6c34](https://github.com/andots/mejiro/commit/79c6c34b3a9088d6ed06d58b60e01fc8acc3607d))
+* **app,front:** introduce AppSettings type and related commands for managing application settings ([d20145e](https://github.com/andots/mejiro/commit/d20145eb79512998b2917ec5083f109b674f0d4a))
+* **app,front:** set initial sidebar width by getting window geometry from tauri state ([167035d](https://github.com/andots/mejiro/commit/167035d7db10c18b00ec5c0244cddf172abebe15))
+* **app:** add app and external capability configurations and remove default capabilities ([2844930](https://github.com/andots/mejiro/commit/28449302be9b4c7b24b39dc189eae305f74f5ce3))
+* **app:** add AppSettings struct and load_app_settings method for restart required settings ([179e307](https://github.com/andots/mejiro/commit/179e30725fc94ac244c93628d572678e1068c0fe))
+* **app:** add save_app_settings method to persist application settings ([e2a34fe](https://github.com/andots/mejiro/commit/e2a34fe64b56635433122d28a44a54439fae5bef))
+* **app:** manage window geometry state as tauri state ([3a41294](https://github.com/andots/mejiro/commit/3a412949b2f95ad880b59aba452b9e424dca67c2))
+* **front:** add listener for close requested events to update last visited URL ([3219c58](https://github.com/andots/mejiro/commit/3219c58eb33a93d6bbcdd6040501698367d60f53))
+
 ## [0.25.1](https://github.com/andots/mejiro/compare/v0.25.0...v0.25.1) (2025-03-03)
 
 
