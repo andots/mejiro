@@ -26,7 +26,7 @@ pub enum FileName {
     #[strum(serialize = "dev-window_geometry.json")]
     WindowGeometry,
     #[strum(serialize = "dev-settings.json")]
-    Settings,
+    UserSettings,
     #[strum(serialize = "dev-app-settings.json")]
     AppSettings,
 }
@@ -42,7 +42,7 @@ pub enum FileName {
     #[strum(serialize = ".window_geometry")]
     WindowGeometry,
     #[strum(serialize = "settings.json")]
-    Settings,
+    UserSettings,
     #[strum(serialize = ".app-settings")]
     AppSettings,
 }
@@ -72,16 +72,22 @@ where
 
 pub trait AppHandleExt {
     fn get_default_app_title(&self) -> String;
+
     fn get_app_dir(&self) -> PathBuf;
     fn get_file_path_from_app_dir(&self, file_name: FileName) -> PathBuf;
-    fn get_bookmarks_file_path(&self) -> PathBuf;
-    fn get_settings_file_path(&self) -> PathBuf;
-    fn get_window_geometry_file_path(&self) -> PathBuf;
+
+    fn get_app_settings_file_path(&self) -> PathBuf;
     fn load_app_settings(&self) -> AppSettings;
-    fn load_user_settings(&self) -> UserSettings;
-    fn save_user_settings(&self) -> Result<(), AppError>;
+
+    fn get_window_geometry_file_path(&self) -> PathBuf;
     fn load_window_geometry(&self) -> WindowGeometry;
     fn save_window_geometry(&self) -> Result<(), AppError>;
+
+    fn get_user_settings_file_path(&self) -> PathBuf;
+    fn load_user_settings(&self) -> UserSettings;
+    fn save_user_settings(&self) -> Result<(), AppError>;
+
+    fn get_bookmarks_file_path(&self) -> PathBuf;
     fn load_bookmarks(&self) -> Bookmarks;
     fn save_bookmarks(&self) -> Result<(), AppError>;
 }
@@ -129,80 +135,22 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
         self.get_app_dir().join(file_name.as_ref())
     }
 
-    fn get_bookmarks_file_path(&self) -> PathBuf {
-        self.get_file_path_from_app_dir(FileName::Bookmarks)
+    fn get_app_settings_file_path(&self) -> PathBuf {
+        self.get_file_path_from_app_dir(FileName::AppSettings)
     }
 
-    fn get_settings_file_path(&self) -> PathBuf {
-        self.get_file_path_from_app_dir(FileName::Settings)
+    fn load_app_settings(&self) -> AppSettings {
+        let path = self.get_app_settings_file_path();
+        deserialize_from_file(path)
     }
 
     fn get_window_geometry_file_path(&self) -> PathBuf {
         self.get_file_path_from_app_dir(FileName::WindowGeometry)
     }
 
-    fn load_app_settings(&self) -> AppSettings {
-        let path = self.get_file_path_from_app_dir(FileName::AppSettings);
-        deserialize_from_file(path)
-    }
-
-    fn load_user_settings(&self) -> UserSettings {
-        let path = self.get_settings_file_path();
-        match fs::File::open(path) {
-            Ok(file) => {
-                let reader = std::io::BufReader::new(file);
-                match serde_json::from_reader(reader) {
-                    Ok(settings) => settings,
-                    Err(e) => {
-                        // TODO: if the file is corrupted, rename it to .bak and create a new one
-                        log::warn!("Load default settings: {:?}", e);
-                        UserSettings::default()
-                    }
-                }
-            }
-            Err(e) => {
-                log::warn!("Load default settings: {:?}", e);
-                UserSettings::default()
-            }
-        }
-    }
-
-    fn save_user_settings(&self) -> Result<(), AppError> {
-        let state = self.state::<Mutex<UserSettings>>();
-        let value = state
-            .lock()
-            .map_err(|_| AppError::Mutex("can't get settings".to_string()))?;
-        let settings = UserSettings {
-            language: value.language.clone(),
-            theme: value.theme.clone(),
-            gpu_acceleration_enabled: value.gpu_acceleration_enabled,
-            incognito: value.incognito,
-            start_page_url: value.start_page_url.clone(),
-        };
-        let path = self.get_settings_file_path();
-        let file = fs::File::create(path)?;
-        serde_json::to_writer_pretty(file, &settings)?;
-        Ok(())
-    }
-
     fn load_window_geometry(&self) -> WindowGeometry {
         let path = self.get_window_geometry_file_path();
-        match fs::File::open(path) {
-            Ok(file) => {
-                let reader = std::io::BufReader::new(file);
-                match serde_json::from_reader(reader) {
-                    Ok(geometry) => geometry,
-                    Err(e) => {
-                        log::warn!("Load default window geometry: {:?}", e);
-                        WindowGeometry::default()
-                    }
-                }
-            }
-            Err(e) => {
-                log::warn!("Load default window geometry: {:?}", e);
-                WindowGeometry::default()
-            }
-        }
+        deserialize_from_file(path)
     }
 
     fn save_window_geometry(&self) -> Result<(), AppError> {
@@ -224,6 +172,37 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
             serde_json::to_writer(file, &geometry)?;
         }
         Ok(())
+    }
+
+    fn get_user_settings_file_path(&self) -> PathBuf {
+        self.get_file_path_from_app_dir(FileName::UserSettings)
+    }
+
+    fn load_user_settings(&self) -> UserSettings {
+        let path = self.get_user_settings_file_path();
+        deserialize_from_file(path)
+    }
+
+    fn save_user_settings(&self) -> Result<(), AppError> {
+        let state = self.state::<Mutex<UserSettings>>();
+        let value = state
+            .lock()
+            .map_err(|_| AppError::Mutex("can't get settings".to_string()))?;
+        let settings = UserSettings {
+            language: value.language.clone(),
+            theme: value.theme.clone(),
+            gpu_acceleration_enabled: value.gpu_acceleration_enabled,
+            incognito: value.incognito,
+            start_page_url: value.start_page_url.clone(),
+        };
+        let path = self.get_user_settings_file_path();
+        let file = fs::File::create(path)?;
+        serde_json::to_writer_pretty(file, &settings)?;
+        Ok(())
+    }
+
+    fn get_bookmarks_file_path(&self) -> PathBuf {
+        self.get_file_path_from_app_dir(FileName::Bookmarks)
     }
 
     fn load_bookmarks(&self) -> Bookmarks {
