@@ -77,6 +77,7 @@ pub trait AppHandleExt {
 
     fn get_app_settings_file_path(&self) -> PathBuf;
     fn load_app_settings(&self) -> AppSettings;
+    fn save_app_settings(&self) -> Result<(), AppError>;
 
     fn get_window_geometry_file_path(&self) -> PathBuf;
     fn load_window_geometry(&self) -> WindowGeometry;
@@ -141,6 +142,18 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
     fn load_app_settings(&self) -> AppSettings {
         let path = self.get_app_settings_file_path();
         deserialize_from_file(path)
+    }
+
+    fn save_app_settings(&self) -> Result<(), AppError> {
+        let path = self.get_app_settings_file_path();
+        let file = fs::File::create(path)?;
+        if let Some(state) = self.try_state::<Mutex<AppSettings>>() {
+            let settings = state
+                .lock()
+                .map_err(|_| AppError::Mutex("can't get settings".to_string()))?;
+            serde_json::to_writer_pretty(file, &settings.clone())?;
+        }
+        Ok(())
     }
 
     fn get_window_geometry_file_path(&self) -> PathBuf {

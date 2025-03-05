@@ -114,6 +114,7 @@ pub fn run() {
         tauri::RunEvent::Ready => {}
         tauri::RunEvent::Exit => {
             // save settings before exit
+            let _ = app_handle.save_app_settings();
             let _ = app_handle.save_user_settings();
             let _ = app_handle.save_bookmarks();
             app_handle.exit(0);
