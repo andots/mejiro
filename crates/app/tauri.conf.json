@@ -10,7 +10,8 @@
   },
   "app": {
     "security": {
-      "csp": null
+      "csp": null,
+      "capabilities": ["app", "external"]
     },
     "withGlobalTauri": true
   },

@@ -1,0 +1,8 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "external",
+  "description": "enables the external permissions",
+  "windows": ["main"],
+  "webviews": ["external"],
+  "permissions": ["core:default"]
+}
