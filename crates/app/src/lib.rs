@@ -64,8 +64,11 @@ pub fn run() {
             let app_settings = app.handle().load_app_settings();
             app.manage(Mutex::new(app_settings));
 
-            // create_window() must be called after app.manage() because frontend might call getting
-            // bookmarks and settings from tauri state before they are managed. (especially in relaese build)
+            let window_geometry = app.handle().load_window_geometry();
+            app.manage(Mutex::new(window_geometry));
+
+            // create_window() must be called after app.manage because window neeed those states and also
+            // frontend might call states before they are managed. (especially in relaese build)
             create_window(app.handle())?;
 
             // Open devtools when debug build

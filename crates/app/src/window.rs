@@ -18,10 +18,16 @@ use crate::settings::{default_start_page_url, AppSettings, WindowGeometry};
 /// The app webview is the main webview that loads the app.
 /// The external webview is a webview that loads external URLs and placed on the right side of the app webview (overlayed).
 pub fn create_window(app_handle: &tauri::AppHandle) -> tauri::Result<()> {
-    let state = app_handle.state::<Mutex<AppSettings>>();
-    let settings = state.lock().map_err(|e| anyhow::anyhow!("{:?}", e))?;
+    let settings_state = app_handle.state::<Mutex<AppSettings>>();
+    let settings = settings_state
+        .lock()
+        .map_err(|e| anyhow::anyhow!("{:?}", e))?;
 
-    let geometry = app_handle.load_window_geometry();
+    let geometry_state = app_handle.state::<Mutex<WindowGeometry>>();
+    let geometry = geometry_state
+        .lock()
+        .map_err(|e| anyhow::anyhow!("{:?}", e))?;
+
     let window = create_main_window(app_handle, &geometry)?;
 
     let app_webview = create_app_webview(app_handle, &settings)?;
