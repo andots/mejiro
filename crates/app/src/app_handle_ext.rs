@@ -12,8 +12,7 @@ use tauri::{Manager, Runtime};
 use crate::{
     constants::MAINWINDOW_LABEL,
     error::AppError,
-    settings::{AppSettings, UserSettings},
-    window::WindowGeometry,
+    settings::{AppSettings, UserSettings, WindowGeometry},
 };
 
 /// The file names are defined as an enum to prevent typos and to provide a centralized list of all data files.

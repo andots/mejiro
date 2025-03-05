@@ -1,6 +1,5 @@
 use std::sync::Mutex;
 
-use serde::{Deserialize, Serialize};
 use tauri::{
     webview::PageLoadEvent, Emitter, LogicalPosition, LogicalSize, Url, WebviewBuilder, WebviewUrl,
     WindowBuilder,
@@ -9,35 +8,11 @@ use tauri::{EventTarget, Manager};
 
 use crate::app_handle_ext::AppHandleExt;
 use crate::constants::{
-    APP_WEBVIEW_LABEL, APP_WEBVIEW_URL, DEFAUTL_HEADER_HEIGHT, DEFAUTL_SIDEBAR_WIDTH,
-    DEFAUTL_WINDOW_HEIGHT, DEFAUTL_WINDOW_WIDTH, DEFAUTL_WINDOW_X, DEFAUTL_WINDOW_Y,
-    EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL, MIN_WINDOW_HEIGHT, MIN_WINDOW_WIDTH,
+    APP_WEBVIEW_LABEL, APP_WEBVIEW_URL, EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL,
+    MIN_WINDOW_HEIGHT, MIN_WINDOW_WIDTH,
 };
 use crate::events::AppEvent;
-use crate::settings::{default_start_page_url, AppSettings};
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct WindowGeometry {
-    pub width: f64,
-    pub height: f64,
-    pub x: f64,
-    pub y: f64,
-    pub sidebar_width: f64,
-    pub header_height: f64,
-}
-
-impl Default for WindowGeometry {
-    fn default() -> Self {
-        Self {
-            width: DEFAUTL_WINDOW_WIDTH,
-            height: DEFAUTL_WINDOW_HEIGHT,
-            x: DEFAUTL_WINDOW_X,
-            y: DEFAUTL_WINDOW_Y,
-            sidebar_width: DEFAUTL_SIDEBAR_WIDTH,
-            header_height: DEFAUTL_HEADER_HEIGHT,
-        }
-    }
-}
+use crate::settings::{default_start_page_url, AppSettings, WindowGeometry};
 
 /// Create the main window with the app and external webviews.
 /// The app webview is the main webview that loads the app.
