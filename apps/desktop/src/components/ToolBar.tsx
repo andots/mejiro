@@ -10,11 +10,12 @@ import { useBookmarkState } from "../stores/bookmarks";
 
 import AddressBar from "./toolbar/AddressBar";
 import Favicon from "./icons/Favicon";
-import { useAppSettingsState } from "../stores/settings";
+import { useUserSettingsState } from "../stores/settings";
 
 const ToolBar: Component = () => {
   const useUrl = useUrlState();
   const useWindow = useWindowState();
+  const useUserSettings = useUserSettingsState();
 
   const bookmarks = useBookmarkState((state) => state.bookmarks);
   const toolbarBookmarks = useBookmarkState((state) => state.toolbarBookmarks);
@@ -42,7 +43,7 @@ const ToolBar: Component = () => {
 
   const handleHome = () => {
     setPage("dashboard");
-    const url = useAppSettingsState.getState().settings.start_page_url;
+    const url = useUserSettings().settings.home_page_url;
     useUrl().navigateToUrl(url);
     if (externalState() === "hidden") {
       useWindow().changeExternalState("right");

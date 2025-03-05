@@ -32,6 +32,7 @@ export type ToolbarBookmarkData = {
 export type UserSettings = {
   language: string;
   theme: string;
+  home_page_url: string;
 };
 
 export type AppSettings = {

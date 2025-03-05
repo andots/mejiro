@@ -46,6 +46,9 @@ pub struct UserSettings {
 
     #[serde(default = "default_theme")]
     pub theme: String,
+
+    #[serde(default = "default_home_page_url")]
+    pub home_page_url: String,
 }
 
 impl Default for UserSettings {
@@ -53,8 +56,13 @@ impl Default for UserSettings {
         Self {
             language: default_language(),
             theme: default_theme(),
+            home_page_url: default_home_page_url(),
         }
     }
+}
+
+pub fn default_home_page_url() -> String {
+    "https://search.brave.com/".to_string()
 }
 
 fn default_language() -> String {

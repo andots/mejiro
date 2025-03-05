@@ -13,6 +13,7 @@ export const useUserSettingsState = createWithSignal<UserSettingsState>((set) =>
   settings: {
     language: "en",
     theme: "light",
+    home_page_url: "https://search.brave.com/",
   },
   getSettings: async () => {
     const settings = await Invoke.GetUserSettings();

@@ -15,36 +15,37 @@ import { useBookmarkState } from "../../stores/bookmarks";
 const SettingsPage: Component = () => {
   const useBookmark = useBookmarkState();
 
-  const userSettings = useUserSettingsState((state) => state.settings);
-  const updateUserSettings = useUserSettingsState((state) => state.updateSettings);
-
+  // App Settings
+  const useAppSettings = useAppSettingsState();
   const appSettings = useAppSettingsState((state) => state.settings);
-  const updateAppSettings = useAppSettingsState((state) => state.updateSettings);
-
-  // const [language, setLanguage] = createSignal(settings().language);
-  // const [theme, setTheme] = createSignal(settings().theme);
   const [gpuAcceleration, setGpuAcceleration] = createSignal(
     appSettings().gpu_acceleration_enabled,
   );
   const [incognito, setIncognito] = createSignal(appSettings().incognito);
-  const [startPageUrl, setStartPageUrl] = createSignal(appSettings().start_page_url);
+
+  // User Settings
+  const useUserSettings = useUserSettingsState();
+  const userSettings = useUserSettingsState((state) => state.settings);
+  const [homePageUrl, setHomePageUrl] = createSignal(userSettings().home_page_url);
+  // const [language, setLanguage] = createSignal(settings().language);
+  // const [theme, setTheme] = createSignal(settings().theme);
 
   const [isUpdating, setIsUpdating] = createSignal(false);
 
   const handleGpuAccelerationChange = (value: boolean) => {
     setGpuAcceleration(value);
-    updateAppSettings({ ...appSettings(), gpu_acceleration_enabled: value });
+    useAppSettings().updateSettings({ ...appSettings(), gpu_acceleration_enabled: value });
   };
 
   const handleIncognitoChange = (value: boolean) => {
     setIncognito(value);
-    updateAppSettings({ ...appSettings(), incognito: value });
+    useAppSettings().updateSettings({ ...appSettings(), incognito: value });
   };
 
-  const handleStartPageUrlUpdate = async () => {
-    if (validateUrl(startPageUrl())) {
+  const handleHomePageUrlUpdate = async () => {
+    if (validateUrl(homePageUrl())) {
       setIsUpdating(true);
-      await updateAppSettings({ ...appSettings(), start_page_url: startPageUrl() });
+      await useUserSettings().updateSettings({ ...userSettings(), home_page_url: homePageUrl() });
       // wait for 500ms before setting isUpdating to false
       setTimeout(() => setIsUpdating(false), 500);
     }
@@ -65,8 +66,10 @@ const SettingsPage: Component = () => {
         <CardContent class="space-y-6">
           {/* Browser Settings Section */}
           <Card class="w-full p-5">
-            <CardTitle class="pb-2 text-base">Webview Settings</CardTitle>
-            <CardDescription class="mb-2">These settings require a reboot.</CardDescription>
+            <CardTitle class="pb-2 text-base">Browser Settings</CardTitle>
+            <CardDescription class="mb-2">
+              These settings require restarting the application.
+            </CardDescription>
             <CardContent class="p-2 space-y-4">
               <div class="flex items-center justify-between">
                 <div class="space-y-0.5">
@@ -94,22 +97,22 @@ const SettingsPage: Component = () => {
             </CardContent>
           </Card>
 
-          {/* Start Page Section */}
+          {/* Home Page Section */}
           <Card class="w-full p-5">
-            <CardTitle class="pb-2 text-base">Start Page</CardTitle>
-            <CardDescription class="mb-2">Open page when starting app.</CardDescription>
+            <CardTitle class="pb-2 text-base">Home Page URL</CardTitle>
+            <CardDescription class="mb-2">
+              Set your favorite page to be displayed when the home button is clicked.
+            </CardDescription>
             <CardContent class="flex flex-row justify-between items-center p-2 space-x-3">
               <TextField class="w-10/12">
                 <TextFieldInput
                   type="url"
-                  id="start-page-url"
-                  placeholder="Enter start page url..."
-                  value={startPageUrl()}
-                  // onChange={(e) => setStartPageUrl(e.currentTarget.value)}
-                  onInput={(e) => setStartPageUrl(e.currentTarget.value)}
+                  placeholder="Enter your favorite page url..."
+                  value={homePageUrl()}
+                  onInput={(e) => setHomePageUrl(e.currentTarget.value)}
                 />
               </TextField>
-              <Button class="w-20" onClick={handleStartPageUrlUpdate} disabled={isUpdating()}>
+              <Button class="w-20" onClick={handleHomePageUrlUpdate} disabled={isUpdating()}>
                 Update
               </Button>
             </CardContent>
