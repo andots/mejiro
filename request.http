@@ -1,0 +1,19 @@
+@host = http://localhost:1421
+
+###
+GET {{host}}/
+
+###
+GET {{host}}/favicon?url=https://www.rust-lang.org/
+
+###
+GET {{host}}/favicon?url=https://www.google.com/
+
+###
+GET {{host}}/favicon?url=https://www
+
+###
+GET {{host}}/favicon?url=afafe
+
+###
+DELETE {{host}}/favicon

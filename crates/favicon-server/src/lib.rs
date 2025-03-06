@@ -2,6 +2,7 @@ pub mod error;
 mod handler;
 mod response;
 
+use axum::routing::delete;
 use axum::{routing::get, Router};
 use redb::{Database, TableDefinition};
 use reqwest::Client;
@@ -9,7 +10,7 @@ use std::sync::Arc;
 use std::{net::SocketAddr, time::Duration};
 use tokio::sync::Mutex;
 
-use handler::get_favicon;
+use handler::{delete_all, get_favicon, health_check};
 
 const USER_AGENT: &str =
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0";
@@ -54,7 +55,9 @@ where
     //     .collect::<Vec<_>>();
 
     let app = Router::new()
+        .route("/", get(health_check))
         .route("/favicon", get(get_favicon))
+        .route("/favicon", delete(delete_all))
         .with_state(app_state);
 
     let addr = SocketAddr::from(([127, 0, 0, 1], port));

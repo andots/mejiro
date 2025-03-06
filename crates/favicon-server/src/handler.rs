@@ -3,8 +3,8 @@ use axum::{
     http,
     response::{IntoResponse, Response},
 };
-use redb::Database;
-use reqwest::Client;
+use redb::{Database, ReadableTable};
+use reqwest::{Client, StatusCode};
 use serde::Deserialize;
 use std::sync::Arc;
 use url::Url;
@@ -44,6 +44,28 @@ async fn get(
     let table = read_txn.open_table(FAVICON_TABLE)?;
     let value = table.get(key)?;
     Ok(value)
+}
+
+async fn keys(db: &Database) -> Result<Vec<String>, Error> {
+    let read_txn = db.begin_read()?;
+    let table = read_txn.open_table(FAVICON_TABLE)?;
+    let iter = table.iter()?;
+    let keys = iter
+        .filter_map(|r| r.ok())
+        .map(|r| r.0.value().to_string())
+        .collect::<Vec<_>>();
+
+    Ok(keys)
+}
+
+async fn remove(db: &Database, key: &str) -> Result<(), Error> {
+    let write_txn = db.begin_write()?;
+    {
+        let mut table = write_txn.open_table(FAVICON_TABLE)?;
+        table.remove(key)?;
+    }
+    write_txn.commit()?;
+    Ok(())
 }
 
 async fn insert(db: &Database, key: &str, value: &[u8]) -> Result<(), Error> {
@@ -103,4 +125,29 @@ pub async fn get_favicon(
             Err(e) => ErrorResponse::from(e).into_response(),
         }
     }
+}
+
+pub async fn delete_all(State(state): State<Arc<AppState>>) -> Response {
+    let db = state.db.lock().await;
+    let keys = match keys(&db).await {
+        Ok(keys) => keys,
+        Err(e) => {
+            return (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()).into_response();
+        }
+    };
+
+    for key in keys {
+        match remove(&db, &key).await {
+            Ok(_) => (),
+            Err(e) => {
+                return (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()).into_response();
+            }
+        }
+    }
+
+    (StatusCode::OK, "All favicons deleted").into_response()
+}
+
+pub async fn health_check() -> Response {
+    (StatusCode::OK, "OK").into_response()
 }
