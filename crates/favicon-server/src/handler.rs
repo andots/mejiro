@@ -1,5 +1,6 @@
 use axum::{
     extract::{Query, State},
+    http,
     response::{IntoResponse, Response},
 };
 use redb::Database;
@@ -22,8 +23,8 @@ pub struct UrlQuery {
     url: String,
 }
 
-async fn fetch_favicon(client: &Client, url: &Url, size: u8) -> Result<Vec<u8>, Error> {
-    let favicon_url = format!("{GSTATIC_URL}&size={size}&url={}", url.as_str());
+async fn fetch_favicon(client: &Client, host: &str, size: u8) -> Result<Vec<u8>, Error> {
+    let favicon_url = format!("{GSTATIC_URL}&size={size}&url=https://{host}");
     println!("Fetching favicon from: {}", favicon_url);
 
     let res = client.get(&favicon_url).send().await?;
@@ -66,9 +67,18 @@ pub async fn get_favicon(
         }
     };
 
+    // key is the host part of the URL
+    let host_str = match url.host_str() {
+        Some(host) => host,
+        None => {
+            return ErrorResponse::new(http::StatusCode::BAD_REQUEST, "Invalid URL: missing host")
+                .into_response();
+        }
+    };
+
     let db = state.db.lock().await;
 
-    let value = match get(&db, url.as_str()).await {
+    let value = match get(&db, host_str).await {
         Ok(v) => v,
         Err(e) => {
             return ErrorResponse::from(e).into_response();
@@ -81,14 +91,14 @@ pub async fn get_favicon(
     } else {
         println!("Favicon not found in database! Fetch favicon from API");
 
-        let favicon_data = match fetch_favicon(&state.client, &url, 32).await {
+        let favicon_data = match fetch_favicon(&state.client, host_str, 32).await {
             Ok(data) => data,
             Err(e) => {
                 return ErrorResponse::from(e).into_response();
             }
         };
 
-        match insert(&db, url.as_str(), favicon_data.as_slice()).await {
+        match insert(&db, host_str, favicon_data.as_slice()).await {
             Ok(_) => create_image_response(favicon_data),
             Err(e) => ErrorResponse::from(e).into_response(),
         }
