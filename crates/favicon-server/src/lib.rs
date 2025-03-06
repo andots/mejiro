@@ -1,3 +1,4 @@
+mod db;
 pub mod error;
 mod handler;
 mod response;
