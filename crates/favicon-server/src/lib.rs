@@ -2,13 +2,18 @@ pub mod error;
 mod handler;
 mod response;
 
-use axum::routing::delete;
-use axum::{routing::get, Router};
+use axum::{
+    http::{header, HeaderValue, Method},
+    routing::delete,
+    routing::get,
+    Router,
+};
 use redb::{Database, TableDefinition};
 use reqwest::Client;
 use std::sync::Arc;
 use std::{net::SocketAddr, time::Duration};
 use tokio::sync::Mutex;
+use tower_http::cors::CorsLayer;
 
 use handler::{delete_all, get_favicon, health_check};
 
@@ -22,7 +27,7 @@ pub struct AppState {
     client: Client,
 }
 
-pub async fn run<P>(path: P, port: u16)
+pub async fn run<P>(path: P, port: u16, allow_origins: Vec<String>)
 where
     P: AsRef<std::path::Path>,
 {
@@ -47,17 +52,26 @@ where
 
     let app_state = Arc::new(AppState { db, client });
 
-    // let allow_origins = vec!["http://localhost:1420"];
+    let origins = allow_origins
+        .iter()
+        .map(|addr| addr.parse::<HeaderValue>().unwrap())
+        .collect::<Vec<_>>();
 
-    // let origins = allow_origins
-    //     .iter()
-    //     .map(|addr| addr.parse::<HeaderValue>().unwrap())
-    //     .collect::<Vec<_>>();
+    let cors = CorsLayer::new()
+        .allow_methods([Method::GET, Method::DELETE])
+        .allow_headers([
+            header::AUTHORIZATION,
+            header::ACCEPT,
+            header::CONTENT_TYPE,
+            header::ACCESS_CONTROL_REQUEST_HEADERS,
+        ])
+        .allow_origin(origins);
 
     let app = Router::new()
         .route("/", get(health_check))
         .route("/favicon", get(get_favicon))
         .route("/favicon", delete(delete_all))
+        .layer(cors)
         .with_state(app_state);
 
     let addr = SocketAddr::from(([127, 0, 0, 1], port));
