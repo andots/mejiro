@@ -1249,6 +1249,7 @@ version = "0.26.0"
 dependencies = [
  "axum",
  "http-serde",
+ "log",
  "redb",
  "reqwest",
  "serde",

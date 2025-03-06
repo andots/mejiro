@@ -84,7 +84,7 @@ impl Display for ErrorResponse {
 
 impl IntoResponse for ErrorResponse {
     fn into_response(self) -> axum::response::Response {
-        println!("Error: {}", self);
+        log::warn!("Error: {}", self);
         // (self.error.code, self.to_json()).into_response()
         // this service needs to return image even if there is an error, so we return default image
         create_default_image_response()

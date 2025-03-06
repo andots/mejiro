@@ -78,7 +78,7 @@ where
 
     let addr = SocketAddr::from(([127, 0, 0, 1], port));
 
-    println!("Server starts on http://{}", addr);
+    log::info!("Favicon server starts on http://{}", addr);
 
     let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
     axum::serve(listener, app).await.unwrap();

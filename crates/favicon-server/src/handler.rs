@@ -25,7 +25,7 @@ const GSTATIC_URL: &str =
 
 async fn fetch_favicon(client: &Client, host: &str, size: u8) -> Result<Vec<u8>, Error> {
     let favicon_url = format!("{GSTATIC_URL}&size={size}&url=https://{host}");
-    println!("Fetching favicon from: {}", favicon_url);
+    log::debug!("Fetching favicon from: {}", favicon_url);
 
     let res = client.get(&favicon_url).send().await?;
     if res.status().is_success() {
@@ -66,11 +66,9 @@ pub async fn get_favicon(
     };
 
     if let Some(inner) = value {
-        println!("Favicon found in database!");
+        log::debug!("Favicon found in database for: {}", host_str);
         create_image_response(inner.value().to_vec())
     } else {
-        println!("Favicon not found in database! Fetch favicon from API");
-
         let favicon_data = match fetch_favicon(&state.client, host_str, 32).await {
             Ok(data) => data,
             Err(e) => {
