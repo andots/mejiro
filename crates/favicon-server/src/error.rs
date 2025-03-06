@@ -66,6 +66,18 @@ impl From<redb::TableError> for ApiError {
     }
 }
 
+impl From<redb::StorageError> for ApiError {
+    fn from(err: redb::StorageError) -> Self {
+        Self::new(StatusCode::INTERNAL_SERVER_ERROR, err.to_string())
+    }
+}
+
+impl From<redb::CommitError> for ApiError {
+    fn from(err: redb::CommitError) -> Self {
+        Self::new(StatusCode::INTERNAL_SERVER_ERROR, err.to_string())
+    }
+}
+
 impl From<url::ParseError> for ApiError {
     fn from(err: url::ParseError) -> Self {
         Self::new(StatusCode::BAD_REQUEST, err.to_string())

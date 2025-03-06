@@ -70,28 +70,42 @@ pub async fn get_favicon(
         let favicon_data = value.value().to_vec();
         create_image_response(favicon_data)
     } else {
-        println!("Favicon not found in database!");
+        println!("Favicon not found in database! Fetch favicon from API");
+
         let favicon_data = match fetch_favicon(&state.client, &url, 32).await {
             Ok(data) => data,
             Err(e) => return e.into_response(),
         };
-        // drop read_txn to allow write_txn to open the table
-        // drop(read_txn);
 
-        // let write_txn = db
-        //     .begin_write()
-        //     .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
-        // {
-        //     let mut table = write_txn
-        //         .open_table(FAVICON_TABLE)
-        //         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
-        //     table
-        //         .insert(url.as_str(), favicon_data.as_slice())
-        //         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
-        // }
-        // write_txn
-        //     .commit()
-        //     .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+        let write_txn = match db.begin_write() {
+            Ok(txn) => txn,
+            Err(e) => {
+                return ApiError::from(e).into_response();
+            }
+        };
+        {
+            match write_txn.open_table(FAVICON_TABLE) {
+                Ok(mut table) => match table.insert(url.as_str(), favicon_data.as_slice()) {
+                    Ok(_) => (),
+                    Err(e) => {
+                        return ApiError::from(e).into_response();
+                    }
+                },
+                Err(e) => {
+                    return ApiError::from(e).into_response();
+                }
+            };
+        }
+
+        match write_txn.commit() {
+            Ok(_) => (),
+            Err(e) => {
+                return ApiError::from(e).into_response();
+            }
+        }
+
+        println!("Favicon saved to database!");
+
         create_image_response(favicon_data)
     }
 }
