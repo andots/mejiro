@@ -1,5 +1,25 @@
 # Changelog
 
+# [0.27.0](https://github.com/andots/mejiro/compare/v0.26.0...v0.27.0) (2025-03-06)
+
+
+### Bug Fixes
+
+* **favicon-server:** update fetch_favicon to use host from URL ([2455025](https://github.com/andots/mejiro/commit/2455025018f27cd135855d64a9a88e9dafddd67d))
+
+
+### Features
+
+* **app:** integrate favicon server with tauri app ([0bd8a6c](https://github.com/andots/mejiro/commit/0bd8a6c752ac7ad2567135dbba019e7bf9a8342f))
+* **favicon-server:** add 404 handler and update routing to include fallback ([1ee9f81](https://github.com/andots/mejiro/commit/1ee9f810a282f0d9d46b9bb7dd0e40a3b5cec84a))
+* **favicon-server:** add CORS support with tower-http ([50ba1cf](https://github.com/andots/mejiro/commit/50ba1cfb44a3ce9f04192f249b5eddb57a68fe14))
+* **favicon-server:** add delete_all endpoint to remove all favicons and health check endpoint ([b16298f](https://github.com/andots/mejiro/commit/b16298f89f059238c2300d7c78fb64786e0b2e6e))
+* **favicon-server:** fetch favicon if not found in database and write it to database ([bf72bc6](https://github.com/andots/mejiro/commit/bf72bc67c7b8d12c87eac1984be5baf56cf4617d))
+* **favicon-server:** initial commit of favicon server for cache image server ([136ab45](https://github.com/andots/mejiro/commit/136ab45d91caa556432c6665c8ce2ee508ddaf2a))
+* **favicon-server:** integrate logging for error handling and server events ([2d86bee](https://github.com/andots/mejiro/commit/2d86bee9c92276e33f1d0ff643fdca2fff7639f5))
+* **favicon-server:** return default image response on error in favicon retrieval ([f423648](https://github.com/andots/mejiro/commit/f423648d1f960ea64830bf2807807c889adae550))
+* **favicon-server:** return default image response when error occurs ([d786c4a](https://github.com/andots/mejiro/commit/d786c4a2f4db4bea46017409adf09c0e45799642))
+
 # [0.26.0](https://github.com/andots/mejiro/compare/v0.25.1...v0.26.0) (2025-03-05)
 
 
