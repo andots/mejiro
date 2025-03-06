@@ -16,7 +16,7 @@ use std::{net::SocketAddr, time::Duration};
 use tokio::sync::Mutex;
 use tower_http::cors::CorsLayer;
 
-use handler::{delete_all, get_favicon, health_check};
+use handler::{delete_all, get_favicon, handler_404, health_check};
 
 const USER_AGENT: &str =
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0";
@@ -73,7 +73,8 @@ where
         .route("/favicon", get(get_favicon))
         .route("/favicon", delete(delete_all))
         .layer(cors)
-        .with_state(app_state);
+        .with_state(app_state)
+        .fallback(handler_404);
 
     let addr = SocketAddr::from(([127, 0, 0, 1], port));
 

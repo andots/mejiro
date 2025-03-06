@@ -4,6 +4,9 @@
 GET {{host}}/
 
 ###
+GET {{host}}/bufiaref
+
+###
 GET {{host}}/favicon?url=https://www.rust-lang.org/
 
 ###

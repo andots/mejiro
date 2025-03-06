@@ -109,3 +109,7 @@ pub async fn delete_all(State(state): State<Arc<AppState>>) -> Response {
 pub async fn health_check() -> Response {
     (StatusCode::OK, "OK").into_response()
 }
+
+pub async fn handler_404() -> Response {
+    (StatusCode::NOT_FOUND, "Not Found").into_response()
+}
