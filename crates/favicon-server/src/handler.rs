@@ -15,13 +15,13 @@ use crate::{
     AppState,
 };
 
-const GSTATIC_URL: &str =
-    "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL";
-
 #[derive(Deserialize)]
 pub struct UrlQuery {
     url: String,
 }
+
+const GSTATIC_URL: &str =
+    "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL";
 
 async fn fetch_favicon(client: &Client, host: &str, size: u8) -> Result<Vec<u8>, Error> {
     let favicon_url = format!("{GSTATIC_URL}&size={size}&url=https://{host}");
@@ -85,7 +85,7 @@ pub async fn get_favicon(
     }
 }
 
-pub async fn delete_all(State(state): State<Arc<AppState>>) -> Response {
+pub async fn remove_all_favicons(State(state): State<Arc<AppState>>) -> Response {
     let db = state.db.lock().await;
     let keys = match keys(&db).await {
         Ok(keys) => keys,
@@ -103,7 +103,7 @@ pub async fn delete_all(State(state): State<Arc<AppState>>) -> Response {
         }
     }
 
-    (StatusCode::OK, "All favicons deleted").into_response()
+    (StatusCode::OK, "All favicons removed from database").into_response()
 }
 
 pub async fn health_check() -> Response {

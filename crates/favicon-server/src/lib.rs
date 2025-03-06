@@ -16,7 +16,7 @@ use std::{net::SocketAddr, time::Duration};
 use tokio::sync::Mutex;
 use tower_http::cors::CorsLayer;
 
-use handler::{delete_all, get_favicon, handler_404, health_check};
+use handler::{get_favicon, handler_404, health_check, remove_all_favicons};
 
 const USER_AGENT: &str =
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0";
@@ -71,7 +71,7 @@ where
     let app = Router::new()
         .route("/", get(health_check))
         .route("/favicon", get(get_favicon))
-        .route("/favicon", delete(delete_all))
+        .route("/favicon", delete(remove_all_favicons))
         .layer(cors)
         .with_state(app_state)
         .fallback(handler_404);
