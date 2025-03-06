@@ -24,3 +24,6 @@ release:
 
 release-dry-run:
   pnpm run release --dry-run
+
+server:
+  cargo run --package favicon-server --bin favicon-server
