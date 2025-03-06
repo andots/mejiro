@@ -3,6 +3,8 @@ use std::fmt::Display;
 use axum::{http::StatusCode, response::IntoResponse, Json};
 use serde::Serialize;
 
+use crate::response::create_default_image_response;
+
 #[derive(thiserror::Error, Debug)]
 pub enum ServerError {
     #[error("IO error: {0}")]
@@ -58,7 +60,10 @@ impl Display for ApiError {
 
 impl IntoResponse for ApiError {
     fn into_response(self) -> axum::response::Response {
-        (self.error.code, self.to_json()).into_response()
+        println!("Error: {}", self);
+        // (self.error.code, self.to_json()).into_response()
+        // this service needs to return image even if there is an error, so we return default image
+        create_default_image_response()
     }
 }
 

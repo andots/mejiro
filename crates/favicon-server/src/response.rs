@@ -18,5 +18,5 @@ pub fn create_default_image_response() -> Response {
     // #339AF0
     // https://icons8.com/icon/NyuxPErq0tu2/globe-africa
     // #5C7CFA
-    create_image_response(include_bytes!("./assets/default.png").to_vec())
+    create_image_response(include_bytes!("assets/default.png").to_vec())
 }
