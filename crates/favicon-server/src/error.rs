@@ -67,6 +67,12 @@ impl IntoResponse for ApiError {
     }
 }
 
+impl From<redb::Error> for ApiError {
+    fn from(err: redb::Error) -> Self {
+        Self::new(StatusCode::INTERNAL_SERVER_ERROR, err.to_string())
+    }
+}
+
 impl From<redb::TransactionError> for ApiError {
     fn from(err: redb::TransactionError) -> Self {
         Self::new(StatusCode::INTERNAL_SERVER_ERROR, err.to_string())

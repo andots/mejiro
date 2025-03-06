@@ -3,6 +3,7 @@ use axum::{
     http::StatusCode,
     response::{IntoResponse, Response},
 };
+use redb::Database;
 use reqwest::Client;
 use serde::Deserialize;
 use std::sync::Arc;
@@ -30,6 +31,7 @@ async fn fetch_favicon(client: &Client, url: &Url, size: u8) -> Result<Vec<u8>, 
                     Err(e) => Err(ApiError::from(e)),
                 }
             } else {
+                // status code is not success
                 Err(ApiError::new(
                     StatusCode::INTERNAL_SERVER_ERROR,
                     "Failed to fetch favicon",
@@ -38,6 +40,26 @@ async fn fetch_favicon(client: &Client, url: &Url, size: u8) -> Result<Vec<u8>, 
         }
         Err(e) => Err(ApiError::from(e)),
     }
+}
+
+async fn get(
+    db: &Database,
+    key: &str,
+) -> Result<Option<redb::AccessGuard<'static, &'static [u8]>>, redb::Error> {
+    let read_txn = db.begin_read()?;
+    let table = read_txn.open_table(FAVICON_TABLE)?;
+    let value = table.get(key)?;
+    Ok(value)
+}
+
+async fn insert(db: &Database, key: &str, value: &[u8]) -> Result<(), redb::Error> {
+    let write_txn = db.begin_write()?;
+    {
+        let mut table = write_txn.open_table(FAVICON_TABLE)?;
+        table.insert(key, value)?;
+    }
+    write_txn.commit()?;
+    Ok(())
 }
 
 pub async fn get_favicon(
@@ -52,23 +74,17 @@ pub async fn get_favicon(
     };
 
     let db = state.db.lock().await;
-    let read_txn = match db.begin_read() {
-        Ok(txn) => txn,
-        Err(e) => {
-            return ApiError::from(e).into_response();
-        }
-    };
-    let table = match read_txn.open_table(FAVICON_TABLE) {
-        Ok(table) => table,
+
+    let value = match get(&db, url.as_str()).await {
+        Ok(v) => v,
         Err(e) => {
             return ApiError::from(e).into_response();
         }
     };
 
-    if let Ok(Some(value)) = table.get(url.as_str()) {
+    if let Some(inner) = value {
         println!("Favicon found in database!");
-        let favicon_data = value.value().to_vec();
-        create_image_response(favicon_data)
+        create_image_response(inner.value().to_vec())
     } else {
         println!("Favicon not found in database! Fetch favicon from API");
 
@@ -79,35 +95,9 @@ pub async fn get_favicon(
             }
         };
 
-        let write_txn = match db.begin_write() {
-            Ok(txn) => txn,
-            Err(e) => {
-                return ApiError::from(e).into_response();
-            }
-        };
-        {
-            match write_txn.open_table(FAVICON_TABLE) {
-                Ok(mut table) => match table.insert(url.as_str(), favicon_data.as_slice()) {
-                    Ok(_) => (),
-                    Err(e) => {
-                        return ApiError::from(e).into_response();
-                    }
-                },
-                Err(e) => {
-                    return ApiError::from(e).into_response();
-                }
-            };
+        match insert(&db, url.as_str(), favicon_data.as_slice()).await {
+            Ok(_) => create_image_response(favicon_data),
+            Err(e) => ApiError::from(e).into_response(),
         }
-
-        match write_txn.commit() {
-            Ok(_) => {
-                println!("Favicon write transaction committed!");
-            }
-            Err(e) => {
-                return ApiError::from(e).into_response();
-            }
-        }
-
-        create_image_response(favicon_data)
     }
 }
