@@ -1,7 +1,5 @@
 import type { Component } from "solid-js";
-
-const GSTATIC_URL =
-  "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL";
+import { FAVICON_SERVER } from "../../constants";
 
 type Props = {
   url: string;
@@ -14,7 +12,7 @@ const Favicon: Component<Props> = (props) => {
     <img
       width={props.width}
       height={props.height}
-      src={`${GSTATIC_URL}&size=32&url=${props.url}`}
+      src={`${FAVICON_SERVER}/favicon?url=${props.url}`}
       alt="favicon"
     />
   );

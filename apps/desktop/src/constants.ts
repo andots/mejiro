@@ -12,6 +12,8 @@ export const NODE_ICON_SIZE = NODE_FONT_SIZE + 3;
 export const RESIZE_HANDLE_WIDTH = 4;
 export const SELECT_BOX_WIDTH = 180;
 
+export const FAVICON_SERVER = "http://localhost:7853";
+
 export const ROUTES = {
   HOME: "/",
 } as const;

@@ -3,8 +3,8 @@ use std::sync::Mutex;
 use tauri::Manager;
 use tauri_plugin_updater::UpdaterExt;
 
-use app_handle_ext::AppHandleExt;
-use constants::MAINWINDOW_LABEL;
+use app_handle_ext::{AppHandleExt, FileName};
+use constants::{FAVICON_SERVER_ALLOW_ORIGINS, FAVICON_SERVER_PORT, MAINWINDOW_LABEL};
 use window::create_window;
 
 mod app_handle_ext;
@@ -20,6 +20,16 @@ mod window;
 pub fn run() {
     let app = tauri::Builder::default()
         .setup(|app| {
+            // run favicon server
+            let database_path = app
+                .handle()
+                .get_file_path_from_app_dir(FileName::FaviconDatabase);
+            tauri::async_runtime::spawn(favicon_server::run(
+                database_path,
+                FAVICON_SERVER_PORT,
+                FAVICON_SERVER_ALLOW_ORIGINS.to_vec(),
+            ));
+
             #[cfg(desktop)]
             {
                 app.handle()

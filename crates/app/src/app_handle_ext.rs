@@ -28,6 +28,8 @@ pub enum FileName {
     WindowGeometry,
     #[strum(serialize = "dev-settings.json")]
     UserSettings,
+    #[strum(serialize = "dev-favicons.db")]
+    FaviconDatabase,
 }
 
 /// File names for release builds.
@@ -44,6 +46,8 @@ pub enum FileName {
     WindowGeometry,
     #[strum(serialize = "settings.json")]
     UserSettings,
+    #[strum(serialize = "favicons.db")]
+    FaviconDatabase,
 }
 
 fn deserialize_from_file<T, P>(path: P) -> T

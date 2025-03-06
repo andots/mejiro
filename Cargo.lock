@@ -2483,6 +2483,7 @@ name = "mejiro"
 version = "0.26.0"
 dependencies = [
  "anyhow",
+ "favicon-server",
  "log",
  "mejiro-core",
  "serde",

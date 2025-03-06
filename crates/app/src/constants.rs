@@ -11,3 +11,6 @@ pub const DEFAUTL_SIDEBAR_WIDTH: f64 = 200.0;
 pub const DEFAUTL_HEADER_HEIGHT: f64 = 40.0;
 pub const MIN_WINDOW_WIDTH: f64 = 360.0;
 pub const MIN_WINDOW_HEIGHT: f64 = 200.0;
+
+pub const FAVICON_SERVER_PORT: u16 = 7853;
+pub const FAVICON_SERVER_ALLOW_ORIGINS: [&str; 2] = ["http://localhost", "http://localhost:1420"];

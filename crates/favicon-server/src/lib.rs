@@ -28,7 +28,7 @@ pub struct AppState {
     client: Client,
 }
 
-pub async fn run<P>(path: P, port: u16, allow_origins: Vec<String>)
+pub async fn run<P>(path: P, port: u16, allow_origins: Vec<&str>)
 where
     P: AsRef<std::path::Path>,
 {
