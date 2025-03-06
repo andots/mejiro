@@ -1,14 +1,18 @@
 use axum::{
     extract::{Query, State},
     http::StatusCode,
-    response::{IntoResponse, Response},
+    response::Response,
 };
 use reqwest::Client;
 use serde::Deserialize;
 use std::sync::Arc;
 use url::Url;
 
-use crate::{error::ApiError, response::create_image_response, AppState, FAVICON_TABLE};
+use crate::{
+    error::ApiError,
+    response::{create_default_image_response, create_image_response},
+    AppState, FAVICON_TABLE,
+};
 
 const GSTATIC_URL: &str =
     "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL";
@@ -47,7 +51,8 @@ pub async fn get_favicon(
     let url = match Url::parse(&query.url) {
         Ok(url) => url,
         Err(e) => {
-            return ApiError::from(e).into_response();
+            println!("Failed to parse URL: {}", e);
+            return create_default_image_response();
         }
     };
 
@@ -55,13 +60,15 @@ pub async fn get_favicon(
     let read_txn = match db.begin_read() {
         Ok(txn) => txn,
         Err(e) => {
-            return ApiError::from(e).into_response();
+            println!("Failed to begin read transaction: {}", e);
+            return create_default_image_response();
         }
     };
     let table = match read_txn.open_table(FAVICON_TABLE) {
         Ok(table) => table,
         Err(e) => {
-            return ApiError::from(e).into_response();
+            println!("Failed to open table: {}", e);
+            return create_default_image_response();
         }
     };
 
@@ -74,13 +81,17 @@ pub async fn get_favicon(
 
         let favicon_data = match fetch_favicon(&state.client, &url, 32).await {
             Ok(data) => data,
-            Err(e) => return e.into_response(),
+            Err(e) => {
+                println!("Failed to fetch favicon: {}", e);
+                return create_default_image_response();
+            }
         };
 
         let write_txn = match db.begin_write() {
             Ok(txn) => txn,
             Err(e) => {
-                return ApiError::from(e).into_response();
+                println!("Failed to begin write transaction: {}", e);
+                return create_default_image_response();
             }
         };
         {
@@ -88,23 +99,26 @@ pub async fn get_favicon(
                 Ok(mut table) => match table.insert(url.as_str(), favicon_data.as_slice()) {
                     Ok(_) => (),
                     Err(e) => {
-                        return ApiError::from(e).into_response();
+                        println!("Failed to insert favicon: {}", e);
+                        return create_default_image_response();
                     }
                 },
                 Err(e) => {
-                    return ApiError::from(e).into_response();
+                    println!("Failed to open table: {}", e);
+                    return create_default_image_response();
                 }
             };
         }
 
         match write_txn.commit() {
-            Ok(_) => (),
+            Ok(_) => {
+                println!("Favicon write transaction committed!");
+            }
             Err(e) => {
-                return ApiError::from(e).into_response();
+                println!("Failed to commit write transaction: {}", e);
+                return create_default_image_response();
             }
         }
-
-        println!("Favicon saved to database!");
 
         create_image_response(favicon_data)
     }
