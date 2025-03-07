@@ -13,6 +13,9 @@ GET {{host}}/favicon?url=https://www.rust-lang.org/
 GET {{host}}/favicon?url=https://www.google.com/
 
 ###
+GET {{host}}/favicon?url=https://docs.solidjs.com/
+
+###
 GET {{host}}/favicon?url=https://www
 
 ###
