@@ -9,7 +9,7 @@ use std::sync::Arc;
 use url::Url;
 
 use crate::{
-    db::{get, insert, keys, remove},
+    db,
     error::{Error, ErrorResponse},
     response::create_image_response,
     AppState,
@@ -58,7 +58,7 @@ pub async fn get_favicon(
 
     let db = state.db.lock().await;
 
-    let value = match get(&db, host_str).await {
+    let value = match db::find(&db, host_str).await {
         Ok(v) => v,
         Err(e) => {
             return ErrorResponse::from(e).into_response();
@@ -76,7 +76,7 @@ pub async fn get_favicon(
             }
         };
 
-        match insert(&db, host_str, favicon_data.as_slice()).await {
+        match db::insert(&db, host_str, favicon_data.as_slice()).await {
             Ok(_) => create_image_response(favicon_data),
             Err(e) => ErrorResponse::from(e).into_response(),
         }
@@ -85,7 +85,7 @@ pub async fn get_favicon(
 
 pub async fn remove_all_favicons(State(state): State<Arc<AppState>>) -> Response {
     let db = state.db.lock().await;
-    let keys = match keys(&db).await {
+    let keys = match db::keys(&db).await {
         Ok(keys) => keys,
         Err(e) => {
             return (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()).into_response();
@@ -93,7 +93,7 @@ pub async fn remove_all_favicons(State(state): State<Arc<AppState>>) -> Response
     };
 
     for key in keys {
-        match remove(&db, &key).await {
+        match db::remove(&db, &key).await {
             Ok(_) => (),
             Err(e) => {
                 return (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()).into_response();

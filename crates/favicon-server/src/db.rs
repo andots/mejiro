@@ -2,7 +2,7 @@ use redb::{Database, ReadableTable};
 
 use crate::{error::Error, FAVICON_TABLE};
 
-pub(crate) async fn get(
+pub(crate) async fn find(
     db: &Database,
     key: &str,
 ) -> Result<Option<redb::AccessGuard<'static, &'static [u8]>>, Error> {
