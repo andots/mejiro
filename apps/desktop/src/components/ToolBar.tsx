@@ -11,6 +11,7 @@ import { useBookmarkState } from "../stores/bookmarks";
 import AddressBar from "./toolbar/AddressBar";
 import Favicon from "./icons/Favicon";
 import { useUserSettingsState } from "../stores/settings";
+import { FAVICON_SIZE } from "../constants";
 
 const ToolBar: Component = () => {
   const useUrl = useUrlState();
@@ -100,7 +101,7 @@ const ToolBar: Component = () => {
                 class="w-9 h-9 p-2"
                 onClick={() => handlePinnedUrl(bookmark.url)}
               >
-                <Favicon url={bookmark.url} width="18" height="18" />
+                <Favicon url={bookmark.url} width={FAVICON_SIZE} height={FAVICON_SIZE} />
               </Button>
             )}
           </For>

@@ -8,7 +8,8 @@ export const NODE_FONT_SIZE = 13;
 export const NODE_HEIGHT_PX = `${NODE_FONT_SIZE + 10}px`;
 export const NODE_ICON_BLOCK_SIZE = NODE_FONT_SIZE + 5;
 export const NODE_ICON_BLOCK_SIZE_PX = `${NODE_ICON_BLOCK_SIZE}px`;
-export const NODE_ICON_SIZE = NODE_FONT_SIZE + 3;
+export const NODE_ICON_SIZE = 16;
+export const FAVICON_SIZE = 16;
 export const RESIZE_HANDLE_WIDTH = 4;
 export const SELECT_BOX_WIDTH = 180;
 

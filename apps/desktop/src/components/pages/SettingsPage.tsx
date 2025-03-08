@@ -6,7 +6,7 @@ import { TextField, TextFieldInput } from "@repo/ui/text-field";
 import { Button } from "@repo/ui/button";
 import { useAppSettingsState, useUserSettingsState } from "../../stores/settings";
 import { validateUrl } from "../../utils";
-import { RecommendedSites } from "../../constants";
+import { FAVICON_SIZE, RecommendedSites } from "../../constants";
 import Favicon from "../icons/Favicon";
 import { useBookmarkState } from "../../stores/bookmarks";
 
@@ -145,7 +145,7 @@ const SettingsPage: Component = () => {
                                 class="mb-2 mr-2"
                                 onClick={() => handleAppendBookmarkToToolbar(title, url)}
                               >
-                                <Favicon url={url} width={"20px"} height={"20px"} />
+                                <Favicon url={url} width={FAVICON_SIZE} height={FAVICON_SIZE} />
                                 {title}
                               </Button>
                             );

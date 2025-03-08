@@ -69,7 +69,8 @@ pub async fn get_favicon(
         log::debug!("Favicon found in database for: {}", host_str);
         create_image_response(inner.value().to_vec())
     } else {
-        let favicon_data = match fetch_favicon(&state.client, host_str, 32).await {
+        let size = 16;
+        let favicon_data = match fetch_favicon(&state.client, host_str, size).await {
             Ok(data) => data,
             Err(e) => {
                 return ErrorResponse::from(e).into_response();
