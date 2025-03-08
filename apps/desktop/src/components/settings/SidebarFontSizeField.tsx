@@ -37,7 +37,7 @@ const SidebarFontSizeField: Component = () => {
         // validationState={rawValue() !== 40 ? "invalid" : "valid"}
       >
         <NumberFieldGroup>
-          <NumberFieldInput />
+          <NumberFieldInput class="h-8" />
           <NumberFieldIncrementTrigger />
           <NumberFieldDecrementTrigger />
         </NumberFieldGroup>
