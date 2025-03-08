@@ -22,6 +22,7 @@ const ToolBar: Component = () => {
   const toolbarBookmarks = useBookmarkState((state) => state.toolbarBookmarks);
   const externalState = useWindowState((state) => state.externalState);
 
+  // TODO: do not call every time when change bookmarks state change
   createEffect(
     on(bookmarks, () => {
       useBookmarkState.getState().getToolbarBookmarks();

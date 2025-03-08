@@ -14,12 +14,12 @@ const Sidebar: Component = () => {
   const sidebarWidth = useWindowState((state) => state.sidebarWidth);
   const [folders, setFolders] = createSignal<FolderData[]>([]);
 
+  // TODO: stop calling getFolders() every time bookmarks state change
   createEffect(
     on(bookmarks, async () => {
       if (bookmarks() === null) {
         return;
       }
-      // TODO: stop calling getFolders() every time bookmarks state change
       const folders = await getFolders();
       setFolders(folders);
       // if (isDev()) console.log("createEffect on Sidebar to getFolders", folders);
