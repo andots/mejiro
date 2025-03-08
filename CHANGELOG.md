@@ -1,5 +1,19 @@
 # Changelog
 
+# [0.28.0](https://github.com/andots/mejiro/compare/v0.27.0...v0.28.0) (2025-03-08)
+
+
+### Bug Fixes
+
+* **favicon-server:** favicon size to 16px ([eb71b55](https://github.com/andots/mejiro/commit/eb71b5515a8e5e4426b53dd1715e6e49e68a3a8e))
+* **favicon-server:** update allowed origins for favicon server ([c1a9453](https://github.com/andots/mejiro/commit/c1a9453d57ca1c460e42ecbcd250d21f4fac8eb6))
+
+
+### Features
+
+* **app,front:** set sidebar font size from user settings ([30cf143](https://github.com/andots/mejiro/commit/30cf143f50a5cd32e011c0c331de3fcbfb760755))
+* **front:** change sidebar font size from settings page ([283de35](https://github.com/andots/mejiro/commit/283de35b866410cad10ade89dbe88139b93006a1))
+
 # [0.27.0](https://github.com/andots/mejiro/compare/v0.26.0...v0.27.0) (2025-03-06)
 
 
