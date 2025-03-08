@@ -6,6 +6,7 @@ import BookmarkNode from "./BookmarkNode";
 import type { NestedBookmark } from "../../types";
 import { isDev } from "../../utils";
 import { useDraggingState } from "../../stores/dragging";
+import { useUserSettingsState } from "../../stores/settings";
 
 // Drag and drop events sequence:
 // dragstart(node) -> dragenter(droppable) -> dragover(droppable) -> drop(droppable) -> dragend(node)
@@ -19,6 +20,7 @@ const BookmarkTree: Component<Props> = (props) => {
 
   const useBookmark = useBookmarkState();
   const useDragging = useDraggingState();
+  const userSettings = useUserSettingsState((state) => state.settings);
 
   const handleDragEnter = (ev: DragEvent) => {
     const source = useDragging().source;
@@ -115,7 +117,11 @@ const BookmarkTree: Component<Props> = (props) => {
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
-      <BookmarkNode bookmark={props.bookmark} level={0} />
+      <BookmarkNode
+        bookmark={props.bookmark}
+        level={0}
+        fontSize={userSettings().sidebar_font_size}
+      />
     </ul>
   );
 };

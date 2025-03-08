@@ -4,10 +4,6 @@ export const SIDEBAR_MAX_WIDTH = 600;
 
 export const INDICATOR_WIDTH = "100px";
 export const INDICATOR_HEIGHT = "2px";
-export const NODE_FONT_SIZE = 13;
-export const NODE_HEIGHT_PX = `${NODE_FONT_SIZE + 10}px`;
-export const NODE_ICON_BLOCK_SIZE = NODE_FONT_SIZE + 5;
-export const NODE_ICON_BLOCK_SIZE_PX = `${NODE_ICON_BLOCK_SIZE}px`;
 export const NODE_ICON_SIZE = 16;
 export const FAVICON_SIZE = 16;
 export const RESIZE_HANDLE_WIDTH = 4;

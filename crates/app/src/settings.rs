@@ -49,6 +49,9 @@ pub struct UserSettings {
 
     #[serde(default = "default_home_page_url")]
     pub home_page_url: String,
+
+    #[serde(default = "default_sidebar_font_size")]
+    pub sidebar_font_size: f32,
 }
 
 impl Default for UserSettings {
@@ -57,6 +60,7 @@ impl Default for UserSettings {
             language: default_language(),
             theme: default_theme(),
             home_page_url: default_home_page_url(),
+            sidebar_font_size: default_sidebar_font_size(),
         }
     }
 }
@@ -71,6 +75,10 @@ fn default_language() -> String {
 
 fn default_theme() -> String {
     "light".to_string()
+}
+
+fn default_sidebar_font_size() -> f32 {
+    13.0
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

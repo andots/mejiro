@@ -33,6 +33,7 @@ export type UserSettings = {
   language: string;
   theme: string;
   home_page_url: string;
+  sidebar_font_size: number;
 };
 
 export type AppSettings = {

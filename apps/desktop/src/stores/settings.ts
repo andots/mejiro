@@ -7,6 +7,7 @@ import { useUrlState } from "./url";
 
 interface UserSettingsState {
   settings: UserSettings;
+  updateSideBarFontSize: (size: number) => Promise<void>;
   get: () => Promise<void>;
   update: (values: UserSettings) => Promise<void>;
 }
@@ -16,6 +17,7 @@ export const useUserSettingsState = createWithSignal<UserSettingsState>((set) =>
     language: "en",
     theme: "light",
     home_page_url: "https://search.brave.com/",
+    sidebar_font_size: 13.0,
   },
   get: async () => {
     const settings = await Invoke.GetUserSettings();
@@ -24,6 +26,9 @@ export const useUserSettingsState = createWithSignal<UserSettingsState>((set) =>
   update: async (values) => {
     const settings = await Invoke.UpdateUserSettings(values);
     set({ settings });
+  },
+  updateSideBarFontSize: async () => {
+    //
   },
 }));
 

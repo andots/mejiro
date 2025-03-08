@@ -5,14 +5,10 @@ import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 import type { NestedBookmark } from "../../types";
 
 import {
-  NODE_ICON_BLOCK_SIZE_PX,
   INDICATOR_WIDTH,
   INDICATOR_HEIGHT,
   RESIZE_HANDLE_WIDTH,
-  NODE_ICON_BLOCK_SIZE,
-  NODE_FONT_SIZE,
   NODE_ICON_SIZE,
-  NODE_HEIGHT_PX,
 } from "../../constants";
 
 import { useUrlState } from "../../stores/url";
@@ -28,6 +24,7 @@ import EditableTitle from "./EditableTitle";
 type Props = {
   bookmark: NestedBookmark;
   level: number;
+  fontSize: number;
 };
 
 const BookmarkNode: Component<Props> = (props) => {
@@ -52,10 +49,12 @@ const BookmarkNode: Component<Props> = (props) => {
     props.bookmark.node_type === "Folder" || props.bookmark.node_type === "Root";
   const isBookmark = () => props.bookmark.node_type === "Bookmark";
 
-  // width
+  // size, width, height
+  const height = () => props.fontSize + 10;
+  const blockSize = () => props.fontSize + 5;
   const paddingLevel = () => props.level * 8;
   const titleWidth = () =>
-    sidebarWidth() - paddingLevel() - RESIZE_HANDLE_WIDTH - NODE_ICON_BLOCK_SIZE * 2 - 20;
+    sidebarWidth() - paddingLevel() - RESIZE_HANDLE_WIDTH - blockSize() * 2 - 20;
 
   // for draggable
   const isRoot = () => props.bookmark.node_type === "Root";
@@ -191,12 +190,12 @@ const BookmarkNode: Component<Props> = (props) => {
         {/* Empty fixed space for Indicator */}
         <div style={{ width: INDICATOR_WIDTH, height: INDICATOR_HEIGHT }} />
 
-        <div class="flex flex-row items-center" style={{ height: NODE_HEIGHT_PX }}>
+        {/* NavigationArrow - Icon(favicon) - Title */}
+        <div class="flex flex-row items-center" style={{ height: `${height()}px` }}>
           <NavigationArrow
             isOpen={isOpen()}
             hasChildren={hasChildren()}
-            width={NODE_ICON_BLOCK_SIZE_PX}
-            height={NODE_ICON_BLOCK_SIZE_PX}
+            size={blockSize()}
             iconSize={NODE_ICON_SIZE}
             onClick={toggleIsOpen}
           />
@@ -206,9 +205,8 @@ const BookmarkNode: Component<Props> = (props) => {
               isOpen={isOpen()}
               isFolder={isFolder()}
               isBookmark={isBookmark()}
+              size={blockSize()}
               host={props.bookmark.host}
-              width={NODE_ICON_BLOCK_SIZE_PX}
-              height={NODE_ICON_BLOCK_SIZE_PX}
               iconSize={NODE_ICON_SIZE}
             />
 
@@ -217,7 +215,7 @@ const BookmarkNode: Component<Props> = (props) => {
               index={props.bookmark.index}
               title={props.bookmark.title}
               width={titleWidth()}
-              fontSize={NODE_FONT_SIZE}
+              fontSize={props.fontSize}
               isEditing={isEditing()}
             />
           </div>
@@ -235,7 +233,9 @@ const BookmarkNode: Component<Props> = (props) => {
       <Show when={hasChildren() && isOpen()}>
         <ul>
           <For each={props.bookmark.children}>
-            {(child) => <BookmarkNode bookmark={child} level={props.level + 1} />}
+            {(child) => (
+              <BookmarkNode bookmark={child} level={props.level + 1} fontSize={props.fontSize} />
+            )}
           </For>
         </ul>
       </Show>
@@ -246,21 +246,19 @@ const BookmarkNode: Component<Props> = (props) => {
 type NavigationArrowProps = {
   isOpen: boolean;
   hasChildren: boolean;
-  width: string;
-  height: string;
+  size: number;
   iconSize: number;
   onClick: (e: MouseEvent) => void;
 };
 
 const NavigationArrow: Component<NavigationArrowProps> = (props) => {
+  const size = () => `${props.size}px`;
+
   return (
-    <div
-      style={{ width: props.width, height: props.height }}
-      class="flex items-center justify-center"
-    >
+    <div style={{ width: size(), height: size() }} class="flex items-center justify-center">
       <Show when={props.hasChildren}>
         <button
-          style={{ width: props.width, height: props.height }}
+          style={{ width: size(), height: size() }}
           class="flex items-center justify-center hover:bg-stone-300 rounded"
           onClick={props.onClick}
           type="button"
@@ -277,17 +275,15 @@ type NodeIconProps = {
   isFolder: boolean;
   isBookmark: boolean;
   host: string | null;
-  width: string;
-  height: string;
+  size: number;
   iconSize: number;
 };
 
 const NodeIcon: Component<NodeIconProps> = (props) => {
+  const size = () => `${props.size}px`;
+
   return (
-    <div
-      style={{ width: props.width, height: props.height }}
-      class="flex items-center justify-center"
-    >
+    <div style={{ width: size(), height: size() }} class="flex items-center justify-center">
       <Switch>
         <Match when={props.isFolder}>
           <FolderIcon isOpen={props.isOpen} size={props.iconSize} />
