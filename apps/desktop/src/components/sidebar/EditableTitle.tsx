@@ -14,9 +14,7 @@ type Props = {
 };
 
 const EditableTitle: Component<Props> = (props) => {
-  const updateBookmarkTitle = useBookmarkState((state) => state.updateBookmarkTitle);
-  const setTreeLockState = useBookmarkState((state) => state.setTreeLockState);
-  const setEditingIndex = useBookmarkState((state) => state.setEditingIndex);
+  const useBookmark = useBookmarkState();
 
   const [ref, setRef] = createSignal<HTMLInputElement | null>(null);
   const [value, setValue] = createSignal<string>("");
@@ -47,10 +45,10 @@ const EditableTitle: Component<Props> = (props) => {
   const handleFocusOut = async (e: FocusEvent) => {
     // update title only if it has changed
     if (value() !== props.title) {
-      await updateBookmarkTitle(props.index, value());
+      await useBookmark().updateBookmarkTitle(props.index, value());
     }
-    setTreeLockState(false);
-    setEditingIndex(null);
+    useBookmark().setTreeLockState(false);
+    useBookmark().setEditingIndex(null);
   };
 
   const handleContextMenu = async (e: MouseEvent) => {
