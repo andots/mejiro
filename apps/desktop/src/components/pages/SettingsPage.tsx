@@ -2,16 +2,15 @@ import { createSignal, For, type Component } from "solid-js";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo/ui/card";
 import { Switch, SwitchControl, SwitchThumb } from "@repo/ui/switch";
-import { TextField, TextFieldInput } from "@repo/ui/text-field";
 import { Button } from "@repo/ui/button";
-import { useAppSettingsState, useUserSettingsState } from "../../stores/settings";
-import { validateUrl } from "../../utils";
-import { FAVICON_SIZE, RecommendedSites } from "../../constants";
-import Favicon from "../icons/Favicon";
-import { useBookmarkState } from "../../stores/bookmarks";
-import SidebarFontSizeField from "../settings/SidebarFontSizeField";
 
-// import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/ui/select";
+import { FAVICON_SIZE, RecommendedSites } from "../../constants";
+import { useAppSettingsState } from "../../stores/settings";
+import { useBookmarkState } from "../../stores/bookmarks";
+
+import Favicon from "../icons/Favicon";
+import SidebarFontSizeField from "../settings/SidebarFontSizeField";
+import HomePageUrlField from "../settings/HomePageUrlField";
 
 const SettingsPage: Component = () => {
   const useBookmark = useBookmarkState();
@@ -24,8 +23,6 @@ const SettingsPage: Component = () => {
   );
   const [incognito, setIncognito] = createSignal(appSettings().incognito);
 
-  const [isUpdating, setIsUpdating] = createSignal(false);
-
   const handleGpuAccelerationChange = (value: boolean) => {
     setGpuAcceleration(value);
     useAppSettings().update({ ...appSettings(), gpu_acceleration_enabled: value });
@@ -34,17 +31,6 @@ const SettingsPage: Component = () => {
   const handleIncognitoChange = (value: boolean) => {
     setIncognito(value);
     useAppSettings().update({ ...appSettings(), incognito: value });
-  };
-
-  const useUserSettings = useUserSettingsState();
-  const [homePageUrl, setHomePageUrl] = createSignal(useUserSettings().home_page_url);
-  const handleHomePageUrlUpdate = async () => {
-    if (validateUrl(homePageUrl())) {
-      setIsUpdating(true);
-      await useUserSettings().updateHomePageUrl(homePageUrl());
-      // wait for 500ms before setting isUpdating to false
-      setTimeout(() => setIsUpdating(false), 500);
-    }
   };
 
   const handleAppendBookmarkToToolbar = async (title: string, url: string) => {
@@ -106,18 +92,8 @@ const SettingsPage: Component = () => {
             <CardDescription class="mb-2">
               Set your favorite page to be displayed when the home button is clicked.
             </CardDescription>
-            <CardContent class="flex flex-row justify-between items-center p-2 space-x-3">
-              <TextField class="w-10/12">
-                <TextFieldInput
-                  type="url"
-                  placeholder="Enter your favorite page url..."
-                  value={homePageUrl()}
-                  onInput={(e) => setHomePageUrl(e.currentTarget.value)}
-                />
-              </TextField>
-              <Button class="w-20" onClick={handleHomePageUrlUpdate} disabled={isUpdating()}>
-                Update
-              </Button>
+            <CardContent class="p-2">
+              <HomePageUrlField />
             </CardContent>
           </Card>
 

@@ -3,7 +3,6 @@ import { createSignal, type Component } from "solid-js";
 import {
   NumberField,
   NumberFieldDecrementTrigger,
-  NumberFieldErrorMessage,
   NumberFieldGroup,
   NumberFieldIncrementTrigger,
   NumberFieldInput,
@@ -11,8 +10,8 @@ import {
 import { useUserSettingsState } from "../../stores/settings";
 
 const SidebarFontSizeField: Component = () => {
-  const [rawValue, setRawValue] = createSignal<number>();
   const useUserSettings = useUserSettingsState();
+  const [rawValue, setRawValue] = createSignal<number>();
 
   const handleOnChange = () => {
     const value = rawValue();
