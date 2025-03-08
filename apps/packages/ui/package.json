@@ -10,6 +10,7 @@
     "./context-menu": "./src/context-menu.tsx",
     "./dialog": "./src/dialog.tsx",
     "./icons": "./src/icons.tsx",
+    "./number-field": "./src/number-field.tsx",
     "./select": "./src/select.tsx",
     "./separator": "./src/separator.tsx",
     "./sheet": "./src/sheet.tsx",

@@ -6,29 +6,41 @@ import { Invoke } from "../invokes";
 import { useUrlState } from "./url";
 
 interface UserSettingsState {
-  settings: UserSettings;
-  updateSideBarFontSize: (size: number) => Promise<void>;
+  language: string;
+  theme: string;
+  home_page_url: string;
+  sidebar_font_size: number;
   get: () => Promise<void>;
-  update: (values: UserSettings) => Promise<void>;
+  updateHomePageUrl: (value: string) => Promise<void>;
+  updateSidebarFontSize: (value: number) => Promise<void>;
 }
 
-export const useUserSettingsState = createWithSignal<UserSettingsState>((set) => ({
-  settings: {
-    language: "en",
-    theme: "light",
-    home_page_url: "https://search.brave.com/",
-    sidebar_font_size: 13.0,
-  },
+export const useUserSettingsState = createWithSignal<UserSettingsState>((set, get) => ({
+  language: "en",
+  theme: "light",
+  home_page_url: "https://search.brave.com/",
+  sidebar_font_size: 13.0,
   get: async () => {
-    const settings = await Invoke.GetUserSettings();
-    set({ settings });
+    const result = await Invoke.GetUserSettings();
+    set({ ...result });
   },
-  update: async (values) => {
-    const settings = await Invoke.UpdateUserSettings(values);
-    set({ settings });
+  updateHomePageUrl: async (value) => {
+    const result = await Invoke.UpdateUserSettings({
+      language: get().language,
+      theme: get().theme,
+      sidebar_font_size: get().sidebar_font_size,
+      home_page_url: value,
+    });
+    set({ ...result });
   },
-  updateSideBarFontSize: async () => {
-    //
+  updateSidebarFontSize: async (value) => {
+    const result = await Invoke.UpdateUserSettings({
+      language: get().language,
+      theme: get().theme,
+      sidebar_font_size: value,
+      home_page_url: get().home_page_url,
+    });
+    set({ ...result });
   },
 }));
 

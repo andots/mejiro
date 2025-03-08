@@ -9,13 +9,13 @@ import { validateUrl } from "../../utils";
 import { FAVICON_SIZE, RecommendedSites } from "../../constants";
 import Favicon from "../icons/Favicon";
 import { useBookmarkState } from "../../stores/bookmarks";
+import SidebarFontSizeField from "../settings/SidebarFontSizeField";
 
 // import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/ui/select";
 
 const SettingsPage: Component = () => {
   const useBookmark = useBookmarkState();
   const useAppSettings = useAppSettingsState();
-  const useUserSettings = useUserSettingsState();
 
   // App Settings
   const appSettings = useAppSettingsState((state) => state.settings);
@@ -23,12 +23,6 @@ const SettingsPage: Component = () => {
     appSettings().gpu_acceleration_enabled,
   );
   const [incognito, setIncognito] = createSignal(appSettings().incognito);
-
-  // User Settings
-  const userSettings = useUserSettingsState((state) => state.settings);
-  const [homePageUrl, setHomePageUrl] = createSignal(userSettings().home_page_url);
-  // const [language, setLanguage] = createSignal(settings().language);
-  // const [theme, setTheme] = createSignal(settings().theme);
 
   const [isUpdating, setIsUpdating] = createSignal(false);
 
@@ -42,10 +36,12 @@ const SettingsPage: Component = () => {
     useAppSettings().update({ ...appSettings(), incognito: value });
   };
 
+  const useUserSettings = useUserSettingsState();
+  const [homePageUrl, setHomePageUrl] = createSignal(useUserSettings().home_page_url);
   const handleHomePageUrlUpdate = async () => {
     if (validateUrl(homePageUrl())) {
       setIsUpdating(true);
-      await useUserSettings().update({ ...userSettings(), home_page_url: homePageUrl() });
+      await useUserSettings().updateHomePageUrl(homePageUrl());
       // wait for 500ms before setting isUpdating to false
       setTimeout(() => setIsUpdating(false), 500);
     }
@@ -64,6 +60,13 @@ const SettingsPage: Component = () => {
         </CardHeader>
 
         <CardContent class="space-y-6">
+          <Card class="w-full p-5">
+            <CardTitle class="pb-2 text-base">Appearance</CardTitle>
+            <CardContent class="p-2 space-y-4">
+              <SidebarFontSizeField />
+            </CardContent>
+          </Card>
+
           {/* Browser Settings Section */}
           <Card class="w-full p-5">
             <CardTitle class="pb-2 text-base">Browser Settings</CardTitle>

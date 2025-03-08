@@ -20,7 +20,7 @@ const BookmarkTree: Component<Props> = (props) => {
 
   const useBookmark = useBookmarkState();
   const useDragging = useDraggingState();
-  const userSettings = useUserSettingsState((state) => state.settings);
+  const fontSize = useUserSettingsState((state) => state.sidebar_font_size);
 
   const handleDragEnter = (ev: DragEvent) => {
     const source = useDragging().source;
@@ -117,11 +117,7 @@ const BookmarkTree: Component<Props> = (props) => {
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
-      <BookmarkNode
-        bookmark={props.bookmark}
-        level={0}
-        fontSize={userSettings().sidebar_font_size}
-      />
+      <BookmarkNode bookmark={props.bookmark} level={0} fontSize={fontSize()} />
     </ul>
   );
 };

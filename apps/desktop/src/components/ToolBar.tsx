@@ -45,7 +45,7 @@ const ToolBar: Component = () => {
 
   const handleHome = () => {
     setPage("dashboard");
-    const url = useUserSettings().settings.home_page_url;
+    const url = useUserSettings().home_page_url;
     useUrl().navigateToUrl(url);
     if (externalState() === "hidden") {
       useWindow().changeExternalState("right");
