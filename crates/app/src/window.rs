@@ -11,8 +11,23 @@ use crate::constants::{
     APP_WEBVIEW_LABEL, APP_WEBVIEW_URL, EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL,
     MIN_WINDOW_HEIGHT, MIN_WINDOW_WIDTH,
 };
+use crate::error::AppError;
 use crate::events::AppEvent;
 use crate::settings::{default_start_page_url, AppSettings, WindowGeometry};
+
+/// Get the app webview
+pub fn get_app_webview(app_handle: &tauri::AppHandle) -> Result<tauri::Webview, AppError> {
+    app_handle
+        .get_webview(APP_WEBVIEW_LABEL)
+        .ok_or(AppError::WebviewNotFound)
+}
+
+/// Get the external webview
+pub fn get_external_webview(app_handle: &tauri::AppHandle) -> Result<tauri::Webview, AppError> {
+    app_handle
+        .get_webview(EXTERNAL_WEBVIEW_LABEL)
+        .ok_or(AppError::WebviewNotFound)
+}
 
 /// Create the main window with the app and external webviews.
 /// The app webview is the main webview that loads the app.

@@ -1,9 +1,9 @@
 use serde::{Deserialize, Serialize};
-use tauri::{Manager, PhysicalPosition, PhysicalSize, Position, Rect, Size, Url};
+use tauri::{PhysicalPosition, PhysicalSize, Position, Rect, Size, Url};
 
 use crate::{
-    constants::{APP_WEBVIEW_LABEL, EXTERNAL_WEBVIEW_LABEL},
     error::AppError,
+    window::{get_app_webview, get_external_webview},
 };
 
 // https://v2.tauri.app/develop/calling-rust/
@@ -17,7 +17,7 @@ pub struct WebviewBounds {
 
 /// Convert WebviewBounds to Rect
 /// Serialize is implemented for Rect but not Deserialize, so we need to convert it
-///https://docs.rs/tauri/latest/tauri/struct.Rect.html
+/// https://docs.rs/tauri/latest/tauri/struct.Rect.html
 impl From<WebviewBounds> for Rect {
     fn from(val: WebviewBounds) -> Self {
         Rect {
@@ -27,24 +27,10 @@ impl From<WebviewBounds> for Rect {
     }
 }
 
-/// Get the app webview
-fn get_app_webview(app_handle: tauri::AppHandle) -> Result<tauri::Webview, AppError> {
-    app_handle
-        .get_webview(APP_WEBVIEW_LABEL)
-        .ok_or(AppError::WebviewNotFound)
-}
-
-/// Get the external webview
-fn get_external_webview(app_handle: tauri::AppHandle) -> Result<tauri::Webview, AppError> {
-    app_handle
-        .get_webview(EXTERNAL_WEBVIEW_LABEL)
-        .ok_or(AppError::WebviewNotFound)
-}
-
 /// Get the size and position of the app webview
 #[tauri::command]
 pub fn get_app_webview_bounds(app_handle: tauri::AppHandle) -> Result<Rect, AppError> {
-    let webview = get_app_webview(app_handle)?;
+    let webview = get_app_webview(&app_handle)?;
     let bounds = webview.bounds()?;
     Ok(bounds)
 }
@@ -53,7 +39,7 @@ pub fn get_app_webview_bounds(app_handle: tauri::AppHandle) -> Result<Rect, AppE
 #[tauri::command]
 pub fn navigate_webview_url(app_handle: tauri::AppHandle, url: String) -> Result<(), AppError> {
     let parsed_url = Url::parse(&url).map_err(tauri::Error::InvalidUrl)?;
-    let mut webview = get_external_webview(app_handle)?;
+    let mut webview = get_external_webview(&app_handle)?;
     webview.navigate(parsed_url)?;
     Ok(())
 }
@@ -62,7 +48,7 @@ pub fn navigate_webview_url(app_handle: tauri::AppHandle, url: String) -> Result
 /// script sending title to send_page_title and it emits to app webview
 #[tauri::command]
 pub fn get_external_webview_title(app_handle: tauri::AppHandle) -> Result<(), AppError> {
-    let webview = get_external_webview(app_handle)?;
+    let webview = get_external_webview(&app_handle)?;
     let _ = webview.eval(include_str!("../../js/get-title.js"));
     Ok(())
 }
@@ -73,7 +59,7 @@ pub fn set_external_webview_bounds(
     app_handle: tauri::AppHandle,
     bounds: WebviewBounds,
 ) -> Result<(), AppError> {
-    let webview = get_external_webview(app_handle)?;
+    let webview = get_external_webview(&app_handle)?;
     webview.set_bounds(bounds.into())?;
     Ok(())
 }
@@ -81,7 +67,7 @@ pub fn set_external_webview_bounds(
 /// Show the external webview
 #[tauri::command]
 pub fn show_external_webview(app_handle: tauri::AppHandle) -> Result<(), AppError> {
-    let webview = get_external_webview(app_handle)?;
+    let webview = get_external_webview(&app_handle)?;
     webview.show()?;
     Ok(())
 }
@@ -89,7 +75,7 @@ pub fn show_external_webview(app_handle: tauri::AppHandle) -> Result<(), AppErro
 /// Hide the external webview
 #[tauri::command]
 pub fn hide_external_webview(app_handle: tauri::AppHandle) -> Result<(), AppError> {
-    let webview = get_external_webview(app_handle)?;
+    let webview = get_external_webview(&app_handle)?;
     webview.hide()?;
     Ok(())
 }
