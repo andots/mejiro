@@ -130,7 +130,8 @@ fn create_external_webview(
                 let _ = webview.eval(include_str!("../js/title-observer.js"));
                 let _ = webview.eval(include_str!("../js/url-observer.js"));
             }
-        });
+        })
+        .initialization_script(include_str!("../js/mouse-gesture.js"));
 
     #[cfg(target_os = "windows")]
     if !settings.gpu_acceleration_enabled {
