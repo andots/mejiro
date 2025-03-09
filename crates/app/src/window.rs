@@ -126,12 +126,12 @@ fn create_external_webview(
         .on_page_load(|webview, payload| {
             if let PageLoadEvent::Finished = payload.event() {
                 // This happens when the page is loaded
-                // Inject the title observer and url observer scripts
+                // Inject the title-observer, url-observer, mouse-gesture scripts
                 let _ = webview.eval(include_str!("../js/title-observer.js"));
                 let _ = webview.eval(include_str!("../js/url-observer.js"));
+                let _ = webview.eval(include_str!("../js/mouse-gesture.js"));
             }
-        })
-        .initialization_script(include_str!("../js/mouse-gesture.js"));
+        });
 
     #[cfg(target_os = "windows")]
     if !settings.gpu_acceleration_enabled {

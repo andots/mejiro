@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+(() => {
   let isMouseMoved = false;
 
   const OVRELAY_ID = "mejiro-mouse-gesture-overlay";
@@ -80,7 +80,6 @@ document.addEventListener("DOMContentLoaded", () => {
       endX = moveEvent.clientX;
       endY = moveEvent.clientY;
 
-      // Draw a red gesture line
       ctx.strokeStyle = STROKE_COLOR;
       ctx.lineWidth = 5;
       ctx.beginPath();
@@ -143,4 +142,4 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
     }
   });
-});
+})();
