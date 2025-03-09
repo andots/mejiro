@@ -32,6 +32,7 @@
   const ctx = canvas.getContext("2d");
 
   function maximizeCanvas() {
+    // TODO: don't hard-coded 20, 20 is for a margin of scrollbar
     canvas.width = window.innerWidth - 20;
     canvas.height = window.innerHeight - 20;
   }
@@ -41,8 +42,6 @@
   window.addEventListener("resize", maximizeCanvas, true);
 
   document.addEventListener("mousedown", (e) => {
-    e.preventDefault();
-
     // Ignore if not right-click
     if (e.button !== 2) return;
 
