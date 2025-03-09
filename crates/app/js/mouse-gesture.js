@@ -43,8 +43,10 @@
   document.addEventListener("mousedown", (e) => {
     e.preventDefault();
 
-    if (e.button !== 2) return; // Ignore if not right-click
+    // Ignore if not right-click
+    if (e.button !== 2) return;
 
+    // Check document.body and namespaceURI
     if (
       !document.body &&
       document.documentElement.namespaceURI !== "http://www.w3.org/1999/xhtml"
@@ -52,16 +54,10 @@
       return;
     }
 
-    if (document.body.tagName.toUpperCase() === "FRAMESET") {
-      document.documentElement.appendChild(overlay);
-    } else {
-      document.body.appendChild(overlay);
-    }
+    // Append overlay and canvas to body, then show it
+    document.body.appendChild(overlay);
+    overlay.appendChild(canvas);
     overlay.showPopover();
-
-    if (!overlay.contains(canvas)) {
-      overlay.appendChild(canvas);
-    }
 
     const startX = e.clientX;
     const startY = e.clientY;
@@ -70,11 +66,9 @@
     let endX = startX;
     let endY = startY;
 
-    // Clear previous lines
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // write mouse move stroke
+    // Write mouse move stroke on canvas
     const onMouseMove = (moveEvent) => {
+      // TODO: need to check mouse move with margin, this is too sensitive
       isMouseMoved = true;
 
       endX = moveEvent.clientX;
@@ -91,6 +85,7 @@
       lastY = endY;
     };
 
+    // Execute Gesuture and cleanup all
     const onMouseUp = (e) => {
       e.preventDefault();
       executeGesture(startX, startY, endX, endY);
@@ -101,17 +96,22 @@
       const dx = ex - sx;
       const dy = ey - sy;
 
+      // Compare dx and dy
       if (Math.abs(dx) > Math.abs(dy)) {
         if (dx > 30) {
-          history.forward(); // Right drag → Go forward
+          // Right drag → Go forward
+          history.forward();
         } else if (dx < -30) {
-          history.back(); // Left drag → Go back
+          // Left drag → Go back
+          history.back();
         }
       } else {
         if (dy > 30) {
-          window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" }); // Down drag → Scroll to bottom
+          // Down drag → Scroll to bottom
+          window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
         } else if (dy < -30) {
-          window.scrollTo({ top: 0, behavior: "smooth" }); // Up drag → Scroll to top
+          // Up drag → Scroll to top
+          window.scrollTo({ top: 0, behavior: "smooth" });
         }
       }
     }
@@ -121,8 +121,6 @@
       overlay.remove();
       canvas.remove();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      // Remove the gesture line after 0.1s
-      // setTimeout(() => ctx.clearRect(0, 0, canvasEl.width, canvasEl.height), 100);
 
       document.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mouseup", onMouseUp);
