@@ -1,18 +1,30 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Create a canvas and add it to the page
-  const canvas = document.createElement("canvas");
-  document.body.appendChild(canvas);
-  const ctx = canvas.getContext("2d");
+  const CANVAS_ID = "mejiro-mouse-gesture-canvas";
+  const STROKE_COLOR = "#16a34a";
 
-  // Set canvas styles
-  canvas.id = "mejiro-mouse-gesture-canvas";
-  canvas.style.zIndex = "9999";
-  canvas.style.position = "fixed";
-  canvas.style.top = "0";
-  canvas.style.left = "0";
-  canvas.style.pointerEvents = "none"; // Ignore mouse events
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  // Create canvas and add it to the page
+  if (!document.getElementById(CANVAS_ID)) {
+    const canvas = document.createElement("canvas");
+    canvas.id = CANVAS_ID;
+    // Set canvas styles
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvas.style.zIndex = "9999";
+    canvas.style.position = "fixed";
+    canvas.style.top = "0";
+    canvas.style.left = "0";
+    canvas.style.pointerEvents = "none"; // Ignore mouse events
+    document.body.appendChild(canvas);
+  }
+
+  const canvas = document.getElementById(CANVAS_ID);
+
+  // if canvas nout found just return.
+  if (canvas === null) {
+    return;
+  }
+
+  const ctx = canvas.getContext("2d");
 
   // Resize the canvas when the window size changes
   window.addEventListener("resize", () => {
@@ -20,7 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
     canvas.height = window.innerHeight;
   });
 
-  const strokeColor = "#16a34a";
   let isMouseMoved = false;
 
   document.addEventListener("mousedown", (e) => {
@@ -46,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
       endY = moveEvent.clientY;
 
       // Draw a red gesture line
-      ctx.strokeStyle = strokeColor;
+      ctx.strokeStyle = STROKE_COLOR;
       ctx.lineWidth = 5;
       ctx.beginPath();
       ctx.moveTo(lastX, lastY);
