@@ -8,26 +8,32 @@ document.addEventListener("DOMContentLoaded", () => {
   const overlay = document.createElementNS("http://www.w3.org/1999/xhtml", "div");
   overlay.id = OVRELAY_ID;
   overlay.popover = "manual";
-  overlay.style.all = "initial !important";
-  overlay.style.position = "fixed !important";
-  overlay.style.inset = "0 !important";
-  overlay.style.pointerEvents = "none !important";
-  overlay.style.top = "0 !important";
-  overlay.style.left = "0 !important";
-  overlay.style.background = "rgba(0, 0, 0, 0)";
-  overlay.style.border = "none";
-  overlay.style.overflow = "hidden";
+  overlay.style.cssText = `
+    all: initial !important;
+    position: fixed !important;
+    inset: 0 !important;
+    pointer-events: none !important;
+    top: 0 !important;
+    left: 0 !important;
+    background: rgba(0, 0, 0, 0);
+    border: none;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+  `;
 
   const canvas = document.createElementNS("http://www.w3.org/1999/xhtml", "canvas");
   canvas.id = CANVAS_ID;
-  canvas.style.all = "initial !important";
-  canvas.style.pointerEvents = "none !important";
+  canvas.style.cssText = `
+    all: initial !important;
+    pointer-events: none !important;
+  `;
 
   const ctx = canvas.getContext("2d");
 
   function maximizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth - 20;
+    canvas.height = window.innerHeight - 20;
   }
 
   maximizeCanvas();
