@@ -1,43 +1,61 @@
 document.addEventListener("DOMContentLoaded", () => {
+  let isMouseMoved = false;
+
+  const OVRELAY_ID = "mejiro-mouse-gesture-overlay";
   const CANVAS_ID = "mejiro-mouse-gesture-canvas";
-  const STROKE_COLOR = "#16a34a";
+  const STROKE_COLOR = "#22c55e";
 
-  // Create canvas and add it to the page
-  if (!document.getElementById(CANVAS_ID)) {
-    const canvas = document.createElement("canvas");
-    canvas.id = CANVAS_ID;
-    // Set canvas styles
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    canvas.style.zIndex = "9999";
-    canvas.style.position = "fixed";
-    canvas.style.top = "0";
-    canvas.style.left = "0";
-    canvas.style.pointerEvents = "none"; // Ignore mouse events
-    document.body.appendChild(canvas);
-  }
+  const overlay = document.createElementNS("http://www.w3.org/1999/xhtml", "div");
+  overlay.id = OVRELAY_ID;
+  overlay.popover = "manual";
+  overlay.style.all = "initial !important";
+  overlay.style.position = "fixed !important";
+  overlay.style.inset = "0 !important";
+  overlay.style.pointerEvents = "none !important";
+  overlay.style.top = "0 !important";
+  overlay.style.left = "0 !important";
+  overlay.style.background = "rgba(0, 0, 0, 0)";
+  overlay.style.border = "none";
+  overlay.style.overflow = "hidden";
 
-  const canvas = document.getElementById(CANVAS_ID);
-
-  // if canvas nout found just return.
-  if (canvas === null) {
-    return;
-  }
+  const canvas = document.createElementNS("http://www.w3.org/1999/xhtml", "canvas");
+  canvas.id = CANVAS_ID;
+  canvas.style.all = "initial !important";
+  canvas.style.pointerEvents = "none !important";
 
   const ctx = canvas.getContext("2d");
 
-  // Resize the canvas when the window size changes
-  window.addEventListener("resize", () => {
+  function maximizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-  });
+  }
 
-  let isMouseMoved = false;
+  maximizeCanvas();
+
+  window.addEventListener("resize", maximizeCanvas, true);
 
   document.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+
     if (e.button !== 2) return; // Ignore if not right-click
 
-    e.preventDefault();
+    if (
+      !document.body &&
+      document.documentElement.namespaceURI !== "http://www.w3.org/1999/xhtml"
+    ) {
+      return;
+    }
+
+    if (document.body.tagName.toUpperCase() === "FRAMESET") {
+      document.documentElement.appendChild(overlay);
+    } else {
+      document.body.appendChild(overlay);
+    }
+    overlay.showPopover();
+
+    if (!overlay.contains(canvas)) {
+      overlay.appendChild(canvas);
+    }
 
     const startX = e.clientX;
     const startY = e.clientY;
@@ -94,10 +112,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function cleanup() {
+      overlay.hidePopover();
+      overlay.remove();
+      canvas.remove();
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // Remove the gesture line after 0.1s
+      // setTimeout(() => ctx.clearRect(0, 0, canvasEl.width, canvasEl.height), 100);
+
       document.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mouseup", onMouseUp);
-      // Remove the gesture line after 0.1s
-      setTimeout(() => ctx.clearRect(0, 0, canvas.width, canvas.height), 100);
       // Set isMouseMoved to false after 0.5s to prevent context menu opened
       setTimeout(() => {
         isMouseMoved = false;
