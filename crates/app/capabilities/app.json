@@ -4,5 +4,5 @@
   "description": "enables the app permissions",
   "windows": ["main"],
   "webviews": ["app"],
-  "permissions": ["core:default", "log:default", "core:window:allow-destroy"]
+  "permissions": ["core:default", "log:default"]
 }

@@ -82,6 +82,7 @@ pub trait AppHandleExt {
     fn get_app_settings_file_path(&self) -> PathBuf;
     fn load_app_settings(&self) -> AppSettings;
     fn save_app_settings(&self) -> Result<(), AppError>;
+    fn sync_last_visited_url(&self) -> Result<(), AppError>;
 
     fn get_window_geometry_file_path(&self) -> PathBuf;
     fn load_window_geometry(&self) -> WindowGeometry;
@@ -156,6 +157,20 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
                 .lock()
                 .map_err(|_| AppError::Mutex("can't get settings".to_string()))?;
             serde_json::to_writer_pretty(file, &settings.clone())?;
+        }
+        Ok(())
+    }
+
+    /// Sync external url with start_page_url in AppSettings for last visited url
+    fn sync_last_visited_url(&self) -> Result<(), AppError> {
+        if let Some(external) = self.get_webview(EXTERNAL_WEBVIEW_LABEL) {
+            if let Some(state) = self.try_state::<Mutex<AppSettings>>() {
+                let url = external.url()?;
+                let mut settings = state
+                    .lock()
+                    .map_err(|_| AppError::Mutex("can't get settings".to_string()))?;
+                settings.start_page_url = url.to_string();
+            }
         }
         Ok(())
     }

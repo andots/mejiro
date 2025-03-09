@@ -35,7 +35,6 @@ const App: Component = () => {
   let unlistenExternalTitleChanged: UnlistenFn;
   let unlistenExternalUrlChanged: UnlistenFn;
   let unlistenResized: UnlistenFn;
-  let unlistenCloseRequested: UnlistenFn;
 
   onMount(async () => {
     // get data from rust side for zustand stores
@@ -72,17 +71,6 @@ const App: Component = () => {
       useWindow().setExternalSize(payload);
     });
 
-    // listen for close requested events and update the start page url as the last visited url
-    unlistenCloseRequested = await getCurrentWindow().onCloseRequested(async (event) => {
-      const url = useUrl().url;
-      if (url !== "") {
-        await useAppSettings().update({
-          ...useAppSettings().settings,
-          start_page_url: url,
-        });
-      }
-    });
-
     // Since the initial ExternalTitleChanged event for start_page_url emitted
     // from the Rust side occurs before the frontend initialization,
     // it is necessary to retrieve the external webview title here.
@@ -97,7 +85,6 @@ const App: Component = () => {
     unlistenExternalTitleChanged();
     unlistenExternalUrlChanged();
     unlistenResized();
-    unlistenCloseRequested();
   });
 
   // createEffect(

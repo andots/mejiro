@@ -137,6 +137,7 @@ pub fn run() {
             if label == MAINWINDOW_LABEL {
                 match event {
                     tauri::WindowEvent::CloseRequested { .. } => {
+                        let _ = app_handle.sync_last_visited_url();
                         let _ = app_handle.save_window_geometry();
                     }
                     tauri::WindowEvent::Resized(_physical_size) => {}
