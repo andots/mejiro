@@ -1,5 +1,23 @@
 # Changelog
 
+# [0.29.0](https://github.com/andots/mejiro/compare/v0.28.0...v0.29.0) (2025-03-09)
+
+
+### Bug Fixes
+
+* **app:** sync last visited url in rust side ([b270fed](https://github.com/andots/mejiro/commit/b270fed5f3d1e75d180c59224b1983dd70629525))
+* **mouse-gesture:** create canvas if not found ([89a6c73](https://github.com/andots/mejiro/commit/89a6c7380e24235e1d94cb9bb2689d00857417b8))
+* **mouse-gesture:** don't need to preventDefault on mousedown, it caused all mousedown refused ([4a64941](https://github.com/andots/mejiro/commit/4a64941740d272791545e6beb3e1ac58e58748a2))
+* **mouse-gesture:** eval mouse gesture scripts on page load to make it works on every webpage ([44e89c5](https://github.com/andots/mejiro/commit/44e89c57dd037815a6789ced602a510f18e3ab8c))
+* **mouse-gesture:** simplify append overlay and canvas, add comments ([bd0d25e](https://github.com/andots/mejiro/commit/bd0d25e38fe4f8cbfb239b37e875c2ecc68ee4d5))
+* **mouse-gesture:** use overlay and canvas for mouse gesture ([562e55c](https://github.com/andots/mejiro/commit/562e55c1d485386e2a14b111de85941e46c3766c))
+* **mouse-gesture:** use style.cssText ([092789b](https://github.com/andots/mejiro/commit/092789ba12c99386b9640fd93221380145e837e6))
+
+
+### Features
+
+* add simple mouse gesture (history back/forward, scroll to top/bottom) ([2af2b86](https://github.com/andots/mejiro/commit/2af2b86a0fee8603d3ee7325bb9d1f48a37262c2))
+
 # [0.28.0](https://github.com/andots/mejiro/compare/v0.27.0...v0.28.0) (2025-03-08)
 
 
