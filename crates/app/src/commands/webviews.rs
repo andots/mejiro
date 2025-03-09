@@ -39,7 +39,7 @@ pub fn get_app_webview_bounds(app_handle: tauri::AppHandle) -> Result<Rect, AppE
 #[tauri::command]
 pub fn navigate_webview_url(app_handle: tauri::AppHandle, url: String) -> Result<(), AppError> {
     let parsed_url = Url::parse(&url).map_err(tauri::Error::InvalidUrl)?;
-    let mut webview = get_external_webview(&app_handle)?;
+    let webview = get_external_webview(&app_handle)?;
     webview.navigate(parsed_url)?;
     Ok(())
 }
