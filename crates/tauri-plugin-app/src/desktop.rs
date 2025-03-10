@@ -8,10 +8,14 @@ use tauri::Manager;
 use tauri::{plugin::PluginApi, AppHandle, Runtime};
 
 use crate::constants::{DEFAULT_HEADER_HEIGHT, EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL};
-use crate::file::FileName;
 use crate::models::*;
 use crate::Error;
 use crate::WindowGeometry;
+
+#[cfg(debug_assertions)]
+const FILE_NAME: &str = "dev-window_geometry.json";
+#[cfg(not(debug_assertions))]
+const FILE_NAME: &str = ".window_geometry";
 
 pub fn init<R: Runtime, C: DeserializeOwned>(
     app_handle: &AppHandle<R>,
@@ -71,12 +75,8 @@ impl<R: Runtime> PluginApp<R> {
         }
     }
 
-    fn get_file_path(&self, file_name: FileName) -> PathBuf {
-        self.get_app_dir().join(file_name.as_ref())
-    }
-
     fn get_window_geometry_file_path(&self) -> PathBuf {
-        self.get_file_path(FileName::WindowGeometry)
+        self.get_app_dir().join(FILE_NAME)
     }
 
     pub fn load_window_geometry(&self) -> WindowGeometry {
