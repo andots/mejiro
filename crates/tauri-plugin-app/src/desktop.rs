@@ -1,5 +1,4 @@
 use std::fs;
-use std::path::PathBuf;
 use std::sync::Mutex;
 
 use serde::de::DeserializeOwned;
@@ -7,7 +6,7 @@ use tauri::Manager;
 use tauri::{plugin::PluginApi, AppHandle, Runtime};
 
 use parus_common::{
-    deserialize_from_file, get_app_dir, FileName, EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL,
+    deserialize_from_file, AppHandlePathExt, EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL,
 };
 
 use crate::constants::DEFAULT_HEADER_HEIGHT;
@@ -43,13 +42,8 @@ impl<R: Runtime> PluginApp<R> {
         self.app_handle.state::<Mutex<WindowGeometry>>()
     }
 
-    fn get_window_geometry_file_path(&self) -> PathBuf {
-        let handle = self.app_handle.clone();
-        get_app_dir(handle).join(FileName::WindowGeometry.as_ref())
-    }
-
     pub fn load_window_geometry(&self) -> WindowGeometry {
-        let path = self.get_window_geometry_file_path();
+        let path = self.app_handle.window_geometry_path();
         deserialize_from_file(path)
     }
 
@@ -72,7 +66,7 @@ impl<R: Runtime> PluginApp<R> {
             sidebar_width: (main_size.width - external_size.width) as f64,
             header_height: DEFAULT_HEADER_HEIGHT,
         };
-        let path = self.get_window_geometry_file_path();
+        let path = self.app_handle.window_geometry_path();
         let file = fs::File::create(path)?;
         serde_json::to_writer(file, &geometry)?;
         Ok(())

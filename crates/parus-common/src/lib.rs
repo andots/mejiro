@@ -68,34 +68,79 @@ where
     }
 }
 
-/// Get the app directory (DATA_DIR/${bundle_identifier}) and create it if not exists.
-/// This function will panic if it fails to get the app dir.
-/// |Platform | Value                                    | Example                                  |
-/// | ------- | ---------------------------------------- | ---------------------------------------- |
-/// | Linux   | `$XDG_DATA_HOME` or `$HOME`/.local/share | /home/alice/.local/share                 |
-/// | macOS   | `$HOME`/Library/Application Support      | /Users/Alice/Library/Application Support |
-/// | Windows | `{FOLDERID_RoamingAppData}`              | C:\Users\Alice\AppData\Roaming           |
-pub fn get_app_dir<R>(app_handle: tauri::AppHandle<R>) -> PathBuf
-where
-    R: tauri::Runtime,
-{
-    let path = app_handle
-        .path()
-        .app_data_dir()
-        .expect("Failed to get app data dir");
+pub trait AppHandlePathExt {
+    /// Get the app directory (DATA_DIR/${bundle_identifier}) and create it if not exists.
+    /// This function will panic if it fails to get the app dir.
+    /// |Platform | Value                                    | Example                                  |
+    /// | ------- | ---------------------------------------- | ---------------------------------------- |
+    /// | Linux   | `$XDG_DATA_HOME` or `$HOME`/.local/share | /home/alice/.local/share                 |
+    /// | macOS   | `$HOME`/Library/Application Support      | /Users/Alice/Library/Application Support |
+    /// | Windows | `{FOLDERID_RoamingAppData}`              | C:\Users\Alice\AppData\Roaming           |
+    fn get_app_dir(&self) -> PathBuf;
 
-    match path.try_exists() {
-        Ok(exists) => {
-            if !exists {
-                // create the app dir if it doesn't exist
-                fs::create_dir_all(&path).expect("Failed to create app config dir");
-                log::info!("App data dir created: {:?}", path);
+    /// Get file path in application directory
+    fn get_file_path_in_app_dir(&self, file_name: FileName) -> PathBuf;
+
+    /// App settings file path
+    fn app_settings_path(&self) -> PathBuf;
+
+    /// Uer settings file path
+    fn user_settings_path(&self) -> PathBuf;
+
+    /// Bookmarks file path
+    fn bookmarks_path(&self) -> PathBuf;
+
+    /// Window geometry file path
+    fn window_geometry_path(&self) -> PathBuf;
+
+    /// Favicon database file path
+    fn favicon_database_path(&self) -> PathBuf;
+}
+
+impl<R: tauri::Runtime> AppHandlePathExt for tauri::AppHandle<R> {
+    fn get_app_dir(&self) -> PathBuf {
+        let path = self
+            .path()
+            .app_data_dir()
+            .expect("Failed to get app data dir");
+
+        match path.try_exists() {
+            Ok(exists) => {
+                if !exists {
+                    // create the app dir if it doesn't exist
+                    fs::create_dir_all(&path).expect("Failed to create app config dir");
+                    log::info!("App data dir created: {:?}", path);
+                }
+                path
             }
-            path
+            Err(e) => {
+                log::error!("Error checking app data dir: {:?}", e);
+                panic!("Failed to check app data dir");
+            }
         }
-        Err(e) => {
-            log::error!("Error checking app data dir: {:?}", e);
-            panic!("Failed to check app data dir");
-        }
+    }
+
+    fn get_file_path_in_app_dir(&self, file_name: FileName) -> PathBuf {
+        self.get_app_dir().join(file_name.as_ref())
+    }
+
+    fn app_settings_path(&self) -> PathBuf {
+        self.get_file_path_in_app_dir(FileName::AppSettings)
+    }
+
+    fn user_settings_path(&self) -> PathBuf {
+        self.get_file_path_in_app_dir(FileName::UserSettings)
+    }
+
+    fn window_geometry_path(&self) -> PathBuf {
+        self.get_file_path_in_app_dir(FileName::WindowGeometry)
+    }
+
+    fn bookmarks_path(&self) -> PathBuf {
+        self.get_file_path_in_app_dir(FileName::Bookmarks)
+    }
+
+    fn favicon_database_path(&self) -> PathBuf {
+        self.get_file_path_in_app_dir(FileName::FaviconDatabase)
     }
 }
