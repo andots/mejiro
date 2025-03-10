@@ -2444,11 +2444,11 @@ dependencies = [
  "strum 0.27.1",
  "tauri",
  "tauri-build",
- "tauri-plugin-app",
  "tauri-plugin-dialog",
  "tauri-plugin-log",
  "tauri-plugin-single-instance",
  "tauri-plugin-updater",
+ "tauri-plugin-window-geometry",
  "thiserror 2.0.12",
 ]
 
@@ -4650,20 +4650,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tauri-plugin-app"
-version = "0.29.0"
-dependencies = [
- "log",
- "parus-common",
- "serde",
- "serde_json",
- "strum 0.27.1",
- "tauri",
- "tauri-plugin",
- "thiserror 2.0.12",
-]
-
-[[package]]
 name = "tauri-plugin-dialog"
 version = "2.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4770,6 +4756,20 @@ dependencies = [
  "url",
  "windows-sys 0.59.0",
  "zip",
+]
+
+[[package]]
+name = "tauri-plugin-window-geometry"
+version = "0.29.0"
+dependencies = [
+ "log",
+ "parus-common",
+ "serde",
+ "serde_json",
+ "strum 0.27.1",
+ "tauri",
+ "tauri-plugin",
+ "thiserror 2.0.12",
 ]
 
 [[package]]

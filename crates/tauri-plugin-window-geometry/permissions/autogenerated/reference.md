@@ -17,7 +17,7 @@ Default permissions for the plugin
 <tr>
 <td>
 
-`app:allow-get-window-geometry`
+`window-geometry:allow-get-window-geometry`
 
 </td>
 <td>
@@ -30,7 +30,7 @@ Enables the get_window_geometry command without any pre-configured scope.
 <tr>
 <td>
 
-`app:deny-get-window-geometry`
+`window-geometry:deny-get-window-geometry`
 
 </td>
 <td>
@@ -43,7 +43,7 @@ Denies the get_window_geometry command without any pre-configured scope.
 <tr>
 <td>
 
-`app:allow-ping`
+`window-geometry:allow-ping`
 
 </td>
 <td>
@@ -56,7 +56,7 @@ Enables the ping command without any pre-configured scope.
 <tr>
 <td>
 
-`app:deny-ping`
+`window-geometry:deny-ping`
 
 </td>
 <td>

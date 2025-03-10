@@ -17,22 +17,22 @@ pub use error::Error;
 pub use models::*;
 
 #[cfg(desktop)]
-use desktop::PluginApp;
+use desktop::WindowGeometryPlugin;
 
 /// Extensions to [`tauri::App`], [`tauri::AppHandle`] and [`tauri::Window`] to access the app APIs.
-pub trait PluginAppExt<R: Runtime> {
-    fn plugin_app(&self) -> &PluginApp<R>;
+pub trait WindowGeometryPluginExt<R: Runtime> {
+    fn window_geometry_plugin(&self) -> &WindowGeometryPlugin<R>;
 }
 
-impl<R: Runtime, T: Manager<R>> crate::PluginAppExt<R> for T {
-    fn plugin_app(&self) -> &PluginApp<R> {
-        self.state::<PluginApp<R>>().inner()
+impl<R: Runtime, T: Manager<R>> crate::WindowGeometryPluginExt<R> for T {
+    fn window_geometry_plugin(&self) -> &WindowGeometryPlugin<R> {
+        self.state::<WindowGeometryPlugin<R>>().inner()
     }
 }
 
 /// Initializes the plugin.
 pub fn init<R: Runtime>() -> TauriPlugin<R> {
-    Builder::new("app")
+    Builder::new("window-geometry")
         .invoke_handler(tauri::generate_handler![
             commands::ping,
             commands::get_window_geometry
@@ -60,7 +60,7 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
                         tauri::WindowEvent::CloseRequested { .. } => {
                             // let _ = app_handle.sync_last_visited_url();
                             // let _ = app_handle.save_window_geometry();
-                            let _ = app_handle.plugin_app().save_window_geometry();
+                            let _ = app_handle.window_geometry_plugin().save_window_geometry();
                         }
                         tauri::WindowEvent::Resized(_physical_size) => {}
                         tauri::WindowEvent::Moved(_physical_position) => {}

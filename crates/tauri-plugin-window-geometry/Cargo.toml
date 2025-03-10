@@ -1,11 +1,11 @@
 [package]
-name = "tauri-plugin-app"
+name = "tauri-plugin-window-geometry"
 version.workspace = true
 authors.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 exclude = ["/examples", "/dist-js", "/guest-js", "/node_modules"]
-links = "tauri-plugin-app"
+links = "tauri-plugin-window-geometry"
 
 [dependencies]
 tauri = { workspace = true }

@@ -66,7 +66,7 @@ pub fn run() {
             };
 
             // TODO: move all features to plugin
-            app.handle().plugin(tauri_plugin_app::init())?;
+            app.handle().plugin(tauri_plugin_window_geometry::init())?;
 
             let bookmarks = app.handle().load_bookmarks();
             app.manage(Mutex::new(bookmarks));

@@ -109,6 +109,6 @@ export const Invoke = {
 
   // Plugin
   GetWindowGeometry: async () => {
-    return invoke<WindowGeometry>("plugin:app|get_window_geometry", {});
+    return invoke<WindowGeometry>("plugin:window-geometry|get_window_geometry", {});
   },
 } as const;

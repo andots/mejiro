@@ -4,14 +4,14 @@ use tauri::{AppHandle, Runtime};
 
 use crate::models::*;
 use crate::Error;
-use crate::PluginAppExt;
+use crate::WindowGeometryPluginExt;
 
 #[tauri::command]
 pub(crate) async fn ping<R: Runtime>(
     app: AppHandle<R>,
     payload: PingRequest,
 ) -> Result<PingResponse, Error> {
-    app.plugin_app().ping(payload)
+    app.window_geometry_plugin().ping(payload)
 }
 
 #[tauri::command]

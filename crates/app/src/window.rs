@@ -5,7 +5,7 @@ use tauri::{
     WindowBuilder,
 };
 use tauri::{EventTarget, Manager};
-use tauri_plugin_app::{PluginAppExt, WindowGeometry};
+use tauri_plugin_window_geometry::{WindowGeometry, WindowGeometryPluginExt};
 
 use crate::app_handle_ext::AppHandleExt;
 use crate::constants::{
@@ -39,7 +39,7 @@ pub fn create_window(app_handle: &tauri::AppHandle) -> tauri::Result<()> {
         .lock()
         .map_err(|e| anyhow::anyhow!("{:?}", e))?;
 
-    let geometry_state = app_handle.plugin_app().window_geometry();
+    let geometry_state = app_handle.window_geometry_plugin().window_geometry();
     let geometry = geometry_state
         .lock()
         .map_err(|e| anyhow::anyhow!("{:?}", e))?;

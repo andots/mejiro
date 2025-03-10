@@ -4,5 +4,5 @@
   "description": "enables the app permissions",
   "windows": ["main"],
   "webviews": ["app"],
-  "permissions": ["core:default", "log:default", "app:default"]
+  "permissions": ["core:default", "log:default", "window-geometry:default"]
 }

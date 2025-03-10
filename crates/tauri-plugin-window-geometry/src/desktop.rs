@@ -17,8 +17,8 @@ use crate::WindowGeometry;
 pub fn init<R: Runtime, C: DeserializeOwned>(
     app_handle: &AppHandle<R>,
     _api: PluginApi<R, C>,
-) -> Result<PluginApp<R>, Error> {
-    let plugin = PluginApp {
+) -> Result<WindowGeometryPlugin<R>, Error> {
+    let plugin = WindowGeometryPlugin {
         app_handle: app_handle.clone(),
     };
     let window_geometry = plugin.load_window_geometry();
@@ -26,12 +26,12 @@ pub fn init<R: Runtime, C: DeserializeOwned>(
     Ok(plugin)
 }
 
-/// Access to the app APIs.
-pub struct PluginApp<R: Runtime> {
+/// Access to the window-geometry-plugin APIs.
+pub struct WindowGeometryPlugin<R: Runtime> {
     app_handle: AppHandle<R>,
 }
 
-impl<R: Runtime> PluginApp<R> {
+impl<R: Runtime> WindowGeometryPlugin<R> {
     pub fn ping(&self, payload: PingRequest) -> Result<PingResponse, Error> {
         Ok(PingResponse {
             value: payload.value,
