@@ -4621,9 +4621,9 @@ dependencies = [
 
 [[package]]
 name = "tauri-plugin"
-version = "2.0.4"
+version = "2.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5841b9a0200e954ef7457f8d327091424328891e267a97b641dc246cc54d0dec"
+checksum = "0ad3021d8e60ec7672f51ecb67c5e1a514a4d7a9a5ffc9d85090739378047502"
 dependencies = [
  "anyhow",
  "glob",
@@ -4634,6 +4634,16 @@ dependencies = [
  "tauri-utils",
  "toml",
  "walkdir",
+]
+
+[[package]]
+name = "tauri-plugin-app"
+version = "0.29.0"
+dependencies = [
+ "serde",
+ "tauri",
+ "tauri-plugin",
+ "thiserror 2.0.12",
 ]
 
 [[package]]

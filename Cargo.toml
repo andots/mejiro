@@ -6,6 +6,7 @@ members = [
   "crates/meta-parser",
   "crates/favicon-fetcher",
   "crates/favicon-server",
+  "crates/tauri-plugin-app",
 ]
 
 [workspace.package]
@@ -27,11 +28,17 @@ thiserror = "2.0.12"
 url = "2.5.4"
 tokio = "1.44.0"
 
+# tauri
+tauri = "2.3.1"
+tauri-build = "2.0.6"
+tauri-plugin = "2.0.5"
+
 # internal
 mejiro-core = { path = "./crates/core" }
 meta-parser = { path = "./crates/meta-parser" }
 favicon-fetcher = { path = "./crates/favicon-fetcher" }
 favicon-server = { path = "./crates/favicon-server" }
+tauri-plugin-app = { path = "./crates/tauri-plugin-app" }
 
 [profile.dev]
 opt-level = 3
