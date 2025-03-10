@@ -3,7 +3,6 @@ use std::sync::Mutex;
 use tauri::{AppHandle, Runtime};
 
 use crate::models::*;
-use crate::window_geometry::WindowGeometry;
 use crate::Error;
 use crate::PluginAppExt;
 

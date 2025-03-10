@@ -4,6 +4,10 @@ use tauri::Manager;
 use std::fs;
 use std::path::{Path, PathBuf};
 
+pub const MAINWINDOW_LABEL: &str = "main";
+pub const APP_WEBVIEW_LABEL: &str = "app";
+pub const EXTERNAL_WEBVIEW_LABEL: &str = "external";
+
 /// Deserialize or return Default
 pub fn deserialize_from_file<T, P>(path: P) -> T
 where

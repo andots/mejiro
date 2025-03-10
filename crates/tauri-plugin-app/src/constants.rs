@@ -1,7 +1,3 @@
-pub const MAINWINDOW_LABEL: &str = "main";
-// pub const APP_WEBVIEW_LABEL: &str = "app";
-pub const EXTERNAL_WEBVIEW_LABEL: &str = "external";
-
 pub const DEFAULT_WINDOW_WIDTH: f64 = 1000.0;
 pub const DEFAULT_WINDOW_HEIGHT: f64 = 1000.0;
 pub const DEFAULT_WINDOW_X: f64 = 50.0;

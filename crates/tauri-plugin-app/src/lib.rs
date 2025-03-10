@@ -6,21 +6,19 @@ mod constants;
 mod error;
 mod file;
 mod models;
-mod window_geometry;
 
-use constants::MAINWINDOW_LABEL;
 use tauri::{
     plugin::{Builder, TauriPlugin},
     Manager, Runtime,
 };
+
+use parus_common::MAINWINDOW_LABEL;
 
 pub use error::Error;
 pub use models::*;
 
 #[cfg(desktop)]
 use desktop::PluginApp;
-
-pub use window_geometry::WindowGeometry;
 
 /// Extensions to [`tauri::App`], [`tauri::AppHandle`] and [`tauri::Window`] to access the app APIs.
 pub trait PluginAppExt<R: Runtime> {

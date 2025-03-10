@@ -6,7 +6,9 @@ use serde::de::DeserializeOwned;
 use tauri::Manager;
 use tauri::{plugin::PluginApi, AppHandle, Runtime};
 
-use crate::constants::{DEFAULT_HEADER_HEIGHT, EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL};
+use parus_common::{EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL};
+
+use crate::constants::DEFAULT_HEADER_HEIGHT;
 use crate::models::*;
 use crate::Error;
 use crate::WindowGeometry;
