@@ -77,6 +77,11 @@ const App: Component = () => {
     // GetExternalWebviewTitle() executes a script on the Rust side to fetch the title,
     // which then emits the ExternalTitleChanged event that the above listener will handle.
     await Invoke.GetExternalWebviewTitle();
+
+    // Test ping
+    await Invoke.Ping("Hello").then((e) => {
+      console.log(e);
+    });
   });
 
   onCleanup(() => {

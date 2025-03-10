@@ -2444,6 +2444,7 @@ dependencies = [
  "strum 0.27.1",
  "tauri",
  "tauri-build",
+ "tauri-plugin-app",
  "tauri-plugin-dialog",
  "tauri-plugin-log",
  "tauri-plugin-single-instance",

@@ -109,4 +109,9 @@ export const Invoke = {
   GetWindowGeometry: async () => {
     return invoke<WindowGeometry>("get_window_geometry", {});
   },
+
+  // Plugin
+  Ping: async (value: string | null) => {
+    return invoke("plugin:app|ping", { payload: { value } });
+  },
 } as const;

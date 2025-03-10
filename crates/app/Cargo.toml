@@ -28,6 +28,7 @@ anyhow = { workspace = true }
 # internal
 mejiro-core.workspace = true
 favicon-server.workspace = true
+tauri-plugin-app.workspace = true
 
 # tauri plugins
 tauri-plugin-dialog = "2.2.0"

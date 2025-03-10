@@ -65,6 +65,11 @@ pub fn run() {
                 });
             };
 
+            #[cfg(desktop)]
+            {
+                app.handle().plugin(tauri_plugin_app::init())?;
+            }
+
             let bookmarks = app.handle().load_bookmarks();
             app.manage(Mutex::new(bookmarks));
 

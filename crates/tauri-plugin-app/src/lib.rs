@@ -15,16 +15,16 @@ mod models;
 pub use error::{Error, Result};
 
 #[cfg(desktop)]
-use desktop::App;
+use desktop::PluginApp;
 
 /// Extensions to [`tauri::App`], [`tauri::AppHandle`] and [`tauri::Window`] to access the app APIs.
-pub trait AppExt<R: Runtime> {
-    fn app(&self) -> &App<R>;
+pub trait PluginAppExt<R: Runtime> {
+    fn plugin_app(&self) -> &PluginApp<R>;
 }
 
-impl<R: Runtime, T: Manager<R>> crate::AppExt<R> for T {
-    fn app(&self) -> &App<R> {
-        self.state::<App<R>>().inner()
+impl<R: Runtime, T: Manager<R>> crate::PluginAppExt<R> for T {
+    fn plugin_app(&self) -> &PluginApp<R> {
+        self.state::<PluginApp<R>>().inner()
     }
 }
 

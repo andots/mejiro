@@ -1,13 +1,13 @@
-use tauri::{command, AppHandle, Runtime};
+use tauri::{AppHandle, Runtime};
 
 use crate::models::*;
-use crate::AppExt;
+use crate::PluginAppExt;
 use crate::Result;
 
-#[command]
+#[tauri::command]
 pub(crate) async fn ping<R: Runtime>(
     app: AppHandle<R>,
     payload: PingRequest,
 ) -> Result<PingResponse> {
-    app.app().ping(payload)
+    app.plugin_app().ping(payload)
 }
