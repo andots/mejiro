@@ -6,17 +6,14 @@ use serde::de::DeserializeOwned;
 use tauri::Manager;
 use tauri::{plugin::PluginApi, AppHandle, Runtime};
 
-use parus_common::{EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL};
+use parus_common::{
+    deserialize_from_file, get_app_dir, FileName, EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL,
+};
 
 use crate::constants::DEFAULT_HEADER_HEIGHT;
 use crate::models::*;
 use crate::Error;
 use crate::WindowGeometry;
-
-#[cfg(debug_assertions)]
-const FILE_NAME: &str = "dev-window_geometry.json";
-#[cfg(not(debug_assertions))]
-const FILE_NAME: &str = ".window_geometry";
 
 pub fn init<R: Runtime, C: DeserializeOwned>(
     app_handle: &AppHandle<R>,
@@ -47,12 +44,13 @@ impl<R: Runtime> PluginApp<R> {
     }
 
     fn get_window_geometry_file_path(&self) -> PathBuf {
-        parus_common::get_app_dir(self.app_handle.clone()).join(FILE_NAME)
+        let handle = self.app_handle.clone();
+        get_app_dir(handle).join(FileName::WindowGeometry.as_ref())
     }
 
     pub fn load_window_geometry(&self) -> WindowGeometry {
         let path = self.get_window_geometry_file_path();
-        parus_common::deserialize_from_file(path)
+        deserialize_from_file(path)
     }
 
     pub fn save_window_geometry(&self) -> Result<(), Error> {

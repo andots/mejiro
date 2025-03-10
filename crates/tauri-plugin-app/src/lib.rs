@@ -4,7 +4,6 @@ mod desktop;
 mod commands;
 mod constants;
 mod error;
-mod file;
 mod models;
 
 use tauri::{
