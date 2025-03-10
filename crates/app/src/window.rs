@@ -5,6 +5,7 @@ use tauri::{
     WindowBuilder,
 };
 use tauri::{EventTarget, Manager};
+use tauri_plugin_app::{PluginAppExt, WindowGeometry};
 
 use crate::app_handle_ext::AppHandleExt;
 use crate::constants::{
@@ -13,7 +14,7 @@ use crate::constants::{
 };
 use crate::error::AppError;
 use crate::events::AppEvent;
-use crate::settings::{default_start_page_url, AppSettings, WindowGeometry};
+use crate::settings::{default_start_page_url, AppSettings};
 
 /// Get the app webview
 pub fn get_app_webview(app_handle: &tauri::AppHandle) -> Result<tauri::Webview, AppError> {
@@ -38,7 +39,7 @@ pub fn create_window(app_handle: &tauri::AppHandle) -> tauri::Result<()> {
         .lock()
         .map_err(|e| anyhow::anyhow!("{:?}", e))?;
 
-    let geometry_state = app_handle.state::<Mutex<WindowGeometry>>();
+    let geometry_state = app_handle.plugin_app().window_geometry();
     let geometry = geometry_state
         .lock()
         .map_err(|e| anyhow::anyhow!("{:?}", e))?;

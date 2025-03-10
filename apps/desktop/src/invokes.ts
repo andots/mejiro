@@ -106,11 +106,11 @@ export const Invoke = {
   UpdateAppSettings: async (settings: AppSettings) => {
     return invoke<AppSettings>("update_app_settings", { settings });
   },
-  GetWindowGeometry: async () => {
-    return invoke<WindowGeometry>("get_window_geometry", {});
-  },
 
   // Plugin
+  GetWindowGeometry: async () => {
+    return invoke<WindowGeometry>("plugin:app|get_window_geometry", {});
+  },
   Ping: async (value: string | null) => {
     return invoke("plugin:app|ping", { payload: { value } });
   },

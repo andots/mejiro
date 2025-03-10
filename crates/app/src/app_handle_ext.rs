@@ -10,9 +10,9 @@ use strum::AsRefStr;
 use tauri::{Manager, Runtime};
 
 use crate::{
-    constants::{DEFAUTL_HEADER_HEIGHT, EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL},
+    constants::EXTERNAL_WEBVIEW_LABEL,
     error::AppError,
-    settings::{AppSettings, UserSettings, WindowGeometry},
+    settings::{AppSettings, UserSettings},
 };
 
 /// The file names are defined as an enum to prevent typos and to provide a centralized list of all data files.
@@ -24,8 +24,6 @@ pub enum FileName {
     Bookmarks,
     #[strum(serialize = "dev-app_settings.json")]
     AppSettings,
-    #[strum(serialize = "dev-window_geometry.json")]
-    WindowGeometry,
     #[strum(serialize = "dev-settings.json")]
     UserSettings,
     #[strum(serialize = "dev-favicons.db")]
@@ -83,10 +81,6 @@ pub trait AppHandleExt {
     fn load_app_settings(&self) -> AppSettings;
     fn save_app_settings(&self) -> Result<(), AppError>;
     fn sync_last_visited_url(&self) -> Result<(), AppError>;
-
-    fn get_window_geometry_file_path(&self) -> PathBuf;
-    fn load_window_geometry(&self) -> WindowGeometry;
-    fn save_window_geometry(&self) -> Result<(), AppError>;
 
     fn get_user_settings_file_path(&self) -> PathBuf;
     fn load_user_settings(&self) -> UserSettings;
@@ -172,40 +166,6 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
                 settings.start_page_url = url.to_string();
             }
         }
-        Ok(())
-    }
-
-    fn get_window_geometry_file_path(&self) -> PathBuf {
-        self.get_file_path_from_app_dir(FileName::WindowGeometry)
-    }
-
-    fn load_window_geometry(&self) -> WindowGeometry {
-        let path = self.get_window_geometry_file_path();
-        deserialize_from_file(path)
-    }
-
-    fn save_window_geometry(&self) -> Result<(), AppError> {
-        let (main_window, external) = match (
-            self.get_window(MAINWINDOW_LABEL),
-            self.get_webview(EXTERNAL_WEBVIEW_LABEL),
-        ) {
-            (Some(main_window), Some(external)) => (main_window, external),
-            _ => return Err(AppError::WebviewNotFound),
-        };
-        let main_size = main_window.inner_size()?;
-        let main_position = main_window.outer_position()?;
-        let external_size = external.size()?;
-        let geometry = WindowGeometry {
-            width: main_size.width as f64,
-            height: main_size.height as f64,
-            x: main_position.x as f64,
-            y: main_position.y as f64,
-            sidebar_width: (main_size.width - external_size.width) as f64,
-            header_height: DEFAUTL_HEADER_HEIGHT,
-        };
-        let path = self.get_window_geometry_file_path();
-        let file = fs::File::create(path)?;
-        serde_json::to_writer(file, &geometry)?;
         Ok(())
     }
 

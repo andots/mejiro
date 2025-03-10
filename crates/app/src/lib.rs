@@ -65,10 +65,8 @@ pub fn run() {
                 });
             };
 
-            #[cfg(desktop)]
-            {
-                app.handle().plugin(tauri_plugin_app::init())?;
-            }
+            // TODO: move all features to plugin
+            app.handle().plugin(tauri_plugin_app::init())?;
 
             let bookmarks = app.handle().load_bookmarks();
             app.manage(Mutex::new(bookmarks));
@@ -78,9 +76,6 @@ pub fn run() {
 
             let app_settings = app.handle().load_app_settings();
             app.manage(Mutex::new(app_settings));
-
-            let window_geometry = app.handle().load_window_geometry();
-            app.manage(Mutex::new(window_geometry));
 
             // create_window() must be called after app.manage because window neeed those states and also
             // frontend might call states before they are managed. (especially in relaese build)
@@ -122,7 +117,6 @@ pub fn run() {
             commands::settings::update_user_settings,
             commands::settings::get_app_settings,
             commands::settings::update_app_settings,
-            commands::settings::get_window_geometry,
             commands::external::send_page_title,
             commands::external::send_page_url,
         ])
@@ -143,7 +137,6 @@ pub fn run() {
                 match event {
                     tauri::WindowEvent::CloseRequested { .. } => {
                         let _ = app_handle.sync_last_visited_url();
-                        let _ = app_handle.save_window_geometry();
                     }
                     tauri::WindowEvent::Resized(_physical_size) => {}
                     tauri::WindowEvent::Moved(_physical_position) => {}

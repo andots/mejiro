@@ -4641,7 +4641,10 @@ dependencies = [
 name = "tauri-plugin-app"
 version = "0.29.0"
 dependencies = [
+ "log",
  "serde",
+ "serde_json",
+ "strum 0.27.1",
  "tauri",
  "tauri-plugin",
  "thiserror 2.0.12",
