@@ -1,8 +1,8 @@
 use serde::{Deserialize, Serialize};
 
 use crate::constants::{
-    DEFAUTL_HEADER_HEIGHT, DEFAUTL_SIDEBAR_WIDTH, DEFAUTL_WINDOW_HEIGHT, DEFAUTL_WINDOW_WIDTH,
-    DEFAUTL_WINDOW_X, DEFAUTL_WINDOW_Y,
+    DEFAULT_HEADER_HEIGHT, DEFAULT_SIDEBAR_WIDTH, DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_WIDTH,
+    DEFAULT_WINDOW_X, DEFAULT_WINDOW_Y,
 };
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -18,12 +18,12 @@ pub struct WindowGeometry {
 impl Default for WindowGeometry {
     fn default() -> Self {
         Self {
-            width: DEFAUTL_WINDOW_WIDTH,
-            height: DEFAUTL_WINDOW_HEIGHT,
-            x: DEFAUTL_WINDOW_X,
-            y: DEFAUTL_WINDOW_Y,
-            sidebar_width: DEFAUTL_SIDEBAR_WIDTH,
-            header_height: DEFAUTL_HEADER_HEIGHT,
+            width: DEFAULT_WINDOW_WIDTH,
+            height: DEFAULT_WINDOW_HEIGHT,
+            x: DEFAULT_WINDOW_X,
+            y: DEFAULT_WINDOW_Y,
+            sidebar_width: DEFAULT_SIDEBAR_WIDTH,
+            header_height: DEFAULT_HEADER_HEIGHT,
         }
     }
 }
