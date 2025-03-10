@@ -1,3 +1,6 @@
+# schema issue on EvenBetterToml https://github.com/tamasfe/taplo/issues/755
+#:schema https://raw.githubusercontent.com/SchemaStore/schemastore/d8d4ddd2dfa7aee57c15dad08fb95ab038007a20/src/schemas/json/cargo.json
+
 [workspace]
 resolver = "3"
 members = [
@@ -43,7 +46,7 @@ favicon-server = { path = "./crates/favicon-server" }
 tauri-plugin-window-geometry = { path = "./crates/tauri-plugin-window-geometry" }
 
 [profile.dev]
-opt-level = 3
+opt-level = 1
 
 [profile.test]
 opt-level = 3
