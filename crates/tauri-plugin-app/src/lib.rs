@@ -34,8 +34,10 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
         .invoke_handler(tauri::generate_handler![commands::ping])
         .setup(|app, api| {
             #[cfg(desktop)]
-            let _app = desktop::init(app, api)?;
-            // app.manage(app);
+            let plugin = desktop::init(app, api)?;
+
+            app.manage(plugin);
+
             Ok(())
         })
         .build()
