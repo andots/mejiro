@@ -7,6 +7,7 @@ members = [
   "crates/favicon-fetcher",
   "crates/favicon-server",
   "crates/tauri-plugin-app",
+  "crates/parus-common",
 ]
 
 [workspace.package]
@@ -39,6 +40,7 @@ meta-parser = { path = "./crates/meta-parser" }
 favicon-fetcher = { path = "./crates/favicon-fetcher" }
 favicon-server = { path = "./crates/favicon-server" }
 tauri-plugin-app = { path = "./crates/tauri-plugin-app" }
+parus-common = { path = "./crates/parus-common" }
 
 [profile.dev]
 opt-level = 3

@@ -1,9 +1,8 @@
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::sync::Mutex;
 
 use serde::de::DeserializeOwned;
-use serde::Deserialize;
 use tauri::Manager;
 use tauri::{plugin::PluginApi, AppHandle, Runtime};
 
@@ -45,43 +44,13 @@ impl<R: Runtime> PluginApp<R> {
         self.app_handle.state::<Mutex<WindowGeometry>>()
     }
 
-    /// Get the app directory (DATA_DIR/${bundle_identifier}) and create it if not exists.
-    /// This function will panic if it fails to get the app dir.
-    /// |Platform | Value                                    | Example                                  |
-    /// | ------- | ---------------------------------------- | ---------------------------------------- |
-    /// | Linux   | `$XDG_DATA_HOME` or `$HOME`/.local/share | /home/alice/.local/share                 |
-    /// | macOS   | `$HOME`/Library/Application Support      | /Users/Alice/Library/Application Support |
-    /// | Windows | `{FOLDERID_RoamingAppData}`              | C:\Users\Alice\AppData\Roaming           |
-    fn get_app_dir(&self) -> PathBuf {
-        let path = self
-            .app_handle
-            .path()
-            .app_data_dir()
-            .expect("Failed to get app data dir");
-
-        match path.try_exists() {
-            Ok(exists) => {
-                if !exists {
-                    // create the app dir if it doesn't exist
-                    fs::create_dir_all(&path).expect("Failed to create app config dir");
-                    log::info!("App data dir created: {:?}", path);
-                }
-                path
-            }
-            Err(e) => {
-                log::error!("Error checking app data dir: {:?}", e);
-                panic!("Failed to check app data dir");
-            }
-        }
-    }
-
     fn get_window_geometry_file_path(&self) -> PathBuf {
-        self.get_app_dir().join(FILE_NAME)
+        parus_common::get_app_dir(self.app_handle.clone()).join(FILE_NAME)
     }
 
     pub fn load_window_geometry(&self) -> WindowGeometry {
         let path = self.get_window_geometry_file_path();
-        deserialize_from_file(path)
+        parus_common::deserialize_from_file(path)
     }
 
     pub fn save_window_geometry(&self) -> Result<(), Error> {
@@ -107,28 +76,5 @@ impl<R: Runtime> PluginApp<R> {
         let file = fs::File::create(path)?;
         serde_json::to_writer(file, &geometry)?;
         Ok(())
-    }
-}
-
-fn deserialize_from_file<T, P>(path: P) -> T
-where
-    T: for<'de> Deserialize<'de> + Default,
-    P: AsRef<Path>,
-{
-    match fs::File::open(path) {
-        Ok(file) => {
-            let reader = std::io::BufReader::new(file);
-            match serde_json::from_reader(reader) {
-                Ok(data) => data,
-                Err(e) => {
-                    log::warn!("Failed to deserialize, return Default: {:?}", e);
-                    T::default()
-                }
-            }
-        }
-        Err(e) => {
-            log::warn!("Failed to open file, return Default: {:?}", e);
-            T::default()
-        }
     }
 }
