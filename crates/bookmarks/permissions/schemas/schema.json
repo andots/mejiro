@@ -433,6 +433,11 @@
           "description": "Denies the update_bookmark_title command without any pre-configured scope.",
           "type": "string",
           "const": "deny-update-bookmark-title"
+        },
+        {
+          "description": "Default permissions for the plugin",
+          "type": "string",
+          "const": "default"
         }
       ]
     }

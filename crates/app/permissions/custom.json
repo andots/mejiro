@@ -11,21 +11,7 @@
           "get_external_webview_title",
           "set_external_webview_bounds",
           "show_external_webview",
-          "hide_external_webview",
-          "get_nested_json",
-          "get_root_and_children_folders",
-          "get_toolbar_bookmarks",
-          "add_bookmark",
-          "append_bookmark_to_toolbar",
-          "remove_bookmark",
-          "update_bookmark_title",
-          "add_folder",
-          "insert_after",
-          "insert_before",
-          "append_to_child",
-          "prepend_to_child",
-          "set_is_open",
-          "toggle_is_open"
+          "hide_external_webview"
         ],
         "deny": []
       }

@@ -1,3 +1,21 @@
+## Default Permission
+
+Default permissions for the plugin
+
+- `allow-get-nested-json`
+- `allow-get-root-and-children-folders`
+- `allow-get-toolbar-bookmarks`
+- `allow-add-bookmark`
+- `allow-append-bookmark-to-toolbar`
+- `allow-remove-bookmark`
+- `allow-update-bookmark-title`
+- `allow-add-folder`
+- `allow-insert-after`
+- `allow-insert-before`
+- `allow-append-to-child`
+- `allow-prepend-to-child`
+- `allow-set-is-open`
+- `allow-toggle-is-open`
 
 ## Permission Table
 

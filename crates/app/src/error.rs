@@ -20,9 +20,8 @@ pub enum AppError {
     #[error(transparent)]
     Core(#[from] mejiro_core::error::CoreError),
 
-    #[error("Mutex Error: {0}")]
-    Mutex(String),
-
+    // #[error("Mutex Error: {0}")]
+    // Mutex(String),
     #[allow(dead_code)]
     #[error("other error: {0}")]
     Other(String),
@@ -38,7 +37,7 @@ pub enum ErrorKind {
     WebviewNotFound(String),
     Tauri(String),
     Core(String),
-    Mutex(String),
+    // Mutex(String),
     Other(String),
 }
 
@@ -55,7 +54,7 @@ impl serde::Serialize for AppError {
             Self::WebviewNotFound => ErrorKind::WebviewNotFound(error_message),
             Self::Tauri(_) => ErrorKind::Tauri(error_message),
             Self::Core(_) => ErrorKind::Core(error_message),
-            Self::Mutex(_) => ErrorKind::Mutex(error_message),
+            // Self::Mutex(_) => ErrorKind::Mutex(error_message),
             Self::Other(_) => ErrorKind::Other(error_message),
         };
         error_kind.serialize(serializer)

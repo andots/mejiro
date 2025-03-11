@@ -1,14 +1,10 @@
-use std::sync::Mutex;
-
 use tauri::Manager;
 use tauri_plugin_updater::UpdaterExt;
 
-use app_handle_ext::AppHandleExt;
 use window::create_window;
 
 use parus_common::AppHandlePathExt;
 
-mod app_handle_ext;
 mod commands;
 mod error;
 mod events;
@@ -70,13 +66,10 @@ pub fn run() {
                 });
             };
 
-            // TODO: move all features to plugin
             app.handle().plugin(tauri_plugin_window_geometry::init())?;
             app.handle().plugin(tauri_plugin_app_settings::init())?;
             app.handle().plugin(tauri_plugin_user_settings::init())?;
-
-            let bookmarks = app.handle().load_bookmarks();
-            app.manage(Mutex::new(bookmarks));
+            app.handle().plugin(tauri_plugin_bookmarks::init())?;
 
             // create_window() must be called after app.manage because window neeed those states and also
             // frontend might call states before they are managed. (especially in relaese build)
@@ -100,20 +93,6 @@ pub fn run() {
             commands::webviews::set_external_webview_bounds,
             commands::webviews::show_external_webview,
             commands::webviews::hide_external_webview,
-            commands::bookmarks::get_nested_json,
-            commands::bookmarks::get_root_and_children_folders,
-            commands::bookmarks::get_toolbar_bookmarks,
-            commands::bookmarks::add_bookmark,
-            commands::bookmarks::append_bookmark_to_toolbar,
-            commands::bookmarks::remove_bookmark,
-            commands::bookmarks::update_bookmark_title,
-            commands::bookmarks::add_folder,
-            commands::bookmarks::insert_after,
-            commands::bookmarks::insert_before,
-            commands::bookmarks::append_to_child,
-            commands::bookmarks::prepend_to_child,
-            commands::bookmarks::set_is_open,
-            commands::bookmarks::toggle_is_open,
             commands::external::send_page_title,
             commands::external::send_page_url,
         ])
@@ -123,9 +102,6 @@ pub fn run() {
     app.run(|app_handle, event| match event {
         tauri::RunEvent::Ready => {}
         tauri::RunEvent::Exit => {
-            // save settings before exit
-            // let _ = app_handle.save_user_settings();
-            let _ = app_handle.save_bookmarks();
             app_handle.exit(0);
         }
         _ => {}

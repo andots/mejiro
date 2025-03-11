@@ -10,6 +10,7 @@
     "window-geometry:default",
     "app-settings:default",
     "user-settings:default",
+    "bookmarks:default",
     "app-webview"
   ]
 }
