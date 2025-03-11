@@ -12,6 +12,8 @@ use tauri::Manager;
 
 pub use models::{default_start_page_url, AppSettings};
 
+const PLUGIN_NAME: &str = "app-settings";
+
 trait AppHandleExt {
     fn load_app_settings(&self) -> AppSettings;
     fn save_app_settings(&self) -> Result<(), Error>;
@@ -53,7 +55,7 @@ impl<R: tauri::Runtime> AppHandleExt for tauri::AppHandle<R> {
 
 /// Initializes the plugin.
 pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
-    tauri::plugin::Builder::new("app-settings")
+    tauri::plugin::Builder::new(PLUGIN_NAME)
         .invoke_handler(tauri::generate_handler![
             commands::get_app_settings,
             commands::update_app_settings
