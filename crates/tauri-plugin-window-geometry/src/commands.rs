@@ -1,19 +1,8 @@
 use std::sync::Mutex;
 
-use tauri::{AppHandle, Runtime};
-
 use parus_common::Error;
 
-use crate::models::*;
-use crate::WindowGeometryPluginExt;
-
-#[tauri::command]
-pub(crate) async fn ping<R: Runtime>(
-    app: AppHandle<R>,
-    payload: PingRequest,
-) -> Result<PingResponse, Error> {
-    app.window_geometry_plugin().ping(payload)
-}
+use crate::models::WindowGeometry;
 
 #[tauri::command]
 pub(crate) fn get_window_geometry(

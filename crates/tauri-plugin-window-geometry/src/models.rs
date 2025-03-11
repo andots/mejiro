@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::constants::{
+use parus_common::constants::{
     DEFAULT_HEADER_HEIGHT, DEFAULT_SIDEBAR_WIDTH, DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_WIDTH,
     DEFAULT_WINDOW_X, DEFAULT_WINDOW_Y,
 };
@@ -26,16 +26,4 @@ impl Default for WindowGeometry {
             header_height: DEFAULT_HEADER_HEIGHT,
         }
     }
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct PingRequest {
-    pub value: Option<String>,
-}
-
-#[derive(Debug, Clone, Default, Deserialize, Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct PingResponse {
-    pub value: Option<String>,
 }

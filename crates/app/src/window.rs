@@ -15,7 +15,7 @@ use parus_common::{
 };
 
 use tauri_plugin_app_settings::{default_start_page_url, AppSettings};
-use tauri_plugin_window_geometry::{WindowGeometry, WindowGeometryPluginExt};
+use tauri_plugin_window_geometry::WindowGeometry;
 
 use crate::app_handle_ext::AppHandleExt;
 use crate::error::AppError;
@@ -44,7 +44,7 @@ pub fn create_window(app_handle: &tauri::AppHandle) -> tauri::Result<()> {
         .lock()
         .map_err(|e| anyhow::anyhow!("{:?}", e))?;
 
-    let geometry_state = app_handle.window_geometry_plugin().window_geometry();
+    let geometry_state = app_handle.state::<Mutex<WindowGeometry>>();
     let geometry = geometry_state
         .lock()
         .map_err(|e| anyhow::anyhow!("{:?}", e))?;
