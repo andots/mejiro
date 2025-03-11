@@ -43,6 +43,10 @@ export const useWindowState = createWithSignal<WindowState>((set, get) => ({
     set(() => ({ sidebarWidth: newWidth }));
   },
   setExternalSize: async (size: PhysicalSize) => {
+    // just return when minimizing window, onResized() will send size.width and size.height 0
+    if (size.width === 0 || size.height === 0) {
+      return;
+    }
     // Set x position based on external state
     let x: number;
     if (get().externalState === "full") {
