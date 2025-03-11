@@ -93,17 +93,16 @@ export const Invoke = {
     return invoke("hide_external_webview", {});
   },
 
-  // Settings commands
-  GetUserSettings: async () => {
-    return invoke<UserSettings>("get_user_settings", {});
-  },
-  UpdateUserSettings: async (settings: UserSettings) => {
-    return invoke<UserSettings>("update_user_settings", { settings });
-  },
-
   // Plugin
+  // Settings commands
   GetWindowGeometry: async () => {
     return invoke<WindowGeometry>("plugin:window-geometry|get_window_geometry", {});
+  },
+  GetUserSettings: async () => {
+    return invoke<UserSettings>("plugin:user-settings|get_user_settings", {});
+  },
+  UpdateUserSettings: async (settings: UserSettings) => {
+    return invoke<UserSettings>("plugin:user-settings|update_user_settings", { settings });
   },
   GetAppSettings: async () => {
     return invoke<AppSettings>("plugin:app-settings|get_app_settings", {});

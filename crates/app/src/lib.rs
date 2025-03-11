@@ -12,7 +12,6 @@ mod app_handle_ext;
 mod commands;
 mod error;
 mod events;
-mod settings;
 mod updater;
 mod window;
 
@@ -74,12 +73,10 @@ pub fn run() {
             // TODO: move all features to plugin
             app.handle().plugin(tauri_plugin_window_geometry::init())?;
             app.handle().plugin(tauri_plugin_app_settings::init())?;
+            app.handle().plugin(tauri_plugin_user_settings::init())?;
 
             let bookmarks = app.handle().load_bookmarks();
             app.manage(Mutex::new(bookmarks));
-
-            let user_settings = app.handle().load_user_settings();
-            app.manage(Mutex::new(user_settings));
 
             // create_window() must be called after app.manage because window neeed those states and also
             // frontend might call states before they are managed. (especially in relaese build)
@@ -117,8 +114,6 @@ pub fn run() {
             commands::bookmarks::prepend_to_child,
             commands::bookmarks::set_is_open,
             commands::bookmarks::toggle_is_open,
-            commands::settings::get_user_settings,
-            commands::settings::update_user_settings,
             commands::external::send_page_title,
             commands::external::send_page_url,
         ])
@@ -129,7 +124,7 @@ pub fn run() {
         tauri::RunEvent::Ready => {}
         tauri::RunEvent::Exit => {
             // save settings before exit
-            let _ = app_handle.save_user_settings();
+            // let _ = app_handle.save_user_settings();
             let _ = app_handle.save_bookmarks();
             app_handle.exit(0);
         }

@@ -2,8 +2,8 @@
 
 Default permissions for the plugin
 
-- `get-user-settings`
-- `update-user-settings`
+- `allow-get-user-settings`
+- `allow-update-user-settings`
 
 ## Permission Table
 

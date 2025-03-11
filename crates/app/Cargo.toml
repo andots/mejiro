@@ -30,6 +30,7 @@ parus-common.workspace = true
 mejiro-core.workspace = true
 favicon-server.workspace = true
 tauri-plugin-app-settings.workspace = true
+tauri-plugin-user-settings.workspace = true
 tauri-plugin-window-geometry.workspace = true
 
 # tauri plugins

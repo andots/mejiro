@@ -6,15 +6,12 @@ use std::{
 use tauri::{Manager, Runtime};
 
 use mejiro_core::bookmarks::Bookmarks;
-use parus_common::{utils::deserialize_from_file_or_default, AppHandlePathExt};
+use parus_common::AppHandlePathExt;
 
-use crate::{error::AppError, settings::UserSettings};
+use crate::error::AppError;
 
 pub trait AppHandleExt {
     fn get_default_app_title(&self) -> String;
-
-    fn load_user_settings(&self) -> UserSettings;
-    fn save_user_settings(&self) -> Result<(), AppError>;
 
     fn load_bookmarks(&self) -> Bookmarks;
     fn save_bookmarks(&self) -> Result<(), AppError>;
@@ -28,23 +25,6 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
             self.package_info().name,
             self.package_info().version
         )
-    }
-
-    fn load_user_settings(&self) -> UserSettings {
-        let path = self.user_settings_path();
-        deserialize_from_file_or_default(path)
-    }
-
-    fn save_user_settings(&self) -> Result<(), AppError> {
-        let path = self.user_settings_path();
-        let file = fs::File::create(path)?;
-        if let Some(state) = self.try_state::<Mutex<UserSettings>>() {
-            let settings = state
-                .lock()
-                .map_err(|_| AppError::Mutex("can't get settings".to_string()))?;
-            serde_json::to_writer_pretty(file, &settings.clone())?;
-        }
-        Ok(())
     }
 
     fn load_bookmarks(&self) -> Bookmarks {

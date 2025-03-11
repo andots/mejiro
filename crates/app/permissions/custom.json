@@ -25,9 +25,7 @@
           "append_to_child",
           "prepend_to_child",
           "set_is_open",
-          "toggle_is_open",
-          "get_user_settings",
-          "update_user_settings"
+          "toggle_is_open"
         ],
         "deny": []
       }
