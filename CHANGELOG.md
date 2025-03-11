@@ -1,5 +1,36 @@
 # Changelog
 
+# [0.30.0](https://github.com/andots/mejiro/compare/v0.29.0...v0.30.0) (2025-03-11)
+
+
+### Bug Fixes
+
+* **app:** use Error from common crate ([950c6f4](https://github.com/andots/mejiro/commit/950c6f40b44b49215b4de2c4653c6129304091f2))
+* **front:** remove ping invoke ([3019020](https://github.com/andots/mejiro/commit/301902076788a686d5fede3505e5b61831d77568))
+* **plugin:** fix constant import module ([402d73b](https://github.com/andots/mejiro/commit/402d73bc76e3a556f3c8a34b386f8b29f6af0b3b))
+* **plugin:** remove AppHandleExt from plugin ([fbbfcf0](https://github.com/andots/mejiro/commit/fbbfcf065d5cc70c2901989c073cb93c0fa933ba))
+* **plugin:** simplify state management of plugin ([6ee0626](https://github.com/andots/mejiro/commit/6ee0626528de37a514c466ead26701459e6fd02d))
+* **plugin:** use Error from common ([d51d92b](https://github.com/andots/mejiro/commit/d51d92b6463a9b4c2060a3aaf73f334a88e28104))
+* **plugin:** use FILE_NAME constant for filename ([d682020](https://github.com/andots/mejiro/commit/d682020946a481de89a46d490cc5758e7b9a238e))
+* remove mobile stuffs ([5881688](https://github.com/andots/mejiro/commit/5881688d32b6eb3baf6f3f2573f3b930fe6cabd8))
+* schema issue on EvenBetterToml ([6a4545b](https://github.com/andots/mejiro/commit/6a4545b00d6da88207d04f2249dd99d0e8a2bb8b))
+* **window-geometry:** simplify state management as a plugin ([f60cbea](https://github.com/andots/mejiro/commit/f60cbeadc895b474f82b55cfaaddb97cf6e701b5))
+
+
+### Features
+
+* **app:** integrate user-settings plugin ([2dd199a](https://github.com/andots/mejiro/commit/2dd199a4c82d8ec70b60ed2b668f0d5d036212b4))
+* **app:** integrate with bookmarks plugin ([9ccb47d](https://github.com/andots/mejiro/commit/9ccb47df5fae9a4275d85766bbc5a75eacb29996))
+* **bookmarks:** add bookmarks commands and functions as plugin ([59b9d30](https://github.com/andots/mejiro/commit/59b9d30609fd1b4620dfcebbc20b3ccb083e9da3))
+* **common:** add common crate for sharing codes ([6392b6b](https://github.com/andots/mejiro/commit/6392b6b0bf427e6ccf11d5b5c0ebfa988e7edf19))
+* **common:** impl AppHandlePathExt to get file path ([32d063f](https://github.com/andots/mejiro/commit/32d063f96f82194e37815f7a306c046b7f8ce219))
+* generate permissions for internal commands to allow specific commands on app/external webviews ([7fa4407](https://github.com/andots/mejiro/commit/7fa4407425acc6c2f3890cf311f995c1ef2ed149))
+* **plugin:** add window-geometry plugin ([f5b5612](https://github.com/andots/mejiro/commit/f5b5612e6886ed175454047ad65640e414dbcc7c))
+* **plugin:** move app settings features and commands to tauri-plugin-app-settings ([b18206e](https://github.com/andots/mejiro/commit/b18206eb9e619b8a1460ea26eec6c54b7af57355))
+* **plugin:** move window geometry models and commands to plugin ([bf53341](https://github.com/andots/mejiro/commit/bf53341293ff3cfa0b81319358d65b89f4be789c))
+* **plugin:** use FileName strum ([ac0e7c5](https://github.com/andots/mejiro/commit/ac0e7c595160922ec86e4a18c99a713c62dfd606))
+* **user-settings:** make plugin for user settings ([01743d7](https://github.com/andots/mejiro/commit/01743d7c004313354d0903a1ed8cabc6d04a955a))
+
 # [0.29.0](https://github.com/andots/mejiro/compare/v0.28.0...v0.29.0) (2025-03-09)
 
 
