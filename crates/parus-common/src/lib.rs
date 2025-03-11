@@ -1,17 +1,14 @@
-mod error;
-
-use std::fs;
-use std::path::{Path, PathBuf};
-
-use serde::Deserialize;
-use strum::AsRefStr;
-use tauri::Manager;
+pub mod constants;
+pub mod error;
+pub mod utils;
 
 pub use error::Error;
 
-pub const MAINWINDOW_LABEL: &str = "main";
-pub const APP_WEBVIEW_LABEL: &str = "app";
-pub const EXTERNAL_WEBVIEW_LABEL: &str = "external";
+use std::fs;
+use std::path::PathBuf;
+
+use strum::AsRefStr;
+use tauri::Manager;
 
 /// The file names are defined as an enum to prevent typos and to provide a centralized list of all data files.
 /// Different file names should be used for debug and release builds to separate development and production data.
@@ -46,30 +43,6 @@ pub enum FileName {
     UserSettings,
     #[strum(serialize = "favicons.db")]
     FaviconDatabase,
-}
-
-/// Deserialize or return Default
-pub fn deserialize_from_file<T, P>(path: P) -> T
-where
-    T: for<'de> Deserialize<'de> + Default,
-    P: AsRef<Path>,
-{
-    match fs::File::open(path) {
-        Ok(file) => {
-            let reader = std::io::BufReader::new(file);
-            match serde_json::from_reader(reader) {
-                Ok(data) => data,
-                Err(e) => {
-                    log::warn!("Failed to deserialize, return Default: {:?}", e);
-                    T::default()
-                }
-            }
-        }
-        Err(e) => {
-            log::warn!("Failed to open file, return Default: {:?}", e);
-            T::default()
-        }
-    }
 }
 
 pub trait AppHandlePathExt {

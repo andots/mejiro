@@ -6,7 +6,9 @@ use tauri::Manager;
 use tauri::{plugin::PluginApi, AppHandle, Runtime};
 
 use parus_common::{
-    deserialize_from_file, AppHandlePathExt, Error, EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL,
+    constants::{EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL},
+    utils::deserialize_from_file,
+    AppHandlePathExt, Error,
 };
 
 use crate::constants::DEFAULT_HEADER_HEIGHT;

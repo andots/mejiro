@@ -3,7 +3,9 @@ use std::{fs, sync::Mutex};
 use serde::de::DeserializeOwned;
 use tauri::{plugin::PluginApi, Manager};
 
-use parus_common::{deserialize_from_file, AppHandlePathExt, Error, EXTERNAL_WEBVIEW_LABEL};
+use parus_common::{
+    constants::EXTERNAL_WEBVIEW_LABEL, utils::deserialize_from_file, AppHandlePathExt, Error,
+};
 
 use crate::models::AppSettings;
 

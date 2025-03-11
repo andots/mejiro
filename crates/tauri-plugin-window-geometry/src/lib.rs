@@ -10,7 +10,7 @@ use tauri::{
     Manager, Runtime,
 };
 
-use parus_common::MAINWINDOW_LABEL;
+use parus_common::constants::MAINWINDOW_LABEL;
 
 pub use models::*;
 
