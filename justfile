@@ -8,7 +8,7 @@ dev:
   pnpm run tauri dev
 
 build:
-  pnpm run tauri build
+  pnpm run tauri build --no-bundle
 
 webdev:
   pnpm run turbo dev
