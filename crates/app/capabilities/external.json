@@ -4,5 +4,8 @@
   "description": "enables the external permissions",
   "windows": ["main"],
   "webviews": ["external"],
-  "permissions": ["core:default"]
+  "remote": {
+    "urls": ["http{s}?://*"]
+  },
+  "permissions": ["external-webview"]
 }
