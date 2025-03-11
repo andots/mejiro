@@ -11,27 +11,26 @@ use parus_common::{
         APP_WEBVIEW_LABEL, APP_WEBVIEW_URL, EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL,
         MIN_WINDOW_HEIGHT, MIN_WINDOW_WIDTH,
     },
-    AppHandleAppExt, AppHandlePathExt,
+    AppHandleAppExt, AppHandlePathExt, Error,
 };
 
 use tauri_plugin_app_settings::{default_start_page_url, AppSettings};
 use tauri_plugin_window_geometry::WindowGeometry;
 
-use crate::error::AppError;
 use crate::events::AppEvent;
 
 /// Get the app webview
-pub fn get_app_webview(app_handle: &tauri::AppHandle) -> Result<tauri::Webview, AppError> {
+pub fn get_app_webview(app_handle: &tauri::AppHandle) -> Result<tauri::Webview, Error> {
     app_handle
         .get_webview(APP_WEBVIEW_LABEL)
-        .ok_or(AppError::WebviewNotFound)
+        .ok_or(Error::WebviewNotFound)
 }
 
 /// Get the external webview
-pub fn get_external_webview(app_handle: &tauri::AppHandle) -> Result<tauri::Webview, AppError> {
+pub fn get_external_webview(app_handle: &tauri::AppHandle) -> Result<tauri::Webview, Error> {
     app_handle
         .get_webview(EXTERNAL_WEBVIEW_LABEL)
-        .ok_or(AppError::WebviewNotFound)
+        .ok_or(Error::WebviewNotFound)
 }
 
 /// Create the main window with the app and external webviews.

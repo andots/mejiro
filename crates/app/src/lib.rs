@@ -6,7 +6,6 @@ use window::create_window;
 use parus_common::AppHandlePathExt;
 
 mod commands;
-mod error;
 mod events;
 mod updater;
 mod window;
