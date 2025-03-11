@@ -1,7 +1,8 @@
 use std::sync::Mutex;
 
-use crate::AppSettings;
 use parus_common::Error;
+
+use crate::AppSettings;
 
 #[tauri::command]
 pub fn get_app_settings(state: tauri::State<'_, Mutex<AppSettings>>) -> Result<AppSettings, Error> {

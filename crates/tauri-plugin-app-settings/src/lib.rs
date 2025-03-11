@@ -4,15 +4,21 @@ mod models;
 #[cfg(desktop)]
 mod desktop;
 
+use std::{fs, sync::Mutex};
+
 #[cfg(desktop)]
 use desktop::AppSettingsPlugin;
 
-use parus_common::constants::MAINWINDOW_LABEL;
+use parus_common::{
+    constants::{EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL},
+    utils::deserialize_from_file_or_default,
+    AppHandlePathExt, Error,
+};
 use tauri::Manager;
 
 pub use models::{default_start_page_url, AppSettings};
 
-/// Extensions to [`tauri::App`], [`tauri::AppHandle`] and [`tauri::Window`] to access the app APIs.
+/// Extensions to [`tauri::App`], [`tauri::AppHandle`] and [`tauri::Window`] to access the APIs.
 pub trait AppSettingsPluginExt<R: tauri::Runtime> {
     fn app_settings_plugin(&self) -> &AppSettingsPlugin<R>;
 }
@@ -20,6 +26,45 @@ pub trait AppSettingsPluginExt<R: tauri::Runtime> {
 impl<R: tauri::Runtime, T: tauri::Manager<R>> crate::AppSettingsPluginExt<R> for T {
     fn app_settings_plugin(&self) -> &AppSettingsPlugin<R> {
         self.state::<AppSettingsPlugin<R>>().inner()
+    }
+}
+
+trait AppHandleExt {
+    fn load_app_settings(&self) -> AppSettings;
+    fn save_app_settings(&self) -> Result<(), Error>;
+    fn sync_last_visited_url(&self) -> Result<(), Error>;
+}
+
+impl<R: tauri::Runtime> AppHandleExt for tauri::AppHandle<R> {
+    fn load_app_settings(&self) -> AppSettings {
+        let path = self.app_settings_path();
+        deserialize_from_file_or_default(path)
+    }
+
+    fn save_app_settings(&self) -> Result<(), Error> {
+        let path = self.app_settings_path();
+        let file = fs::File::create(path)?;
+        if let Some(state) = self.try_state::<Mutex<AppSettings>>() {
+            let settings = state
+                .lock()
+                .map_err(|_| Error::Mutex("can't get settings".to_string()))?;
+            serde_json::to_writer_pretty(file, &settings.clone())?;
+        }
+        Ok(())
+    }
+
+    /// Sync external url with start_page_url in AppSettings for last visited url
+    fn sync_last_visited_url(&self) -> Result<(), Error> {
+        if let Some(external) = self.get_webview(EXTERNAL_WEBVIEW_LABEL) {
+            if let Some(state) = self.try_state::<Mutex<AppSettings>>() {
+                let url = external.url()?;
+                let mut settings = state
+                    .lock()
+                    .map_err(|_| Error::Mutex("can't get settings".to_string()))?;
+                settings.start_page_url = url.to_string();
+            }
+        }
+        Ok(())
     }
 }
 
@@ -42,13 +87,12 @@ pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
             tauri::RunEvent::Ready => {}
             tauri::RunEvent::Exit => {
                 // save settings before exit
-                let _ = app_handle.app_settings_plugin().save_app_settings();
-                // app_handle.exit(0);
+                let _ = app_handle.save_app_settings();
             }
             tauri::RunEvent::WindowEvent { label, event, .. } => {
                 if label == MAINWINDOW_LABEL {
                     if let tauri::WindowEvent::CloseRequested { .. } = event {
-                        let _ = app_handle.app_settings_plugin().sync_last_visited_url();
+                        let _ = app_handle.sync_last_visited_url();
                     }
                 }
             }
