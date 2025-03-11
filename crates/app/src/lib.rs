@@ -4,19 +4,25 @@ use tauri::Manager;
 use tauri_plugin_updater::UpdaterExt;
 
 use app_handle_ext::AppHandleExt;
-use constants::{FAVICON_SERVER_ALLOW_ORIGINS, FAVICON_SERVER_PORT};
 use window::create_window;
 
 use parus_common::AppHandlePathExt;
 
 mod app_handle_ext;
 mod commands;
-mod constants;
 mod error;
 mod events;
 mod settings;
 mod updater;
 mod window;
+
+// TODO: use random port picker?
+const FAVICON_SERVER_PORT: u16 = 7853;
+const FAVICON_SERVER_ALLOW_ORIGINS: [&str; 3] = [
+    "http://localhost/",
+    "http://tauri.localhost/",
+    "http://localhost:1420/",
+];
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -82,7 +88,7 @@ pub fn run() {
             // Open devtools when debug build
             #[cfg(debug_assertions)]
             {
-                use constants::APP_WEBVIEW_LABEL;
+                use parus_common::constants::APP_WEBVIEW_LABEL;
                 app.get_webview(APP_WEBVIEW_LABEL)
                     .expect("failed to get webview")
                     .open_devtools();

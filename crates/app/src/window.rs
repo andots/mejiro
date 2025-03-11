@@ -4,16 +4,18 @@ use tauri::{
 };
 use tauri::{EventTarget, Manager};
 
-use parus_common::AppHandlePathExt;
+use parus_common::{
+    constants::{
+        APP_WEBVIEW_LABEL, APP_WEBVIEW_URL, EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL,
+        MIN_WINDOW_HEIGHT, MIN_WINDOW_WIDTH,
+    },
+    AppHandlePathExt,
+};
 
 use tauri_plugin_app_settings::{default_start_page_url, AppSettings, AppSettingsPluginExt};
 use tauri_plugin_window_geometry::{WindowGeometry, WindowGeometryPluginExt};
 
 use crate::app_handle_ext::AppHandleExt;
-use crate::constants::{
-    APP_WEBVIEW_LABEL, APP_WEBVIEW_URL, EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL,
-    MIN_WINDOW_HEIGHT, MIN_WINDOW_WIDTH,
-};
 use crate::error::AppError;
 use crate::events::AppEvent;
 

@@ -2,7 +2,7 @@ use serde::Serialize;
 use strum::AsRefStr;
 use tauri::Emitter;
 
-use crate::constants::APP_WEBVIEW_LABEL;
+use parus_common::constants::APP_WEBVIEW_LABEL;
 
 #[derive(AsRefStr)]
 pub enum AppEvent {

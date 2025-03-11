@@ -1,8 +1,9 @@
 use tauri::Manager;
 
+use parus_common::constants::MAINWINDOW_LABEL;
+
 use crate::{
     app_handle_ext::AppHandleExt,
-    constants::MAINWINDOW_LABEL,
     events::{emit_to_app_webview, AppEvent},
 };
 
