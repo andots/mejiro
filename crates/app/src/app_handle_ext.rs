@@ -1,11 +1,11 @@
 use std::{
     fs::{self},
-    path::{Path, PathBuf},
+    path::PathBuf,
     sync::Mutex,
 };
 
 use mejiro_core::bookmarks::Bookmarks;
-use serde::Deserialize;
+use parus_common::utils::deserialize_from_file_or_default;
 use strum::AsRefStr;
 use tauri::{Manager, Runtime};
 
@@ -36,29 +36,6 @@ pub enum FileName {
     UserSettings,
     #[strum(serialize = "favicons.db")]
     FaviconDatabase,
-}
-
-fn deserialize_from_file<T, P>(path: P) -> T
-where
-    T: for<'de> Deserialize<'de> + Default,
-    P: AsRef<Path>,
-{
-    match fs::File::open(path) {
-        Ok(file) => {
-            let reader = std::io::BufReader::new(file);
-            match serde_json::from_reader(reader) {
-                Ok(data) => data,
-                Err(e) => {
-                    log::warn!("Failed to deserialize, return Default: {:?}", e);
-                    T::default()
-                }
-            }
-        }
-        Err(e) => {
-            log::warn!("Failed to open file, return Default: {:?}", e);
-            T::default()
-        }
-    }
 }
 
 pub trait AppHandleExt {
@@ -125,7 +102,7 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
 
     fn load_user_settings(&self) -> UserSettings {
         let path = self.get_user_settings_file_path();
-        deserialize_from_file(path)
+        deserialize_from_file_or_default(path)
     }
 
     fn save_user_settings(&self) -> Result<(), AppError> {

@@ -4,7 +4,8 @@ use serde::de::DeserializeOwned;
 use tauri::{plugin::PluginApi, Manager};
 
 use parus_common::{
-    constants::EXTERNAL_WEBVIEW_LABEL, utils::deserialize_from_file, AppHandlePathExt, Error,
+    constants::EXTERNAL_WEBVIEW_LABEL, utils::deserialize_from_file_or_default, AppHandlePathExt,
+    Error,
 };
 
 use crate::models::AppSettings;
@@ -33,7 +34,7 @@ impl<R: tauri::Runtime> AppSettingsPlugin<R> {
 
     pub fn load_app_settings(&self) -> AppSettings {
         let path = self.app_handle.app_settings_path();
-        deserialize_from_file(path)
+        deserialize_from_file_or_default(path)
     }
 
     pub fn save_app_settings(&self) -> Result<(), Error> {

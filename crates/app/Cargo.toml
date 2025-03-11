@@ -26,6 +26,7 @@ strum = { workspace = true, features = ["derive"] }
 anyhow = { workspace = true }
 
 # internal
+parus-common.workspace = true
 mejiro-core.workspace = true
 favicon-server.workspace = true
 tauri-plugin-app-settings.workspace = true

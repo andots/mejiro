@@ -7,7 +7,7 @@ use tauri::{plugin::PluginApi, AppHandle, Runtime};
 
 use parus_common::{
     constants::{EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL},
-    utils::deserialize_from_file,
+    utils::deserialize_from_file_or_default,
     AppHandlePathExt, Error,
 };
 
@@ -45,7 +45,7 @@ impl<R: Runtime> WindowGeometryPlugin<R> {
 
     pub fn load_window_geometry(&self) -> WindowGeometry {
         let path = self.app_handle.window_geometry_path();
-        deserialize_from_file(path)
+        deserialize_from_file_or_default(path)
     }
 
     pub fn save_window_geometry(&self) -> Result<(), Error> {

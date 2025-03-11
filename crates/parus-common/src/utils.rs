@@ -3,7 +3,7 @@ use std::{fs, path::Path};
 use serde::Deserialize;
 
 /// Deserialize or return Default
-pub fn deserialize_from_file<T, P>(path: P) -> T
+pub fn deserialize_from_file_or_default<T, P>(path: P) -> T
 where
     T: for<'de> Deserialize<'de> + Default,
     P: AsRef<Path>,
