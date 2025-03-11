@@ -1,13 +1,7 @@
 mod commands;
 mod models;
 
-#[cfg(desktop)]
-mod desktop;
-
 use std::{fs, sync::Mutex};
-
-#[cfg(desktop)]
-use desktop::AppSettingsPlugin;
 
 use parus_common::{
     constants::{EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL},
@@ -17,17 +11,6 @@ use parus_common::{
 use tauri::Manager;
 
 pub use models::{default_start_page_url, AppSettings};
-
-/// Extensions to [`tauri::App`], [`tauri::AppHandle`] and [`tauri::Window`] to access the APIs.
-pub trait AppSettingsPluginExt<R: tauri::Runtime> {
-    fn app_settings_plugin(&self) -> &AppSettingsPlugin<R>;
-}
-
-impl<R: tauri::Runtime, T: tauri::Manager<R>> crate::AppSettingsPluginExt<R> for T {
-    fn app_settings_plugin(&self) -> &AppSettingsPlugin<R> {
-        self.state::<AppSettingsPlugin<R>>().inner()
-    }
-}
 
 trait AppHandleExt {
     fn load_app_settings(&self) -> AppSettings;
@@ -75,11 +58,9 @@ pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
             commands::get_app_settings,
             commands::update_app_settings
         ])
-        .setup(|app, api| {
-            #[cfg(desktop)]
-            let plugin = desktop::init(app, api)?;
-
-            app.manage(plugin);
+        .setup(|app, _api| {
+            let settings = app.load_app_settings();
+            app.manage(Mutex::new(settings));
 
             Ok(())
         })

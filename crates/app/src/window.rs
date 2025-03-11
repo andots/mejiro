@@ -1,3 +1,5 @@
+use std::sync::Mutex;
+
 use tauri::{
     webview::PageLoadEvent, Emitter, LogicalPosition, LogicalSize, Url, WebviewBuilder, WebviewUrl,
     WindowBuilder,
@@ -12,7 +14,7 @@ use parus_common::{
     AppHandlePathExt,
 };
 
-use tauri_plugin_app_settings::{default_start_page_url, AppSettings, AppSettingsPluginExt};
+use tauri_plugin_app_settings::{default_start_page_url, AppSettings};
 use tauri_plugin_window_geometry::{WindowGeometry, WindowGeometryPluginExt};
 
 use crate::app_handle_ext::AppHandleExt;
@@ -37,7 +39,7 @@ pub fn get_external_webview(app_handle: &tauri::AppHandle) -> Result<tauri::Webv
 /// The app webview is the main webview that loads the app.
 /// The external webview is a webview that loads external URLs and placed on the right side of the app webview (overlayed).
 pub fn create_window(app_handle: &tauri::AppHandle) -> tauri::Result<()> {
-    let settings_state = app_handle.app_settings_plugin().app_settings();
+    let settings_state = app_handle.state::<Mutex<AppSettings>>();
     let settings = settings_state
         .lock()
         .map_err(|e| anyhow::anyhow!("{:?}", e))?;
