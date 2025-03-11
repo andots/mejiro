@@ -3,9 +3,11 @@ use std::sync::Mutex;
 use tauri::Manager;
 use tauri_plugin_updater::UpdaterExt;
 
-use app_handle_ext::{AppHandleExt, FileName};
+use app_handle_ext::AppHandleExt;
 use constants::{FAVICON_SERVER_ALLOW_ORIGINS, FAVICON_SERVER_PORT};
 use window::create_window;
+
+use parus_common::AppHandlePathExt;
 
 mod app_handle_ext;
 mod commands;
@@ -21,9 +23,7 @@ pub fn run() {
     let app = tauri::Builder::default()
         .setup(|app| {
             // run favicon server
-            let database_path = app
-                .handle()
-                .get_file_path_from_app_dir(FileName::FaviconDatabase);
+            let database_path = app.handle().favicon_database_path();
             tauri::async_runtime::spawn(favicon_server::run(
                 database_path,
                 FAVICON_SERVER_PORT,

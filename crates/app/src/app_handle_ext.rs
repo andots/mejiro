@@ -1,54 +1,21 @@
 use std::{
     fs::{self},
-    path::PathBuf,
     sync::Mutex,
 };
 
-use mejiro_core::bookmarks::Bookmarks;
-use parus_common::utils::deserialize_from_file_or_default;
-use strum::AsRefStr;
 use tauri::{Manager, Runtime};
 
+use mejiro_core::bookmarks::Bookmarks;
+use parus_common::{utils::deserialize_from_file_or_default, AppHandlePathExt};
+
 use crate::{error::AppError, settings::UserSettings};
-
-/// The file names are defined as an enum to prevent typos and to provide a centralized list of all data files.
-/// Different file names should be used for debug and release builds to separate development and production data.
-#[cfg(debug_assertions)]
-#[derive(AsRefStr)]
-pub enum FileName {
-    #[strum(serialize = "dev-bookmarks.json")]
-    Bookmarks,
-    #[strum(serialize = "dev-settings.json")]
-    UserSettings,
-    #[strum(serialize = "dev-favicons.db")]
-    FaviconDatabase,
-}
-
-/// File names for release builds.
-/// Bookmarks and window geometry data are stored in JSON format, but with a dot prefix and no extension name
-/// to prevent accidental deletion or modification by users.
-#[cfg(not(debug_assertions))]
-#[derive(AsRefStr)]
-pub enum FileName {
-    #[strum(serialize = ".bookmarks")]
-    Bookmarks,
-    #[strum(serialize = "settings.json")]
-    UserSettings,
-    #[strum(serialize = "favicons.db")]
-    FaviconDatabase,
-}
 
 pub trait AppHandleExt {
     fn get_default_app_title(&self) -> String;
 
-    fn get_app_dir(&self) -> PathBuf;
-    fn get_file_path_from_app_dir(&self, file_name: FileName) -> PathBuf;
-
-    fn get_user_settings_file_path(&self) -> PathBuf;
     fn load_user_settings(&self) -> UserSettings;
     fn save_user_settings(&self) -> Result<(), AppError>;
 
-    fn get_bookmarks_file_path(&self) -> PathBuf;
     fn load_bookmarks(&self) -> Bookmarks;
     fn save_bookmarks(&self) -> Result<(), AppError>;
 }
@@ -63,50 +30,13 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
         )
     }
 
-    /// Get the app directory (DATA_DIR/${bundle_identifier}) and create it if not exists.
-    /// This function will panic if it fails to get the app dir.
-    /// |Platform | Value                                    | Example                                  |
-    /// | ------- | ---------------------------------------- | ---------------------------------------- |
-    /// | Linux   | `$XDG_DATA_HOME` or `$HOME`/.local/share | /home/alice/.local/share                 |
-    /// | macOS   | `$HOME`/Library/Application Support      | /Users/Alice/Library/Application Support |
-    /// | Windows | `{FOLDERID_RoamingAppData}`              | C:\Users\Alice\AppData\Roaming           |
-    fn get_app_dir(&self) -> PathBuf {
-        let path = self
-            .path()
-            .app_data_dir()
-            .expect("Failed to get app data dir");
-
-        match path.try_exists() {
-            Ok(exists) => {
-                if !exists {
-                    // create the app dir if it doesn't exist
-                    fs::create_dir_all(&path).expect("Failed to create app config dir");
-                    log::info!("App data dir created: {:?}", path);
-                }
-                path
-            }
-            Err(e) => {
-                log::error!("Error checking app data dir: {:?}", e);
-                panic!("Failed to check app data dir");
-            }
-        }
-    }
-
-    fn get_file_path_from_app_dir(&self, file_name: FileName) -> PathBuf {
-        self.get_app_dir().join(file_name.as_ref())
-    }
-
-    fn get_user_settings_file_path(&self) -> PathBuf {
-        self.get_file_path_from_app_dir(FileName::UserSettings)
-    }
-
     fn load_user_settings(&self) -> UserSettings {
-        let path = self.get_user_settings_file_path();
+        let path = self.user_settings_path();
         deserialize_from_file_or_default(path)
     }
 
     fn save_user_settings(&self) -> Result<(), AppError> {
-        let path = self.get_user_settings_file_path();
+        let path = self.user_settings_path();
         let file = fs::File::create(path)?;
         if let Some(state) = self.try_state::<Mutex<UserSettings>>() {
             let settings = state
@@ -117,12 +47,8 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
         Ok(())
     }
 
-    fn get_bookmarks_file_path(&self) -> PathBuf {
-        self.get_file_path_from_app_dir(FileName::Bookmarks)
-    }
-
     fn load_bookmarks(&self) -> Bookmarks {
-        let path = self.get_bookmarks_file_path();
+        let path = self.bookmarks_path();
         if path.exists() {
             log::info!("Bookmarks file found: {:?}", path);
             // create backup before loading
@@ -152,7 +78,7 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
     }
 
     fn save_bookmarks(&self) -> Result<(), AppError> {
-        let path = self.get_bookmarks_file_path();
+        let path = self.bookmarks_path();
         let state = self.state::<Mutex<Bookmarks>>();
         let bookmarks = state
             .lock()
