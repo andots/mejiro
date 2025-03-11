@@ -1,11 +1,9 @@
 use tauri::Manager;
 
 use parus_common::constants::MAINWINDOW_LABEL;
+use parus_common::AppHandleAppExt;
 
-use crate::{
-    app_handle_ext::AppHandleExt,
-    events::{emit_to_app_webview, AppEvent},
-};
+use crate::events::{emit_to_app_webview, AppEvent};
 
 #[tauri::command]
 pub fn send_page_title(app_handle: tauri::AppHandle, title: String) {

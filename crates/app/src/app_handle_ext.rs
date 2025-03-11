@@ -11,22 +11,11 @@ use parus_common::AppHandlePathExt;
 use crate::error::AppError;
 
 pub trait AppHandleExt {
-    fn get_default_app_title(&self) -> String;
-
     fn load_bookmarks(&self) -> Bookmarks;
     fn save_bookmarks(&self) -> Result<(), AppError>;
 }
 
 impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
-    /// Get the default title of the app. The title is in the format of "name - version".
-    fn get_default_app_title(&self) -> String {
-        format!(
-            "{} - v{}",
-            self.package_info().name,
-            self.package_info().version
-        )
-    }
-
     fn load_bookmarks(&self) -> Bookmarks {
         let path = self.bookmarks_path();
         if path.exists() {

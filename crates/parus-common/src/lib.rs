@@ -45,6 +45,21 @@ pub enum FileName {
     FaviconDatabase,
 }
 
+pub trait AppHandleAppExt {
+    /// Get the default title of the app. The title is in the format of "name - version".
+    fn get_default_app_title(&self) -> String;
+}
+
+impl<R: tauri::Runtime> AppHandleAppExt for tauri::AppHandle<R> {
+    fn get_default_app_title(&self) -> String {
+        format!(
+            "{} - v{}",
+            self.package_info().name,
+            self.package_info().version
+        )
+    }
+}
+
 pub trait AppHandlePathExt {
     /// Get the app directory (DATA_DIR/${bundle_identifier}) and create it if not exists.
     /// This function will panic if it fails to get the app dir.

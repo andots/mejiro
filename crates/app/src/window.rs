@@ -11,13 +11,12 @@ use parus_common::{
         APP_WEBVIEW_LABEL, APP_WEBVIEW_URL, EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL,
         MIN_WINDOW_HEIGHT, MIN_WINDOW_WIDTH,
     },
-    AppHandlePathExt,
+    AppHandleAppExt, AppHandlePathExt,
 };
 
 use tauri_plugin_app_settings::{default_start_page_url, AppSettings};
 use tauri_plugin_window_geometry::WindowGeometry;
 
-use crate::app_handle_ext::AppHandleExt;
 use crate::error::AppError;
 use crate::events::AppEvent;
 
