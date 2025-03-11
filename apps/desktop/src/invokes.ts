@@ -100,15 +100,15 @@ export const Invoke = {
   UpdateUserSettings: async (settings: UserSettings) => {
     return invoke<UserSettings>("update_user_settings", { settings });
   },
-  GetAppSettings: async () => {
-    return invoke<AppSettings>("get_app_settings", {});
-  },
-  UpdateAppSettings: async (settings: AppSettings) => {
-    return invoke<AppSettings>("update_app_settings", { settings });
-  },
 
   // Plugin
   GetWindowGeometry: async () => {
     return invoke<WindowGeometry>("plugin:window-geometry|get_window_geometry", {});
+  },
+  GetAppSettings: async () => {
+    return invoke<AppSettings>("plugin:app-settings|get_app_settings", {});
+  },
+  UpdateAppSettings: async (settings: AppSettings) => {
+    return invoke<AppSettings>("plugin:app-settings|update_app_settings", { settings });
   },
 } as const;

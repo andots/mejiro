@@ -9,11 +9,7 @@ use serde::Deserialize;
 use strum::AsRefStr;
 use tauri::{Manager, Runtime};
 
-use crate::{
-    constants::EXTERNAL_WEBVIEW_LABEL,
-    error::AppError,
-    settings::{AppSettings, UserSettings},
-};
+use crate::{error::AppError, settings::UserSettings};
 
 /// The file names are defined as an enum to prevent typos and to provide a centralized list of all data files.
 /// Different file names should be used for debug and release builds to separate development and production data.
@@ -22,8 +18,6 @@ use crate::{
 pub enum FileName {
     #[strum(serialize = "dev-bookmarks.json")]
     Bookmarks,
-    #[strum(serialize = "dev-app_settings.json")]
-    AppSettings,
     #[strum(serialize = "dev-settings.json")]
     UserSettings,
     #[strum(serialize = "dev-favicons.db")]
@@ -38,10 +32,6 @@ pub enum FileName {
 pub enum FileName {
     #[strum(serialize = ".bookmarks")]
     Bookmarks,
-    #[strum(serialize = ".app_settings")]
-    AppSettings,
-    #[strum(serialize = ".window_geometry")]
-    WindowGeometry,
     #[strum(serialize = "settings.json")]
     UserSettings,
     #[strum(serialize = "favicons.db")]
@@ -76,11 +66,6 @@ pub trait AppHandleExt {
 
     fn get_app_dir(&self) -> PathBuf;
     fn get_file_path_from_app_dir(&self, file_name: FileName) -> PathBuf;
-
-    fn get_app_settings_file_path(&self) -> PathBuf;
-    fn load_app_settings(&self) -> AppSettings;
-    fn save_app_settings(&self) -> Result<(), AppError>;
-    fn sync_last_visited_url(&self) -> Result<(), AppError>;
 
     fn get_user_settings_file_path(&self) -> PathBuf;
     fn load_user_settings(&self) -> UserSettings;
@@ -132,41 +117,6 @@ impl<R: Runtime> AppHandleExt for tauri::AppHandle<R> {
 
     fn get_file_path_from_app_dir(&self, file_name: FileName) -> PathBuf {
         self.get_app_dir().join(file_name.as_ref())
-    }
-
-    fn get_app_settings_file_path(&self) -> PathBuf {
-        self.get_file_path_from_app_dir(FileName::AppSettings)
-    }
-
-    fn load_app_settings(&self) -> AppSettings {
-        let path = self.get_app_settings_file_path();
-        deserialize_from_file(path)
-    }
-
-    fn save_app_settings(&self) -> Result<(), AppError> {
-        let path = self.get_app_settings_file_path();
-        let file = fs::File::create(path)?;
-        if let Some(state) = self.try_state::<Mutex<AppSettings>>() {
-            let settings = state
-                .lock()
-                .map_err(|_| AppError::Mutex("can't get settings".to_string()))?;
-            serde_json::to_writer_pretty(file, &settings.clone())?;
-        }
-        Ok(())
-    }
-
-    /// Sync external url with start_page_url in AppSettings for last visited url
-    fn sync_last_visited_url(&self) -> Result<(), AppError> {
-        if let Some(external) = self.get_webview(EXTERNAL_WEBVIEW_LABEL) {
-            if let Some(state) = self.try_state::<Mutex<AppSettings>>() {
-                let url = external.url()?;
-                let mut settings = state
-                    .lock()
-                    .map_err(|_| AppError::Mutex("can't get settings".to_string()))?;
-                settings.start_page_url = url.to_string();
-            }
-        }
-        Ok(())
     }
 
     fn get_user_settings_file_path(&self) -> PathBuf {

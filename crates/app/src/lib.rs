@@ -4,7 +4,7 @@ use tauri::Manager;
 use tauri_plugin_updater::UpdaterExt;
 
 use app_handle_ext::{AppHandleExt, FileName};
-use constants::{FAVICON_SERVER_ALLOW_ORIGINS, FAVICON_SERVER_PORT, MAINWINDOW_LABEL};
+use constants::{FAVICON_SERVER_ALLOW_ORIGINS, FAVICON_SERVER_PORT};
 use window::create_window;
 
 mod app_handle_ext;
@@ -67,15 +67,13 @@ pub fn run() {
 
             // TODO: move all features to plugin
             app.handle().plugin(tauri_plugin_window_geometry::init())?;
+            app.handle().plugin(tauri_plugin_app_settings::init())?;
 
             let bookmarks = app.handle().load_bookmarks();
             app.manage(Mutex::new(bookmarks));
 
             let user_settings = app.handle().load_user_settings();
             app.manage(Mutex::new(user_settings));
-
-            let app_settings = app.handle().load_app_settings();
-            app.manage(Mutex::new(app_settings));
 
             // create_window() must be called after app.manage because window neeed those states and also
             // frontend might call states before they are managed. (especially in relaese build)
@@ -115,8 +113,6 @@ pub fn run() {
             commands::bookmarks::toggle_is_open,
             commands::settings::get_user_settings,
             commands::settings::update_user_settings,
-            commands::settings::get_app_settings,
-            commands::settings::update_app_settings,
             commands::external::send_page_title,
             commands::external::send_page_url,
         ])
@@ -127,22 +123,9 @@ pub fn run() {
         tauri::RunEvent::Ready => {}
         tauri::RunEvent::Exit => {
             // save settings before exit
-            let _ = app_handle.save_app_settings();
             let _ = app_handle.save_user_settings();
             let _ = app_handle.save_bookmarks();
             app_handle.exit(0);
-        }
-        tauri::RunEvent::WindowEvent { label, event, .. } => {
-            if label == MAINWINDOW_LABEL {
-                match event {
-                    tauri::WindowEvent::CloseRequested { .. } => {
-                        let _ = app_handle.sync_last_visited_url();
-                    }
-                    tauri::WindowEvent::Resized(_physical_size) => {}
-                    tauri::WindowEvent::Moved(_physical_position) => {}
-                    _ => {}
-                }
-            }
         }
         _ => {}
     });

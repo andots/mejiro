@@ -1,0 +1,20 @@
+[package]
+name = "tauri-plugin-app-settings"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+exclude = ["/examples", "/dist-js", "/guest-js", "/node_modules"]
+links = "tauri-plugin-app-settings"
+
+[dependencies]
+tauri = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+log = { workspace = true }
+
+parus-common.workspace = true
+
+[build-dependencies]
+tauri-plugin = { workspace = true, features = ["build"] }

@@ -2444,6 +2444,7 @@ dependencies = [
  "strum 0.27.1",
  "tauri",
  "tauri-build",
+ "tauri-plugin-app-settings",
  "tauri-plugin-dialog",
  "tauri-plugin-log",
  "tauri-plugin-single-instance",
@@ -4647,6 +4648,19 @@ dependencies = [
  "tauri-utils",
  "toml",
  "walkdir",
+]
+
+[[package]]
+name = "tauri-plugin-app-settings"
+version = "0.29.0"
+dependencies = [
+ "log",
+ "parus-common",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-plugin",
+ "thiserror 2.0.12",
 ]
 
 [[package]]

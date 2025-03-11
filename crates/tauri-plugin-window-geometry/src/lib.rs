@@ -49,17 +49,14 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
             tauri::RunEvent::Ready => {}
             tauri::RunEvent::Exit => {
                 // save settings before exit
-                // let _ = app_handle.save_app_settings();
                 // let _ = app_handle.save_user_settings();
                 // let _ = app_handle.save_bookmarks();
-                app_handle.exit(0);
+                // app_handle.exit(0);
             }
             tauri::RunEvent::WindowEvent { label, event, .. } => {
                 if label == MAINWINDOW_LABEL {
                     match event {
                         tauri::WindowEvent::CloseRequested { .. } => {
-                            // let _ = app_handle.sync_last_visited_url();
-                            // let _ = app_handle.save_window_geometry();
                             let _ = app_handle.window_geometry_plugin().save_window_geometry();
                         }
                         tauri::WindowEvent::Resized(_physical_size) => {}

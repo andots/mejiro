@@ -1,9 +1,13 @@
+mod error;
+
 use std::fs;
 use std::path::{Path, PathBuf};
 
 use serde::Deserialize;
 use strum::AsRefStr;
 use tauri::Manager;
+
+pub use error::Error;
 
 pub const MAINWINDOW_LABEL: &str = "main";
 pub const APP_WEBVIEW_LABEL: &str = "app";
