@@ -7,7 +7,7 @@ mod desktop;
 #[cfg(desktop)]
 use desktop::AppSettingsPlugin;
 
-use parus_common::MAINWINDOW_LABEL;
+use parus_common::constants::MAINWINDOW_LABEL;
 use tauri::Manager;
 
 pub use models::{default_start_page_url, AppSettings};
