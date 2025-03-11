@@ -17,13 +17,14 @@ pub enum Error {
     #[error("Mutex Error: {0}")]
     Mutex(String),
 
-    #[error("other error: {0}")]
-    Other(String),
-
     #[error("failed to parse as json: {0}")]
     Json(#[from] serde_json::Error),
-    // #[error(transparent)]
-    // Core(#[from] mejiro_core::error::CoreError),
+
+    #[error(transparent)]
+    Core(#[from] mejiro_core::error::CoreError),
+
+    #[error("other error: {0}")]
+    Other(String),
 }
 
 #[derive(serde::Serialize)]
@@ -35,7 +36,7 @@ pub enum ErrorKind {
     Json(String),
     WebviewNotFound(String),
     Tauri(String),
-    // Core(String),
+    Core(String),
     Mutex(String),
     Other(String),
 }
@@ -52,7 +53,7 @@ impl serde::Serialize for Error {
             Self::Json(_) => ErrorKind::Json(error_message),
             Self::WebviewNotFound => ErrorKind::WebviewNotFound(error_message),
             Self::Tauri(_) => ErrorKind::Tauri(error_message),
-            // Self::Core(_) => ErrorKind::Core(error_message),
+            Self::Core(_) => ErrorKind::Core(error_message),
             Self::Mutex(_) => ErrorKind::Mutex(error_message),
             Self::Other(_) => ErrorKind::Other(error_message),
         };

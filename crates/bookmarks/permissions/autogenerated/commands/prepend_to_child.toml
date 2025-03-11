@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-prepend-to-child"
+description = "Enables the prepend_to_child command without any pre-configured scope."
+commands.allow = ["prepend_to_child"]
+
+[[permission]]
+identifier = "deny-prepend-to-child"
+description = "Denies the prepend_to_child command without any pre-configured scope."
+commands.deny = ["prepend_to_child"]

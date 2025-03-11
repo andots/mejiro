@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-insert-after"
+description = "Enables the insert_after command without any pre-configured scope."
+commands.allow = ["insert_after"]
+
+[[permission]]
+identifier = "deny-insert-after"
+description = "Denies the insert_after command without any pre-configured scope."
+commands.deny = ["insert_after"]

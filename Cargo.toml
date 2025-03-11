@@ -5,6 +5,7 @@
 resolver = "3"
 members = [
   "crates/app",
+  "crates/bookmarks",
   "crates/core",
   "crates/meta-parser",
   "crates/favicon-fetcher",
@@ -46,6 +47,7 @@ meta-parser = { path = "./crates/meta-parser" }
 favicon-fetcher = { path = "./crates/favicon-fetcher" }
 favicon-server = { path = "./crates/favicon-server" }
 tauri-plugin-app-settings = { path = "./crates/tauri-plugin-app-settings" }
+tauri-plugin-bookmarks = { path = "./crates/bookmarks" }
 tauri-plugin-user-settings = { path = "./crates/tauri-plugin-user-settings" }
 tauri-plugin-window-geometry = { path = "./crates/tauri-plugin-window-geometry" }
 

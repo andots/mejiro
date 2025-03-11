@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-get-toolbar-bookmarks"
+description = "Enables the get_toolbar_bookmarks command without any pre-configured scope."
+commands.allow = ["get_toolbar_bookmarks"]
+
+[[permission]]
+identifier = "deny-get-toolbar-bookmarks"
+description = "Denies the get_toolbar_bookmarks command without any pre-configured scope."
+commands.deny = ["get_toolbar_bookmarks"]

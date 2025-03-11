@@ -3077,6 +3077,7 @@ name = "parus-common"
 version = "0.29.0"
 dependencies = [
  "log",
+ "mejiro-core",
  "serde",
  "serde_json",
  "strum 0.27.1",
@@ -4660,6 +4661,21 @@ dependencies = [
  "parus-common",
  "serde",
  "serde_json",
+ "tauri",
+ "tauri-plugin",
+ "thiserror 2.0.12",
+]
+
+[[package]]
+name = "tauri-plugin-bookmarks"
+version = "0.29.0"
+dependencies = [
+ "log",
+ "mejiro-core",
+ "parus-common",
+ "serde",
+ "serde_json",
+ "strum 0.27.1",
  "tauri",
  "tauri-plugin",
  "thiserror 2.0.12",

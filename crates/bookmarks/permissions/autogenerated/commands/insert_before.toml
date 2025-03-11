@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-insert-before"
+description = "Enables the insert_before command without any pre-configured scope."
+commands.allow = ["insert_before"]
+
+[[permission]]
+identifier = "deny-insert-before"
+description = "Denies the insert_before command without any pre-configured scope."
+commands.deny = ["insert_before"]

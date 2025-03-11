@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-get-nested-json"
+description = "Enables the get_nested_json command without any pre-configured scope."
+commands.allow = ["get_nested_json"]
+
+[[permission]]
+identifier = "deny-get-nested-json"
+description = "Denies the get_nested_json command without any pre-configured scope."
+commands.deny = ["get_nested_json"]

@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-get-root-and-children-folders"
+description = "Enables the get_root_and_children_folders command without any pre-configured scope."
+commands.allow = ["get_root_and_children_folders"]
+
+[[permission]]
+identifier = "deny-get-root-and-children-folders"
+description = "Denies the get_root_and_children_folders command without any pre-configured scope."
+commands.deny = ["get_root_and_children_folders"]
