@@ -6,12 +6,11 @@ use tauri::Manager;
 use tauri::{plugin::PluginApi, AppHandle, Runtime};
 
 use parus_common::{
-    deserialize_from_file, AppHandlePathExt, EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL,
+    deserialize_from_file, AppHandlePathExt, Error, EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL,
 };
 
 use crate::constants::DEFAULT_HEADER_HEIGHT;
 use crate::models::*;
-use crate::Error;
 use crate::WindowGeometry;
 
 pub fn init<R: Runtime, C: DeserializeOwned>(

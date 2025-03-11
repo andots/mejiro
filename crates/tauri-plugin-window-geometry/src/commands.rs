@@ -2,8 +2,9 @@ use std::sync::Mutex;
 
 use tauri::{AppHandle, Runtime};
 
+use parus_common::Error;
+
 use crate::models::*;
-use crate::Error;
 use crate::WindowGeometryPluginExt;
 
 #[tauri::command]

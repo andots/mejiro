@@ -3,7 +3,6 @@ mod desktop;
 
 mod commands;
 mod constants;
-mod error;
 mod models;
 
 use tauri::{
@@ -13,7 +12,6 @@ use tauri::{
 
 use parus_common::MAINWINDOW_LABEL;
 
-pub use error::Error;
 pub use models::*;
 
 #[cfg(desktop)]
