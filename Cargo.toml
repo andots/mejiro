@@ -11,6 +11,7 @@ members = [
   "crates/favicon-server",
   "crates/parus-common",
   "crates/tauri-plugin-app-settings",
+  "crates/tauri-plugin-user-settings",
   "crates/tauri-plugin-window-geometry",
 ]
 
@@ -44,8 +45,9 @@ mejiro-core = { path = "./crates/core" }
 meta-parser = { path = "./crates/meta-parser" }
 favicon-fetcher = { path = "./crates/favicon-fetcher" }
 favicon-server = { path = "./crates/favicon-server" }
-tauri-plugin-window-geometry = { path = "./crates/tauri-plugin-window-geometry" }
 tauri-plugin-app-settings = { path = "./crates/tauri-plugin-app-settings" }
+tauri-plugin-user-settings = { path = "./crates/tauri-plugin-user-settings" }
+tauri-plugin-window-geometry = { path = "./crates/tauri-plugin-window-geometry" }
 
 [profile.dev]
 opt-level = 1

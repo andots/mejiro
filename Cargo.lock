@@ -4774,6 +4774,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "tauri-plugin-user-settings"
+version = "0.29.0"
+dependencies = [
+ "log",
+ "parus-common",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-plugin",
+ "thiserror 2.0.12",
+]
+
+[[package]]
 name = "tauri-plugin-window-geometry"
 version = "0.29.0"
 dependencies = [
