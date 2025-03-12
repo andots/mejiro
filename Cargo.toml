@@ -12,6 +12,7 @@ members = [
   "crates/meta-parser",
   "crates/favicon-fetcher",
   "crates/favicon-server",
+  "crates/user-scripts",
   "crates/user-settings",
   "crates/window-geometry",
 ]
@@ -49,6 +50,7 @@ favicon-server = { path = "./crates/favicon-server" }
 # internal plugins
 tauri-plugin-app-settings = { path = "./crates/app-settings" }
 tauri-plugin-bookmarks = { path = "./crates/bookmarks" }
+tauri-plugin-user-scripts = { path = "./crates/user-scripts" }
 tauri-plugin-user-settings = { path = "./crates/user-settings" }
 tauri-plugin-window-geometry = { path = "./crates/window-geometry" }
 
