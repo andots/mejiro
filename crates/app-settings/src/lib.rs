@@ -1,16 +1,17 @@
 mod commands;
 mod models;
 
+pub use models::{default_start_page_url, AppSettings};
+
 use std::{fs, sync::Mutex};
+
+use tauri::Manager;
 
 use parus_common::{
     constants::{EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL},
     utils::deserialize_from_file_or_default,
     AppHandlePathExt, Error,
 };
-use tauri::Manager;
-
-pub use models::{default_start_page_url, AppSettings};
 
 const PLUGIN_NAME: &str = "app-settings";
 

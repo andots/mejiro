@@ -1,12 +1,13 @@
 mod commands;
 mod models;
 
+pub use models::UserSettings;
+
 use std::{fs, sync::Mutex};
 
-use parus_common::{utils::deserialize_from_file_or_default, AppHandlePathExt, Error};
 use tauri::Manager;
 
-use models::UserSettings;
+use parus_common::{utils::deserialize_from_file_or_default, AppHandlePathExt, Error};
 
 const PLUGIN_NAME: &str = "user-settings";
 

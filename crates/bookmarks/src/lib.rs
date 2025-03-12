@@ -3,9 +3,10 @@ mod models;
 
 use std::{fs, sync::Mutex};
 
+use tauri::Manager;
+
 use mejiro_core::bookmarks::Bookmarks;
 use parus_common::{AppHandlePathExt, Error};
-use tauri::Manager;
 
 const PLUGIN_NAME: &str = "bookmarks";
 

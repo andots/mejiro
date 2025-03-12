@@ -5,10 +5,7 @@ pub use models::WindowGeometry;
 
 use std::{fs, sync::Mutex};
 
-use tauri::{
-    plugin::{Builder, TauriPlugin},
-    Manager, Runtime,
-};
+use tauri::Manager;
 
 use parus_common::{
     constants::{DEFAULT_HEADER_HEIGHT, EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL},
@@ -56,8 +53,8 @@ impl<R: tauri::Runtime> AppHandleExt for tauri::AppHandle<R> {
 }
 
 /// Initializes the plugin.
-pub fn init<R: Runtime>() -> TauriPlugin<R> {
-    Builder::new(PLUGIN_NAME)
+pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
+    tauri::plugin::Builder::new(PLUGIN_NAME)
         .invoke_handler(tauri::generate_handler![commands::get_window_geometry])
         .setup(|app, _api| {
             let window_geometry = app.load_window_geometry();
