@@ -4,7 +4,6 @@ pub mod utils;
 
 pub use error::Error;
 
-use std::fs;
 use std::path::PathBuf;
 
 use strum::AsRefStr;
@@ -100,21 +99,8 @@ impl<R: tauri::Runtime> AppHandlePathExt for tauri::AppHandle<R> {
             .path()
             .app_data_dir()
             .expect("Failed to get app data dir");
-
-        match path.try_exists() {
-            Ok(exists) => {
-                if !exists {
-                    // create the app dir if it doesn't exist
-                    fs::create_dir_all(&path).expect("Failed to create app config dir");
-                    log::info!("App data dir created: {:?}", path);
-                }
-                path
-            }
-            Err(e) => {
-                log::error!("Error checking app data dir: {:?}", e);
-                panic!("Failed to check app data dir");
-            }
-        }
+        create_dir_if_not_exists(&path);
+        path
     }
 
     fn get_userscripts_dir(&self) -> PathBuf {
