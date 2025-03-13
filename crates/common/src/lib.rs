@@ -10,6 +10,8 @@ use std::path::PathBuf;
 use strum::AsRefStr;
 use tauri::Manager;
 
+use utils::create_dir_if_not_exists;
+
 /// The file names are defined as an enum to prevent typos and to provide a centralized list of all data files.
 /// Different file names should be used for debug and release builds to separate development and production data.
 #[cfg(debug_assertions)]
@@ -70,6 +72,9 @@ pub trait AppHandlePathExt {
     /// | Windows | `{FOLDERID_RoamingAppData}`              | C:\Users\Alice\AppData\Roaming           |
     fn get_app_dir(&self) -> PathBuf;
 
+    /// Get userscripts dir
+    fn get_userscripts_dir(&self) -> PathBuf;
+
     /// Get file path in application directory
     fn get_file_path_in_app_dir(&self, file_name: FileName) -> PathBuf;
 
@@ -110,6 +115,12 @@ impl<R: tauri::Runtime> AppHandlePathExt for tauri::AppHandle<R> {
                 panic!("Failed to check app data dir");
             }
         }
+    }
+
+    fn get_userscripts_dir(&self) -> PathBuf {
+        let path = self.get_app_dir().join("userscripts");
+        create_dir_if_not_exists(&path);
+        path
     }
 
     fn get_file_path_in_app_dir(&self, file_name: FileName) -> PathBuf {

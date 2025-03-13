@@ -1,19 +1,5 @@
-#![allow(unused)]
-
 use once_cell::sync::Lazy;
 use regex::Regex;
-
-#[derive(Debug, thiserror::Error)]
-pub enum Error {
-    #[error(transparent)]
-    Io(#[from] std::io::Error),
-
-    #[error("No filename")]
-    NoFileName(),
-
-    #[error("No @name")]
-    NoName(),
-}
 
 #[derive(Debug)]
 struct Data {
@@ -34,6 +20,7 @@ type Metadata = Vec<Data>;
 
 trait Finder {
     fn get(&self, key: &str) -> Option<String>;
+    #[allow(unused)]
     fn has_key(&self, key: &str) -> bool;
     fn find_all(&self, key: &str) -> Vec<String>;
 }
@@ -55,11 +42,17 @@ impl Finder for Metadata {
 
 #[derive(Debug)]
 pub struct UserScript {
+    #[allow(unused)]
     script: String,
+    #[allow(unused)]
     name: Option<String>,
+    #[allow(unused)]
     description: Option<String>,
+    #[allow(unused)]
     version: Option<String>,
+    #[allow(unused)]
     author: Option<String>,
+    #[allow(unused)]
     match_patterns: Vec<String>,
 }
 
@@ -97,7 +90,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_extract_metadata() {
+    fn test_parse() {
         let script = r#"
 // ==UserScript==
 // @author       You
@@ -107,5 +100,8 @@ mod tests {
         let user_script = UserScript::parse(script);
         assert_eq!(user_script.author, Some("You".to_string()));
         assert_eq!(user_script.name, Some("title".to_string()));
+        assert_eq!(user_script.description, None);
+        assert_eq!(user_script.version, None);
+        assert!(user_script.match_patterns.is_empty());
     }
 }
