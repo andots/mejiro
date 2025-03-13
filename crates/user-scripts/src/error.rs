@@ -14,4 +14,7 @@ pub enum Error {
 
     #[error(transparent)]
     GlobPattern(#[from] glob::PatternError),
+
+    #[error("Invalid UTF-8 characters")]
+    InvalidUTF8(),
 }

@@ -10,7 +10,7 @@ use tauri::Manager;
 use parus_common::AppHandlePathExt;
 
 use models::UserScript;
-use utils::list_userscript_files;
+use utils::list_userscripts;
 
 const PLUGIN_NAME: &str = "user-scripts";
 
@@ -22,7 +22,7 @@ impl<R: tauri::Runtime> AppHandleExt for tauri::AppHandle<R> {
     fn load_user_scripts(&self) -> Vec<UserScript> {
         let mut scripts = vec![];
         let dir = self.get_userscripts_dir();
-        if let Ok(paths) = list_userscript_files(&dir) {
+        if let Ok(paths) = list_userscripts(&dir) {
             for path in paths {
                 if let Ok(mut file) = fs::File::open(path) {
                     let mut script = String::new();
