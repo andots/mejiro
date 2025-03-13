@@ -8,11 +8,13 @@ rust-version.workspace = true
 exclude = ["/examples", "/dist-js", "/guest-js", "/node_modules"]
 
 [dependencies]
-tauri = { workspace = true }
+log = { workspace = true }
+once_cell = { workspace = true }
+regex = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
+tauri = { workspace = true }
 thiserror = { workspace = true }
-log = { workspace = true }
 
 parus-common.workspace = true
 
