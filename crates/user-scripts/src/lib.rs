@@ -41,7 +41,7 @@ impl<R: tauri::Runtime> AppHandleExt for tauri::AppHandle<R> {
         if let Some(state) = self.try_state::<Mutex<Vec<UserScript>>>() {
             if let Ok(user_scripts) = state.lock() {
                 for user_script in user_scripts.iter() {
-                    let _ = webview.eval(user_script.script.as_str());
+                    let _ = webview.eval(user_script.code.as_str());
                 }
             }
         }

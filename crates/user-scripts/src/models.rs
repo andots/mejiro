@@ -42,7 +42,7 @@ impl Finder for Metadata {
 
 #[derive(Debug)]
 pub struct UserScript {
-    pub script: String,
+    pub code: String,
     #[allow(unused)]
     pub name: Option<String>,
     #[allow(unused)]
@@ -74,7 +74,7 @@ impl UserScript {
         }
 
         Self {
-            script: script.to_string(),
+            code: script.to_string(),
             name: metadata.get("name"),
             description: metadata.get("description"),
             version: metadata.get("version"),
