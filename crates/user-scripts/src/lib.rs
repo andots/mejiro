@@ -14,13 +14,15 @@ use utils::list_userscripts;
 
 const PLUGIN_NAME: &str = "user-scripts";
 
+type UserScripts = Vec<UserScript>;
+
 trait AppHandleExt {
-    fn load_user_scripts(&self) -> Result<Vec<UserScript>, Error>;
+    fn load_user_scripts(&self) -> Result<UserScripts, Error>;
     fn eval_user_scripts<T: tauri::Runtime>(&self, webview: &tauri::Webview<T>);
 }
 
 impl<R: tauri::Runtime> AppHandleExt for tauri::AppHandle<R> {
-    fn load_user_scripts(&self) -> Result<Vec<UserScript>, Error> {
+    fn load_user_scripts(&self) -> Result<UserScripts, Error> {
         let mut scripts = vec![];
         let dir = self.get_userscripts_dir();
         let paths = list_userscripts(&dir)?;
@@ -34,7 +36,7 @@ impl<R: tauri::Runtime> AppHandleExt for tauri::AppHandle<R> {
     }
 
     fn eval_user_scripts<T: tauri::Runtime>(&self, webview: &tauri::Webview<T>) {
-        if let Some(state) = self.try_state::<Mutex<Vec<UserScript>>>() {
+        if let Some(state) = self.try_state::<Mutex<UserScripts>>() {
             if let Ok(user_scripts) = state.lock() {
                 for user_script in user_scripts.iter() {
                     let _ = webview.eval(user_script.code.as_str());
