@@ -18,7 +18,6 @@ type UserScripts = Vec<UserScript>;
 
 trait AppHandleExt {
     fn load_user_scripts(&self) -> Result<UserScripts, Error>;
-    fn eval_user_scripts<T: tauri::Runtime>(&self, webview: &tauri::Webview<T>);
 }
 
 impl<R: tauri::Runtime> AppHandleExt for tauri::AppHandle<R> {
@@ -34,12 +33,18 @@ impl<R: tauri::Runtime> AppHandleExt for tauri::AppHandle<R> {
         }
         Ok(scripts)
     }
+}
 
-    fn eval_user_scripts<T: tauri::Runtime>(&self, webview: &tauri::Webview<T>) {
+trait WebviewExt {
+    fn run_all_user_scripts(&self);
+}
+
+impl<R: tauri::Runtime> WebviewExt for tauri::Webview<R> {
+    fn run_all_user_scripts(&self) {
         if let Some(state) = self.try_state::<Mutex<UserScripts>>() {
             if let Ok(user_scripts) = state.lock() {
                 for user_script in user_scripts.iter() {
-                    let _ = webview.eval(user_script.code.as_str());
+                    let _ = self.eval(user_script.code.as_str());
                 }
             }
         }
@@ -64,8 +69,7 @@ pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
                 match payload.event() {
                     tauri::webview::PageLoadEvent::Started => {
                         log::debug!("Started: {}", payload.url().as_str());
-                        let handle = webview.app_handle();
-                        handle.eval_user_scripts(webview);
+                        webview.run_all_user_scripts();
                     }
                     tauri::webview::PageLoadEvent::Finished => {
                         log::debug!("Finished: {}", payload.url().as_str());
