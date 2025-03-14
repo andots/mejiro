@@ -28,7 +28,7 @@ mod tests {
     }
 
     #[test]
-    fn test_list_user_js_file() -> anyhow::Result<()> {
+    fn test_list_userscripts() -> anyhow::Result<()> {
         let path = get_assets_dir();
         let files = list_userscripts(&path)?;
         assert_eq!(files.len(), 2);

@@ -42,18 +42,17 @@ impl Finder for Metadata {
 
 #[derive(Debug)]
 pub struct UserScript {
+    pub script: String,
     #[allow(unused)]
-    script: String,
+    pub name: Option<String>,
     #[allow(unused)]
-    name: Option<String>,
+    pub description: Option<String>,
     #[allow(unused)]
-    description: Option<String>,
+    pub version: Option<String>,
     #[allow(unused)]
-    version: Option<String>,
+    pub author: Option<String>,
     #[allow(unused)]
-    author: Option<String>,
-    #[allow(unused)]
-    match_patterns: Vec<String>,
+    pub match_patterns: Vec<String>,
 }
 
 static METADATA_KEY_VALUE_REGEX: Lazy<Regex> =

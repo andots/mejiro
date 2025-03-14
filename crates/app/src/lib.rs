@@ -69,6 +69,7 @@ pub fn run() {
             app.handle().plugin(tauri_plugin_app_settings::init())?;
             app.handle().plugin(tauri_plugin_user_settings::init())?;
             app.handle().plugin(tauri_plugin_bookmarks::init())?;
+            app.handle().plugin(tauri_plugin_user_scripts::init())?;
 
             // create_window() must be called after app.manage because window neeed those states and also
             // frontend might call states before they are managed. (especially in relaese build)

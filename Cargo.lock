@@ -2450,6 +2450,7 @@ dependencies = [
  "tauri-plugin-log",
  "tauri-plugin-single-instance",
  "tauri-plugin-updater",
+ "tauri-plugin-user-scripts",
  "tauri-plugin-user-settings",
  "tauri-plugin-window-geometry",
  "thiserror 2.0.12",
