@@ -14,33 +14,32 @@ use notify_debouncer_full::{new_debouncer, DebounceEventResult};
 use parus_common::{constants::EXTERNAL_WEBVIEW_LABEL, AppHandlePathExt};
 
 use models::UserScript;
-use utils::list_userscripts;
+use utils::load_user_scripts;
 
 const PLUGIN_NAME: &str = "user-scripts";
 
 type UserScripts = HashMap<String, UserScript>;
 
 trait AppHandleExt {
-    fn load_user_scripts(&self) -> Result<UserScripts, Error>;
+    fn manage_and_watch_user_scripts(&self);
     fn reload_external_webview(&self);
     fn update_script(&self, path: &Path) -> Result<(), Error>;
     fn watch_user_scripts(&self);
 }
 
 impl<R: tauri::Runtime> AppHandleExt for tauri::AppHandle<R> {
-    fn load_user_scripts(&self) -> Result<UserScripts, Error> {
-        let mut scripts: UserScripts = HashMap::new();
-        let dir = self.get_userscripts_dir();
-        let paths = list_userscripts(&dir)?;
-        for path in paths {
-            if let Ok(script) = fs::read_to_string(&path) {
-                let user_script = UserScript::parse(&script);
-                if let Some(path) = path.to_str() {
-                    scripts.insert(path.to_string(), user_script);
-                }
+    fn manage_and_watch_user_scripts(&self) {
+        let dir = self.get_user_scripts_dir();
+        match load_user_scripts(&dir) {
+            Ok(user_scripts) => {
+                self.manage(Mutex::new(user_scripts));
+                self.watch_user_scripts();
             }
+            Err(e) => log::error!(
+                "Error occured while loading user scripts: {:?}",
+                e.to_string()
+            ),
         }
-        Ok(scripts)
     }
 
     fn reload_external_webview(&self) {
@@ -69,7 +68,7 @@ impl<R: tauri::Runtime> AppHandleExt for tauri::AppHandle<R> {
 
     fn watch_user_scripts(&self) {
         let (tx, rx) = std::sync::mpsc::channel();
-        let path = self.get_userscripts_dir();
+        let path = self.get_user_scripts_dir();
         let app_handle = self.app_handle().clone();
         tauri::async_runtime::spawn_blocking(move || -> anyhow::Result<()> {
             let mut debouncer = new_debouncer(Duration::from_secs(1), None, tx)?;
@@ -130,13 +129,7 @@ pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
     tauri::plugin::Builder::new(PLUGIN_NAME)
         .invoke_handler(tauri::generate_handler![])
         .setup(|app, _api| {
-            match app.load_user_scripts() {
-                Ok(scripts) => {
-                    app.manage(Mutex::new(scripts));
-                    app.watch_user_scripts();
-                }
-                Err(e) => log::error!("UserScript error: {}", e.to_string()),
-            }
+            app.manage_and_watch_user_scripts();
             Ok(())
         })
         .on_page_load(|webview, payload| {

@@ -1,8 +1,26 @@
-use std::path::{Path, PathBuf};
+use std::{
+    collections::HashMap,
+    fs,
+    path::{Path, PathBuf},
+};
 
 use glob::glob;
 
-use crate::Error;
+use crate::{models::UserScript, Error, UserScripts};
+
+pub fn load_user_scripts(dir: &Path) -> Result<UserScripts, Error> {
+    let mut scripts: UserScripts = HashMap::new();
+    let paths = list_userscripts(dir)?;
+    for path in paths {
+        if let Ok(script) = fs::read_to_string(&path) {
+            let user_script = UserScript::parse(&script);
+            if let Some(path) = path.to_str() {
+                scripts.insert(path.to_string(), user_script);
+            }
+        }
+    }
+    Ok(scripts)
+}
 
 pub fn list_userscripts(dir: &Path) -> Result<Vec<PathBuf>, Error> {
     let mut pattern = dir.to_path_buf();

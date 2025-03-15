@@ -71,8 +71,8 @@ pub trait AppHandlePathExt {
     /// | Windows | `{FOLDERID_RoamingAppData}`              | C:\Users\Alice\AppData\Roaming           |
     fn get_app_dir(&self) -> PathBuf;
 
-    /// Get userscripts dir
-    fn get_userscripts_dir(&self) -> PathBuf;
+    /// Get user scripts dir
+    fn get_user_scripts_dir(&self) -> PathBuf;
 
     /// Get file path in application directory
     fn get_file_path_in_app_dir(&self, file_name: FileName) -> PathBuf;
@@ -103,7 +103,7 @@ impl<R: tauri::Runtime> AppHandlePathExt for tauri::AppHandle<R> {
         path
     }
 
-    fn get_userscripts_dir(&self) -> PathBuf {
+    fn get_user_scripts_dir(&self) -> PathBuf {
         let path = self.get_app_dir().join("userscripts");
         create_dir_if_not_exists(&path);
         path
