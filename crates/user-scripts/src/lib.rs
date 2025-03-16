@@ -169,24 +169,40 @@ trait WebviewExt {
 
 impl<R: tauri::Runtime> WebviewExt for tauri::Webview<R> {
     fn run_all_user_scripts(&self) {
-        if let Some(state) = self.try_state::<UserScriptState>() {
-            if let Ok(user_scripts) = state.lock() {
-                if let Ok(url) = self.url() {
-                    for (_path, user_script) in user_scripts.iter() {
-                        let mut should_run = false;
-                        if user_script.match_patterns.is_empty() {
-                            should_run = true;
-                        } else {
-                            let url_str = url.as_str();
-                            for pattern in user_script.match_patterns.iter() {
-                                should_run = pattern.is_match(url_str);
-                            }
-                        }
-                        if should_run {
-                            log::debug!("Run userscript: {}", &_path);
-                            let _ = self.eval(user_script.code.as_str());
-                        }
-                    }
+        let state = match self.try_state::<UserScriptState>() {
+            Some(state) => state,
+            None => return,
+        };
+
+        let user_scripts = match state.lock() {
+            Ok(scripts) => scripts,
+            Err(_) => {
+                log::error!("Failed to lock UserScriptState");
+                return;
+            }
+        };
+
+        let url = match self.url() {
+            Ok(url) => url,
+            Err(_) => {
+                log::error!("Failed to get webview URL");
+                return;
+            }
+        };
+
+        let url_str = url.as_str();
+
+        for (path, user_script) in user_scripts.iter() {
+            let should_run = user_script.match_patterns.is_empty()
+                || user_script
+                    .match_patterns
+                    .iter()
+                    .any(|pattern| pattern.is_match(url_str));
+
+            if should_run {
+                log::debug!("Run userscript: {}", path);
+                if let Err(err) = self.eval(user_script.code.as_str()) {
+                    log::error!("Failed to execute userscript {}: {:?}", path, err);
                 }
             }
         }
