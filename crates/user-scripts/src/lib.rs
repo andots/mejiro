@@ -8,7 +8,10 @@ use std::{collections::HashMap, fs, path::Path, sync::Mutex, time::Duration};
 
 use tauri::Manager;
 
-use notify::{EventKind, RecursiveMode};
+use notify::{
+    event::{ModifyKind, RenameMode},
+    EventKind, RecursiveMode,
+};
 use notify_debouncer_full::{new_debouncer, DebounceEventResult};
 
 use parus_common::{constants::EXTERNAL_WEBVIEW_LABEL, AppHandlePathExt};
@@ -78,9 +81,8 @@ impl<R: tauri::Runtime> AppHandleExt for tauri::AppHandle<R> {
             let key = path.to_str().ok_or(Error::InvalidUTF8)?;
             map.entry(key.to_string())
                 .and_modify(|value| *value = user_script);
-            log::debug!("Update user script: {:?}", key);
+            log::debug!("Update user script: {:?}", path.file_name());
         }
-        self.reload_external_webview();
         Ok(())
     }
 
@@ -94,9 +96,8 @@ impl<R: tauri::Runtime> AppHandleExt for tauri::AppHandle<R> {
             let mut map = state.lock().map_err(|_| Error::PoisonError)?;
             let key = path.to_str().ok_or(Error::InvalidUTF8)?;
             map.insert(key.to_string(), user_script);
-            log::debug!("Add user script: {:?}", key);
+            log::debug!("Add user script: {:?}", path.file_name());
         }
-        self.reload_external_webview();
         Ok(())
     }
 
@@ -108,9 +109,8 @@ impl<R: tauri::Runtime> AppHandleExt for tauri::AppHandle<R> {
             let mut map = state.lock().map_err(|_| Error::PoisonError)?;
             let key = path.to_str().ok_or(Error::InvalidUTF8)?;
             map.remove(key);
-            log::debug!("Remove user script: {:?}", key);
+            log::debug!("Remove user script: {:?}", path.file_name());
         }
-        self.reload_external_webview();
         Ok(())
     }
 
@@ -130,20 +130,49 @@ impl<R: tauri::Runtime> AppHandleExt for tauri::AppHandle<R> {
                                 None => break,
                             };
                             if check_path_is_user_js(path) {
+                                log::debug!("event: {:?}, {:?}", event.kind, event.paths);
                                 match event.kind {
-                                    EventKind::Modify(_) => {
-                                        if let Err(e) = app_handle.update_user_script(path) {
-                                            log::error!("update script error: {:?}", e.to_string());
+                                    EventKind::Modify(modify) => match modify {
+                                        ModifyKind::Any => {
+                                            if let Err(e) = app_handle.update_user_script(path) {
+                                                log::error!(
+                                                    "update script error: {:?}",
+                                                    e.to_string()
+                                                );
+                                            } else {
+                                                app_handle.reload_external_webview();
+                                            }
                                         }
-                                    }
+                                        ModifyKind::Name(RenameMode::Both) => {
+                                            if let (Some(from), Some(to)) =
+                                                (event.paths.first(), event.paths.last())
+                                            {
+                                                // remove script (from)
+                                                if let Err(e) = app_handle.remove_user_script(from)
+                                                {
+                                                    log::error!("{}", e);
+                                                }
+                                                // add script (to)
+                                                if let Err(e) = app_handle.add_user_script(to) {
+                                                    log::error!("{}", e);
+                                                }
+                                                app_handle.reload_external_webview();
+                                            }
+                                        }
+                                        _ => {}
+                                    },
                                     EventKind::Create(_) => {
                                         if let Err(e) = app_handle.add_user_script(path) {
                                             log::error!("add script error: {:?}", e.to_string());
+                                        } else {
+                                            app_handle.reload_external_webview();
                                         }
                                     }
                                     EventKind::Remove(_) => {
                                         if let Err(e) = app_handle.remove_user_script(path) {
                                             log::error!("remove script error: {}", e.to_string());
+                                        } else {
+                                            app_handle.reload_external_webview();
                                         }
                                     }
                                     _ => {}
