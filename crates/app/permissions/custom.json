@@ -8,7 +8,6 @@
         "allow": [
           "get_app_webview_bounds",
           "navigate_webview_url",
-          "get_external_webview_title",
           "set_external_webview_bounds",
           "show_external_webview",
           "hide_external_webview"

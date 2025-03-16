@@ -89,7 +89,6 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             commands::webviews::get_app_webview_bounds,
             commands::webviews::navigate_webview_url,
-            commands::webviews::get_external_webview_title,
             commands::webviews::set_external_webview_bounds,
             commands::webviews::show_external_webview,
             commands::webviews::hide_external_webview,

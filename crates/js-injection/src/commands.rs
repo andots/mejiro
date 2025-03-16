@@ -2,7 +2,7 @@ use serde::Serialize;
 use tauri::{Emitter, Manager};
 
 use parus_common::{
-    constants::{APP_WEBVIEW_LABEL, MAINWINDOW_LABEL},
+    constants::{APP_WEBVIEW_LABEL, EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL},
     AppEvent, AppHandleAppExt,
 };
 
@@ -34,4 +34,13 @@ pub fn send_page_title<R: tauri::Runtime>(app_handle: tauri::AppHandle<R>, title
 #[tauri::command]
 pub fn send_page_url<R: tauri::Runtime>(app_handle: tauri::AppHandle<R>, url: String) {
     let _ = emit_to_app_webview(&app_handle, AppEvent::ExternalUrlChanged, url);
+}
+
+/// Get the title of the external webview by evaluating a JavaScript
+/// script sending title to send_page_title and it emits to app webview
+#[tauri::command]
+pub fn get_external_webview_title<R: tauri::Runtime>(app_handle: tauri::AppHandle<R>) {
+    if let Some(webview) = app_handle.get_webview(EXTERNAL_WEBVIEW_LABEL) {
+        let _ = webview.eval(include_str!("js/get-title.js"));
+    }
 }

@@ -84,28 +84,11 @@ export const Invoke = {
     return invoke<NestedBookmark>("plugin:bookmarks|toggle_is_open", { index, topLevelIndex });
   },
 
-  // App Webview commands
-  GetAppWebviewBounds: async () => {
-    return invoke<Bounds>("get_app_webview_bounds", {});
-  },
-  // External Webview commands
-  NavigateWebviewUrl: async (url: string) => {
-    return invoke("navigate_webview_url", { url });
-  },
+  // js-injection
   GetExternalWebviewTitle: async () => {
-    return invoke<string>("get_external_webview_title", {});
-  },
-  SetExternalWebviewBounds: async (bounds: Rect) => {
-    return invoke("set_external_webview_bounds", { bounds });
-  },
-  ShowExternalWebview: async () => {
-    return invoke("show_external_webview", {});
-  },
-  HideExternalWebview: async () => {
-    return invoke("hide_external_webview", {});
+    return invoke<string>("plugin:js-injection|get_external_webview_title", {});
   },
 
-  // Plugin
   // Settings commands
   GetWindowGeometry: async () => {
     return invoke<WindowGeometry>("plugin:window-geometry|get_window_geometry", {});
@@ -121,5 +104,23 @@ export const Invoke = {
   },
   UpdateAppSettings: async (settings: AppSettings) => {
     return invoke<AppSettings>("plugin:app-settings|update_app_settings", { settings });
+  },
+
+  // App Webview commands
+  GetAppWebviewBounds: async () => {
+    return invoke<Bounds>("get_app_webview_bounds", {});
+  },
+  // External Webview commands
+  NavigateWebviewUrl: async (url: string) => {
+    return invoke("navigate_webview_url", { url });
+  },
+  SetExternalWebviewBounds: async (bounds: Rect) => {
+    return invoke("set_external_webview_bounds", { bounds });
+  },
+  ShowExternalWebview: async () => {
+    return invoke("show_external_webview", {});
+  },
+  HideExternalWebview: async () => {
+    return invoke("hide_external_webview", {});
   },
 } as const;

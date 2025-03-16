@@ -4,6 +4,7 @@ Default permissions for the plugin
 
 - `allow-send-page-title`
 - `allow-send-page-url`
+- `allow-get-external-webview-title`
 
 ## Permission Table
 
@@ -13,6 +14,32 @@ Default permissions for the plugin
 <th>Description</th>
 </tr>
 
+
+<tr>
+<td>
+
+`js-injection:allow-get-external-webview-title`
+
+</td>
+<td>
+
+Enables the get_external_webview_title command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`js-injection:deny-get-external-webview-title`
+
+</td>
+<td>
+
+Denies the get_external_webview_title command without any pre-configured scope.
+
+</td>
+</tr>
 
 <tr>
 <td>

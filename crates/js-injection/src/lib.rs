@@ -9,6 +9,7 @@ pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
         .invoke_handler(tauri::generate_handler![
             commands::send_page_title,
             commands::send_page_url,
+            commands::get_external_webview_title,
         ])
         .on_page_load(|webview, payload| {
             if webview.label() == EXTERNAL_WEBVIEW_LABEL {

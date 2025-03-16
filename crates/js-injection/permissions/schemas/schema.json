@@ -295,6 +295,16 @@
       "type": "string",
       "oneOf": [
         {
+          "description": "Enables the get_external_webview_title command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-get-external-webview-title"
+        },
+        {
+          "description": "Denies the get_external_webview_title command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-get-external-webview-title"
+        },
+        {
           "description": "Enables the send_page_title command without any pre-configured scope.",
           "type": "string",
           "const": "allow-send-page-title"

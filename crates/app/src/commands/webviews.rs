@@ -43,15 +43,6 @@ pub fn navigate_webview_url(app_handle: tauri::AppHandle, url: String) -> Result
     Ok(())
 }
 
-/// Get the title of the external webview by evaluating a JavaScript
-/// script sending title to send_page_title and it emits to app webview
-#[tauri::command]
-pub fn get_external_webview_title(app_handle: tauri::AppHandle) -> Result<(), Error> {
-    let webview = get_external_webview(&app_handle)?;
-    let _ = webview.eval(include_str!("../../js/get-title.js"));
-    Ok(())
-}
-
 /// Set the size and position of the external webview
 #[tauri::command]
 pub fn set_external_webview_bounds(
