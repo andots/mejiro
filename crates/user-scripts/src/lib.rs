@@ -4,7 +4,7 @@ mod models;
 pub use error::Error;
 pub use models::UserScript;
 
-use std::{collections::HashMap, fs, path::Path, sync::Mutex, time::Duration};
+use std::{collections::HashMap, fs, path::Path, sync::RwLock, time::Duration};
 
 use tauri::Manager;
 
@@ -22,7 +22,7 @@ use models::check_path_is_user_js;
 const PLUGIN_NAME: &str = "user-scripts";
 
 type UserScriptCollection = HashMap<String, UserScript>;
-type UserScriptState = Mutex<UserScriptCollection>;
+type UserScriptState = RwLock<UserScriptCollection>;
 
 fn load_user_scripts(dir: &Path) -> Result<UserScriptCollection, Error> {
     let mut scripts: UserScriptCollection = HashMap::new();
@@ -52,7 +52,7 @@ impl<R: tauri::Runtime> AppHandleExt for tauri::AppHandle<R> {
         let dir = self.get_user_scripts_dir();
         match load_user_scripts(&dir) {
             Ok(user_scripts) => {
-                self.manage(Mutex::new(user_scripts));
+                self.manage::<UserScriptState>(RwLock::new(user_scripts));
                 self.watch_user_scripts_dir();
             }
             Err(e) => log::error!(
@@ -77,12 +77,12 @@ impl<R: tauri::Runtime> AppHandleExt for tauri::AppHandle<R> {
             .try_state::<UserScriptState>()
             .ok_or(Error::StateNotManaged)?;
         {
-            let mut map = state.lock().map_err(|_| Error::PoisonError)?;
+            let mut map = state.write().map_err(|_| Error::PoisonError)?;
             let key = path.to_str().ok_or(Error::InvalidUTF8)?;
             map.entry(key.to_string())
                 .and_modify(|value| *value = user_script);
-            log::debug!("Update user script: {:?}", path.file_name());
         }
+        log::info!("Update user script: {:?}", path.file_name());
         Ok(())
     }
 
@@ -93,11 +93,11 @@ impl<R: tauri::Runtime> AppHandleExt for tauri::AppHandle<R> {
             .try_state::<UserScriptState>()
             .ok_or(Error::StateNotManaged)?;
         {
-            let mut map = state.lock().map_err(|_| Error::PoisonError)?;
+            let mut map = state.write().map_err(|_| Error::PoisonError)?;
             let key = path.to_str().ok_or(Error::InvalidUTF8)?;
             map.insert(key.to_string(), user_script);
-            log::debug!("Add user script: {:?}", path.file_name());
         }
+        log::info!("Add user script: {:?}", path.file_name());
         Ok(())
     }
 
@@ -106,11 +106,11 @@ impl<R: tauri::Runtime> AppHandleExt for tauri::AppHandle<R> {
             .try_state::<UserScriptState>()
             .ok_or(Error::StateNotManaged)?;
         {
-            let mut map = state.lock().map_err(|_| Error::PoisonError)?;
+            let mut map = state.write().map_err(|_| Error::PoisonError)?;
             let key = path.to_str().ok_or(Error::InvalidUTF8)?;
             map.remove(key);
-            log::debug!("Remove user script: {:?}", path.file_name());
         }
+        log::info!("Remove user script: {:?}", path.file_name());
         Ok(())
     }
 
@@ -203,11 +203,11 @@ impl<R: tauri::Runtime> WebviewExt for tauri::Webview<R> {
         let state = self
             .try_state::<UserScriptState>()
             .ok_or(Error::StateNotManaged)?;
-        let user_scripts = state.lock().map_err(|_| Error::PoisonError)?;
+        let user_scripts = state.read().map_err(|_| Error::PoisonError)?;
         let url = self.url()?;
         let url_str = url.as_str();
 
-        for (path, user_script) in user_scripts.iter() {
+        for (_key, user_script) in user_scripts.iter() {
             let should_run = user_script.match_patterns.is_empty()
                 || user_script
                     .match_patterns
@@ -215,10 +215,7 @@ impl<R: tauri::Runtime> WebviewExt for tauri::Webview<R> {
                     .any(|pattern| pattern.is_match(url_str));
 
             if should_run {
-                log::debug!("Run userscript: {}", path);
-                if let Err(err) = self.eval(user_script.code.as_str()) {
-                    log::error!("Failed to execute userscript {}: {:?}", path, err);
-                }
+                let _ = self.eval(user_script.code.as_str());
             }
         }
         Ok(())
