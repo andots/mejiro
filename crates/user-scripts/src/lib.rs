@@ -164,32 +164,16 @@ impl<R: tauri::Runtime> AppHandleExt for tauri::AppHandle<R> {
 }
 
 trait WebviewExt {
-    fn run_all_user_scripts(&self);
+    fn run_all_user_scripts(&self) -> Result<(), Error>;
 }
 
 impl<R: tauri::Runtime> WebviewExt for tauri::Webview<R> {
-    fn run_all_user_scripts(&self) {
-        let state = match self.try_state::<UserScriptState>() {
-            Some(state) => state,
-            None => return,
-        };
-
-        let user_scripts = match state.lock() {
-            Ok(scripts) => scripts,
-            Err(_) => {
-                log::error!("Failed to lock UserScriptState");
-                return;
-            }
-        };
-
-        let url = match self.url() {
-            Ok(url) => url,
-            Err(_) => {
-                log::error!("Failed to get webview URL");
-                return;
-            }
-        };
-
+    fn run_all_user_scripts(&self) -> Result<(), Error> {
+        let state = self
+            .try_state::<UserScriptState>()
+            .ok_or(Error::StateNotManaged)?;
+        let user_scripts = state.lock().map_err(|_| Error::PoisonError)?;
+        let url = self.url()?;
         let url_str = url.as_str();
 
         for (path, user_script) in user_scripts.iter() {
@@ -206,6 +190,7 @@ impl<R: tauri::Runtime> WebviewExt for tauri::Webview<R> {
                 }
             }
         }
+        Ok(())
     }
 }
 
@@ -221,11 +206,14 @@ pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
             if webview.label() == EXTERNAL_WEBVIEW_LABEL {
                 match payload.event() {
                     tauri::webview::PageLoadEvent::Started => {
-                        log::debug!("Started: {}", payload.url().as_str());
-                        webview.run_all_user_scripts();
+                        // log::debug!("Started: {}", payload.url().as_str());
+                        // webview.run_all_user_scripts();
                     }
                     tauri::webview::PageLoadEvent::Finished => {
-                        // log::debug!("Finished: {}", payload.url().as_str());
+                        log::debug!("Finished: {}", payload.url().as_str());
+                        if let Err(e) = webview.run_all_user_scripts() {
+                            log::error!("run all scripts error: {}", e.to_string());
+                        }
                     }
                 }
             }

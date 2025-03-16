@@ -6,6 +6,9 @@ pub enum Error {
     #[error(transparent)]
     Fs(#[from] parus_fs::Error),
 
+    #[error(transparent)]
+    Tauri(#[from] tauri::Error),
+
     #[error("state is not managed")]
     StateNotManaged,
 
