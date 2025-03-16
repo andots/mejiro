@@ -9,6 +9,7 @@ exclude = ["/examples", "/dist-js", "/guest-js", "/node_modules"]
 
 [dependencies]
 log = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
 tauri = { workspace = true, features = ["unstable"] }
 thiserror = { workspace = true }
 

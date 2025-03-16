@@ -1,8 +1,7 @@
 use std::sync::Mutex;
 
 use tauri::{
-    webview::PageLoadEvent, Emitter, LogicalPosition, LogicalSize, Url, WebviewBuilder, WebviewUrl,
-    WindowBuilder,
+    Emitter, LogicalPosition, LogicalSize, Url, WebviewBuilder, WebviewUrl, WindowBuilder,
 };
 use tauri::{EventTarget, Manager};
 
@@ -11,13 +10,11 @@ use parus_common::{
         APP_WEBVIEW_LABEL, APP_WEBVIEW_URL, EXTERNAL_WEBVIEW_LABEL, MAINWINDOW_LABEL,
         MIN_WINDOW_HEIGHT, MIN_WINDOW_WIDTH,
     },
-    AppHandleAppExt, AppHandlePathExt, Error,
+    AppEvent, AppHandleAppExt, AppHandlePathExt, Error,
 };
 
 use tauri_plugin_app_settings::{default_start_page_url, AppSettings};
 use tauri_plugin_window_geometry::WindowGeometry;
-
-use crate::events::AppEvent;
 
 /// Get the app webview
 pub fn get_app_webview(app_handle: &tauri::AppHandle) -> Result<tauri::Webview, Error> {
@@ -126,15 +123,6 @@ fn create_external_webview(
                 )
                 .ok();
             true
-        })
-        .on_page_load(|webview, payload| {
-            if let PageLoadEvent::Finished = payload.event() {
-                // This happens when the page is loaded
-                // Inject the title-observer, url-observer, mouse-gesture scripts
-                let _ = webview.eval(include_str!("../js/title-observer.js"));
-                let _ = webview.eval(include_str!("../js/url-observer.js"));
-                let _ = webview.eval(include_str!("../js/mouse-gesture.js"));
-            }
         });
 
     #[cfg(target_os = "windows")]

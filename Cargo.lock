@@ -2505,6 +2505,7 @@ dependencies = [
  "tauri-plugin-app-settings",
  "tauri-plugin-bookmarks",
  "tauri-plugin-dialog",
+ "tauri-plugin-js-injection",
  "tauri-plugin-log",
  "tauri-plugin-single-instance",
  "tauri-plugin-updater",
@@ -4838,6 +4839,7 @@ version = "0.31.0"
 dependencies = [
  "log",
  "parus-common",
+ "serde",
  "tauri",
  "tauri-plugin",
  "thiserror 2.0.12",

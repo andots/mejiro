@@ -1,8 +1,10 @@
 pub mod constants;
 pub mod error;
+pub mod events;
 pub mod utils;
 
 pub use error::Error;
+pub use events::AppEvent;
 
 use std::path::PathBuf;
 

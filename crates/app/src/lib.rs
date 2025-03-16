@@ -6,7 +6,6 @@ use window::create_window;
 use parus_common::AppHandlePathExt;
 
 mod commands;
-mod events;
 mod updater;
 mod window;
 
@@ -70,6 +69,7 @@ pub fn run() {
             app.handle().plugin(tauri_plugin_user_settings::init())?;
             app.handle().plugin(tauri_plugin_bookmarks::init())?;
             app.handle().plugin(tauri_plugin_user_scripts::init())?;
+            app.handle().plugin(tauri_plugin_js_injection::init())?;
 
             // create_window() must be called after app.manage because window neeed those states and also
             // frontend might call states before they are managed. (especially in relaese build)
@@ -93,8 +93,6 @@ pub fn run() {
             commands::webviews::set_external_webview_bounds,
             commands::webviews::show_external_webview,
             commands::webviews::hide_external_webview,
-            commands::external::send_page_title,
-            commands::external::send_page_url,
         ])
         .build(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -20,7 +20,7 @@
       "identifier": "external-webview",
       "description": "permissions for the external webview",
       "commands": {
-        "allow": ["send_page_title", "send_page_url"],
+        "allow": [],
         "deny": []
       }
     }

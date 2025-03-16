@@ -7,5 +7,5 @@
   "remote": {
     "urls": ["http{s}?://*"]
   },
-  "permissions": ["external-webview"]
+  "permissions": ["js-injection:default"]
 }

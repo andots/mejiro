@@ -12,7 +12,7 @@
     if (!window.__TAURI__?.core?.invoke) {
       return;
     }
-    window.__TAURI__.core.invoke("send_page_url", { url });
+    window.__TAURI__.core.invoke("plugin:js-injection|send_page_url", { url });
   };
 
   const handleUrlChange = () => {
