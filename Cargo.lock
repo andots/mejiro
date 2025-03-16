@@ -4833,6 +4833,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "tauri-plugin-js-injection"
+version = "0.31.0"
+dependencies = [
+ "log",
+ "parus-common",
+ "tauri",
+ "tauri-plugin",
+ "thiserror 2.0.12",
+]
+
+[[package]]
 name = "tauri-plugin-log"
 version = "2.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"

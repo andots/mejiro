@@ -1,0 +1,20 @@
+[package]
+name = "tauri-plugin-js-injection"
+links = "tauri-plugin-js-injection"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+exclude = ["/examples", "/dist-js", "/guest-js", "/node_modules"]
+
+[dependencies]
+log = { workspace = true }
+tauri = { workspace = true, features = ["unstable"] }
+thiserror = { workspace = true }
+
+parus-common.workspace = true
+
+[build-dependencies]
+tauri-plugin = { workspace = true, features = ["build"] }
+
+[dev-dependencies]
