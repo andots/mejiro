@@ -17,6 +17,7 @@ use parus_fs::glob_files_with_matcher;
 const PLUGIN_NAME: &str = "user-scripts";
 
 type UserScriptCollection = HashMap<String, UserScript>;
+type UserScriptState = Mutex<UserScriptCollection>;
 
 fn load_user_scripts(dir: &Path) -> Result<UserScriptCollection, Error> {
     let mut scripts: UserScriptCollection = HashMap::new();
@@ -35,7 +36,9 @@ fn load_user_scripts(dir: &Path) -> Result<UserScriptCollection, Error> {
 trait AppHandleExt {
     fn manage_and_watch_user_scripts(&self);
     fn reload_external_webview(&self);
-    fn update_script(&self, path: &Path) -> Result<(), Error>;
+    fn update_user_script(&self, path: &Path) -> Result<(), Error>;
+    fn add_user_script(&self, path: &Path) -> Result<(), Error>;
+    fn remove_user_script(&self, path: &Path) -> Result<(), Error>;
     fn watch_user_scripts(&self);
 }
 
@@ -62,19 +65,47 @@ impl<R: tauri::Runtime> AppHandleExt for tauri::AppHandle<R> {
         }
     }
 
-    fn update_script(&self, path: &Path) -> Result<(), Error> {
+    fn update_user_script(&self, path: &Path) -> Result<(), Error> {
         let script = fs::read_to_string(path)?;
         let user_script = UserScript::parse(&script);
-        if let Some(state) = self.try_state::<Mutex<UserScriptCollection>>() {
+        if let Some(state) = self.try_state::<UserScriptState>() {
             if let Ok(mut map) = state.lock() {
                 if let Some(key) = path.to_str() {
                     map.entry(key.to_string())
                         .and_modify(|value| *value = user_script);
+                    log::debug!("Update user script: {:?}", key);
                     self.reload_external_webview();
                 }
             }
         }
+        Ok(())
+    }
 
+    fn add_user_script(&self, path: &Path) -> Result<(), Error> {
+        let script = fs::read_to_string(path)?;
+        let user_script = UserScript::parse(&script);
+        if let Some(state) = self.try_state::<UserScriptState>() {
+            if let Ok(mut map) = state.lock() {
+                if let Some(key) = path.to_str() {
+                    map.insert(key.to_string(), user_script);
+                    log::debug!("Add user script: {:?}", key);
+                    self.reload_external_webview();
+                }
+            }
+        }
+        Ok(())
+    }
+
+    fn remove_user_script(&self, path: &Path) -> Result<(), Error> {
+        if let Some(state) = self.try_state::<UserScriptState>() {
+            if let Ok(mut map) = state.lock() {
+                if let Some(key) = path.to_str() {
+                    map.remove(key);
+                    log::debug!("Add user script: {:?}", key);
+                    self.reload_external_webview();
+                }
+            }
+        }
         Ok(())
     }
 
@@ -91,16 +122,19 @@ impl<R: tauri::Runtime> AppHandleExt for tauri::AppHandle<R> {
                         for event in events.iter() {
                             match event.kind {
                                 EventKind::Modify(_) => {
-                                    log::info!("File modified: {:?}", event.paths);
                                     if let Some(p) = event.paths.last() {
-                                        app_handle.update_script(p)?;
+                                        app_handle.update_user_script(p)?;
                                     }
                                 }
                                 EventKind::Create(_) => {
-                                    log::info!("File created: {:?}", event.paths);
+                                    if let Some(p) = event.paths.last() {
+                                        app_handle.add_user_script(p)?;
+                                    }
                                 }
                                 EventKind::Remove(_) => {
-                                    log::info!("File removed: {:?}", event.paths);
+                                    if let Some(p) = event.paths.last() {
+                                        app_handle.remove_user_script(p)?;
+                                    }
                                 }
                                 _ => {}
                             }
@@ -126,7 +160,7 @@ trait WebviewExt {
 
 impl<R: tauri::Runtime> WebviewExt for tauri::Webview<R> {
     fn run_all_user_scripts(&self) {
-        if let Some(state) = self.try_state::<Mutex<UserScriptCollection>>() {
+        if let Some(state) = self.try_state::<UserScriptState>() {
             if let Ok(user_scripts) = state.lock() {
                 for (_, user_script) in user_scripts.iter() {
                     let _ = self.eval(user_script.code.as_str());
