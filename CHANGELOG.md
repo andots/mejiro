@@ -1,5 +1,30 @@
 # Changelog
 
+# [0.31.0](https://github.com/andots/mejiro/compare/v0.30.0...v0.31.0) (2025-03-16)
+
+
+### Bug Fixes
+
+* **front:** do nothing when minimizing window ([28a3bb5](https://github.com/andots/mejiro/commit/28a3bb51ab1d8022909b599cd59a0cfcdbc15f35))
+* **user-scripts:** check the path is *.user.js on DebounceEvent ([340511d](https://github.com/andots/mejiro/commit/340511d224cfe44c5bad3e0a1d61b508520502b9))
+* **user-scripts:** error handing for non utf-8 path correctly ([3c6aba5](https://github.com/andots/mejiro/commit/3c6aba548be6cfad5daf5484949b8bf35df02438))
+* **user-scripts:** error handling add/update/remove user scripts ([9572515](https://github.com/andots/mejiro/commit/957251566280b22cea9de99ad68f318db61131d0))
+* **user-scripts:** error handling and use fs::read_to_string ([9ad44c7](https://github.com/andots/mejiro/commit/9ad44c768c41fb7193c3ee0e8d9b68231b209ac2))
+* **user-scripts:** return Result on run_all_user_script() and run scripts on page load finished ([781d3ad](https://github.com/andots/mejiro/commit/781d3ad8907be750483e4345db81edb7797c2432))
+
+
+### Features
+
+* add fs crate for glob files ([0d29762](https://github.com/andots/mejiro/commit/0d297625ce52b64aecb6030ce5d12edecbac26cf))
+* **app:** integrate with user-scripts plugin ([390f6eb](https://github.com/andots/mejiro/commit/390f6eb069e66d063153aabe9fbba06067e3481e))
+* **user-scripts:** add, remove userscripts with file watcher ([0d051f7](https://github.com/andots/mejiro/commit/0d051f7e272c18339c767c6a83b275fbe567d632))
+* **user-scripts:** hot reload when modified user script file ([2d0634a](https://github.com/andots/mejiro/commit/2d0634a13de7a2a77b7c84e7d82df46fb8c9273f))
+* **user-scripts:** load userscripts in app_dir/userscripts and manage it as tauri state ([1b58096](https://github.com/andots/mejiro/commit/1b58096b6cffb650dad3be0d3e8b3359f03a36b0))
+* **user-scripts:** parse metadata of user script ([58e69bf](https://github.com/andots/mejiro/commit/58e69bf48195efc8a291ba515c82d9045278c2cd))
+* **user-scripts:** run scripts with [@match](https://github.com/match) metadata ([1b633f6](https://github.com/andots/mejiro/commit/1b633f69b3c1b55d83d9dd1f5c03cde7c7cf6d4c))
+* **user-scripts:** watch file rename event (remove script -> add script) ([70f6638](https://github.com/andots/mejiro/commit/70f66389d21b9ac47c4023ddeca9861ad6f8f2b6))
+* **user-scripts:** watch user scripts directory with notify crate ([e73f4f3](https://github.com/andots/mejiro/commit/e73f4f3122c1d0ccb2bc395c491858799b0afc43))
+
 # [0.30.0](https://github.com/andots/mejiro/compare/v0.29.0...v0.30.0) (2025-03-11)
 
 
