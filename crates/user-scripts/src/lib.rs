@@ -1,10 +1,8 @@
 mod error;
 mod models;
-mod utils;
 
 pub use error::Error;
 pub use models::UserScript;
-use utils::check_path_is_user_js;
 
 use std::{collections::HashMap, fs, path::Path, sync::Mutex, time::Duration};
 
@@ -15,6 +13,8 @@ use notify_debouncer_full::{new_debouncer, DebounceEventResult};
 
 use parus_common::{constants::EXTERNAL_WEBVIEW_LABEL, AppHandlePathExt};
 use parus_fs::glob_files_with_matcher;
+
+use models::check_path_is_user_js;
 
 const PLUGIN_NAME: &str = "user-scripts";
 

@@ -1,3 +1,5 @@
+use std::path::Path;
+
 use once_cell::sync::Lazy;
 use regex::Regex;
 
@@ -107,6 +109,15 @@ fn convert_match_to_regex(match_rule: &str) -> Result<Regex, regex::Error> {
     Regex::new(&pattern)
 }
 
+pub fn check_path_is_user_js(path: &Path) -> bool {
+    if let (Some(stem), Some(extension)) = (path.file_stem(), path.extension()) {
+        if let Some(stem_str) = stem.to_str() {
+            return stem_str.ends_with(".user") && extension == "js";
+        }
+    }
+    false
+}
+
 #[cfg(test)]
 mod tests {
     use std::path::PathBuf;
@@ -154,10 +165,17 @@ mod tests {
 
     #[test]
     fn test_path_end_with_userjs() -> anyhow::Result<()> {
+        // should true
+        let path = PathBuf::from("a/b/c/d.user.js");
+        assert!(check_path_is_user_js(&path));
+
+        // should false because end with user.js but no file name
         let path = PathBuf::from("a/b/c/user.js");
-        assert!(path.ends_with("user.js"));
-        let path = PathBuf::from("a/b/c/abc.user.js");
-        assert!(path.ends_with("user.js"));
+        assert!(!check_path_is_user_js(&path));
+
+        // should false because just a js file
+        let path = PathBuf::from("a/b/c/c.js");
+        assert!(!check_path_is_user_js(&path));
         Ok(())
     }
 }
