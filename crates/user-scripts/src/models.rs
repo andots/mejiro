@@ -109,6 +109,8 @@ fn convert_match_to_regex(match_rule: &str) -> Result<Regex, regex::Error> {
 
 #[cfg(test)]
 mod tests {
+    use std::path::PathBuf;
+
     use super::*;
 
     #[test]
@@ -147,6 +149,15 @@ mod tests {
         assert!(!regex.is_match("https://example.jp"));
         assert!(!regex.is_match("http://example.jp/"));
         assert!(!regex.is_match("https://example.com/"));
+        Ok(())
+    }
+
+    #[test]
+    fn test_path_end_with_userjs() -> anyhow::Result<()> {
+        let path = PathBuf::from("a/b/c/user.js");
+        assert!(path.ends_with("user.js"));
+        let path = PathBuf::from("a/b/c/abc.user.js");
+        assert!(path.ends_with("user.js"));
         Ok(())
     }
 }

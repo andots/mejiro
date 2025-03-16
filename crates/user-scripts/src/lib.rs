@@ -1,8 +1,10 @@
 mod error;
 mod models;
+mod utils;
 
 pub use error::Error;
 pub use models::UserScript;
+use utils::check_path_is_user_js;
 
 use std::{collections::HashMap, fs, path::Path, sync::Mutex, time::Duration};
 
@@ -39,7 +41,7 @@ trait AppHandleExt {
     fn update_user_script(&self, path: &Path) -> Result<(), Error>;
     fn add_user_script(&self, path: &Path) -> Result<(), Error>;
     fn remove_user_script(&self, path: &Path) -> Result<(), Error>;
-    fn watch_user_scripts(&self);
+    fn watch_user_scripts_dir(&self);
 }
 
 impl<R: tauri::Runtime> AppHandleExt for tauri::AppHandle<R> {
@@ -48,7 +50,7 @@ impl<R: tauri::Runtime> AppHandleExt for tauri::AppHandle<R> {
         match load_user_scripts(&dir) {
             Ok(user_scripts) => {
                 self.manage(Mutex::new(user_scripts));
-                self.watch_user_scripts();
+                self.watch_user_scripts_dir();
             }
             Err(e) => log::error!(
                 "Error occured while loading user scripts: {:?}",
@@ -112,40 +114,40 @@ impl<R: tauri::Runtime> AppHandleExt for tauri::AppHandle<R> {
         Ok(())
     }
 
-    fn watch_user_scripts(&self) {
+    fn watch_user_scripts_dir(&self) {
         let (tx, rx) = std::sync::mpsc::channel();
-        let path = self.get_user_scripts_dir();
+        let dir = self.get_user_scripts_dir();
         let app_handle = self.app_handle().clone();
         tauri::async_runtime::spawn_blocking(move || -> anyhow::Result<()> {
             let mut debouncer = new_debouncer(Duration::from_secs(1), None, tx)?;
-            debouncer.watch(path, RecursiveMode::Recursive)?;
+            debouncer.watch(dir, RecursiveMode::Recursive)?;
             loop {
                 match rx.recv() {
                     Ok(DebounceEventResult::Ok(events)) => {
                         for event in events.iter() {
-                            match event.kind {
-                                EventKind::Modify(_) => {
-                                    if let Some(p) = event.paths.last() {
-                                        if let Err(e) = app_handle.update_user_script(p) {
+                            let path = match event.paths.last() {
+                                Some(v) => v,
+                                None => break,
+                            };
+                            if check_path_is_user_js(path) {
+                                match event.kind {
+                                    EventKind::Modify(_) => {
+                                        if let Err(e) = app_handle.update_user_script(path) {
                                             log::error!("update script error: {:?}", e.to_string());
                                         }
                                     }
-                                }
-                                EventKind::Create(_) => {
-                                    if let Some(p) = event.paths.last() {
-                                        if let Err(e) = app_handle.add_user_script(p) {
+                                    EventKind::Create(_) => {
+                                        if let Err(e) = app_handle.add_user_script(path) {
                                             log::error!("add script error: {:?}", e.to_string());
                                         }
                                     }
-                                }
-                                EventKind::Remove(_) => {
-                                    if let Some(p) = event.paths.last() {
-                                        if let Err(e) = app_handle.remove_user_script(p) {
+                                    EventKind::Remove(_) => {
+                                        if let Err(e) = app_handle.remove_user_script(path) {
                                             log::error!("remove script error: {}", e.to_string());
                                         }
                                     }
+                                    _ => {}
                                 }
-                                _ => {}
                             }
                         }
                     }
