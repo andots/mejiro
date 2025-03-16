@@ -68,44 +68,47 @@ impl<R: tauri::Runtime> AppHandleExt for tauri::AppHandle<R> {
     fn update_user_script(&self, path: &Path) -> Result<(), Error> {
         let script = fs::read_to_string(path)?;
         let user_script = UserScript::parse(&script);
-        if let Some(state) = self.try_state::<UserScriptState>() {
-            if let Ok(mut map) = state.lock() {
-                if let Some(key) = path.to_str() {
-                    map.entry(key.to_string())
-                        .and_modify(|value| *value = user_script);
-                    log::debug!("Update user script: {:?}", key);
-                    self.reload_external_webview();
-                }
-            }
+        let state = self
+            .try_state::<UserScriptState>()
+            .ok_or(Error::StateNotManaged)?;
+        {
+            let mut map = state.lock().map_err(|_| Error::PoisonError)?;
+            let key = path.to_str().ok_or(Error::InvalidUTF8)?;
+            map.entry(key.to_string())
+                .and_modify(|value| *value = user_script);
+            log::debug!("Update user script: {:?}", key);
         }
+        self.reload_external_webview();
         Ok(())
     }
 
     fn add_user_script(&self, path: &Path) -> Result<(), Error> {
         let script = fs::read_to_string(path)?;
         let user_script = UserScript::parse(&script);
-        if let Some(state) = self.try_state::<UserScriptState>() {
-            if let Ok(mut map) = state.lock() {
-                if let Some(key) = path.to_str() {
-                    map.insert(key.to_string(), user_script);
-                    log::debug!("Add user script: {:?}", key);
-                    self.reload_external_webview();
-                }
-            }
+        let state = self
+            .try_state::<UserScriptState>()
+            .ok_or(Error::StateNotManaged)?;
+        {
+            let mut map = state.lock().map_err(|_| Error::PoisonError)?;
+            let key = path.to_str().ok_or(Error::InvalidUTF8)?;
+            map.insert(key.to_string(), user_script);
+            log::debug!("Add user script: {:?}", key);
         }
+        self.reload_external_webview();
         Ok(())
     }
 
     fn remove_user_script(&self, path: &Path) -> Result<(), Error> {
-        if let Some(state) = self.try_state::<UserScriptState>() {
-            if let Ok(mut map) = state.lock() {
-                if let Some(key) = path.to_str() {
-                    map.remove(key);
-                    log::debug!("Add user script: {:?}", key);
-                    self.reload_external_webview();
-                }
-            }
+        let state = self
+            .try_state::<UserScriptState>()
+            .ok_or(Error::StateNotManaged)?;
+        {
+            let mut map = state.lock().map_err(|_| Error::PoisonError)?;
+            let key = path.to_str().ok_or(Error::InvalidUTF8)?;
+            map.remove(key);
+            log::debug!("Remove user script: {:?}", key);
         }
+        self.reload_external_webview();
         Ok(())
     }
 
@@ -123,17 +126,23 @@ impl<R: tauri::Runtime> AppHandleExt for tauri::AppHandle<R> {
                             match event.kind {
                                 EventKind::Modify(_) => {
                                     if let Some(p) = event.paths.last() {
-                                        app_handle.update_user_script(p)?;
+                                        if let Err(e) = app_handle.update_user_script(p) {
+                                            log::error!("update script error: {:?}", e.to_string());
+                                        }
                                     }
                                 }
                                 EventKind::Create(_) => {
                                     if let Some(p) = event.paths.last() {
-                                        app_handle.add_user_script(p)?;
+                                        if let Err(e) = app_handle.add_user_script(p) {
+                                            log::error!("add script error: {:?}", e.to_string());
+                                        }
                                     }
                                 }
                                 EventKind::Remove(_) => {
                                     if let Some(p) = event.paths.last() {
-                                        app_handle.remove_user_script(p)?;
+                                        if let Err(e) = app_handle.remove_user_script(p) {
+                                            log::error!("remove script error: {}", e.to_string());
+                                        }
                                     }
                                 }
                                 _ => {}
@@ -196,7 +205,7 @@ pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
             if webview.label() == EXTERNAL_WEBVIEW_LABEL {
                 match payload.event() {
                     tauri::webview::PageLoadEvent::Started => {
-                        // log::debug!("Started: {}", payload.url().as_str());
+                        log::debug!("Started: {}", payload.url().as_str());
                         webview.run_all_user_scripts();
                     }
                     tauri::webview::PageLoadEvent::Finished => {
