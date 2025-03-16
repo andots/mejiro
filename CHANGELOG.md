@@ -1,5 +1,20 @@
 # Changelog
 
+# [0.32.0](https://github.com/andots/mejiro/compare/v0.31.0...v0.32.0) (2025-03-16)
+
+
+### Bug Fixes
+
+* **app:** plugin init order to fix js inject order (required scripts -> user scripts) ([e098b2f](https://github.com/andots/mejiro/commit/e098b2f908a625d6d6a0769e42a846270d1c088d))
+* **user-scripts:** use RwLock for state ([4d4fbdf](https://github.com/andots/mejiro/commit/4d4fbdfc5ba563be99d22bb533f653969e5a676f))
+
+
+### Features
+
+* **js-injection:** integrate with js-injection plugin ([4fc1852](https://github.com/andots/mejiro/commit/4fc18524ddab4046381869e8cd2162a00e01bcea))
+* **js-injection:** merge scripts with once_cell and eval once on page load ([54693cd](https://github.com/andots/mejiro/commit/54693cd6b0280edfdc42b3b1c9a48b877614fbea))
+* **js-injection:** move command get_external_webview_title to plugin ([46bc651](https://github.com/andots/mejiro/commit/46bc6517e6c2341a8f0304fa32ef5d6187251dc1))
+
 # [0.31.0](https://github.com/andots/mejiro/compare/v0.30.0...v0.31.0) (2025-03-16)
 
 
