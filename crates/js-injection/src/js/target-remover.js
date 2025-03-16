@@ -1,4 +1,6 @@
 (() => {
+  console.info("Run: target-remover");
+
   // document.addEventListener("DOMContentLoaded", () => {
   function removeTargetAttributes() {
     const targets = document.querySelectorAll("a[target]");

@@ -1,4 +1,6 @@
 (() => {
+  console.info("Run: mouse-gesture");
+
   let isMouseMoved = false;
 
   const OVRELAY_ID = "mejiro-mouse-gesture-overlay";

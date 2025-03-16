@@ -1,4 +1,6 @@
 (() => {
+  console.info("Run: title-observer");
+
   let previousTitle;
 
   const sendTitleToTauri = (title) => {

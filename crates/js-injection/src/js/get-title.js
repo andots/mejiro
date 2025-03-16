@@ -1,4 +1,6 @@
 (() => {
+  console.info("Run: get-title");
+
   const sendTitleToTauri = (title) => {
     if (!window.__TAURI__?.core?.invoke) {
       return;

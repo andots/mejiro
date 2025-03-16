@@ -4838,6 +4838,7 @@ name = "tauri-plugin-js-injection"
 version = "0.31.0"
 dependencies = [
  "log",
+ "once_cell",
  "parus-common",
  "serde",
  "tauri",

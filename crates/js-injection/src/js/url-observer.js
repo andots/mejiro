@@ -1,4 +1,6 @@
 (() => {
+  console.info("Run: url-observer");
+
   const DEBOUNCE_TIME = 100;
   const URL_CHANGE_EVENT = "urlchange";
   const POP_STATE_EVENT = "popstate";
