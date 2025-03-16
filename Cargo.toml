@@ -12,6 +12,7 @@ members = [
   "crates/meta-parser",
   "crates/favicon-fetcher",
   "crates/favicon-server",
+  "crates/fs",
   "crates/user-scripts",
   "crates/user-settings",
   "crates/window-geometry",
@@ -45,6 +46,7 @@ tauri-plugin = "2.0.5"
 
 # internal
 parus-common = { path = "./crates/common" }
+parus-fs = { path = "./crates/fs" }
 mejiro-core = { path = "./crates/core" }
 meta-parser = { path = "./crates/meta-parser" }
 favicon-fetcher = { path = "./crates/favicon-fetcher" }

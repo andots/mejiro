@@ -3184,6 +3184,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "parus-fs"
+version = "0.30.0"
+dependencies = [
+ "anyhow",
+ "glob",
+ "log",
+ "notify",
+ "notify-debouncer-full",
+ "thiserror 2.0.12",
+]
+
+[[package]]
 name = "percent-encoding"
 version = "2.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4893,12 +4905,12 @@ name = "tauri-plugin-user-scripts"
 version = "0.30.0"
 dependencies = [
  "anyhow",
- "glob",
  "log",
  "notify",
  "notify-debouncer-full",
  "once_cell",
  "parus-common",
+ "parus-fs",
  "regex",
  "serde",
  "serde_json",

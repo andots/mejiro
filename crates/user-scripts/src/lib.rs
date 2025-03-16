@@ -1,8 +1,8 @@
 mod error;
 mod models;
-mod utils;
 
 pub use error::Error;
+pub use models::UserScript;
 
 use std::{collections::HashMap, fs, path::Path, sync::Mutex, time::Duration};
 
@@ -12,13 +12,25 @@ use notify::{EventKind, RecursiveMode};
 use notify_debouncer_full::{new_debouncer, DebounceEventResult};
 
 use parus_common::{constants::EXTERNAL_WEBVIEW_LABEL, AppHandlePathExt};
-
-use models::UserScript;
-use utils::load_user_scripts;
+use parus_fs::glob_files_with_matcher;
 
 const PLUGIN_NAME: &str = "user-scripts";
 
-type UserScripts = HashMap<String, UserScript>;
+type UserScriptCollection = HashMap<String, UserScript>;
+
+fn load_user_scripts(dir: &Path) -> Result<UserScriptCollection, Error> {
+    let mut scripts: UserScriptCollection = HashMap::new();
+    let paths = glob_files_with_matcher(dir, "**/*.user.js")?;
+    for path in paths {
+        if let Ok(script) = fs::read_to_string(&path) {
+            let user_script = UserScript::parse(&script);
+            if let Some(path) = path.to_str() {
+                scripts.insert(path.to_string(), user_script);
+            }
+        }
+    }
+    Ok(scripts)
+}
 
 trait AppHandleExt {
     fn manage_and_watch_user_scripts(&self);
@@ -53,7 +65,7 @@ impl<R: tauri::Runtime> AppHandleExt for tauri::AppHandle<R> {
     fn update_script(&self, path: &Path) -> Result<(), Error> {
         let script = fs::read_to_string(path)?;
         let user_script = UserScript::parse(&script);
-        if let Some(state) = self.try_state::<Mutex<UserScripts>>() {
+        if let Some(state) = self.try_state::<Mutex<UserScriptCollection>>() {
             if let Ok(mut map) = state.lock() {
                 if let Some(key) = path.to_str() {
                     map.entry(key.to_string())
@@ -114,7 +126,7 @@ trait WebviewExt {
 
 impl<R: tauri::Runtime> WebviewExt for tauri::Webview<R> {
     fn run_all_user_scripts(&self) {
-        if let Some(state) = self.try_state::<Mutex<UserScripts>>() {
+        if let Some(state) = self.try_state::<Mutex<UserScriptCollection>>() {
             if let Ok(user_scripts) = state.lock() {
                 for (_, user_script) in user_scripts.iter() {
                     let _ = self.eval(user_script.code.as_str());
