@@ -5,10 +5,4 @@ pub enum Error {
 
     #[error(transparent)]
     Fs(#[from] parus_fs::Error),
-
-    #[error("No filename")]
-    NoFileName(),
-
-    #[error("No @name")]
-    NoName(),
 }

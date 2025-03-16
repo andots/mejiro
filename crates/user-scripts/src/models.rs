@@ -42,7 +42,10 @@ impl Finder for Metadata {
 
 #[derive(Debug)]
 pub struct UserScript {
+    /// whole code of user script
     pub code: String,
+    /// metadata of @match as Vec<Regex>
+    pub match_patterns: Vec<Regex>,
     #[allow(unused)]
     pub name: Option<String>,
     #[allow(unused)]
@@ -51,8 +54,6 @@ pub struct UserScript {
     pub version: Option<String>,
     #[allow(unused)]
     pub author: Option<String>,
-    #[allow(unused)]
-    pub match_patterns: Vec<String>,
 }
 
 static METADATA_KEY_VALUE_REGEX: Lazy<Regex> =
@@ -73,15 +74,37 @@ impl UserScript {
             metadata.push(data);
         }
 
+        let mut match_patterns = vec![];
+        for match_rule in metadata.find_all("match") {
+            match convert_match_to_regex(&match_rule) {
+                Ok(regex) => match_patterns.push(regex),
+                Err(e) => log::error!("Regex error: {:?}", e.to_string()),
+            }
+        }
+
         Self {
             code: script.to_string(),
             name: metadata.get("name"),
             description: metadata.get("description"),
             version: metadata.get("version"),
             author: metadata.get("author"),
-            match_patterns: metadata.find_all("match"),
+            match_patterns,
         }
     }
+}
+
+/// Convert @match metadata to rust Regex
+/// match pattern should follow chrome extension match-patterns
+/// https://developer.chrome.com/docs/extensions/develop/concepts/match-patterns
+fn convert_match_to_regex(match_rule: &str) -> Result<Regex, regex::Error> {
+    // escape dot and slash, replace wildcard * to .*
+    let rule = match_rule
+        .replace(".", "\\.")
+        .replace("/", "\\/")
+        .replace("*", ".*");
+
+    let pattern = format!("^{}$", rule);
+    Regex::new(&pattern)
 }
 
 #[cfg(test)]
@@ -102,5 +125,28 @@ mod tests {
         assert_eq!(user_script.description, None);
         assert_eq!(user_script.version, None);
         assert!(user_script.match_patterns.is_empty());
+    }
+
+    #[test]
+    fn test_convert_match_to_regex() -> anyhow::Result<()> {
+        let match_rule = "*://docs.rs/*";
+        let regex = convert_match_to_regex(match_rule)?;
+        assert!(regex.is_match("https://docs.rs/url/latest/url/"));
+        assert!(regex.is_match("https://docs.rs/url/latest/url/#feature-debugger_visualizer"));
+        assert!(!regex.is_match("https://crates.io/"));
+
+        let match_rule = "*://*/*";
+        let regex = convert_match_to_regex(match_rule)?;
+        assert!(regex.is_match("https://docs.rs/url/latest/url/"));
+        assert!(regex.is_match("http://example.com/xyz/abc"));
+
+        let match_rule = "https://example.jp/*";
+        let regex = convert_match_to_regex(match_rule)?;
+        assert!(regex.is_match("https://example.jp/"));
+        assert!(regex.is_match("https://example.jp/abc/def"));
+        assert!(!regex.is_match("https://example.jp"));
+        assert!(!regex.is_match("http://example.jp/"));
+        assert!(!regex.is_match("https://example.com/"));
+        Ok(())
     }
 }

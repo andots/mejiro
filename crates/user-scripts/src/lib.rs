@@ -162,8 +162,22 @@ impl<R: tauri::Runtime> WebviewExt for tauri::Webview<R> {
     fn run_all_user_scripts(&self) {
         if let Some(state) = self.try_state::<UserScriptState>() {
             if let Ok(user_scripts) = state.lock() {
-                for (_, user_script) in user_scripts.iter() {
-                    let _ = self.eval(user_script.code.as_str());
+                if let Ok(url) = self.url() {
+                    for (_path, user_script) in user_scripts.iter() {
+                        let mut should_run = false;
+                        if user_script.match_patterns.is_empty() {
+                            should_run = true;
+                        } else {
+                            let url_str = url.as_str();
+                            for pattern in user_script.match_patterns.iter() {
+                                should_run = pattern.is_match(url_str);
+                            }
+                        }
+                        if should_run {
+                            log::debug!("Run userscript: {}", &_path);
+                            let _ = self.eval(user_script.code.as_str());
+                        }
+                    }
                 }
             }
         }
@@ -182,11 +196,11 @@ pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
             if webview.label() == EXTERNAL_WEBVIEW_LABEL {
                 match payload.event() {
                     tauri::webview::PageLoadEvent::Started => {
-                        log::debug!("Started: {}", payload.url().as_str());
+                        // log::debug!("Started: {}", payload.url().as_str());
                         webview.run_all_user_scripts();
                     }
                     tauri::webview::PageLoadEvent::Finished => {
-                        log::debug!("Finished: {}", payload.url().as_str());
+                        // log::debug!("Finished: {}", payload.url().as_str());
                     }
                 }
             }
