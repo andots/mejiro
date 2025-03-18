@@ -235,10 +235,9 @@ pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
                 match payload.event() {
                     tauri::webview::PageLoadEvent::Started => {
                         // log::debug!("Started: {}", payload.url().as_str());
-                        // webview.run_all_user_scripts();
                     }
                     tauri::webview::PageLoadEvent::Finished => {
-                        log::debug!("Finished: {}", payload.url().as_str());
+                        // log::debug!("Finished: {}", payload.url().as_str());
                         if let Err(e) = webview.run_all_user_scripts() {
                             log::error!("run all scripts error: {}", e.to_string());
                         }

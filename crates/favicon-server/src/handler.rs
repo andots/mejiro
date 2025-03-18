@@ -66,7 +66,7 @@ pub async fn get_favicon(
     };
 
     if let Some(inner) = value {
-        log::debug!("Favicon found in database for: {}", host_str);
+        // log::debug!("Favicon found in database for: {}", host_str);
         create_image_response(inner.value().to_vec())
     } else {
         let size = 16;
