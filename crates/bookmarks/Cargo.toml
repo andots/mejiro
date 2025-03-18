@@ -15,7 +15,7 @@ thiserror = { workspace = true }
 strum = { workspace = true, features = ["derive"] }
 log = { workspace = true }
 
-mejiro-core.workspace = true
+parus-bookmark.workspace = true
 parus-common.workspace = true
 
 [build-dependencies]

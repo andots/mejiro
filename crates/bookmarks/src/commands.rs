@@ -2,7 +2,7 @@ use std::sync::Mutex;
 
 use serde::Serialize;
 
-use mejiro_core::{
+use parus_bookmark::{
     bookmarks::{Bookmarks, NestedBookmark},
     data::{FolderData, ToolbarBookmarkData},
 };

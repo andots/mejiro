@@ -1,5 +1,5 @@
 [package]
-name = "mejiro-core"
+name = "parus-bookmark"
 version.workspace = true
 authors.workspace = true
 edition.workspace = true

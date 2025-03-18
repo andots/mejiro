@@ -13,4 +13,4 @@ strum = { workspace = true, features = ["derive"] }
 log = { workspace = true }
 tauri = { workspace = true }
 
-mejiro-core.workspace = true
+parus-bookmark.workspace = true

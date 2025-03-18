@@ -2516,20 +2516,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "mejiro-core"
-version = "0.32.0"
-dependencies = [
- "anyhow",
- "indextree",
- "log",
- "serde",
- "serde_json",
- "tempfile",
- "thiserror 2.0.12",
- "url",
-]
-
-[[package]]
 name = "memchr"
 version = "2.7.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3172,11 +3158,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "parus-bookmark"
+version = "0.32.0"
+dependencies = [
+ "anyhow",
+ "indextree",
+ "log",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror 2.0.12",
+ "url",
+]
+
+[[package]]
 name = "parus-common"
 version = "0.32.0"
 dependencies = [
  "log",
- "mejiro-core",
+ "parus-bookmark",
  "serde",
  "serde_json",
  "strum 0.27.1",
@@ -4782,7 +4782,7 @@ name = "tauri-plugin-bookmarks"
 version = "0.32.0"
 dependencies = [
  "log",
- "mejiro-core",
+ "parus-bookmark",
  "parus-common",
  "serde",
  "serde_json",

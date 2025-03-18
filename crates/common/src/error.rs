@@ -21,7 +21,7 @@ pub enum Error {
     Json(#[from] serde_json::Error),
 
     #[error(transparent)]
-    Core(#[from] mejiro_core::error::CoreError),
+    Core(#[from] parus_bookmark::error::CoreError),
 
     #[error("other error: {0}")]
     Other(String),

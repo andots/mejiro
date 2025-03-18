@@ -47,8 +47,8 @@ tauri-plugin = "2.0.5"
 
 # internal
 parus-common = { path = "./crates/common" }
+parus-bookmark = { path = "./crates/core" }
 parus-fs = { path = "./crates/fs" }
-mejiro-core = { path = "./crates/core" }
 meta-parser = { path = "./crates/meta-parser" }
 favicon-fetcher = { path = "./crates/favicon-fetcher" }
 favicon-server = { path = "./crates/favicon-server" }

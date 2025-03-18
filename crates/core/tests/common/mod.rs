@@ -3,7 +3,7 @@
 use std::{path::PathBuf, sync::OnceLock};
 
 use indextree::{macros::tree, Arena};
-use mejiro_core::{bookmarks::Bookmarks, data::BookmarkData};
+use parus_bookmark::{bookmarks::Bookmarks, data::BookmarkData};
 
 static OUTS_PATH: OnceLock<PathBuf> = OnceLock::new();
 

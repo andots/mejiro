@@ -3,7 +3,7 @@ mod common;
 #[cfg(test)]
 mod tests {
     use indextree::{macros::tree, Arena};
-    use mejiro_core::{
+    use parus_bookmark::{
         bookmarks::Bookmarks,
         data::{BookmarkData, NodeType},
         error::CoreError,
