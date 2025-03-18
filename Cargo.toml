@@ -8,7 +8,6 @@ members = [
   "crates/bookmark",
   "crates/common",
   "crates/meta-parser",
-  "crates/favicon-fetcher",
   "crates/favicon-server",
   "crates/fs",
   "crates/plugin-app-settings",
@@ -50,7 +49,6 @@ parus-bookmark = { path = "./crates/bookmark" }
 parus-common = { path = "./crates/common" }
 parus-fs = { path = "./crates/fs" }
 meta-parser = { path = "./crates/meta-parser" }
-favicon-fetcher = { path = "./crates/favicon-fetcher" }
 favicon-server = { path = "./crates/favicon-server" }
 # internal plugins
 tauri-plugin-app-settings = { path = "./crates/plugin-app-settings" }

@@ -1185,17 +1185,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "37909eebbb50d72f9059c3b6d82c0463f2ff062c9e95845c43a6c9c0355411be"
 
 [[package]]
-name = "favicon-fetcher"
-version = "0.32.0"
-dependencies = [
- "base64 0.22.1",
- "reqwest",
- "thiserror 2.0.12",
- "tokio",
- "tokio-macros",
-]
-
-[[package]]
 name = "favicon-server"
 version = "0.32.0"
 dependencies = [
