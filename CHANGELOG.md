@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.32.2](https://github.com/andots/parus/compare/v0.32.1...v0.32.2) (2025-03-18)
+
+
+### Bug Fixes
+
+* set new repository url ([32e085f](https://github.com/andots/parus/commit/32e085feb62a24f1cb94aab73dff8d03ad767333))
+
 ## [0.32.1](https://github.com/andots/parus/compare/v0.32.0...v0.32.1) (2025-03-18)
 
 
