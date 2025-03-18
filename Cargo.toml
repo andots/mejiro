@@ -6,9 +6,9 @@ resolver = "3"
 members = [
   "crates/app",
   "crates/app-settings",
+  "crates/bookmark",
   "crates/bookmarks",
   "crates/common",
-  "crates/core",
   "crates/meta-parser",
   "crates/favicon-fetcher",
   "crates/favicon-server",
@@ -46,8 +46,8 @@ tauri-build = "2.0.6"
 tauri-plugin = "2.0.5"
 
 # internal
+parus-bookmark = { path = "./crates/bookmark" }
 parus-common = { path = "./crates/common" }
-parus-bookmark = { path = "./crates/core" }
 parus-fs = { path = "./crates/fs" }
 meta-parser = { path = "./crates/meta-parser" }
 favicon-fetcher = { path = "./crates/favicon-fetcher" }
