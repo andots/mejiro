@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.32.1](https://github.com/andots/mejiro/compare/v0.32.0...v0.32.1) (2025-03-18)
+
+
+### Bug Fixes
+
+* **js-injection:** remove unnecessary dom id ([2a5436b](https://github.com/andots/mejiro/commit/2a5436bf53481f3d9c7b9c09c7070b07bc73e3e7))
+* remove logging ([1e191f3](https://github.com/andots/mejiro/commit/1e191f3bb59c0d2ab2a63f9acf6246aed9d59f2f))
+
 # [0.32.0](https://github.com/andots/mejiro/compare/v0.31.0...v0.32.0) (2025-03-16)
 
 
