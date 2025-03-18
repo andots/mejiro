@@ -3,12 +3,9 @@
 
   let isMouseMoved = false;
 
-  const OVRELAY_ID = "mejiro-mouse-gesture-overlay";
-  const CANVAS_ID = "mejiro-mouse-gesture-canvas";
   const STROKE_COLOR = "#22c55e";
 
   const overlay = document.createElementNS("http://www.w3.org/1999/xhtml", "div");
-  overlay.id = OVRELAY_ID;
   overlay.popover = "manual";
   overlay.style.cssText = `
     all: initial !important;
@@ -25,7 +22,6 @@
   `;
 
   const canvas = document.createElementNS("http://www.w3.org/1999/xhtml", "canvas");
-  canvas.id = CANVAS_ID;
   canvas.style.cssText = `
     all: initial !important;
     pointer-events: none !important;
