@@ -1,6 +1,6 @@
-# Mejiro
+# Parus
 
-Mejiro is a lightweight and fast web viewer with a strong focus on bookmark management.
+Parus is a lightweight and fast web viewer with a strong focus on bookmark management.
 
 ## ⚠️ IMPORTANT: Alpha Version Notice
 

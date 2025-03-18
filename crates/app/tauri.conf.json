@@ -1,7 +1,7 @@
 {
   "$schema": "../../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "Mejiro",
-  "identifier": "com.andots.mejiro",
+  "productName": "Parus",
+  "identifier": "Parus",
   "build": {
     "frontendDist": "../../target-frontend/desktop",
     "devUrl": "http://localhost:1420",
