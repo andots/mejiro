@@ -5,18 +5,18 @@
 resolver = "3"
 members = [
   "crates/app",
-  "crates/app-settings",
   "crates/bookmark",
-  "crates/bookmarks",
   "crates/common",
   "crates/meta-parser",
   "crates/favicon-fetcher",
   "crates/favicon-server",
   "crates/fs",
-  "crates/js-injection",
-  "crates/user-scripts",
-  "crates/user-settings",
-  "crates/window-geometry",
+  "crates/plugin-app-settings",
+  "crates/plugin-bookmarks",
+  "crates/plugin-js-injection",
+  "crates/plugin-user-scripts",
+  "crates/plugin-user-settings",
+  "crates/plugin-window-geometry",
 ]
 
 [workspace.package]
@@ -53,12 +53,12 @@ meta-parser = { path = "./crates/meta-parser" }
 favicon-fetcher = { path = "./crates/favicon-fetcher" }
 favicon-server = { path = "./crates/favicon-server" }
 # internal plugins
-tauri-plugin-app-settings = { path = "./crates/app-settings" }
-tauri-plugin-bookmarks = { path = "./crates/bookmarks" }
-tauri-plugin-js-injection = { path = "./crates/js-injection" }
-tauri-plugin-user-scripts = { path = "./crates/user-scripts" }
-tauri-plugin-user-settings = { path = "./crates/user-settings" }
-tauri-plugin-window-geometry = { path = "./crates/window-geometry" }
+tauri-plugin-app-settings = { path = "./crates/plugin-app-settings" }
+tauri-plugin-bookmarks = { path = "./crates/plugin-bookmarks" }
+tauri-plugin-js-injection = { path = "./crates/plugin-js-injection" }
+tauri-plugin-user-scripts = { path = "./crates/plugin-user-scripts" }
+tauri-plugin-user-settings = { path = "./crates/plugin-user-settings" }
+tauri-plugin-window-geometry = { path = "./crates/plugin-window-geometry" }
 
 [profile.dev]
 opt-level = 1
