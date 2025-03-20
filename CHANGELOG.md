@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.32.3](https://github.com/andots/parus/compare/v0.32.2...v0.32.3) (2025-03-20)
+
+
+### Bug Fixes
+
+* **bookmark:** force open all ancestors when bookmarking ([e13fc0a](https://github.com/andots/parus/commit/e13fc0a5f20593ef6d8f97eb9a4346cc7a7c0d35))
+* **bookmark:** rename to Error ([001641d](https://github.com/andots/parus/commit/001641db3a5bc9772aea0219807ed0630321f4e0))
+
 ## [0.32.2](https://github.com/andots/parus/compare/v0.32.1...v0.32.2) (2025-03-18)
 
 
