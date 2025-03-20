@@ -4,9 +4,8 @@ mod common;
 mod tests {
     use indextree::{macros::tree, Arena};
     use parus_bookmark::{
-        bookmarks::Bookmarks,
         data::{BookmarkData, NodeType},
-        error::Error,
+        Bookmarks, Error,
     };
 
     use crate::common::{
@@ -385,6 +384,46 @@ mod tests {
         )?;
 
         println!("{}", bookmarks.to_nested_json_pretty(1)?);
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_add_bookmark_and_open_ancestors() -> anyhow::Result<()> {
+        let mut arena = Arena::new();
+        let root = BookmarkData::new_root();
+        tree!(&mut arena,
+            root => {
+               BookmarkData::try_new_bookmark("abc", "https://docs.rs/abc").unwrap(),
+            }
+        );
+        let mut bookmarks = Bookmarks::new(arena);
+
+        let top_level_index = 1;
+        bookmarks.add_bookmark("abc/cdf", "https://docs.rs/abc/cdf", top_level_index)?;
+
+        // close all
+        bookmarks.set_is_open(1, false)?;
+        bookmarks.set_is_open(2, false)?;
+        bookmarks.set_is_open(3, false)?;
+
+        // make sure all nodes are closed
+        for node in bookmarks.arena().iter() {
+            let data = node.get();
+            assert!(!data.is_open);
+        }
+
+        // add_bookmark will open all ancestors
+        bookmarks.add_bookmark(
+            "abc/cdf/efg",
+            "https://docs.rs/abc/cdf/efg",
+            top_level_index,
+        )?;
+
+        for node in bookmarks.arena().iter() {
+            let data = node.get();
+            assert!(data.is_open);
+        }
 
         Ok(())
     }

@@ -44,7 +44,7 @@ impl Bookmarks {
     }
 
     /// Adds a new bookmark by comparing paths between the given URL and existing URLs
-    /// If no matching URL is found, adds a new node to the top node
+    /// If no matching URL is found, adds a new node to the top level node
     pub fn add_bookmark(
         &mut self,
         title: &str,
@@ -107,6 +107,12 @@ impl Bookmarks {
         } else {
             // if not found target, append new node to the top node
             top_node_id.checked_append(new_node, &mut self.arena)?;
+        }
+
+        // set open new_node and its ancestors
+        let ancestors = new_node.ancestors(&self.arena).collect::<Vec<_>>();
+        for node_id in ancestors {
+            self.set_is_open(node_id.into(), true)?;
         }
 
         Ok(())

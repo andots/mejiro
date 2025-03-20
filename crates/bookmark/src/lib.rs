@@ -2,7 +2,7 @@ pub mod bookmarks;
 pub mod data;
 pub mod error;
 pub mod serialize;
-pub mod utils;
+mod utils;
 
 // re-export
 pub use indextree::Arena;
