@@ -4,7 +4,7 @@ use indextree::{Arena, NodeId};
 use serde::ser::{SerializeSeq, Serializer};
 use serde::Serialize;
 
-use crate::error::CoreError;
+use crate::error::Error;
 
 /// Convenience wrapper struct for serializing a node and its descendants.
 #[derive(Serialize)]
@@ -19,10 +19,10 @@ pub struct NestedNode<'a, T: Serialize> {
 
 impl<'a, T: Serialize> NestedNode<'a, T> {
     /// Attempt to create a new `NestedNode` from an `Arena` and a `NodeId`.
-    pub fn try_new(arena: &'a Arena<T>, node_id: NodeId) -> Result<Self, CoreError> {
+    pub fn try_new(arena: &'a Arena<T>, node_id: NodeId) -> Result<Self, Error> {
         let node = arena
             .get(node_id)
-            .ok_or(CoreError::NestedNode(node_id.into()))?;
+            .ok_or(Error::NestedNode(node_id.into()))?;
         Ok(NestedNode {
             index: node_id.into(),
             data: node.get(),

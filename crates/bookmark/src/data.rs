@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use url::Url;
 
-use crate::{error::CoreError, utils::get_unix_timestamp};
+use crate::{error::Error, utils::get_unix_timestamp};
 
 /// https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/bookmarks/BookmarkTreeNodeType
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
@@ -54,12 +54,12 @@ impl BookmarkData {
         Self::new(title, None, NodeType::Folder)
     }
 
-    pub fn try_new_bookmark(title: &str, url: &str) -> Result<Self, CoreError> {
+    pub fn try_new_bookmark(title: &str, url: &str) -> Result<Self, Error> {
         let parsed_url = Url::parse(url)?;
         if parsed_url.scheme() == "http" || parsed_url.scheme() == "https" {
             Ok(Self::new(title, Some(parsed_url), NodeType::Bookmark))
         } else {
-            Err(CoreError::NotWebUrl(parsed_url.to_string()))
+            Err(Error::NotWebUrl(parsed_url.to_string()))
         }
     }
 

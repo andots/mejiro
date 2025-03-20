@@ -6,7 +6,7 @@ mod tests {
     use parus_bookmark::{
         bookmarks::Bookmarks,
         data::{BookmarkData, NodeType},
-        error::CoreError,
+        error::Error,
     };
 
     use crate::common::{
@@ -63,7 +63,7 @@ mod tests {
         assert!(err.is_err());
         assert_eq!(
             err.unwrap_err().to_string(),
-            CoreError::CannotMoveRoot().to_string()
+            Error::CannotMoveRoot().to_string()
         );
 
         // try to move to non-exist node must be error
@@ -71,7 +71,7 @@ mod tests {
         assert!(err.is_err());
         assert_eq!(
             err.unwrap_err().to_string(),
-            CoreError::NodeIdNotFound(100).to_string()
+            Error::NodeIdNotFound(100).to_string()
         );
 
         // try to move from non-exist node must be error
@@ -79,7 +79,7 @@ mod tests {
         assert!(err.is_err());
         assert_eq!(
             err.unwrap_err().to_string(),
-            CoreError::NodeIdNotFound(100).to_string()
+            Error::NodeIdNotFound(100).to_string()
         );
 
         // try to move to same node must be error
@@ -87,7 +87,7 @@ mod tests {
         assert!(err.is_err());
         assert_eq!(
             err.unwrap_err().to_string(),
-            CoreError::SameSourceAndDestination().to_string()
+            Error::SameSourceAndDestination().to_string()
         );
 
         Ok(())
@@ -129,7 +129,7 @@ mod tests {
         assert!(err.is_err());
         assert_eq!(
             err.unwrap_err().to_string(),
-            CoreError::CannotMoveRoot().to_string()
+            Error::CannotMoveRoot().to_string()
         );
 
         // try to move to non-exist node must be error
@@ -137,7 +137,7 @@ mod tests {
         assert!(err.is_err());
         assert_eq!(
             err.unwrap_err().to_string(),
-            CoreError::NodeIdNotFound(100).to_string()
+            Error::NodeIdNotFound(100).to_string()
         );
 
         // try to move from non-exist node must be error
@@ -145,7 +145,7 @@ mod tests {
         assert!(err.is_err());
         assert_eq!(
             err.unwrap_err().to_string(),
-            CoreError::NodeIdNotFound(100).to_string()
+            Error::NodeIdNotFound(100).to_string()
         );
 
         // try to insert same node must be error
@@ -153,7 +153,7 @@ mod tests {
         assert!(err.is_err());
         assert_eq!(
             err.unwrap_err().to_string(),
-            CoreError::SameSourceAndDestination().to_string()
+            Error::SameSourceAndDestination().to_string()
         );
 
         Ok(())
@@ -212,7 +212,7 @@ mod tests {
         assert!(err.is_err());
         assert_eq!(
             err.unwrap_err().to_string(),
-            CoreError::CannotMoveRoot().to_string()
+            Error::CannotMoveRoot().to_string()
         );
 
         // try to move to non-exist node must be error
@@ -220,7 +220,7 @@ mod tests {
         assert!(err.is_err());
         assert_eq!(
             err.unwrap_err().to_string(),
-            CoreError::NodeIdNotFound(100).to_string()
+            Error::NodeIdNotFound(100).to_string()
         );
 
         // try to move from non-exist node must be error
@@ -228,7 +228,7 @@ mod tests {
         assert!(err.is_err());
         assert_eq!(
             err.unwrap_err().to_string(),
-            CoreError::NodeIdNotFound(100).to_string()
+            Error::NodeIdNotFound(100).to_string()
         );
 
         // try to insert same node must be error
@@ -236,7 +236,7 @@ mod tests {
         assert!(err.is_err());
         assert_eq!(
             err.unwrap_err().to_string(),
-            CoreError::SameSourceAndDestination().to_string()
+            Error::SameSourceAndDestination().to_string()
         );
 
         Ok(())

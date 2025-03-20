@@ -2,14 +2,14 @@ use std::{fs::File, io::BufReader, path::Path};
 
 use indextree::Arena;
 
-use crate::{data::BookmarkData, error::CoreError};
+use crate::{data::BookmarkData, error::Error};
 
 use super::Bookmarks;
 
 /// File I/O
 impl Bookmarks {
     /// Load Arena from file (JSON format)
-    pub fn load_from_file<P>(path: P) -> Result<Self, CoreError>
+    pub fn load_from_file<P>(path: P) -> Result<Self, Error>
     where
         P: AsRef<Path>,
     {
@@ -20,7 +20,7 @@ impl Bookmarks {
     }
 
     /// Save Arena to file (JSON format)
-    pub fn save_to_file<P>(&self, path: P) -> Result<(), CoreError>
+    pub fn save_to_file<P>(&self, path: P) -> Result<(), Error>
     where
         P: AsRef<Path>,
     {

@@ -1,13 +1,13 @@
 use crate::{
     data::{FolderData, NodeType, ToolbarBookmarkData},
-    error::CoreError,
+    error::Error,
 };
 
 use super::Bookmarks;
 
 impl Bookmarks {
     /// Get root and children folders as Vec<FolderData>
-    pub fn get_root_and_children_folders(&self) -> Result<Vec<FolderData>, CoreError> {
+    pub fn get_root_and_children_folders(&self) -> Result<Vec<FolderData>, Error> {
         let mut vec: Vec<FolderData> = Vec::new();
         // push root folder at first
         let root_id = self.get_root_node_id()?;

@@ -1,4 +1,4 @@
-use crate::error::CoreError;
+use crate::error::Error;
 
 use super::Bookmarks;
 use super::NestedBookmark;
@@ -6,24 +6,24 @@ use super::NestedBookmark;
 /// Converting to JSON
 impl Bookmarks {
     /// Arena to JSON string
-    pub fn to_json(&self) -> Result<String, CoreError> {
+    pub fn to_json(&self) -> Result<String, Error> {
         Ok(serde_json::to_string(&self.arena)?)
     }
 
     /// Arena to NestedBookmarks
-    pub fn to_nested_bookmark(&self, index: usize) -> Result<NestedBookmark, CoreError> {
+    pub fn to_nested_bookmark(&self, index: usize) -> Result<NestedBookmark, Error> {
         let node_id = self.find_node_id_by_index(index)?;
         NestedBookmark::try_new(&self.arena, node_id)
     }
 
     /// Arena to nested JSON string (frontend friendly)
-    pub fn to_nested_json(&self, index: usize) -> Result<String, CoreError> {
+    pub fn to_nested_json(&self, index: usize) -> Result<String, Error> {
         let value = self.to_nested_bookmark(index)?;
         Ok(serde_json::to_string(&value)?)
     }
 
     /// Arena to nested JSON string (frontend friendly) with pretty format
-    pub fn to_nested_json_pretty(&self, index: usize) -> Result<String, CoreError> {
+    pub fn to_nested_json_pretty(&self, index: usize) -> Result<String, Error> {
         let value = self.to_nested_bookmark(index)?;
         Ok(serde_json::to_string_pretty(&value)?)
     }

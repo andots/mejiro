@@ -1,14 +1,14 @@
 use indextree::NodeId;
 use url::Url;
 
-use crate::{data::BookmarkData, error::CoreError};
+use crate::{data::BookmarkData, error::Error};
 
 use super::Bookmarks;
 
 /// Updating
 impl Bookmarks {
     /// Set is_open flag
-    pub fn set_is_open(&mut self, index: usize, is_open: bool) -> Result<(), CoreError> {
+    pub fn set_is_open(&mut self, index: usize, is_open: bool) -> Result<(), Error> {
         let node = self.get_mut_node_by_index(index)?;
         let data = node.get_mut();
         data.is_open = is_open;
@@ -16,7 +16,7 @@ impl Bookmarks {
     }
 
     /// Toggle is_open flag
-    pub fn toggle_is_open(&mut self, index: usize) -> Result<(), CoreError> {
+    pub fn toggle_is_open(&mut self, index: usize) -> Result<(), Error> {
         let node = self.get_mut_node_by_index(index)?;
         let data = node.get_mut();
         data.is_open = !data.is_open;
@@ -24,7 +24,7 @@ impl Bookmarks {
     }
 
     /// Update title
-    pub fn update_title(&mut self, index: usize, title: String) -> Result<(), CoreError> {
+    pub fn update_title(&mut self, index: usize, title: String) -> Result<(), Error> {
         let node = self.get_mut_node_by_index(index)?;
         let data = node.get_mut();
         data.title = title;
@@ -35,7 +35,7 @@ impl Bookmarks {
 /// Adding
 impl Bookmarks {
     /// Add folder
-    pub fn add_folder(&mut self, parent_index: usize, title: &str) -> Result<usize, CoreError> {
+    pub fn add_folder(&mut self, parent_index: usize, title: &str) -> Result<usize, Error> {
         let parent_node_id = self.find_node_id_by_index(parent_index)?;
         let new_folder = BookmarkData::new_folder(title);
         let new_node = self.arena.new_node(new_folder);
@@ -50,7 +50,7 @@ impl Bookmarks {
         title: &str,
         url: &str,
         top_level_index: usize,
-    ) -> Result<(), CoreError> {
+    ) -> Result<(), Error> {
         let bookmark = BookmarkData::try_new_bookmark(title, url)?;
 
         // get the URL of one level above the given URL as base_url_str
@@ -60,7 +60,7 @@ impl Bookmarks {
         let mut base_url = parsed_url.clone();
         base_url
             .path_segments_mut()
-            .map_err(|_| CoreError::CannotBeBase())?
+            .map_err(|_| Error::CannotBeBase())?
             .pop_if_empty()
             .pop();
         let base_url_str = base_url.as_str();
@@ -113,7 +113,7 @@ impl Bookmarks {
     }
 
     /// Add bookmark to Toolbar folder
-    pub fn append_bookmark_to_toolbar(&mut self, title: &str, url: &str) -> Result<(), CoreError> {
+    pub fn append_bookmark_to_toolbar(&mut self, title: &str, url: &str) -> Result<(), Error> {
         let toolbar_id = self.get_toolbar_node_id()?;
         let bookmark = BookmarkData::try_new_bookmark(title, url)?;
         let new_node = self.arena.new_node(bookmark);
@@ -128,15 +128,15 @@ impl Bookmarks {
         &self,
         source_index: usize,
         destination_index: usize,
-    ) -> Result<(NodeId, NodeId), CoreError> {
+    ) -> Result<(NodeId, NodeId), Error> {
         // if source node is root, return error
         if source_index == 1 {
-            return Err(CoreError::CannotMoveRoot());
+            return Err(Error::CannotMoveRoot());
         }
 
         // if source and destination is same, return error
         if source_index == destination_index {
-            return Err(CoreError::SameSourceAndDestination());
+            return Err(Error::SameSourceAndDestination());
         }
 
         let source_node_id = self.find_node_id_by_index(source_index)?;
@@ -147,7 +147,7 @@ impl Bookmarks {
             .descendants(&self.arena)
             .any(|node_id| node_id == dest_node_id)
         {
-            return Err(CoreError::CannotMoveToDescendant());
+            return Err(Error::CannotMoveToDescendant());
         }
 
         Ok((source_node_id, dest_node_id))
@@ -158,7 +158,7 @@ impl Bookmarks {
         &mut self,
         source_index: usize,
         destination_index: usize,
-    ) -> Result<(), CoreError> {
+    ) -> Result<(), Error> {
         let (source_node_id, dest_node_id) =
             self.validate_movable(source_index, destination_index)?;
 
@@ -178,7 +178,7 @@ impl Bookmarks {
         &mut self,
         source_index: usize,
         destination_index: usize,
-    ) -> Result<(), CoreError> {
+    ) -> Result<(), Error> {
         let (source_node_id, dest_node_id) =
             self.validate_movable(source_index, destination_index)?;
 
@@ -193,7 +193,7 @@ impl Bookmarks {
         &mut self,
         source_index: usize,
         destination_index: usize,
-    ) -> Result<(), CoreError> {
+    ) -> Result<(), Error> {
         let (source_node_id, dest_node_id) =
             self.validate_movable(source_index, destination_index)?;
 
@@ -208,14 +208,14 @@ impl Bookmarks {
         &mut self,
         source_index: usize,
         destination_index: usize,
-    ) -> Result<(), CoreError> {
+    ) -> Result<(), Error> {
         let (source_node_id, dest_node_id) =
             self.validate_movable(source_index, destination_index)?;
 
         // check that source node is not the first child of the dest node
         let dest_first_child = dest_node_id.children(&self.arena).next();
         if dest_first_child == Some(source_node_id) {
-            return Err(CoreError::CannotPrependAsFirstChild());
+            return Err(Error::CannotPrependAsFirstChild());
         }
 
         // move to the dest children (prepend - to the front)
@@ -228,9 +228,9 @@ impl Bookmarks {
 /// Removing
 impl Bookmarks {
     /// Remove subtree
-    pub fn remove_subtree(&mut self, index: usize) -> Result<(), CoreError> {
+    pub fn remove_subtree(&mut self, index: usize) -> Result<(), Error> {
         if index == 1 {
-            return Err(CoreError::CannotRemoveRoot());
+            return Err(Error::CannotRemoveRoot());
         }
         let node_id = self.find_node_id_by_index(index)?;
         node_id.remove_subtree(&mut self.arena);

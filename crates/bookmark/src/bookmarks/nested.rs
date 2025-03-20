@@ -2,7 +2,7 @@ use indextree::{Arena, NodeId};
 use serde::Serialize;
 
 use crate::data::BookmarkData;
-use crate::error::CoreError;
+use crate::error::Error;
 
 #[derive(Serialize)]
 pub struct NestedBookmark {
@@ -13,10 +13,10 @@ pub struct NestedBookmark {
 }
 
 impl NestedBookmark {
-    pub(crate) fn try_new(arena: &Arena<BookmarkData>, node_id: NodeId) -> Result<Self, CoreError> {
+    pub(crate) fn try_new(arena: &Arena<BookmarkData>, node_id: NodeId) -> Result<Self, Error> {
         let node = arena
             .get(node_id)
-            .ok_or(CoreError::NestedNode(node_id.into()))?;
+            .ok_or(Error::NestedNode(node_id.into()))?;
         Ok(Self {
             index: node_id.into(),
             data: node.get().clone(),
