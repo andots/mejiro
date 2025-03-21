@@ -4,4 +4,6 @@ permissions = [
   "allow-send-page-title",
   "allow-send-page-url",
   "allow-get-external-webview-title",
+  "allow-history-back",
+  "allow-history-forward",
 ]

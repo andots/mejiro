@@ -5,6 +5,8 @@ Default permissions for the plugin
 - `allow-send-page-title`
 - `allow-send-page-url`
 - `allow-get-external-webview-title`
+- `allow-history-back`
+- `allow-history-forward`
 
 ## Permission Table
 
@@ -37,6 +39,58 @@ Enables the get_external_webview_title command without any pre-configured scope.
 <td>
 
 Denies the get_external_webview_title command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`js-injection:allow-history-back`
+
+</td>
+<td>
+
+Enables the history_back command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`js-injection:deny-history-back`
+
+</td>
+<td>
+
+Denies the history_back command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`js-injection:allow-history-forward`
+
+</td>
+<td>
+
+Enables the history_forward command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`js-injection:deny-history-forward`
+
+</td>
+<td>
+
+Denies the history_forward command without any pre-configured scope.
 
 </td>
 </tr>

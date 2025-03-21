@@ -11,6 +11,7 @@
     "app-settings:default",
     "user-settings:default",
     "bookmarks:default",
+    "js-injection:default",
     "app-webview"
   ]
 }

@@ -88,6 +88,12 @@ export const Invoke = {
   GetExternalWebviewTitle: async () => {
     return invoke<string>("plugin:js-injection|get_external_webview_title", {});
   },
+  HistoryBack: async () => {
+    return invoke("plugin:js-injection|history_back", {});
+  },
+  HistoryForward: async () => {
+    return invoke("plugin:js-injection|history_forward", {});
+  },
 
   // Settings commands
   GetWindowGeometry: async () => {

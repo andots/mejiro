@@ -1,7 +1,13 @@
 import { Button } from "@repo/ui/button";
-import { type Component, createEffect, For, on } from "solid-js";
+import { type Component, createEffect, For, type JSX, on, type ParentComponent } from "solid-js";
 
-import { IcBaselineHome, IcBaselineMenu, OcticonGear24 } from "@repo/ui/icons";
+import {
+  IcBaselineArrowBack,
+  IcBaselineArrowForward,
+  IcBaselineHome,
+  IcBaselineMenu,
+  OcticonGear24,
+} from "@repo/ui/icons";
 
 import { useUrlState } from "../stores/url";
 import { useWindowState } from "../stores/window";
@@ -12,6 +18,24 @@ import AddressBar from "./toolbar/AddressBar";
 import Favicon from "./icons/Favicon";
 import { useUserSettingsState } from "../stores/settings";
 import { FAVICON_SIZE } from "../constants";
+import { Invoke } from "../invokes";
+
+type Props = {
+  onClick: () => void;
+};
+
+const ToolbarButton: ParentComponent<Props> = (props) => {
+  return (
+    <Button
+      class="w-7 h-7 [&_svg]:size-5 [&_svg]:shrink-0"
+      variant="ghost"
+      size="icon"
+      onClick={props.onClick}
+    >
+      {props.children}
+    </Button>
+  );
+};
 
 const ToolBar: Component = () => {
   const useUrl = useUrlState();
@@ -70,36 +94,46 @@ const ToolBar: Component = () => {
     }
   };
 
+  const handleBack = () => {
+    Invoke.HistoryBack();
+  };
+
+  const handleForward = () => {
+    Invoke.HistoryForward();
+  };
+
   return (
     <div id="toolbar" class="flex items-center w-full h-full px-2">
       <div class="flex flex-row items-center">
-        {/* Menu button */}
-        <Button
-          class="w-9 h-9 [&_svg]:size-6 [&_svg]:shrink-0"
-          variant="ghost"
-          size="icon"
-          onClick={handleMenu}
-        >
-          <IcBaselineMenu />
-        </Button>
+        <div class="flex flex-row space-x-1">
+          {/* Menu button */}
+          <ToolbarButton onClick={handleMenu}>
+            <IcBaselineMenu />
+          </ToolbarButton>
 
-        {/* Home button */}
-        <Button
-          class="w-9 h-9 [&_svg]:size-6 [&_svg]:shrink-0"
-          variant="ghost"
-          size="icon"
-          onClick={handleHome}
-        >
-          <IcBaselineHome />
-        </Button>
+          {/* Home button */}
+          <ToolbarButton onClick={handleHome}>
+            <IcBaselineHome />
+          </ToolbarButton>
+
+          {/* Back button */}
+          <ToolbarButton onClick={handleBack}>
+            <IcBaselineArrowBack />
+          </ToolbarButton>
+
+          {/* Forward button */}
+          <ToolbarButton onClick={handleForward}>
+            <IcBaselineArrowForward />
+          </ToolbarButton>
+        </div>
 
         {/* Pinned url favicons */}
-        <div class="flex items-center ml-2">
+        <div class="flex items-center ml-2 space-x-1">
           <For each={toolbarBookmarks()}>
             {(bookmark) => (
               <Button
                 variant="ghost"
-                class="w-9 h-9 p-2"
+                class="w-7 h-7 p-1"
                 onClick={() => handlePinnedUrl(bookmark.url)}
               >
                 <Favicon url={bookmark.url} width={FAVICON_SIZE} height={FAVICON_SIZE} />
@@ -116,14 +150,9 @@ const ToolBar: Component = () => {
 
       <div class="flex-none">
         {/* Settings button */}
-        <Button
-          class="w-9 h-9 [&_svg]:size-5 [&_svg]:shrink-0"
-          variant="ghost"
-          size="icon"
-          onClick={() => handleSettings()}
-        >
+        <ToolbarButton onClick={handleSettings}>
           <OcticonGear24 />
-        </Button>
+        </ToolbarButton>
       </div>
     </div>
   );

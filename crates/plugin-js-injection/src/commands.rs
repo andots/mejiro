@@ -44,3 +44,17 @@ pub fn get_external_webview_title<R: tauri::Runtime>(app_handle: tauri::AppHandl
         let _ = webview.eval(include_str!("js/get-title.js"));
     }
 }
+
+#[tauri::command]
+pub fn history_back<R: tauri::Runtime>(app_handle: tauri::AppHandle<R>) {
+    if let Some(webview) = app_handle.get_webview(EXTERNAL_WEBVIEW_LABEL) {
+        let _ = webview.eval(include_str!("js/history-back.js"));
+    }
+}
+
+#[tauri::command]
+pub fn history_forward<R: tauri::Runtime>(app_handle: tauri::AppHandle<R>) {
+    if let Some(webview) = app_handle.get_webview(EXTERNAL_WEBVIEW_LABEL) {
+        let _ = webview.eval(include_str!("js/history-forward.js"));
+    }
+}

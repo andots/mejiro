@@ -305,6 +305,26 @@
           "const": "deny-get-external-webview-title"
         },
         {
+          "description": "Enables the history_back command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-history-back"
+        },
+        {
+          "description": "Denies the history_back command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-history-back"
+        },
+        {
+          "description": "Enables the history_forward command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-history-forward"
+        },
+        {
+          "description": "Denies the history_forward command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-history-forward"
+        },
+        {
           "description": "Enables the send_page_title command without any pre-configured scope.",
           "type": "string",
           "const": "allow-send-page-title"
