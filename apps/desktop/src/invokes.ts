@@ -23,7 +23,7 @@ export const Invoke = {
     return invoke<NestedBookmark>("plugin:bookmarks|get_nested_json", { index });
   },
   AddBookmark: async (title: string, url: string, topLevelIndex: number) => {
-    return invoke<NestedBookmark>("plugin:bookmarks|add_bookmark", { title, url, topLevelIndex });
+    return invoke<BookmarkResponse>("plugin:bookmarks|add_bookmark", { title, url, topLevelIndex });
   },
   AppendBookmarkToToolbar: async (title: string, url: string, topLevelIndex: number) => {
     return invoke<NestedBookmark>("plugin:bookmarks|append_bookmark_to_toolbar", {

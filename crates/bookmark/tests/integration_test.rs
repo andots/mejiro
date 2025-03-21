@@ -400,7 +400,8 @@ mod tests {
         let mut bookmarks = Bookmarks::new(arena);
 
         let top_level_index = 1;
-        bookmarks.add_bookmark("abc/cdf", "https://docs.rs/abc/cdf", top_level_index)?;
+        let b3 = bookmarks.add_bookmark("abc/cdf", "https://docs.rs/abc/cdf", top_level_index)?;
+        assert_eq!(b3, 3);
 
         // close all
         bookmarks.set_is_open(1, false)?;
@@ -414,11 +415,12 @@ mod tests {
         }
 
         // add_bookmark will open all ancestors
-        bookmarks.add_bookmark(
+        let b4 = bookmarks.add_bookmark(
             "abc/cdf/efg",
             "https://docs.rs/abc/cdf/efg",
             top_level_index,
         )?;
+        assert_eq!(b4, 4);
 
         for node in bookmarks.arena().iter() {
             let data = node.get();

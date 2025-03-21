@@ -54,13 +54,17 @@ pub fn add_bookmark(
     title: String,
     url: String,
     top_level_index: usize,
-) -> Result<NestedBookmark, Error> {
+) -> Result<BookmarkResponse, Error> {
     let mut bookmarks = state
         .lock()
         .map_err(|_| Error::Mutex("can't get bookmarks".to_string()))?;
-    bookmarks.add_bookmark(&title, &url, top_level_index)?;
+    let index = bookmarks.add_bookmark(&title, &url, top_level_index)?;
+    let nested = bookmarks.to_nested_bookmark(top_level_index)?;
 
-    Ok(bookmarks.to_nested_bookmark(top_level_index)?)
+    Ok(BookmarkResponse {
+        index,
+        bookmarks: nested,
+    })
 }
 
 #[tauri::command]

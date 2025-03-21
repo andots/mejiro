@@ -69,10 +69,9 @@ export const useBookmarkState = createWithSignal<BookmarkState>((set, get) => ({
     }
   },
   addBookmark: async (title, url) => {
-    // get current top of bookmark index that shown in the UI as a starting point
     const topLevelIndex = get().getCurrentTopLevel();
-    const bookmarks = await Invoke.AddBookmark(title, url, topLevelIndex);
-    set(() => ({ bookmarks }));
+    const res = await Invoke.AddBookmark(title, url, topLevelIndex);
+    set(() => ({ bookmarks: res.bookmarks }));
   },
   appendBookmarkToToolbar: async (title, url) => {
     const topLevelIndex = get().getCurrentTopLevel();

@@ -50,7 +50,7 @@ impl Bookmarks {
         title: &str,
         url: &str,
         top_level_index: usize,
-    ) -> Result<(), Error> {
+    ) -> Result<usize, Error> {
         let bookmark = BookmarkData::try_new_bookmark(title, url)?;
 
         // get the URL of one level above the given URL as base_url_str
@@ -115,7 +115,7 @@ impl Bookmarks {
             self.set_is_open(node_id.into(), true)?;
         }
 
-        Ok(())
+        Ok(new_node.into())
     }
 
     /// Add bookmark to Toolbar folder
