@@ -5,7 +5,7 @@
   "windows": ["main"],
   "webviews": ["external"],
   "remote": {
-    "urls": ["http{s}?://*"]
+    "urls": ["http{s}?://*", "http://localhost:5500"]
   },
-  "permissions": ["js-injection:default"]
+  "permissions": ["js-injection:allow-send-page-url", "js-injection:allow-send-page-title"]
 }
