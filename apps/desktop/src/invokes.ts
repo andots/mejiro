@@ -2,11 +2,11 @@ import { invoke } from "@tauri-apps/api/core";
 import type {
   ToolbarBookmarkData,
   Bounds,
+  BookmarkResponse,
   FolderData,
   Rect,
   UserSettings,
   NestedBookmark,
-  AddFolderResponse,
   AppSettings,
   WindowGeometry,
 } from "./types";
@@ -43,7 +43,7 @@ export const Invoke = {
     });
   },
   AddFolder: async (parentIndex: number, title: string, topLevelIndex: number) => {
-    return invoke<AddFolderResponse>("plugin:bookmarks|add_folder", {
+    return invoke<BookmarkResponse>("plugin:bookmarks|add_folder", {
       parentIndex,
       title,
       topLevelIndex,

@@ -8,6 +8,12 @@ use parus_bookmark::{
 };
 use parus_common::Error;
 
+#[derive(Serialize)]
+pub struct BookmarkResponse {
+    index: usize,
+    bookmarks: NestedBookmark,
+}
+
 #[tauri::command]
 pub fn get_nested_json(
     state: tauri::State<'_, Mutex<Bookmarks>>,
@@ -101,19 +107,13 @@ pub fn update_bookmark_title(
     Ok(bookmarks.to_nested_bookmark(top_level_index)?)
 }
 
-#[derive(Serialize)]
-pub struct AddFolderResponse {
-    index: usize,
-    bookmarks: NestedBookmark,
-}
-
 #[tauri::command]
 pub fn add_folder(
     state: tauri::State<'_, Mutex<Bookmarks>>,
     parent_index: usize,
     title: String,
     top_level_index: usize,
-) -> Result<AddFolderResponse, Error> {
+) -> Result<BookmarkResponse, Error> {
     let mut bookmarks = state
         .lock()
         .map_err(|_| Error::Mutex("can't get bookmarks".to_string()))?;
@@ -121,7 +121,7 @@ pub fn add_folder(
     let index = bookmarks.add_folder(parent_index, &title)?;
     let nested = bookmarks.to_nested_bookmark(top_level_index)?;
 
-    Ok(AddFolderResponse {
+    Ok(BookmarkResponse {
         index,
         bookmarks: nested,
     })

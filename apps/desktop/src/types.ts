@@ -10,7 +10,7 @@ export type NestedBookmark = {
   children: NestedBookmark[];
 };
 
-export type AddFolderResponse = {
+export type BookmarkResponse = {
   index: number;
   bookmarks: NestedBookmark;
 };
