@@ -1,5 +1,19 @@
 # Changelog
 
+# [0.33.0](https://github.com/andots/parus/compare/v0.32.3...v0.33.0) (2025-03-25)
+
+
+### Bug Fixes
+
+* **app:** set permissions send_page_url and send_page_title only for external webview ([14ee8b3](https://github.com/andots/parus/commit/14ee8b334b7b7e3f186ca87c8de6ee7ccb4cda5d))
+* **front:** set activeIndex after adding bookmark ([3606dea](https://github.com/andots/parus/commit/3606dea11d6924f5b0455816df21c74898127619))
+
+
+### Features
+
+* **bookmark:** add_bookmark return the index of new node ([56de09a](https://github.com/andots/parus/commit/56de09a20e3a16e0453674f1f174521a3d08e062))
+* history back/forward from toolbar ([3cfb208](https://github.com/andots/parus/commit/3cfb208e9a58c5cf6764cf05779aa52b145ef3f1))
+
 ## [0.32.3](https://github.com/andots/parus/compare/v0.32.2...v0.32.3) (2025-03-20)
 
 

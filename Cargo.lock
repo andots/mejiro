@@ -1186,7 +1186,7 @@ checksum = "37909eebbb50d72f9059c3b6d82c0463f2ff062c9e95845c43a6c9c0355411be"
 
 [[package]]
 name = "favicon-server"
-version = "0.32.3"
+version = "0.33.0"
 dependencies = [
  "axum",
  "http-serde",
@@ -2495,7 +2495,7 @@ dependencies = [
 
 [[package]]
 name = "meta-parser"
-version = "0.32.3"
+version = "0.33.0"
 dependencies = [
  "reqwest",
  "tl",
@@ -3122,7 +3122,7 @@ dependencies = [
 
 [[package]]
 name = "parus"
-version = "0.32.3"
+version = "0.33.0"
 dependencies = [
  "anyhow",
  "favicon-server",
@@ -3148,7 +3148,7 @@ dependencies = [
 
 [[package]]
 name = "parus-bookmark"
-version = "0.32.3"
+version = "0.33.0"
 dependencies = [
  "anyhow",
  "indextree",
@@ -3162,7 +3162,7 @@ dependencies = [
 
 [[package]]
 name = "parus-common"
-version = "0.32.3"
+version = "0.33.0"
 dependencies = [
  "log",
  "parus-bookmark",
@@ -3175,7 +3175,7 @@ dependencies = [
 
 [[package]]
 name = "parus-fs"
-version = "0.32.3"
+version = "0.33.0"
 dependencies = [
  "anyhow",
  "glob",
@@ -4755,7 +4755,7 @@ dependencies = [
 
 [[package]]
 name = "tauri-plugin-app-settings"
-version = "0.32.3"
+version = "0.33.0"
 dependencies = [
  "log",
  "parus-common",
@@ -4768,7 +4768,7 @@ dependencies = [
 
 [[package]]
 name = "tauri-plugin-bookmarks"
-version = "0.32.3"
+version = "0.33.0"
 dependencies = [
  "log",
  "parus-bookmark",
@@ -4824,7 +4824,7 @@ dependencies = [
 
 [[package]]
 name = "tauri-plugin-js-injection"
-version = "0.32.3"
+version = "0.33.0"
 dependencies = [
  "log",
  "once_cell",
@@ -4905,7 +4905,7 @@ dependencies = [
 
 [[package]]
 name = "tauri-plugin-user-scripts"
-version = "0.32.3"
+version = "0.33.0"
 dependencies = [
  "anyhow",
  "log",
@@ -4924,7 +4924,7 @@ dependencies = [
 
 [[package]]
 name = "tauri-plugin-user-settings"
-version = "0.32.3"
+version = "0.33.0"
 dependencies = [
  "log",
  "parus-common",
@@ -4937,7 +4937,7 @@ dependencies = [
 
 [[package]]
 name = "tauri-plugin-window-geometry"
-version = "0.32.3"
+version = "0.33.0"
 dependencies = [
  "log",
  "parus-common",
